@@ -362,6 +362,13 @@ function restore(e){
 function clearAll(){ if(!confirm('همه پاک شود؟'))return; localStorage.removeItem('items'); localStorage.removeItem('links'); renderList(); renderLinks(); renderCal(); toast('✓ پاک شد'); }
 
 renderList();
+  <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/smart-secretary/sw.js')
+    .then(function () { console.log('SW ok'); })
+    .catch(function (e) { console.log('SW fail', e); });
+}
+</script>
 </script>
 </body>
 </html>
