@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="منشی هوشمند">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>منشی هوشمند</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:#0b1220;color:#e2e8f0;min-height:100vh;padding:10px 10px 60px;line-height:1.5}
+.box{max-width:440px;margin:0 auto}
+.header{text-align:center;margin-bottom:12px}
+.logo{width:52px;height:52px;background:linear-gradient(135deg,#0ea5e9,#6366f1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 6px}
+h1{font-size:1.25rem;color:#38bdf8}
+.sub{color:#94a3b8;font-size:.82rem}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-bottom:10px;position:sticky;top:0;z-index:20;background:#0b1220;padding:5px 0}
+.nav button{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:7px 1px;font-size:.65rem;color:#94a3b8}
+.nav button.on{background:#0ea5e9;color:#fff;border-color:#0ea5e9}
+.panel{display:none}.panel.on{display:block}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:12px;margin-bottom:8px}
+.card h2{font-size:.9rem;color:#7dd3fc;margin-bottom:8px}
+.btn{display:block;width:100%;text-align:center;padding:11px;border-radius:9px;font-size:.88rem;font-weight:600;text-decoration:none;margin-bottom:6px;border:none;color:#fff}
+.btn-b{background:#0ea5e9}.btn-g{background:#10b981}.btn-p{background:#8b5cf6}.btn-o{background:#f59e0b}.btn-r{background:#ef4444}.btn-gr{background:#334155;color:#e2e8f0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}.grid2 .btn{margin-bottom:0}
+.cmd{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:9px;margin-bottom:5px;font-size:.82rem;color:#bae6fd}
+.note{font-size:.75rem;color:#94a3b8;margin-top:5px}
+label{font-size:.75rem;color:#94a3b8;display:block;margin-top:7px;margin-bottom:2px}
+input,textarea,select{width:100%;padding:9px;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#e2e8f0;font-size:.85rem;font-family:inherit}
+textarea{min-height:60px}
+.item{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px;margin-bottom:6px}
+.item .title{font-size:.88rem;margin-bottom:3px}
+.item .meta{font-size:.72rem;color:#94a3b8}
+.badge{display:inline-block;padding:2px 7px;border-radius:999px;font-size:.65rem;margin-left:4px}
+.b-do{background:#3b82f6;color:#fff}
+.b-ch{background:#f59e0b;color:#000}
+.b-done{background:#10b981;color:#fff}
+.row{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.row button{flex:1;padding:6px;font-size:.72rem;border:none;border-radius:6px;color:#fff}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:9px 16px;border-radius:9px;font-size:.85rem;display:none;z-index:99}
+.voice-box{text-align:center;padding:10px}
+.mic{width:64px;height:64px;border-radius:50%;border:none;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-size:26px;margin:6px auto;display:flex;align-items:center;justify-content:center}
+.mic.on{background:linear-gradient(135deg,#ef4444,#dc2626)}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="header">
+    <div class="logo">🤖</div>
+    <h1>منشی هوشمند</h1>
+    <p class="sub">اپ کنترل‌پنل اجرایی</p>
+  </div>
+
+  <div class="nav">
+    <button class="on" onclick="go('home',this)">خانه</button>
+    <button onclick="go('run',this)">اجرا</button>
+    <button onclick="go('forms',this)">ثبت</button>
+    <button onclick="go('voice',this)">صوتی</button>
+    <button onclick="go('set',this)">تنظیمات</button>
+  </div>
+
+  <!-- خانه: لیست همه موارد -->
+  <div id="home" class="panel on">
+    <div class="card">
+      <h2>🚀 اجرای سریع</h2>
+      <a class="btn btn-b" href="https://grok.com" target="_blank">باز کردن Grok</a>
+      <div class="grid2">
+        <a class="btn btn-g" href="https://grok.com/automations" target="_blank">اتوماسیون‌ها</a>
+        <a class="btn btn-p" href="https://grok.com" target="_blank">چت + صوت</a>
+      </div>
+    </div>
+    <div class="card">
+      <h2>📋 همه موارد (جلسه / یادداشت / ایمیل)</h2>
+      <div id="list"></div>
+      <p class="note" id="emptyNote">هنوز موردی ثبت نشده. از بخش «ثبت» اضافه کنید.</p>
+    </div>
+  </div>
+
+  <!-- اجرا -->
+  <div id="run" class="panel">
+    <div class="card">
+      <h2>💬 دستورات (کلیک = کپی)</h2>
+      <div class="cmd" onclick="copy(this)">منشی را الان اجرا کن</div>
+      <div class="cmd" onclick="copy(this)">خلاصه امروز را بده</div>
+      <div class="cmd" onclick="copy(this)">جلسات فردا و این هفته را بگو</div>
+      <div class="cmd" onclick="copy(this)">ایمیل‌های مهم را خلاصه کن</div>
+      <div class="cmd" onclick="copy(this)">پیشنهاد برنامه روزانه بده</div>
+      <div class="cmd" onclick="copy(this)">تعهدات باز من را لیست کن</div>
+    </div>
+    <div class="card">
+      <h2>🔗 سرویس‌ها</h2>
+      <a class="btn btn-gr" href="https://calendar.google.com" target="_blank">تقویم</a>
+      <a class="btn btn-gr" href="https://mail.google.com" target="_blank">جیمیل</a>
+      <a class="btn btn-gr" href="https://drive.google.com" target="_blank">Drive</a>
+    </div>
+  </div>
+
+  <!-- ثبت جلسه / یادداشت / ایمیل -->
+  <div id="forms" class="panel">
+    <div class="card">
+      <h2>📅 ثبت جلسه</h2>
+      <label>عنوان جلسه</label>
+      <input id="mTitle" placeholder="مثلاً جلسه باغ پسته">
+      <label>تاریخ / زمان</label>
+      <input id="mWhen" placeholder="۱۹ اکتبر ۱۰:۰۰">
+      <label>توضیح</label>
+      <textarea id="mDesc" placeholder="توضیحات..."></textarea>
+      <label>وضعیت</label>
+      <select id="mStatus">
+        <option value="doing">در حال انجام</option>
+        <option value="change">تغییر</option>
+        <option value="done">تکمیل</option>
+      </select>
+      <button class="btn btn-g" onclick="addItem('meeting')">ثبت جلسه</button>
+    </div>
+    <div class="card">
+      <h2>📝 ثبت یادداشت</h2>
+      <label>عنوان</label>
+      <input id="nTitle" placeholder="عنوان یادداشت">
+      <label>متن</label>
+      <textarea id="nDesc" placeholder="متن یادداشت..."></textarea>
+      <label>وضعیت</label>
+      <select id="nStatus">
+        <option value="doing">در حال انجام</option>
+        <option value="change">تغییر</option>
+        <option value="done">تکمیل</option>
+      </select>
+      <button class="btn btn-p" onclick="addItem('note')">ثبت یادداشت</button>
+    </div>
+    <div class="card">
+      <h2>✉️ ثبت ایمیل (پیگیری)</h2>
+      <label>گیرنده / موضوع</label>
+      <input id="eTitle" placeholder="ایمیل به احمدی - پیگیری">
+      <label>توضیح</label>
+      <textarea id="eDesc" placeholder="جزئیات..."></textarea>
+      <label>وضعیت</label>
+      <select id="eStatus">
+        <option value="doing">در حال انجام</option>
+        <option value="change">تغییر</option>
+        <option value="done">تکمیل</option>
+      </select>
+      <button class="btn btn-b" onclick="addItem('email')">ثبت ایمیل</button>
+    </div>
+  </div>
+
+  <!-- صوتی -->
+  <div id="voice" class="panel">
+    <div class="card">
+      <h2>🎤 منشی صوتی</h2>
+      <div class="voice-box">
+        <button class="mic" id="micBtn" onclick="toggleVoice()">🎤</button>
+        <div id="vStatus" class="note">برای صحبت دکمه را بزنید (فقط روی HTTPS)</div>
+        <div id="vResult" class="item" style="display:none;margin-top:8px"></div>
+      </div>
+      <a class="btn btn-p" href="https://grok.com" target="_blank">Grok Voice (بهتر و بدون خطا)</a>
+    </div>
+  </div>
+
+  <!-- تنظیمات -->
+  <div id="set" class="panel">
+    <div class="card">
+      <h2>📲 نصب اپ</h2>
+      <p class="note">اگر آیکون‌ها و manifest درست باشند، کروم گزینه «Install app» می‌دهد. وگرنه فقط شورتکات ساخته می‌شود.</p>
+      <button class="btn btn-b" id="installBtn" onclick="tryInstall()">تلاش برای نصب</button>
+    </div>
+    <div class="card">
+      <h2>🔗 لینک‌های ارتباطی</h2>
+      <label>نام (مثلاً واتساپ پشتیبانی)</label>
+      <input id="lName" placeholder="واتساپ / ایمیل کاری">
+      <label>نوع</label>
+      <select id="lType">
+        <option value="whatsapp">واتساپ</option>
+        <option value="email">ایمیل</option>
+        <option value="other">سایر</option>
+      </select>
+      <label>لینک یا شماره / ایمیل</label>
+      <input id="lUrl" placeholder="https://wa.me/98912... یا email@site.com">
+      <button class="btn btn-g" onclick="addLink()">افزودن لینک</button>
+      <div id="linksList" style="margin-top:10px"></div>
+    </div>
+    <div class="card">
+      <h2>💾 پشتیبان</h2>
+      <button class="btn btn-g" onclick="backup()">دانلود پشتیبان</button>
+      <input type="file" accept=".json" onchange="restore(event)" style="margin-top:8px">
+      <button class="btn btn-r" onclick="clearAll()">پاک کردن همه داده‌ها</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault(); deferredPrompt=e;
+  document.getElementById('installBtn').textContent='📲 نصب اپ (آماده)';
+});
+function tryInstall(){
+  if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt=null; }
+  else toast('از منوی کروم «Install app» یا «Add to Home screen» را بزنید');
+}
+
+function go(id,btn){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')});
+  document.querySelectorAll('.nav button').forEach(function(b){b.classList.remove('on')});
+  document.getElementById(id).classList.add('on');
+  if(btn) btn.classList.add('on');
+  if(id==='home') renderList();
+  if(id==='set') renderLinks();
+}
+function toast(m){ var t=document.getElementById('toast'); t.textContent=m; t.style.display='block'; setTimeout(function(){t.style.display='none'},1800); }
+function copy(el){
+  var t=el.innerText;
+  if(navigator.clipboard) navigator.clipboard.writeText(t).then(function(){toast('✓ کپی شد')});
+  else { var a=document.createElement('textarea'); a.value=t; document.body.appendChild(a); a.select(); document.execCommand('copy'); document.body.removeChild(a); toast('✓ کپی شد'); }
+}
+
+function loadItems(){ try{ return JSON.parse(localStorage.getItem('items')||'[]'); }catch(e){ return []; } }
+function saveItems(arr){ localStorage.setItem('items', JSON.stringify(arr)); }
+
+function addItem(type){
+  var title, desc, status, when='';
+  if(type==='meeting'){
+    title=document.getElementById('mTitle').value.trim();
+    desc=document.getElementById('mDesc').value.trim();
+    status=document.getElementById('mStatus').value;
+    when=document.getElementById('mWhen').value.trim();
+  } else if(type==='note'){
+    title=document.getElementById('nTitle').value.trim();
+    desc=document.getElementById('nDesc').value.trim();
+    status=document.getElementById('nStatus').value;
+  } else {
+    title=document.getElementById('eTitle').value.trim();
+    desc=document.getElementById('eDesc').value.trim();
+    status=document.getElementById('eStatus').value;
+  }
+  if(!title) return toast('عنوان را وارد کنید');
+  var arr=loadItems();
+  arr.unshift({ id:Date.now(), type:type, title:title, desc:desc, when:when, status:status, created:new Date().toISOString() });
+  saveItems(arr);
+  toast('✓ ثبت شد');
+  if(type==='meeting'){ document.getElementById('mTitle').value=''; document.getElementById('mDesc').value=''; document.getElementById('mWhen').value=''; }
+  if(type==='note'){ document.getElementById('nTitle').value=''; document.getElementById('nDesc').value=''; }
+  if(type==='email'){ document.getElementById('eTitle').value=''; document.getElementById('eDesc').value=''; }
+}
+
+function statusLabel(s){
+  if(s==='doing') return ['در حال انجام','b-do'];
+  if(s==='change') return ['تغییر','b-ch'];
+  return ['تکمیل','b-done'];
+}
+function typeLabel(t){
+  if(t==='meeting') return '📅 جلسه';
+  if(t==='note') return '📝 یادداشت';
+  return '✉️ ایمیل';
+}
+
+function renderList(){
+  var arr=loadItems();
+  var box=document.getElementById('list');
+  var empty=document.getElementById('emptyNote');
+  box.innerHTML='';
+  if(!arr.length){ empty.style.display='block'; return; }
+  empty.style.display='none';
+  arr.forEach(function(it){
+    var st=statusLabel(it.status);
+    var d=document.createElement('div');
+    d.className='item';
+    d.innerHTML='<div class="title">'+typeLabel(it.type)+' '+escapeHtml(it.title)+
+      ' <span class="badge '+st[1]+'">'+st[0]+'</span></div>'+
+      (it.when?'<div class="meta">زمان: '+escapeHtml(it.when)+'</div>':'')+
+      (it.desc?'<div class="meta">'+escapeHtml(it.desc)+'</div>':'')+
+      '<div class="row">'+
+      '<button style="background:#3b82f6" onclick="setStatus('+it.id+',\'doing\')">در حال انجام</button>'+
+      '<button style="background:#f59e0b;color:#000" onclick="setStatus('+it.id+',\'change\')">تغییر</button>'+
+      '<button style="background:#10b981" onclick="setStatus('+it.id+',\'done\')">تکمیل</button>'+
+      '<button style="background:#ef4444" onclick="delItem('+it.id+')">حذف</button></div>';
+    box.appendChild(d);
+  });
+}
+function setStatus(id,s){
+  var arr=loadItems();
+  arr.forEach(function(it){ if(it.id===id) it.status=s; });
+  saveItems(arr); renderList(); toast('✓ وضعیت عوض شد');
+}
+function delItem(id){
+  if(!confirm('حذف شود؟')) return;
+  saveItems(loadItems().filter(function(it){ return it.id!==id; }));
+  renderList(); toast('✓ حذف شد');
+}
+function escapeHtml(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+/* لینک‌های واتساپ / ایمیل */
+function loadLinks(){ try{ return JSON.parse(localStorage.getItem('links')||'[]'); }catch(e){ return []; } }
+function saveLinks(a){ localStorage.setItem('links', JSON.stringify(a)); }
+function addLink(){
+  var name=document.getElementById('lName').value.trim();
+  var type=document.getElementById('lType').value;
+  var url=document.getElementById('lUrl').value.trim();
+  if(!name||!url) return toast('نام و لینک را وارد کنید');
+  if(type==='whatsapp' && url.indexOf('http')!==0){
+    url='https://wa.me/'+url.replace(/[^0-9]/g,'');
+  }
+  if(type==='email' && url.indexOf('@')>-1 && url.indexOf('mailto:')!==0){
+    url='mailto:'+url;
+  }
+  var arr=loadLinks();
+  arr.push({ id:Date.now(), name:name, type:type, url:url, active:true });
+  saveLinks(arr);
+  document.getElementById('lName').value='';
+  document.getElementById('lUrl').value='';
+  renderLinks(); toast('✓ لینک اضافه شد');
+}
+function renderLinks(){
+  var arr=loadLinks();
+  var box=document.getElementById('linksList');
+  box.innerHTML='';
+  if(!arr.length){ box.innerHTML='<p class="note">لینکی ثبت نشده</p>'; return; }
+  arr.forEach(function(l){
+    var d=document.createElement('div');
+    d.className='item';
+    d.innerHTML='<div class="title">'+(l.active?'✅ ':'❌ ')+escapeHtml(l.name)+
+      ' <span class="meta">('+(l.type==='whatsapp'?'واتساپ':l.type==='email'?'ایمیل':'سایر')+')</span></div>'+
+      '<div class="row">'+
+      '<a class="btn btn-b" style="padding:6px;font-size:.75rem;margin:0;flex:1" href="'+l.url+'" target="_blank">باز کردن</a>'+
+      '<button style="background:#f59e0b;color:#000" onclick="toggleLink('+l.id+')">'+(l.active?'غیرفعال':'فعال')+'</button>'+
+      '<button style="background:#ef4444" onclick="delLink('+l.id+')">حذف</button></div>';
+    box.appendChild(d);
+  });
+}
+function toggleLink(id){
+  var arr=loadLinks();
+  arr.forEach(function(l){ if(l.id===id) l.active=!l.active; });
+  saveLinks(arr); renderLinks(); toast('✓ تغییر کرد');
+}
+function delLink(id){
+  if(!confirm('حذف لینک؟')) return;
+  saveLinks(loadLinks().filter(function(l){ return l.id!==id; }));
+  renderLinks(); toast('✓ حذف شد');
+}
+
+/* صوت */
+var rec=null, listening=false;
+function toggleVoice(){
+  if(location.protocol==='file:'){ document.getElementById('vStatus').textContent='فقط روی HTTPS کار می‌کند'; return; }
+  if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){
+    toast('مرورگر پشتیبانی نمی‌کند'); return;
+  }
+  if(listening){ rec.stop(); listening=false; document.getElementById('micBtn').classList.remove('on'); document.getElementById('vStatus').textContent='متوقف شد'; return; }
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  rec=new SR(); rec.lang='fa-IR';
+  rec.onstart=function(){ listening=true; document.getElementById('micBtn').classList.add('on'); document.getElementById('vStatus').textContent='در حال گوش دادن...'; };
+  rec.onresult=function(e){
+    var text=e.results[0][0].transcript;
+    var r=document.getElementById('vResult'); r.style.display='block'; r.textContent=text;
+    document.getElementById('vStatus').textContent='شناسایی شد';
+    if(navigator.clipboard) navigator.clipboard.writeText(text);
+    toast('✓ متن کپی شد');
+  };
+  rec.onerror=function(e){
+    listening=false; document.getElementById('micBtn').classList.remove('on');
+    document.getElementById('vStatus').textContent=e.error==='not-allowed'?'اجازه میکروفون یا HTTPS لازم است':e.error;
+  };
+  rec.onend=function(){ listening=false; document.getElementById('micBtn').classList.remove('on'); };
+  rec.start();
+}
+
+function backup(){
+  var data={ items:loadItems(), links:loadLinks(), date:new Date().toISOString() };
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download='smart-secretary-backup.json'; a.click(); toast('✓ دانلود شد');
+}
+function restore(e){
+  var f=e.target.files[0]; if(!f) return;
+  var r=new FileReader();
+  r.onload=function(ev){
+    try{
+      var d=JSON.parse(ev.target.result);
+      if(d.items) saveItems(d.items);
+      if(d.links) saveLinks(d.links);
+      renderList(); renderLinks(); toast('✓ بازیابی شد');
+    }catch(err){ toast('فایل نامعتبر'); }
+  };
+  r.readAsText(f);
+}
+function clearAll(){
+  if(!confirm('همه جلسات، یادداشت‌ها و لینک‌ها پاک شود؟')) return;
+  localStorage.removeItem('items'); localStorage.removeItem('links');
+  renderList(); renderLinks(); toast('✓ پاک شد');
+}
+
+renderList();
+if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+}
+</script>
+</body>
+</html>
