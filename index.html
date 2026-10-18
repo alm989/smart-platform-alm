@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="منشی هوشمند">
+<title>منشی هوشمند</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:#0b1220;color:#e2e8f0;min-height:100vh;padding:12px 10px 50px;line-height:1.55}
+.box{max-width:440px;margin:0 auto}
+.header{text-align:center;margin-bottom:14px;padding-top:6px}
+.logo{width:54px;height:54px;background:linear-gradient(135deg,#0ea5e9,#6366f1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 8px}
+h1{font-size:1.3rem;color:#38bdf8;margin-bottom:2px}
+.sub{color:#94a3b8;font-size:.85rem}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:10;background:#0b1220;padding:6px 0}
+.nav button{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:8px 2px;font-size:.7rem;color:#94a3b8;cursor:pointer}
+.nav button.on{background:#0ea5e9;color:#fff;border-color:#0ea5e9}
+.panel{display:none}
+.panel.on{display:block}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px;margin-bottom:10px}
+.card h2{font-size:.95rem;color:#7dd3fc;margin-bottom:10px}
+.btn{display:block;width:100%;text-align:center;padding:12px;border-radius:10px;font-size:.92rem;font-weight:600;text-decoration:none;margin-bottom:7px;border:none;color:#fff;cursor:pointer}
+.btn-b{background:#0ea5e9}.btn-g{background:#10b981}.btn-p{background:#8b5cf6}.btn-o{background:#f59e0b}.btn-r{background:#ef4444}.btn-gr{background:#334155;color:#e2e8f0}
+.btn:active{opacity:.85}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.grid2 .btn{margin-bottom:0}
+.cmd{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px;margin-bottom:6px;font-size:.85rem;color:#bae6fd;cursor:pointer}
+.note{font-size:.78rem;color:#94a3b8;margin-top:6px}
+label{font-size:.78rem;color:#94a3b8;display:block;margin-top:8px;margin-bottom:3px}
+input,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#e2e8f0;font-size:.88rem;font-family:inherit;outline:none}
+textarea{min-height:70px;resize:vertical}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:10px 18px;border-radius:10px;font-size:.88rem;display:none;z-index:99}
+ul{padding-right:16px;margin:4px 0}
+li{margin-bottom:4px;color:#cbd5e1;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="header">
+    <div class="logo">🤖</div>
+    <h1>منشی هوشمند</h1>
+    <p class="sub">کنترل‌پنل اجرایی کامل</p>
+  </div>
+
+  <div class="nav">
+    <button class="on" onclick="go('home',this)">خانه</button>
+    <button onclick="go('run',this)">اجرا</button>
+    <button onclick="go('forms',this)">فرم‌ها</button>
+    <button onclick="go('backup',this)">پشتیبان</button>
+    <button onclick="go('set',this)">تنظیمات</button>
+  </div>
+
+  <!-- خانه -->
+  <div id="home" class="panel on">
+    <div class="card">
+      <h2>🚀 اجرای منشی</h2>
+      <a class="btn btn-b" href="https://grok.com" target="_blank">باز کردن Grok</a>
+      <div class="grid2">
+        <a class="btn btn-g" href="https://grok.com/automations" target="_blank">اتوماسیون‌ها</a>
+        <a class="btn btn-p" href="https://grok.com" target="_blank">چت + صوت</a>
+      </div>
+    </div>
+    <div class="card">
+      <h2>⏰ زمان‌بندی فعال</h2>
+      <ul>
+        <li>صبح: ۰۸:۳۰ تهران</li>
+        <li>شب: ۲۰:۰۰ تهران</li>
+        <li>تریگر: ایمیل‌های مهم</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>📋 قابلیت‌ها</h2>
+      <ul>
+        <li>خلاصه ایمیل و تقویم</li>
+        <li>پیش‌نویس ایمیل و جلسه</li>
+        <li>پشتیبان‌گیری و بازیابی</li>
+        <li>دستورات آماده یک‌کلیکی</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- اجرا -->
+  <div id="run" class="panel">
+    <div class="card">
+      <h2>💬 دستورات (کلیک = کپی)</h2>
+      <div class="cmd" onclick="copy(this)">منشی را الان اجرا کن</div>
+      <div class="cmd" onclick="copy(this)">خلاصه امروز را بده</div>
+      <div class="cmd" onclick="copy(this)">جلسات فردا و این هفته را بگو</div>
+      <div class="cmd" onclick="copy(this)">ایمیل‌های مهم را خلاصه کن</div>
+      <div class="cmd" onclick="copy(this)">پیشنهاد برنامه روزانه بده</div>
+      <div class="cmd" onclick="copy(this)">تعهدات باز من را لیست کن</div>
+      <div class="cmd" onclick="copy(this)">خلاصه هفتگی این هفته را بده</div>
+      <p class="note">بعد از کپی در Grok پیست کنید</p>
+    </div>
+    <div class="card">
+      <h2>🔗 دسترسی سریع</h2>
+      <a class="btn btn-gr" href="https://calendar.google.com" target="_blank">تقویم گوگل</a>
+      <a class="btn btn-gr" href="https://mail.google.com" target="_blank">جیمیل</a>
+      <a class="btn btn-gr" href="https://outlook.live.com" target="_blank">Outlook</a>
+      <a class="btn btn-gr" href="https://drive.google.com" target="_blank">Google Drive</a>
+    </div>
+  </div>
+
+  <!-- فرم‌ها -->
+  <div id="forms" class="panel">
+    <div class="card">
+      <h2>✉️ پیش‌نویس ایمیل</h2>
+      <label>گیرنده</label>
+      <input type="email" id="emailTo" placeholder="name@example.com">
+      <label>موضوع</label>
+      <input type="text" id="emailSubject" placeholder="موضوع">
+      <label>متن</label>
+      <textarea id="emailBody" placeholder="متن ایمیل..."></textarea>
+      <button class="btn btn-b" onclick="makeEmail()">ساخت دستور ایمیل</button>
+    </div>
+    <div class="card">
+      <h2>📅 پیشنهاد جلسه</h2>
+      <label>نام</label>
+      <input type="text" id="meetName" placeholder="نام طرف مقابل">
+      <label>ایمیل</label>
+      <input type="email" id="meetEmail" placeholder="email@example.com">
+      <label>موضوع</label>
+      <input type="text" id="meetSubject" placeholder="موضوع جلسه">
+      <label>زمان‌ها</label>
+      <input type="text" id="meetDays" placeholder="دوشنبه و چهارشنبه ۱۰ صبح">
+      <button class="btn btn-g" onclick="makeMeet()">ساخت دستور جلسه</button>
+    </div>
+    <div class="card">
+      <h2>📝 یادداشت / جستجو</h2>
+      <label>یادداشت برای منشی</label>
+      <textarea id="note" placeholder="چیزی که منشی باید بداند..."></textarea>
+      <button class="btn btn-p" onclick="makeNote()">ساخت دستور یادداشت</button>
+      <label>جستجو</label>
+      <input type="text" id="searchQ" placeholder="فایل یا موضوع">
+      <button class="btn btn-o" onclick="makeSearch()">ساخت دستور جستجو</button>
+    </div>
+  </div>
+
+  <!-- پشتیبان -->
+  <div id="backup" class="panel">
+    <div class="card">
+      <h2>💾 پشتیبان‌گیری</h2>
+      <button class="btn btn-g" onclick="doBackup()">دانلود فایل پشتیبان</button>
+      <button class="btn btn-gr" onclick="copyBackup()">کپی متن پشتیبان</button>
+    </div>
+    <div class="card">
+      <h2>♻️ بازیابی</h2>
+      <input type="file" id="restoreFile" accept=".json" onchange="restoreFile(event)">
+      <textarea id="restoreText" placeholder="یا متن JSON را اینجا بچسبانید..." style="margin-top:8px"></textarea>
+      <button class="btn btn-o" onclick="restoreText()">بازیابی از متن</button>
+      <button class="btn btn-r" onclick="clearData()">پاک کردن داده‌ها</button>
+    </div>
+  </div>
+
+  <!-- تنظیمات -->
+  <div id="set" class="panel">
+    <div class="card">
+      <h2>📲 نصب روی گوشی</h2>
+      <p class="note">از منوی مرورگر گزینه Add to Home Screen را بزنید.</p>
+    </div>
+    <div class="card">
+      <h2>🔗 لینک تلگرام</h2>
+      <input type="text" id="tg" placeholder="@MyBot یا t.me/MyBot">
+      <button class="btn btn-b" onclick="saveTg()">ذخیره</button>
+      <a class="btn btn-gr" id="tgOpen" href="https://t.me/" target="_blank">باز کردن تلگرام</a>
+      <p class="note" id="tgStatus"></p>
+    </div>
+    <div class="card">
+      <h2>ℹ️ درباره</h2>
+      <p class="note">منشی هوشمند روی Grok اجرا می‌شود. این صفحه کنترل‌پنل است. هیچ ارسالی بدون تأیید شما انجام نمی‌شود.</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ انجام شد</div>
+
+<script>
+function go(id,btn){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')});
+  document.querySelectorAll('.nav button').forEach(function(b){b.classList.remove('on')});
+  document.getElementById(id).classList.add('on');
+  if(btn) btn.classList.add('on');
+}
+function toast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg||'✓ انجام شد';
+  t.style.display='block';
+  setTimeout(function(){t.style.display='none'},1800);
+}
+function copy(el){
+  var text=el.innerText||el.textContent;
+  if(navigator.clipboard){navigator.clipboard.writeText(text).then(function(){toast('✓ کپی شد')}).catch(function(){fb(text)})}
+  else fb(text);
+}
+function fb(text){
+  var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');toast('✓ کپی شد')}catch(e){}
+  document.body.removeChild(ta);
+}
+function makeEmail(){
+  var to=document.getElementById('emailTo').value.trim();
+  var sub=document.getElementById('emailSubject').value.trim();
+  var body=document.getElementById('emailBody').value.trim();
+  if(!to||!sub||!body) return toast('همه فیلدها را پر کنید');
+  var cmd='برای '+to+' یک ایمیل با موضوع «'+sub+'» آماده کن:\n\n'+body;
+  if(navigator.clipboard) navigator.clipboard.writeText(cmd).then(function(){toast('✓ دستور ایمیل کپی شد')});
+  else fb(cmd);
+}
+function makeMeet(){
+  var name=document.getElementById('meetName').value.trim();
+  var email=document.getElementById('meetEmail').value.trim();
+  var sub=document.getElementById('meetSubject').value.trim();
+  var days=document.getElementById('meetDays').value.trim();
+  if(!name||!sub||!days) return toast('فیلدهای ضروری را پر کنید');
+  var cmd='با '+name+(email?' ('+email+')':'')+' جلسه با موضوع «'+sub+'» در زمان‌های '+days+' پیشنهاد بده و پیش‌نویس دعوت‌نامه آماده کن';
+  if(navigator.clipboard) navigator.clipboard.writeText(cmd).then(function(){toast('✓ دستور جلسه کپی شد')});
+  else fb(cmd);
+}
+function makeNote(){
+  var n=document.getElementById('note').value.trim();
+  if(!n) return toast('یادداشت خالی است');
+  var cmd='این را به خاطر بسپار و در گزارش‌های بعدی در نظر بگیر:\n'+n;
+  if(navigator.clipboard) navigator.clipboard.writeText(cmd).then(function(){toast('✓ کپی شد')});
+  else fb(cmd);
+}
+function makeSearch(){
+  var q=document.getElementById('searchQ').value.trim();
+  if(!q) return toast('عبارت جستجو را بنویسید');
+  var cmd='جستجو کن و خلاصه بده: '+q;
+  if(navigator.clipboard) navigator.clipboard.writeText(cmd).then(function(){toast('✓ کپی شد')});
+  else fb(cmd);
+}
+function getData(){
+  return {
+    v:4, date:new Date().toISOString(),
+    tg:localStorage.getItem('tg')||'',
+    forms:{
+      emailTo:document.getElementById('emailTo').value,
+      emailSubject:document.getElementById('emailSubject').value,
+      emailBody:document.getElementById('emailBody').value,
+      meetName:document.getElementById('meetName').value,
+      meetEmail:document.getElementById('meetEmail').value,
+      meetSubject:document.getElementById('meetSubject').value,
+      meetDays:document.getElementById('meetDays').value,
+      note:document.getElementById('note').value,
+      searchQ:document.getElementById('searchQ').value
+    }
+  };
+}
+function doBackup(){
+  var blob=new Blob([JSON.stringify(getData(),null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='smart-secretary-backup.json';a.click();toast('✓ دانلود شد');
+}
+function copyBackup(){
+  if(navigator.clipboard) navigator.clipboard.writeText(JSON.stringify(getData(),null,2)).then(function(){toast('✓ کپی شد')});
+  else fb(JSON.stringify(getData(),null,2));
+}
+function restoreFile(e){
+  var f=e.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(ev){try{apply(JSON.parse(ev.target.result));toast('✓ بازیابی شد')}catch(err){toast('فایل نامعتبر')}};
+  r.readAsText(f);
+}
+function restoreText(){
+  try{apply(JSON.parse(document.getElementById('restoreText').value));toast('✓ بازیابی شد')}
+  catch(err){toast('JSON نامعتبر')}
+}
+function apply(d){
+  if(d.tg){localStorage.setItem('tg',d.tg);document.getElementById('tg').value=d.tg;
+    document.getElementById('tgOpen').href=d.tg.indexOf('http')===0?d.tg:'https://t.me/'+d.tg.replace('@','');}
+  if(d.forms){
+    var f=d.forms;
+    if(f.emailTo)document.getElementById('emailTo').value=f.emailTo;
+    if(f.emailSubject)document.getElementById('emailSubject').value=f.emailSubject;
+    if(f.emailBody)document.getElementById('emailBody').value=f.emailBody;
+    if(f.meetName)document.getElementById('meetName').value=f.meetName;
+    if(f.meetEmail)document.getElementById('meetEmail').value=f.meetEmail;
+    if(f.meetSubject)document.getElementById('meetSubject').value=f.meetSubject;
+    if(f.meetDays)document.getElementById('meetDays').value=f.meetDays;
+    if(f.note)document.getElementById('note').value=f.note;
+    if(f.searchQ)document.getElementById('searchQ').value=f.searchQ;
+  }
+}
+function clearData(){
+  if(!confirm('همه داده‌ها پاک شود؟'))return;
+  localStorage.clear();
+  ['emailTo','emailSubject','emailBody','meetName','meetEmail','meetSubject','meetDays','note','searchQ','tg'].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.value='';
+  });
+  toast('✓ پاک شد');
+}
+function saveTg(){
+  var val=document.getElementById('tg').value.trim();
+  if(!val)return toast('لینک را وارد کنید');
+  if(val.charAt(0)==='@')val=val.slice(1);
+  if(val.indexOf('http')!==0)val='https://t.me/'+val.replace('t.me/','');
+  localStorage.setItem('tg',val);
+  document.getElementById('tgOpen').href=val;
+  document.getElementById('tgStatus').textContent='ذخیره شد ✓';
+  document.getElementById('tgStatus').style.color='#4ade80';
+  toast('✓ ذخیره شد');
+}
+(function(){
+  var s=localStorage.getItem('tg');
+  if(s){document.getElementById('tg').value=s;document.getElementById('tgOpen').href=s;
+    document.getElementById('tgStatus').textContent='لینک ذخیره شده';document.getElementById('tgStatus').style.color='#4ade80';}
+})();
+</script>
+</body>
+</html>
