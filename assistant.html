@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="دستیار هوشمند">
+<title>دستیار هوشمند</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:linear-gradient(165deg,#0f172a,#1e1b4b 45%,#0f172a);color:#e2e8f0;min-height:100vh;padding:12px 10px 50px;line-height:1.55}
+.box{max-width:460px;margin:0 auto}
+.header{text-align:center;margin-bottom:12px}
+.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 8px}
+h1{font-size:1.25rem;color:#c4b5fd}
+.sub{color:#94a3b8;font-size:.8rem}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-bottom:10px;position:sticky;top:0;z-index:20;background:rgba(15,23,42,.96);padding:5px 0}
+.nav button{background:#1e293b;border:1px solid #334155;border-radius:9px;padding:8px 1px;font-size:.65rem;color:#94a3b8;cursor:pointer}
+.nav button.on{background:#8b5cf6;color:#fff;border-color:#8b5cf6}
+.panel{display:none}.panel.on{display:block}
+.card{background:rgba(30,41,59,.92);border:1px solid #334155;border-radius:14px;padding:14px;margin-bottom:10px}
+.card h2{font-size:.88rem;color:#c4b5fd;margin-bottom:8px}
+textarea{width:100%;min-height:110px;padding:12px;border-radius:10px;border:1px solid #475569;background:#0f172a;color:#e2e8f0;font-size:.88rem;font-family:inherit;resize:vertical}
+.btn{display:block;width:100%;padding:11px;border:none;border-radius:10px;font-size:.88rem;font-weight:600;color:#fff;cursor:pointer;margin-top:7px;text-align:center;text-decoration:none}
+.btn-p{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+.btn-b{background:linear-gradient(135deg,#0ea5e9,#0284c7)}
+.btn-g{background:linear-gradient(135deg,#10b981,#059669)}
+.btn-o{background:linear-gradient(135deg,#ea580c,#c2410c)}
+.btn-gr{background:#334155;color:#e2e8f0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
+.grid2 .btn{margin-top:0;font-size:.8rem;padding:10px}
+.chip{display:inline-block;background:#1e293b;border:1px solid #475569;border-radius:999px;padding:6px 11px;margin:3px;font-size:.75rem;color:#cbd5e1;cursor:pointer}
+.chip:active{background:#8b5cf6;border-color:#8b5cf6;color:#fff}
+.note{font-size:.74rem;color:#94a3b8;margin-top:6px}
+.hist{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:8px 10px;margin-bottom:5px;font-size:.78rem;color:#bae6fd;cursor:pointer}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:10px 16px;border-radius:10px;font-size:.84rem;display:none;z-index:50}
+.mic{width:56px;height:56px;border-radius:50%;border:none;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;margin:8px auto;cursor:pointer}
+.mic.on{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.sec-title{font-size:.76rem;color:#a78bfa;margin:10px 0 5px;font-weight:600}
+.route{background:#0f172a;border:1px solid #475569;border-radius:10px;padding:9px;margin-bottom:5px;font-size:.8rem}
+.route b{color:#c4b5fd}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="header">
+    <div class="logo">🧠</div>
+    <h1>دستیار هوشمند</h1>
+    <p class="sub">دانش · جستجو · منشی · صوت</p>
+  </div>
+
+  <div class="nav">
+    <button class="on" onclick="go('chat',this)">گفتگو</button>
+    <button onclick="go('know',this)">دانش</button>
+    <button onclick="go('tools',this)">جستجو</button>
+    <button onclick="go('voice',this)">صوتی</button>
+    <button onclick="go('more',this)">بیشتر</button>
+  </div>
+
+  <div id="chat" class="panel on">
+    <div class="card">
+      <h2>💬 درخواست شما</h2>
+      <textarea id="q" placeholder="درخواست را بنویسید یا از میانبرها استفاده کنید..."></textarea>
+      <button class="btn btn-p" onclick="sendGrok()">ارسال به Grok</button>
+      <div class="grid2">
+        <button class="btn btn-b" onclick="copyQ()">کپی متن</button>
+        <button class="btn btn-gr" onclick="clearQ()">پاک کردن</button>
+      </div>
+      <p class="note">متن کپی و Grok باز می‌شود. پیست کنید و ارسال کنید.</p>
+    </div>
+    <div class="card">
+      <h2>🧭 مسیریابی</h2>
+      <div class="route"><b>اداری / تقویم / جلسه</b> → منشی هوشمند</div>
+      <div class="route"><b>خلاصه · ترجمه · ایده · نقد</b> → موتور دانش</div>
+      <div class="route"><b>وب · اخبار · فایل · تحقیق</b> → جستجو و ابزار</div>
+      <a class="btn btn-b" href="https://alm989.github.io/smart-secretary/" target="_blank">باز کردن منشی هوشمند</a>
+    </div>
+    <div class="card">
+      <h2>🕘 تاریخچه</h2>
+      <div id="hist"></div>
+      <p class="note" id="histEmpty">هنوز درخواستی نیست.</p>
+      <button class="btn btn-gr" onclick="clearHist()">پاک کردن تاریخچه</button>
+    </div>
+  </div>
+
+  <div id="know" class="panel">
+    <div class="card">
+      <h2>📚 موتور دانش</h2>
+      <p class="note">قالب را بزنید، متن را کامل کنید، ارسال به Grok.</p>
+      <div class="sec-title">خلاصه و بازنویسی</div>
+      <span class="chip" onclick="fill(T.summary)">خلاصه متن</span>
+      <span class="chip" onclick="fill(T.rewriteFormal)">بازنویسی رسمی</span>
+      <span class="chip" onclick="fill(T.rewriteSimple)">بازنویسی ساده</span>
+      <div class="sec-title">ترجمه</div>
+      <span class="chip" onclick="fill(T.trEn)">ترجمه به انگلیسی</span>
+      <span class="chip" onclick="fill(T.trFa)">ترجمه به فارسی</span>
+      <div class="sec-title">ایده و تحلیل</div>
+      <span class="chip" onclick="fill(T.ideate)">ایده‌پردازی</span>
+      <span class="chip" onclick="fill(T.analyze)">تحلیل و نقد</span>
+      <span class="chip" onclick="fill(T.solve)">حل مسئله</span>
+      <div class="sec-title">ترکیبی</div>
+      <span class="chip" onclick="fill(T.meetPrep)">آماده‌سازی جلسه</span>
+      <span class="chip" onclick="fill(T.draftMsg)">پیش‌نویس متن</span>
+      <span class="chip" onclick="fill(T.plan)">برنامه عملی</span>
+      <span class="chip" onclick="fill(T.compare)">مقایسه گزینه‌ها</span>
+      <span class="chip" onclick="fill(T.checklist)">چک‌لیست</span>
+      <span class="chip" onclick="fill(T.explain)">توضیح ساده</span>
+    </div>
+  </div>
+
+  <div id="tools" class="panel">
+    <div class="card">
+      <h2>🔍 جستجو و ابزار</h2>
+      <p class="note">پیدا کردن اطلاعات از وب، اخبار و منابع — فقط خواندن.</p>
+      <div class="sec-title">وب و اخبار</div>
+      <span class="chip" onclick="fill(T.webSearch)">جستجوی وب</span>
+      <span class="chip" onclick="fill(T.news)">اخبار روز</span>
+      <span class="chip" onclick="fill(T.research)">تحقیق کوتاه</span>
+      <div class="sec-title">منابع و فایل</div>
+      <span class="chip" onclick="fill(T.driveNotion)">جستجو Drive/Notion</span>
+      <span class="chip" onclick="fill(T.compareSrc)">مقایسه منابع</span>
+      <div class="sec-title">راهنما</div>
+      <span class="chip" onclick="fill(T.define)">تعریف مفهوم</span>
+      <span class="chip" onclick="fill(T.howTo)">راهنمای گام‌به‌گام</span>
+    </div>
+    <div class="card">
+      <h2>🔐 قوانین جستجو و ابزار</h2>
+      <p class="note">• فقط خواندن و خلاصه<br>• بدون ایمیل و تلگرام<br>• بدون تغییر فایل مگر تأیید شما<br>• اشاره به منبع وقتی ممکن است</p>
+    </div>
+  </div>
+
+  <div id="voice" class="panel">
+    <div class="card">
+      <h2>🎤 ورودی صوتی</h2>
+      <button class="mic" id="mic" onclick="voice()">🎤</button>
+      <p class="note" id="vStatus">برای صحبت کلیک کنید (HTTPS)</p>
+      <a class="btn btn-p" href="https://grok.com" target="_blank">Grok Voice</a>
+    </div>
+  </div>
+
+  <div id="more" class="panel">
+    <div class="card">
+      <h2>🔗 دسترسی‌ها</h2>
+      <a class="btn btn-p" href="https://grok.com" target="_blank">Grok</a>
+      <a class="btn btn-b" href="https://alm989.github.io/smart-secretary/" target="_blank">منشی هوشمند</a>
+      <a class="btn btn-g" href="https://grok.com/automations" target="_blank">اتوماسیون‌ها</a>
+      <a class="btn btn-o" href="https://drive.google.com" target="_blank">Google Drive</a>
+    </div>
+    <div class="card">
+      <h2>📋 دستور به منشی</h2>
+      <span class="chip" onclick="fill(T.secToday)">خلاصه امروز</span>
+      <span class="chip" onclick="fill(T.secMeet)">جلسات فردا</span>
+      <span class="chip" onclick="fill(T.secRemind)">یادآوری‌های باز</span>
+      <span class="chip" onclick="fill(T.secDash)">وضعیت داشبورد</span>
+    </div>
+    <div class="card">
+      <h2>ℹ️ درباره</h2>
+      <p class="note">دستیار = کنترل مرکزی<br>منشی = اداری<br>دانش = فکر و متن<br>جستجو = وب و منابع<br>ایمیل/تلگرام: قطع</p>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var T = {
+  summary: 'این متن را خلاصه کن.\nنکات کلیدی را به‌صورت فهرست شماره‌دار بنویس.\nحداکثر ۷ نکته، کوتاه و واضح، به فارسی.\n\nمتن:\n',
+  rewriteFormal: 'این متن را به فارسی رسمی، حرفه‌ای و روان بازنویسی کن.\nمعنی را عوض نکن؛ فقط لحن و ساختار را بهتر کن.\n\nمتن:\n',
+  rewriteSimple: 'این متن را خیلی ساده و قابل‌فهم برای همه بازنویسی کن.\nجمله‌ها کوتاه باشد.\n\nمتن:\n',
+  trEn: 'این متن را به انگلیسی روان و حرفه‌ای ترجمه کن.\nمناسب استفاده کاری باشد.\n\nمتن:\n',
+  trFa: 'این متن را به فارسی روان و طبیعی ترجمه کن.\nکلمه‌به‌کلمه خشک نباشد.\n\nمتن:\n',
+  ideate: 'برای این موضوع ۱۰ ایده عملی و خلاقانه بده.\nهر ایده در یک خط، با توضیح خیلی کوتاه.\nایده‌ها متنوع باشند.\n\nموضوع:\n',
+  analyze: 'این مورد را تحلیل کن:\n1) نقاط قوت\n2) نقاط ضعف\n3) ریسک‌ها\n4) ۳ پیشنهاد بهبود مشخص\n\nموضوع / متن:\n',
+  solve: 'این مسئله را قدم‌به‌قدم حل کن.\nبرای هر قدم: کار، دلیل کوتاه، نتیجه مورد انتظار.\nدر پایان یک راه‌حل پیشنهادی نهایی بده.\n\nمسئله:\n',
+  meetPrep: 'برای این جلسه یک آماده‌سازی کوتاه بنویس:\n- هدف جلسه\n- ۳ سؤال کلیدی\n- نکات پیگیری احتمالی\n\nموضوع جلسه:\n',
+  draftMsg: 'یک متن کوتاه و مؤدبانه به فارسی برای این منظور بنویس.\nفقط پیش‌نویس باشد؛ ارسال نکن.\n\nمنظور:\n',
+  plan: 'برای این هدف یک برنامه ۳ تا ۷ روزه عملی بده.\nهر روز حداکثر ۳ کار مشخص.\n\nهدف:\n',
+  compare: 'این گزینه‌ها را با هم مقایسه کن.\nفهرست: معیار · گزینه ۱ · گزینه ۲ · جمع‌بندی پیشنهاد.\n\nگزینه‌ها:\n',
+  checklist: 'برای این کار یک چک‌لیست عملی و مرتب بساز.\nموارد قابل تیک‌زدن، کوتاه و مشخص.\n\nکار:\n',
+  explain: 'این موضوع را ساده و قابل‌فهم توضیح بده.\nانگار برای کسی که تازه‌وارد است.\n\nموضوع:\n',
+  webSearch: 'این موضوع را در اینترنت جستجو کن و خلاصه بده.\n- نکات کلیدی (حداکثر ۷ مورد)\n- اگر آمار یا تاریخ مهم است ذکر کن\n- در پایان یک جمع‌بندی کوتاه\nمنبع یا نام سایت‌های معتبر را اشاره کن.\nبدون ایمیل و بدون ارسال پیام.\n\nموضوع:\n',
+  news: '۳ تا ۵ خبر مهم امروز را خلاصه کن.\nبرای هر خبر: عنوان کوتاه + یک خط توضیح.\nاگر موضوع خاصی مدنظر است روی همان تمرکز کن.\nبه فارسی، مرتب و بی‌طرف.\n\nموضوع (اختیاری):\n',
+  research: 'یک تحقیق کوتاه و ساختاریافته درباره این موضوع انجام بده:\n1) تعریف / زمینه\n2) نکات مهم\n3) مزایا و معایب یا ریسک‌ها\n4) جمع‌بندی عملی برای تصمیم‌گیری\nحداکثر در حد یک صفحه، به فارسی.\n\nموضوع:\n',
+  driveNotion: 'در Google Drive و Notion (فقط خواندن) بگرد و موارد مرتبط با این موضوع را پیدا کن.\nبرای هر مورد: نام / عنوان + یک خط توضیح + ارتباط با موضوع.\nچیزی را تغییر نده و ارسال نکن.\n\nموضوع / کلیدواژه:\n',
+  compareSrc: 'درباره این موضوع چند دیدگاه یا منبع معتبر را مقایسه کن.\nفهرست: دیدگاه · نکته اصلی · تفاوت با بقیه.\nدر پایان جمع‌بندی بی‌طرف بده.\n\nموضوع:\n',
+  define: 'این مفهوم را ساده و دقیق توضیح بده.\n- تعریف کوتاه\n- یک مثال کاربردی\n- اشتباه رایج (اگر دارد)\nبه فارسی روان.\n\nمفهوم:\n',
+  howTo: 'گام‌به‌گام و عملی توضیح بده چطور این کار را انجام دهم.\nمراحل شماره‌دار، کوتاه، قابل‌اجرا.\nفرض کن دانش اولیه کمی دارم.\n\nکار / ابزار:\n',
+  secToday: 'منشی را الان اجرا کن. خلاصه امروز را بده: جلسات، یادآوری‌ها، اولویت‌ها. بدون بررسی ایمیل.',
+  secMeet: 'جلسات فردا و این هفته را از روی تقویم بگو و تعارض‌ها را هشدار بده.',
+  secRemind: 'یادآوری‌ها و تعهدات باز را لیست کن.',
+  secDash: 'وضعیت داشبورد منشی را خلاصه کن: جلسات فعال، یادآوری فعال، رویدادهای نزدیک به موعد.'
+};
+
+function go(id,btn){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')});
+  document.querySelectorAll('.nav button').forEach(function(b){b.classList.remove('on')});
+  document.getElementById(id).classList.add('on');
+  if(btn) btn.classList.add('on');
+}
+function toast(m){
+  var t=document.getElementById('toast');
+  t.textContent=m; t.style.display='block';
+  setTimeout(function(){t.style.display='none'},1800);
+}
+function fill(text){
+  document.getElementById('q').value=text;
+  document.getElementById('q').focus();
+  go('chat', document.querySelector('.nav button'));
+  toast('✓ قالب آماده شد');
+}
+function clearQ(){ document.getElementById('q').value=''; }
+function copyQ(){
+  var t=document.getElementById('q').value.trim();
+  if(!t) return toast('متنی نیست');
+  if(navigator.clipboard) navigator.clipboard.writeText(t).then(function(){toast('✓ کپی شد')});
+  else {
+    var a=document.createElement('textarea'); a.value=t; document.body.appendChild(a); a.select();
+    try{document.execCommand('copy');toast('✓ کپی شد')}catch(e){}
+    document.body.removeChild(a);
+  }
+}
+function sendGrok(){
+  var t=document.getElementById('q').value.trim();
+  if(!t) return toast('درخواست را بنویسید');
+  saveHist(t);
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(t).then(function(){
+      toast('✓ کپی شد — Grok باز می‌شود');
+      window.open('https://grok.com','_blank');
+    });
+  } else window.open('https://grok.com','_blank');
+}
+function loadHist(){ try{return JSON.parse(localStorage.getItem('asst_hist')||'[]')}catch(e){return[]} }
+function saveHist(t){
+  var h=loadHist().filter(function(x){return x!==t});
+  h.unshift(t); if(h.length>25) h=h.slice(0,25);
+  localStorage.setItem('asst_hist',JSON.stringify(h));
+  renderHist();
+}
+function renderHist(){
+  var h=loadHist(), box=document.getElementById('hist'), empty=document.getElementById('histEmpty');
+  box.innerHTML='';
+  if(!h.length){ empty.style.display='block'; return; }
+  empty.style.display='none';
+  h.forEach(function(t){
+    var d=document.createElement('div');
+    d.className='hist';
+    d.textContent=t.length>90?t.slice(0,90)+'…':t;
+    d.onclick=function(){ document.getElementById('q').value=t; };
+    box.appendChild(d);
+  });
+}
+function clearHist(){ localStorage.removeItem('asst_hist'); renderHist(); toast('✓ پاک شد'); }
+
+var rec=null, listening=false;
+function voice(){
+  if(location.protocol==='file:'){ document.getElementById('vStatus').textContent='فقط روی HTTPS'; return; }
+  if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){ toast('پشتیبانی نمی‌شود'); return; }
+  if(listening){ rec.stop(); listening=false; document.getElementById('mic').classList.remove('on'); return; }
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  rec=new SR(); rec.lang='fa-IR';
+  rec.onstart=function(){ listening=true; document.getElementById('mic').classList.add('on'); document.getElementById('vStatus').textContent='گوش می‌دهد...'; };
+  rec.onresult=function(e){
+    var text=e.results[0][0].transcript;
+    var q=document.getElementById('q');
+    q.value=(q.value?q.value+'\n':'')+text;
+    document.getElementById('vStatus').textContent='شناسایی شد';
+    toast('✓ اضافه شد');
+  };
+  rec.onerror=function(e){ listening=false; document.getElementById('mic').classList.remove('on'); document.getElementById('vStatus').textContent=e.error==='not-allowed'?'اجازه میکروفون لازم است':e.error; };
+  rec.onend=function(){ listening=false; document.getElementById('mic').classList.remove('on'); };
+  rec.start();
+}
+renderHist();
+</script>
+</body>
+</html>
