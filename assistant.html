@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#8b5cf6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="دستیار هوشمند">
+<link rel="manifest" href="/smart-secretary/manifest-assistant.json">
+<link rel="apple-touch-icon" href="/smart-secretary/icon-192.png">
 <title>دستیار هوشمند</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -186,92 +188,4 @@ var T = {
   define: 'این مفهوم را ساده و دقیق توضیح بده.\n- تعریف کوتاه\n- یک مثال کاربردی\n- اشتباه رایج (اگر دارد)\nبه فارسی روان.\n\nمفهوم:\n',
   howTo: 'گام‌به‌گام و عملی توضیح بده چطور این کار را انجام دهم.\nمراحل شماره‌دار، کوتاه، قابل‌اجرا.\nفرض کن دانش اولیه کمی دارم.\n\nکار / ابزار:\n',
   secToday: 'منشی را الان اجرا کن. خلاصه امروز را بده: جلسات، یادآوری‌ها، اولویت‌ها. بدون بررسی ایمیل.',
-  secMeet: 'جلسات فردا و این هفته را از روی تقویم بگو و تعارض‌ها را هشدار بده.',
-  secRemind: 'یادآوری‌ها و تعهدات باز را لیست کن.',
-  secDash: 'وضعیت داشبورد منشی را خلاصه کن: جلسات فعال، یادآوری فعال، رویدادهای نزدیک به موعد.'
-};
-
-function go(id,btn){
-  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')});
-  document.querySelectorAll('.nav button').forEach(function(b){b.classList.remove('on')});
-  document.getElementById(id).classList.add('on');
-  if(btn) btn.classList.add('on');
-}
-function toast(m){
-  var t=document.getElementById('toast');
-  t.textContent=m; t.style.display='block';
-  setTimeout(function(){t.style.display='none'},1800);
-}
-function fill(text){
-  document.getElementById('q').value=text;
-  document.getElementById('q').focus();
-  go('chat', document.querySelector('.nav button'));
-  toast('✓ قالب آماده شد');
-}
-function clearQ(){ document.getElementById('q').value=''; }
-function copyQ(){
-  var t=document.getElementById('q').value.trim();
-  if(!t) return toast('متنی نیست');
-  if(navigator.clipboard) navigator.clipboard.writeText(t).then(function(){toast('✓ کپی شد')});
-  else {
-    var a=document.createElement('textarea'); a.value=t; document.body.appendChild(a); a.select();
-    try{document.execCommand('copy');toast('✓ کپی شد')}catch(e){}
-    document.body.removeChild(a);
-  }
-}
-function sendGrok(){
-  var t=document.getElementById('q').value.trim();
-  if(!t) return toast('درخواست را بنویسید');
-  saveHist(t);
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(t).then(function(){
-      toast('✓ کپی شد — Grok باز می‌شود');
-      window.open('https://grok.com','_blank');
-    });
-  } else window.open('https://grok.com','_blank');
-}
-function loadHist(){ try{return JSON.parse(localStorage.getItem('asst_hist')||'[]')}catch(e){return[]} }
-function saveHist(t){
-  var h=loadHist().filter(function(x){return x!==t});
-  h.unshift(t); if(h.length>25) h=h.slice(0,25);
-  localStorage.setItem('asst_hist',JSON.stringify(h));
-  renderHist();
-}
-function renderHist(){
-  var h=loadHist(), box=document.getElementById('hist'), empty=document.getElementById('histEmpty');
-  box.innerHTML='';
-  if(!h.length){ empty.style.display='block'; return; }
-  empty.style.display='none';
-  h.forEach(function(t){
-    var d=document.createElement('div');
-    d.className='hist';
-    d.textContent=t.length>90?t.slice(0,90)+'…':t;
-    d.onclick=function(){ document.getElementById('q').value=t; };
-    box.appendChild(d);
-  });
-}
-function clearHist(){ localStorage.removeItem('asst_hist'); renderHist(); toast('✓ پاک شد'); }
-
-var rec=null, listening=false;
-function voice(){
-  if(location.protocol==='file:'){ document.getElementById('vStatus').textContent='فقط روی HTTPS'; return; }
-  if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){ toast('پشتیبانی نمی‌شود'); return; }
-  if(listening){ rec.stop(); listening=false; document.getElementById('mic').classList.remove('on'); return; }
-  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  rec=new SR(); rec.lang='fa-IR';
-  rec.onstart=function(){ listening=true; document.getElementById('mic').classList.add('on'); document.getElementById('vStatus').textContent='گوش می‌دهد...'; };
-  rec.onresult=function(e){
-    var text=e.results[0][0].transcript;
-    var q=document.getElementById('q');
-    q.value=(q.value?q.value+'\n':'')+text;
-    document.getElementById('vStatus').textContent='شناسایی شد';
-    toast('✓ اضافه شد');
-  };
-  rec.onerror=function(e){ listening=false; document.getElementById('mic').classList.remove('on'); document.getElementById('vStatus').textContent=e.error==='not-allowed'?'اجازه میکروفون لازم است':e.error; };
-  rec.onend=function(){ listening=false; document.getElementById('mic').classList.remove('on'); };
-  rec.start();
-}
-renderHist();
-</script>
-</body>
-</html>
+  secMeet: 'جلسات فردا و این هفته را
