@@ -5,43 +5,121 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#8b5cf6">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="دستیار هوشمند">
 <link rel="manifest" href="/smart-secretary/manifest-assistant.json">
 <link rel="apple-touch-icon" href="/smart-secretary/icon-192.png">
 <title>دستیار هوشمند</title>
 <style>
+:root{
+  --bg:#0b1020;--card:rgba(30,41,59,.95);--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;
+  --p:#8b5cf6;--p2:#6d28d9;--b:#0ea5e9;--g:#10b981;--o:#f59e0b;--r:#ef4444;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:linear-gradient(165deg,#0f172a,#1e1b4b 45%,#0f172a);color:#e2e8f0;min-height:100vh;padding:12px 10px 50px;line-height:1.55}
+body{
+  font-family:Tahoma,"Segoe UI",system-ui,sans-serif;
+  background:radial-gradient(1200px 600px at 80% -10%,#312e81 0%,transparent 50%),
+             radial-gradient(900px 500px at -10% 100%,#0e7490 0%,transparent 45%),
+             var(--bg);
+  color:var(--txt);min-height:100vh;padding:12px 10px 56px;line-height:1.55;
+}
 .box{max-width:460px;margin:0 auto}
-.header{text-align:center;margin-bottom:12px}
-.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 8px}
-h1{font-size:1.25rem;color:#c4b5fd}
-.sub{color:#94a3b8;font-size:.8rem}
-.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-bottom:10px;position:sticky;top:0;z-index:20;background:rgba(15,23,42,.96);padding:5px 0}
-.nav button{background:#1e293b;border:1px solid #334155;border-radius:9px;padding:8px 1px;font-size:.65rem;color:#94a3b8;cursor:pointer}
-.nav button.on{background:#8b5cf6;color:#fff;border-color:#8b5cf6}
-.panel{display:none}.panel.on{display:block}
-.card{background:rgba(30,41,59,.92);border:1px solid #334155;border-radius:14px;padding:14px;margin-bottom:10px}
-.card h2{font-size:.88rem;color:#c4b5fd;margin-bottom:8px}
-textarea{width:100%;min-height:110px;padding:12px;border-radius:10px;border:1px solid #475569;background:#0f172a;color:#e2e8f0;font-size:.88rem;font-family:inherit;resize:vertical}
-.btn{display:block;width:100%;padding:11px;border:none;border-radius:10px;font-size:.88rem;font-weight:600;color:#fff;cursor:pointer;margin-top:7px;text-align:center;text-decoration:none}
-.btn-p{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
-.btn-b{background:linear-gradient(135deg,#0ea5e9,#0284c7)}
-.btn-g{background:linear-gradient(135deg,#10b981,#059669)}
-.btn-o{background:linear-gradient(135deg,#ea580c,#c2410c)}
-.btn-gr{background:#334155;color:#e2e8f0}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
-.grid2 .btn{margin-top:0;font-size:.8rem;padding:10px}
-.chip{display:inline-block;background:#1e293b;border:1px solid #475569;border-radius:999px;padding:6px 11px;margin:3px;font-size:.75rem;color:#cbd5e1;cursor:pointer}
-.chip:active{background:#8b5cf6;border-color:#8b5cf6;color:#fff}
-.note{font-size:.74rem;color:#94a3b8;margin-top:6px}
-.hist{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:8px 10px;margin-bottom:5px;font-size:.78rem;color:#bae6fd;cursor:pointer}
-.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:10px 16px;border-radius:10px;font-size:.84rem;display:none;z-index:50}
-.mic{width:56px;height:56px;border-radius:50%;border:none;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;margin:8px auto;cursor:pointer}
-.mic.on{background:linear-gradient(135deg,#ef4444,#dc2626)}
-.sec-title{font-size:.76rem;color:#a78bfa;margin:10px 0 5px;font-weight:600}
-.route{background:#0f172a;border:1px solid #475569;border-radius:10px;padding:9px;margin-bottom:5px;font-size:.8rem}
+.header{text-align:center;margin-bottom:12px;padding-top:4px}
+.logo{
+  width:64px;height:64px;border-radius:18px;
+  background:linear-gradient(135deg,var(--p),#06b6d4);
+  display:flex;align-items:center;justify-content:center;font-size:30px;
+  margin:0 auto 8px;box-shadow:0 8px 24px rgba(139,92,246,.35);
+}
+h1{font-size:1.28rem;color:#ddd6fe;font-weight:700}
+.sub{color:var(--muted);font-size:.8rem;margin-top:2px}
+.nav{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:12px;
+  position:sticky;top:0;z-index:30;padding:6px 0;
+  background:rgba(11,16,32,.92);backdrop-filter:blur(10px);
+}
+.nav button{
+  background:rgba(30,41,59,.9);border:1px solid var(--line);border-radius:12px;
+  padding:10px 2px;font-size:.68rem;color:var(--muted);cursor:pointer;transition:.15s;
+}
+.nav button:active{transform:scale(.97)}
+.nav button.on{
+  background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border-color:transparent;
+  box-shadow:0 4px 14px rgba(139,92,246,.4);
+}
+.panel{display:none!important}.panel.on{display:block!important}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:14px;margin-bottom:10px;box-shadow:0 4px 20px rgba(0,0,0,.2);
+}
+.card h2{font-size:.9rem;color:#c4b5fd;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+textarea,.inp{
+  width:100%;padding:12px;border-radius:12px;border:1px solid #475569;
+  background:#0f172a;color:var(--txt);font-size:.9rem;font-family:inherit;resize:vertical;
+}
+textarea{min-height:120px}
+textarea:focus,.inp:focus{outline:none;border-color:var(--p);box-shadow:0 0 0 3px rgba(139,92,246,.2)}
+.btn{
+  display:block;width:100%;padding:12px;border:none;border-radius:12px;
+  font-size:.88rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;
+  text-align:center;text-decoration:none;transition:.15s;
+}
+.btn:active{transform:scale(.98)}
+.btn-p{background:linear-gradient(135deg,var(--p),var(--p2))}
+.btn-b{background:linear-gradient(135deg,var(--b),#0284c7)}
+.btn-g{background:linear-gradient(135deg,var(--g),#059669)}
+.btn-o{background:linear-gradient(135deg,var(--o),#d97706);color:#111}
+.btn-r{background:linear-gradient(135deg,var(--r),#dc2626)}
+.btn-gr{background:#334155;color:var(--txt)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.grid2 .btn{margin-top:0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px}
+.grid3 .btn{margin-top:0;font-size:.75rem;padding:10px 4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.chip{
+  display:inline-flex;align-items:center;gap:4px;background:#1e293b;
+  border:1px solid #475569;border-radius:999px;padding:8px 12px;
+  font-size:.76rem;color:#cbd5e1;cursor:pointer;user-select:none;transition:.12s;
+}
+.chip:active,.chip.on{background:var(--p);border-color:var(--p);color:#fff;transform:scale(.97)}
+.sec{font-size:.72rem;color:#a78bfa;margin:12px 0 6px;font-weight:700;letter-spacing:.02em}
+.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
+.route{
+  background:#0f172a;border:1px solid #475569;border-radius:12px;
+  padding:10px 12px;margin-bottom:6px;font-size:.82rem;
+}
 .route b{color:#c4b5fd}
+.hist{
+  background:#0f172a;border:1px solid var(--line);border-radius:10px;
+  padding:10px 12px;margin-bottom:6px;font-size:.8rem;color:#bae6fd;cursor:pointer;
+  transition:.12s;
+}
+.hist:active{border-color:var(--p);background:#1e1b4b}
+.toast{
+  position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
+  background:var(--g);color:#fff;padding:11px 18px;border-radius:12px;
+  font-size:.85rem;display:none;z-index:80;box-shadow:0 8px 24px rgba(0,0,0,.3);
+}
+.mic{
+  width:72px;height:72px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;font-size:28px;
+  display:flex;align-items:center;justify-content:center;margin:10px auto;cursor:pointer;
+  box-shadow:0 8px 28px rgba(139,92,246,.45);
+}
+.mic.on{background:linear-gradient(135deg,var(--r),#dc2626);animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5)}50%{box-shadow:0 0 0 14px rgba(239,68,68,0)}}
+.badge{
+  display:inline-block;background:#312e81;color:#c4b5fd;font-size:.65rem;
+  padding:2px 8px;border-radius:999px;margin-right:4px;
+}
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.stat{
+  background:#0f172a;border:1px solid var(--line);border-radius:12px;
+  padding:10px 6px;text-align:center;
+}
+.stat .n{font-size:1.2rem;font-weight:700;color:#c4b5fd}
+.stat .l{font-size:.68rem;color:var(--muted);margin-top:2px}
+.footer-tip{text-align:center;font-size:.7rem;color:#64748b;margin-top:16px}
 </style>
 </head>
 <body>
@@ -49,143 +127,349 @@ textarea{width:100%;min-height:110px;padding:12px;border-radius:10px;border:1px 
   <div class="header">
     <div class="logo">🧠</div>
     <h1>دستیار هوشمند</h1>
-    <p class="sub">دانش · جستجو · منشی · صوت</p>
+    <p class="sub">دانش · جستجو · منشی · صوت · کنترل مرکزی</p>
   </div>
 
   <div class="nav">
-    <button class="on" onclick="go('chat',this)">گفتگو</button>
-    <button onclick="go('know',this)">دانش</button>
-    <button onclick="go('tools',this)">جستجو</button>
-    <button onclick="go('voice',this)">صوتی</button>
-    <button onclick="go('more',this)">بیشتر</button>
+    <button type="button" class="on" onclick="go('chat',this)">گفتگو</button>
+    <button type="button" onclick="go('know',this)">دانش</button>
+    <button type="button" onclick="go('tools',this)">جستجو</button>
+    <button type="button" onclick="go('voice',this)">صوتی</button>
+    <button type="button" onclick="go('more',this)">بیشتر</button>
   </div>
 
+  <!-- گفتگو -->
   <div id="chat" class="panel on">
+    <div class="stat-row">
+      <div class="stat"><div class="n" id="stHist">۰</div><div class="l">تاریخچه</div></div>
+      <div class="stat"><div class="n" id="stKnow">۱۴</div><div class="l">قالب دانش</div></div>
+      <div class="stat"><div class="n" id="stTool">۷</div><div class="l">ابزار جستجو</div></div>
+    </div>
     <div class="card">
       <h2>💬 درخواست شما</h2>
-      <textarea id="q" placeholder="درخواست را بنویسید یا از میانبرها استفاده کنید..."></textarea>
-      <button class="btn btn-p" onclick="sendGrok()">ارسال به Grok</button>
+      <textarea id="q" placeholder="درخواست را بنویسید یا از میانبرهای دانش و جستجو استفاده کنید..."></textarea>
+      <button type="button" class="btn btn-p" onclick="sendGrok()">🚀 ارسال به Grok</button>
       <div class="grid2">
-        <button class="btn btn-b" onclick="copyQ()">کپی متن</button>
-        <button class="btn btn-gr" onclick="clearQ()">پاک کردن</button>
+        <button type="button" class="btn btn-b" onclick="copyQ()">📋 کپی</button>
+        <button type="button" class="btn btn-gr" onclick="clearQ()">پاک کردن</button>
       </div>
-      <p class="note">متن کپی و Grok باز می‌شود. پیست کنید و ارسال کنید.</p>
+      <p class="note">متن در کلیپ‌بورد کپی می‌شود و Grok باز می‌گردد. پیست کنید و Enter بزنید.</p>
     </div>
     <div class="card">
-      <h2>🧭 مسیریابی</h2>
-      <div class="route"><b>اداری / تقویم / جلسه</b> → منشی هوشمند</div>
-      <div class="route"><b>خلاصه · ترجمه · ایده · نقد</b> → موتور دانش</div>
-      <div class="route"><b>وب · اخبار · فایل · تحقیق</b> → جستجو و ابزار</div>
-      <a class="btn btn-b" href="https://alm989.github.io/smart-secretary/" target="_blank">باز کردن منشی هوشمند</a>
+      <h2>🧭 مسیریابی هوشمند</h2>
+      <div class="route"><b>اداری · تقویم · جلسه · یادآوری</b><br>→ منشی هوشمند</div>
+      <div class="route"><b>خلاصه · ترجمه · ایده · نقد · حل مسئله</b><br>→ موتور دانش (تب دانش)</div>
+      <div class="route"><b>وب · اخبار · تحقیق · فایل‌ها</b><br>→ جستجو و ابزار (تب جستجو)</div>
+      <a class="btn btn-b" href="https://alm989.github.io/smart-secretary/" target="_blank" rel="noopener">باز کردن منشی هوشمند</a>
     </div>
     <div class="card">
-      <h2>🕘 تاریخچه</h2>
+      <h2>🕘 تاریخچه درخواست‌ها</h2>
       <div id="hist"></div>
-      <p class="note" id="histEmpty">هنوز درخواستی نیست.</p>
-      <button class="btn btn-gr" onclick="clearHist()">پاک کردن تاریخچه</button>
+      <p class="note" id="histEmpty">هنوز درخواستی ذخیره نشده. با ارسال به Grok ذخیره می‌شود.</p>
+      <div class="grid2">
+        <button type="button" class="btn btn-gr" onclick="clearHist()">پاک کردن تاریخچه</button>
+        <button type="button" class="btn btn-g" onclick="exportHist()">دانلود تاریخچه</button>
+      </div>
     </div>
   </div>
 
+  <!-- موتور دانش -->
   <div id="know" class="panel">
     <div class="card">
       <h2>📚 موتور دانش</h2>
-      <p class="note">قالب را بزنید، متن را کامل کنید، ارسال به Grok.</p>
-      <div class="sec-title">خلاصه و بازنویسی</div>
-      <span class="chip" onclick="fill(T.summary)">خلاصه متن</span>
-      <span class="chip" onclick="fill(T.rewriteFormal)">بازنویسی رسمی</span>
-      <span class="chip" onclick="fill(T.rewriteSimple)">بازنویسی ساده</span>
-      <div class="sec-title">ترجمه</div>
-      <span class="chip" onclick="fill(T.trEn)">ترجمه به انگلیسی</span>
-      <span class="chip" onclick="fill(T.trFa)">ترجمه به فارسی</span>
-      <div class="sec-title">ایده و تحلیل</div>
-      <span class="chip" onclick="fill(T.ideate)">ایده‌پردازی</span>
-      <span class="chip" onclick="fill(T.analyze)">تحلیل و نقد</span>
-      <span class="chip" onclick="fill(T.solve)">حل مسئله</span>
-      <div class="sec-title">ترکیبی</div>
-      <span class="chip" onclick="fill(T.meetPrep)">آماده‌سازی جلسه</span>
-      <span class="chip" onclick="fill(T.draftMsg)">پیش‌نویس متن</span>
-      <span class="chip" onclick="fill(T.plan)">برنامه عملی</span>
-      <span class="chip" onclick="fill(T.compare)">مقایسه گزینه‌ها</span>
-      <span class="chip" onclick="fill(T.checklist)">چک‌لیست</span>
-      <span class="chip" onclick="fill(T.explain)">توضیح ساده</span>
+      <p class="note">روی هر میانبر بزنید تا قالب در کادر گفتگو قرار بگیرد. متن خود را کامل کنید و ارسال کنید.</p>
+
+      <div class="sec">خلاصه و بازنویسی</div>
+      <div class="chips">
+        <span class="chip" onclick="fill(T.summary)">📝 خلاصه متن</span>
+        <span class="chip" onclick="fill(T.rewriteFormal)">✒️ بازنویسی رسمی</span>
+        <span class="chip" onclick="fill(T.rewriteSimple)">✨ بازنویسی ساده</span>
+        <span class="chip" onclick="fill(T.bulletize)">• گلوله‌ای کردن</span>
+      </div>
+
+      <div class="sec">ترجمه</div>
+      <div class="chips">
+        <span class="chip" onclick="fill(T.trEn)">EN ترجمه انگلیسی</span>
+        <span class="chip" onclick="fill(T.trFa)">FA ترجمه فارسی</span>
+        <span class="chip" onclick="fill(T.trBusiness)">EN تجاری</span>
+      </div>
+
+      <div class="sec">ایده · تحلیل · حل</div>
+      <div class="chips">
+        <span class="chip" onclick="fill(T.ideate)">💡 ایده‌پردازی</span>
+        <span class="chip" onclick="fill(T.analyze)">🔍 تحلیل و نقد</span>
+        <span class="chip" onclick="fill(T.solve)">🧩 حل مسئله</span>
+        <span class="chip" onclick="fill(T.decide)">⚖️ کمک تصمیم</span>
+      </div>
+
+      <div class="sec">کاربردی ترکیبی</div>
+      <div class="chips">
+        <span class="chip" onclick="fill(T.meetPrep)">📅 آماده‌سازی جلسه</span>
+        <span class="chip" onclick="fill(T.draftMsg)">✉️ پیش‌نویس متن</span>
+        <span class="chip" onclick="fill(T.plan)">📆 برنامه عملی</span>
+        <span class="chip" onclick="fill(T.compare)">📊 مقایسه گزینه‌ها</span>
+        <span class="chip" onclick="fill(T.checklist)">✅ چک‌لیست</span>
+        <span class="chip" onclick="fill(T.explain)">🎓 توضیح ساده</span>
+        <span class="chip" onclick="fill(T.swot)">📐 SWOT</span>
+        <span class="chip" onclick="fill(T.emailReply)">↩️ پاسخ حرفه‌ای</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>🔐 قوانین موتور دانش</h2>
+      <p class="note">• فقط تولید متن و تحلیل<br>• بدون ارسال ایمیل یا تلگرام<br>• اقدام حساس فقط با تأیید شما<br>• خروجی پیش‌فرض فارسی (مگر ترجمه)</p>
     </div>
   </div>
 
+  <!-- جستجو و ابزار -->
   <div id="tools" class="panel">
     <div class="card">
       <h2>🔍 جستجو و ابزار</h2>
-      <p class="note">پیدا کردن اطلاعات از وب، اخبار و منابع — فقط خواندن.</p>
-      <div class="sec-title">وب و اخبار</div>
-      <span class="chip" onclick="fill(T.webSearch)">جستجوی وب</span>
-      <span class="chip" onclick="fill(T.news)">اخبار روز</span>
-      <span class="chip" onclick="fill(T.research)">تحقیق کوتاه</span>
-      <div class="sec-title">منابع و فایل</div>
-      <span class="chip" onclick="fill(T.driveNotion)">جستجو Drive/Notion</span>
-      <span class="chip" onclick="fill(T.compareSrc)">مقایسه منابع</span>
-      <div class="sec-title">راهنما</div>
-      <span class="chip" onclick="fill(T.define)">تعریف مفهوم</span>
-      <span class="chip" onclick="fill(T.howTo)">راهنمای گام‌به‌گام</span>
+      <p class="note">پیدا کردن اطلاعات از وب و منابع — فقط خواندن و خلاصه.</p>
+
+      <div class="sec">وب و اخبار</div>
+      <div class="chips">
+        <span class="chip" onclick="fill(T.webSearch)">🌐 جستجوی وب</span>
+        <span class="chip" onclick="fill(T.news)">📰 اخبار روز</span>
+        <span class="chip" onclick="fill(T.research)">📖 تحقیق کوتاه</span>
+        <span class="chip" onclick="fill(T.factCheck)">✔️ راستی‌آزمایی</span>
+      </div>
+
+      <div class="sec">منابع و فایل</div>
+      <div class="chips">
+        <span class="chip" onclick="fill(T.driveNotion)">📂 Drive / Notion</span>
+        <span class="chip" onclick="fill(T.compareSrc)">🔀 مقایسه منابع</span>
+      </div>
+
+      <div class="sec">راهنما و مفهوم</div>
+      <div class="chips">
+        <span class="chip" onclick="fill(T.define)">📘 تعریف مفهوم</span>
+        <span class="chip" onclick="fill(T.howTo)">🛠️ راهنمای گام‌به‌گام</span>
+        <span class="chip" onclick="fill(T.learn)">🎓 مسیر یادگیری</span>
+      </div>
     </div>
     <div class="card">
-      <h2>🔐 قوانین جستجو و ابزار</h2>
-      <p class="note">• فقط خواندن و خلاصه<br>• بدون ایمیل و تلگرام<br>• بدون تغییر فایل مگر تأیید شما<br>• اشاره به منبع وقتی ممکن است</p>
+      <h2>🔗 باز کردن ابزارهای خارجی</h2>
+      <div class="grid2">
+        <a class="btn btn-p" href="https://grok.com" target="_blank" rel="noopener">Grok</a>
+        <a class="btn btn-b" href="https://drive.google.com" target="_blank" rel="noopener">Drive</a>
+      </div>
+      <div class="grid2">
+        <a class="btn btn-g" href="https://www.notion.so" target="_blank" rel="noopener">Notion</a>
+        <a class="btn btn-o" href="https://calendar.google.com" target="_blank" rel="noopener">تقویم</a>
+      </div>
+    </div>
+    <div class="card">
+      <h2>🔐 قوانین جستجو</h2>
+      <p class="note">• فقط خواندن و خلاصه<br>• بدون تغییر فایل مگر تأیید شما<br>• بدون ایمیل و تلگرام<br>• اشاره به منبع وقتی ممکن است</p>
     </div>
   </div>
 
+  <!-- صوتی -->
   <div id="voice" class="panel">
     <div class="card">
-      <h2>🎤 ورودی صوتی</h2>
-      <button class="mic" id="mic" onclick="voice()">🎤</button>
-      <p class="note" id="vStatus">برای صحبت کلیک کنید (HTTPS)</p>
-      <a class="btn btn-p" href="https://grok.com" target="_blank">Grok Voice</a>
+      <h2>🎤 ورودی صوتی فارسی</h2>
+      <button type="button" class="mic" id="mic" onclick="voice()">🎤</button>
+      <p class="note" id="vStatus" style="text-align:center">برای صحبت کلیک کنید (فقط HTTPS)</p>
+      <p class="note" style="text-align:center">متن شناسایی‌شده به کادر گفتگو اضافه می‌شود.</p>
+      <a class="btn btn-p" href="https://grok.com" target="_blank" rel="noopener">Grok Voice</a>
     </div>
   </div>
 
+  <!-- بیشتر -->
   <div id="more" class="panel">
     <div class="card">
-      <h2>🔗 دسترسی‌ها</h2>
-      <a class="btn btn-p" href="https://grok.com" target="_blank">Grok</a>
-      <a class="btn btn-b" href="https://alm989.github.io/smart-secretary/" target="_blank">منشی هوشمند</a>
-      <a class="btn btn-g" href="https://grok.com/automations" target="_blank">اتوماسیون‌ها</a>
-      <a class="btn btn-o" href="https://drive.google.com" target="_blank">Google Drive</a>
+      <h2>🔗 دسترسی سریع</h2>
+      <a class="btn btn-p" href="https://grok.com" target="_blank" rel="noopener">Grok</a>
+      <a class="btn btn-b" href="https://alm989.github.io/smart-secretary/" target="_blank" rel="noopener">منشی هوشمند</a>
+      <a class="btn btn-g" href="https://grok.com/automations" target="_blank" rel="noopener">اتوماسیون‌های Grok</a>
+      <a class="btn btn-o" href="https://drive.google.com" target="_blank" rel="noopener">Google Drive</a>
     </div>
     <div class="card">
       <h2>📋 دستور به منشی</h2>
-      <span class="chip" onclick="fill(T.secToday)">خلاصه امروز</span>
-      <span class="chip" onclick="fill(T.secMeet)">جلسات فردا</span>
-      <span class="chip" onclick="fill(T.secRemind)">یادآوری‌های باز</span>
-      <span class="chip" onclick="fill(T.secDash)">وضعیت داشبورد</span>
+      <p class="note">این دستورها برای کنترل منشی از طریق Grok است.</p>
+      <div class="chips">
+        <span class="chip" onclick="fill(T.secToday)">خلاصه امروز</span>
+        <span class="chip" onclick="fill(T.secMeet)">جلسات فردا</span>
+        <span class="chip" onclick="fill(T.secRemind)">یادآوری‌های باز</span>
+        <span class="chip" onclick="fill(T.secDash)">وضعیت داشبورد</span>
+        <span class="chip" onclick="fill(T.secWeek)">خلاصه هفته</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>⚙️ تنظیمات سریع</h2>
+      <button type="button" class="btn btn-gr" onclick="clearHist()">پاک کردن تاریخچه</button>
+      <button type="button" class="btn btn-g" onclick="exportHist()">دانلود تاریخچه JSON</button>
+      <button type="button" class="btn btn-b" onclick="copyAllTemplates()">کپی فهرست قالب‌ها</button>
     </div>
     <div class="card">
       <h2>ℹ️ درباره</h2>
-      <p class="note">دستیار = کنترل مرکزی<br>منشی = اداری<br>دانش = فکر و متن<br>جستجو = وب و منابع<br>ایمیل/تلگرام: قطع</p>
+      <p class="note">
+        <span class="badge">دستیار</span> کنترل مرکزی<br>
+        <span class="badge">منشی</span> اداری و تقویم<br>
+        <span class="badge">دانش</span> فکر و متن<br>
+        <span class="badge">جستجو</span> وب و منابع<br>
+        ایمیل و تلگرام: غیرفعال
+      </p>
     </div>
   </div>
+
+  <p class="footer-tip">دستیار هوشمند · نسخه کامل · alm989</p>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
 var T = {
-  summary: 'این متن را خلاصه کن.\nنکات کلیدی را به‌صورت فهرست شماره‌دار بنویس.\nحداکثر ۷ نکته، کوتاه و واضح، به فارسی.\n\nمتن:\n',
-  rewriteFormal: 'این متن را به فارسی رسمی، حرفه‌ای و روان بازنویسی کن.\nمعنی را عوض نکن؛ فقط لحن و ساختار را بهتر کن.\n\nمتن:\n',
-  rewriteSimple: 'این متن را خیلی ساده و قابل‌فهم برای همه بازنویسی کن.\nجمله‌ها کوتاه باشد.\n\nمتن:\n',
-  trEn: 'این متن را به انگلیسی روان و حرفه‌ای ترجمه کن.\nمناسب استفاده کاری باشد.\n\nمتن:\n',
-  trFa: 'این متن را به فارسی روان و طبیعی ترجمه کن.\nکلمه‌به‌کلمه خشک نباشد.\n\nمتن:\n',
-  ideate: 'برای این موضوع ۱۰ ایده عملی و خلاقانه بده.\nهر ایده در یک خط، با توضیح خیلی کوتاه.\nایده‌ها متنوع باشند.\n\nموضوع:\n',
-  analyze: 'این مورد را تحلیل کن:\n1) نقاط قوت\n2) نقاط ضعف\n3) ریسک‌ها\n4) ۳ پیشنهاد بهبود مشخص\n\nموضوع / متن:\n',
-  solve: 'این مسئله را قدم‌به‌قدم حل کن.\nبرای هر قدم: کار، دلیل کوتاه، نتیجه مورد انتظار.\nدر پایان یک راه‌حل پیشنهادی نهایی بده.\n\nمسئله:\n',
-  meetPrep: 'برای این جلسه یک آماده‌سازی کوتاه بنویس:\n- هدف جلسه\n- ۳ سؤال کلیدی\n- نکات پیگیری احتمالی\n\nموضوع جلسه:\n',
-  draftMsg: 'یک متن کوتاه و مؤدبانه به فارسی برای این منظور بنویس.\nفقط پیش‌نویس باشد؛ ارسال نکن.\n\nمنظور:\n',
-  plan: 'برای این هدف یک برنامه ۳ تا ۷ روزه عملی بده.\nهر روز حداکثر ۳ کار مشخص.\n\nهدف:\n',
-  compare: 'این گزینه‌ها را با هم مقایسه کن.\nفهرست: معیار · گزینه ۱ · گزینه ۲ · جمع‌بندی پیشنهاد.\n\nگزینه‌ها:\n',
-  checklist: 'برای این کار یک چک‌لیست عملی و مرتب بساز.\nموارد قابل تیک‌زدن، کوتاه و مشخص.\n\nکار:\n',
-  explain: 'این موضوع را ساده و قابل‌فهم توضیح بده.\nانگار برای کسی که تازه‌وارد است.\n\nموضوع:\n',
-  webSearch: 'این موضوع را در اینترنت جستجو کن و خلاصه بده.\n- نکات کلیدی (حداکثر ۷ مورد)\n- اگر آمار یا تاریخ مهم است ذکر کن\n- در پایان یک جمع‌بندی کوتاه\nمنبع یا نام سایت‌های معتبر را اشاره کن.\nبدون ایمیل و بدون ارسال پیام.\n\nموضوع:\n',
-  news: '۳ تا ۵ خبر مهم امروز را خلاصه کن.\nبرای هر خبر: عنوان کوتاه + یک خط توضیح.\nاگر موضوع خاصی مدنظر است روی همان تمرکز کن.\nبه فارسی، مرتب و بی‌طرف.\n\nموضوع (اختیاری):\n',
-  research: 'یک تحقیق کوتاه و ساختاریافته درباره این موضوع انجام بده:\n1) تعریف / زمینه\n2) نکات مهم\n3) مزایا و معایب یا ریسک‌ها\n4) جمع‌بندی عملی برای تصمیم‌گیری\nحداکثر در حد یک صفحه، به فارسی.\n\nموضوع:\n',
-  driveNotion: 'در Google Drive و Notion (فقط خواندن) بگرد و موارد مرتبط با این موضوع را پیدا کن.\nبرای هر مورد: نام / عنوان + یک خط توضیح + ارتباط با موضوع.\nچیزی را تغییر نده و ارسال نکن.\n\nموضوع / کلیدواژه:\n',
-  compareSrc: 'درباره این موضوع چند دیدگاه یا منبع معتبر را مقایسه کن.\nفهرست: دیدگاه · نکته اصلی · تفاوت با بقیه.\nدر پایان جمع‌بندی بی‌طرف بده.\n\nموضوع:\n',
-  define: 'این مفهوم را ساده و دقیق توضیح بده.\n- تعریف کوتاه\n- یک مثال کاربردی\n- اشتباه رایج (اگر دارد)\nبه فارسی روان.\n\nمفهوم:\n',
-  howTo: 'گام‌به‌گام و عملی توضیح بده چطور این کار را انجام دهم.\nمراحل شماره‌دار، کوتاه، قابل‌اجرا.\nفرض کن دانش اولیه کمی دارم.\n\nکار / ابزار:\n',
-  secToday: 'منشی را الان اجرا کن. خلاصه امروز را بده: جلسات، یادآوری‌ها، اولویت‌ها. بدون بررسی ایمیل.',
-  secMeet: 'جلسات فردا و این هفته را
+  summary: "این متن را خلاصه کن.\nنکات کلیدی را به‌صورت فهرست شماره‌دار بنویس.\nحداکثر ۷ نکته، کوتاه و واضح، به فارسی.\n\nمتن:\n",
+  rewriteFormal: "این متن را به فارسی رسمی، حرفه‌ای و روان بازنویسی کن.\nمعنی را عوض نکن؛ فقط لحن و ساختار را بهتر کن.\n\nمتن:\n",
+  rewriteSimple: "این متن را خیلی ساده و قابل‌فهم برای همه بازنویسی کن.\nجمله‌ها کوتاه باشد.\n\nمتن:\n",
+  bulletize: "این متن را به فهرست گلوله‌ای مرتب و کوتاه تبدیل کن. هر مورد یک خط.\n\nمتن:\n",
+  trEn: "این متن را به انگلیسی روان و حرفه‌ای ترجمه کن.\nمناسب استفاده کاری باشد.\n\nمتن:\n",
+  trFa: "این متن را به فارسی روان و طبیعی ترجمه کن.\nکلمه‌به‌کلمه خشک نباشد.\n\nمتن:\n",
+  trBusiness: "این متن را به انگلیسی تجاری و رسمی ترجمه کن. لحن حرفه‌ای و مؤدب.\n\nمتن:\n",
+  ideate: "برای این موضوع ۱۰ ایده عملی و خلاقانه بده.\nهر ایده در یک خط، با توضیح خیلی کوتاه.\nایده‌ها متنوع باشند.\n\nموضوع:\n",
+  analyze: "این مورد را تحلیل کن:\n1) نقاط قوت\n2) نقاط ضعف\n3) ریسک‌ها\n4) ۳ پیشنهاد بهبود مشخص\n\nموضوع / متن:\n",
+  solve: "این مسئله را قدم‌به‌قدم حل کن.\nبرای هر قدم: کار، دلیل کوتاه، نتیجه مورد انتظار.\nدر پایان یک راه‌حل پیشنهادی نهایی بده.\n\nمسئله:\n",
+  decide: "برای این تصمیم کمک کن:\n- گزینه‌ها\n- معیارهای مقایسه\n- مزایا/معایب هر گزینه\n- پیشنهاد نهایی با دلیل\n\nموضوع تصمیم:\n",
+  meetPrep: "برای این جلسه یک آماده‌سازی کوتاه بنویس:\n- هدف جلسه\n- ۳ سؤال کلیدی\n- نکات پیگیری احتمالی\n\nموضوع جلسه:\n",
+  draftMsg: "یک متن کوتاه و مؤدبانه به فارسی برای این منظور بنویس.\nفقط پیش‌نویس باشد؛ ارسال نکن.\n\nمنظور:\n",
+  plan: "برای این هدف یک برنامه ۳ تا ۷ روزه عملی بده.\nهر روز حداکثر ۳ کار مشخص.\n\nهدف:\n",
+  compare: "این گزینه‌ها را با هم مقایسه کن.\nفهرست: معیار · گزینه ۱ · گزینه ۲ · جمع‌بندی پیشنهاد.\n\nگزینه‌ها:\n",
+  checklist: "برای این کار یک چک‌لیست عملی و مرتب بساز.\nموارد قابل تیک‌زدن، کوتاه و مشخص.\n\nکار:\n",
+  explain: "این موضوع را ساده و قابل‌فهم توضیح بده.\nانگار برای کسی که تازه‌وارد است.\n\nموضوع:\n",
+  swot: "تحلیل SWOT برای این موضوع بنویس:\nStrengths · Weaknesses · Opportunities · Threats\nهر بخش ۳ تا ۵ مورد، به فارسی.\n\nموضوع:\n",
+  emailReply: "یک پاسخ حرفه‌ای و مؤدبانه به این پیام بنویس.\nفقط پیش‌نویس؛ ارسال نکن.\n\nپیام دریافتی:\n",
+  webSearch: "این موضوع را در اینترنت جستجو کن و خلاصه بده.\n- نکات کلیدی (حداکثر ۷ مورد)\n- اگر آمار یا تاریخ مهم است ذکر کن\n- در پایان یک جمع‌بندی کوتاه\nمنبع یا نام سایت‌های معتبر را اشاره کن.\nبدون ایمیل و بدون ارسال پیام.\n\nموضوع:\n",
+  news: "۳ تا ۵ خبر مهم امروز را خلاصه کن.\nبرای هر خبر: عنوان کوتاه + یک خط توضیح.\nاگر موضوع خاصی مدنظر است روی همان تمرکز کن.\nبه فارسی، مرتب و بی‌طرف.\n\nموضوع (اختیاری):\n",
+  research: "یک تحقیق کوتاه و ساختاریافته درباره این موضوع انجام بده:\n1) تعریف / زمینه\n2) نکات مهم\n3) مزایا و معایب یا ریسک‌ها\n4) جمع‌بندی عملی برای تصمیم‌گیری\nحداکثر در حد یک صفحه، به فارسی.\n\nموضوع:\n",
+  factCheck: "این ادعا را راستی‌آزمایی کن.\nبگو معتبر / مشکوک / نادرست است و دلیل کوتاه با منبع احتمالی.\n\nادعا:\n",
+  driveNotion: "در Google Drive و Notion (فقط خواندن) بگرد و موارد مرتبط با این موضوع را پیدا کن.\nبرای هر مورد: نام / عنوان + یک خط توضیح + ارتباط با موضوع.\nچیزی را تغییر نده و ارسال نکن.\n\nموضوع / کلیدواژه:\n",
+  compareSrc: "درباره این موضوع چند دیدگاه یا منبع معتبر را مقایسه کن.\nفهرست: دیدگاه · نکته اصلی · تفاوت با بقیه.\nدر پایان جمع‌بندی بی‌طرف بده.\n\nموضوع:\n",
+  define: "این مفهوم را ساده و دقیق توضیح بده.\n- تعریف کوتاه\n- یک مثال کاربردی\n- اشتباه رایج (اگر دارد)\nبه فارسی روان.\n\nمفهوم:\n",
+  howTo: "گام‌به‌گام و عملی توضیح بده چطور این کار را انجام دهم.\nمراحل شماره‌دار، کوتاه، قابل‌اجرا.\nفرض کن دانش اولیه کمی دارم.\n\nکار / ابزار:\n",
+  learn: "یک مسیر یادگیری کوتاه و عملی برای این موضوع پیشنهاد بده.\nمراحل از مبتدی تا قابل‌استفاده، با منابع پیشنهادی عمومی.\n\nموضوع:\n",
+  secToday: "منشی را الان اجرا کن. خلاصه امروز را بده: جلسات، یادآوری‌ها، اولویت‌ها. بدون بررسی ایمیل.",
+  secMeet: "جلسات فردا و این هفته را از روی تقویم بگو و تعارض‌ها را هشدار بده.",
+  secRemind: "یادآوری‌ها و تعهدات باز را لیست کن.",
+  secDash: "وضعیت داشبورد منشی را خلاصه کن: جلسات فعال، یادآوری فعال، رویدادهای نزدیک به موعد.",
+  secWeek: "خلاصه هفته جاری را از دید منشی بده: جلسات مهم، یادآوری‌ها، کارهای باز."
+};
+
+function toFa(n){return String(n).replace(/\d/g,function(d){return "۰۱۲۳۴۵۶۷۸۹"[d];});}
+
+function go(id,btn){
+  try{
+    document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
+    document.querySelectorAll(".nav button").forEach(function(b){b.classList.remove("on");});
+    var el=document.getElementById(id); if(el) el.classList.add("on");
+    if(btn) btn.classList.add("on");
+    if(id==="chat") renderHist();
+  }catch(e){ console.error(e); alert("خطا: "+e.message); }
+}
+
+function toast(m){
+  var t=document.getElementById("toast");
+  t.textContent=m; t.style.display="block";
+  setTimeout(function(){t.style.display="none";},1800);
+}
+
+function fill(text){
+  document.getElementById("q").value=text;
+  document.getElementById("q").focus();
+  go("chat", document.querySelector(".nav button"));
+  toast("قالب آماده شد");
+}
+
+function clearQ(){ document.getElementById("q").value=""; toast("پاک شد"); }
+
+function copyQ(){
+  var t=document.getElementById("q").value.trim();
+  if(!t) return toast("متنی نیست");
+  if(navigator.clipboard) navigator.clipboard.writeText(t).then(function(){toast("کپی شد");});
+  else {
+    var a=document.createElement("textarea"); a.value=t; document.body.appendChild(a); a.select();
+    try{document.execCommand("copy");toast("کپی شد");}catch(e){}
+    document.body.removeChild(a);
+  }
+}
+
+function sendGrok(){
+  var t=document.getElementById("q").value.trim();
+  if(!t) return toast("درخواست را بنویسید");
+  saveHist(t);
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(t).then(function(){
+      toast("کپی شد — Grok باز می‌شود");
+      window.open("https://grok.com","_blank");
+    });
+  } else window.open("https://grok.com","_blank");
+}
+
+function loadHist(){ try{return JSON.parse(localStorage.getItem("asst_hist")||"[]");}catch(e){return [];} }
+
+function saveHist(t){
+  var h=loadHist().filter(function(x){return x!==t;});
+  h.unshift(t); if(h.length>40) h=h.slice(0,40);
+  localStorage.setItem("asst_hist", JSON.stringify(h));
+  renderHist();
+}
+
+function renderHist(){
+  var h=loadHist(), box=document.getElementById("hist"), empty=document.getElementById("histEmpty");
+  box.innerHTML="";
+  document.getElementById("stHist").textContent=toFa(h.length);
+  if(!h.length){ empty.style.display="block"; return; }
+  empty.style.display="none";
+  h.forEach(function(t){
+    var d=document.createElement("div");
+    d.className="hist";
+    d.textContent=t.length>100?t.slice(0,100)+"…":t;
+    d.onclick=function(){ document.getElementById("q").value=t; toast("بازیابی شد"); };
+    box.appendChild(d);
+  });
+}
+
+function clearHist(){
+  if(!confirm("تاریخچه پاک شود؟")) return;
+  localStorage.removeItem("asst_hist");
+  renderHist(); toast("پاک شد");
+}
+
+function exportHist(){
+  var data={history:loadHist(),date:new Date().toISOString(),app:"smart-assistant"};
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));
+  a.download="assistant-history.json"; a.click(); toast("دانلود شد");
+}
+
+function copyAllTemplates(){
+  var names=Object.keys(T).join("\n");
+  if(navigator.clipboard) navigator.clipboard.writeText(names).then(function(){toast("فهرست کپی شد");});
+}
+
+var rec=null, listening=false;
+function voice(){
+  if(location.protocol==="file:"){ document.getElementById("vStatus").textContent="فقط روی HTTPS"; return; }
+  if(!("webkitSpeechRecognition" in window)&&!("SpeechRecognition" in window)){ toast("پشتیبانی نمی‌شود"); return; }
+  if(listening){ rec.stop(); listening=false; document.getElementById("mic").classList.remove("on"); document.getElementById("vStatus").textContent="متوقف شد"; return; }
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  rec=new SR(); rec.lang="fa-IR";
+  rec.onstart=function(){ listening=true; document.getElementById("mic").classList.add("on"); document.getElementById("vStatus").textContent="در حال گوش دادن..."; };
+  rec.onresult=function(e){
+    var text=e.results[0][0].transcript;
+    var q=document.getElementById("q");
+    q.value=(q.value?q.value+"\n":"")+text;
+    document.getElementById("vStatus").textContent="شناسایی شد";
+    toast("به کادر اضافه شد");
+  };
+  rec.onerror=function(e){
+    listening=false; document.getElementById("mic").classList.remove("on");
+    document.getElementById("vStatus").textContent=e.error==="not-allowed"?"اجازه میکروفون لازم است":e.error;
+  };
+  rec.onend=function(){ listening=false; document.getElementById("mic").classList.remove("on"); };
+  rec.start();
+}
+
+renderHist();
+</script>
+</body>
+</html>
