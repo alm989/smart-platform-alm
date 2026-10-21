@@ -2,37 +2,260 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="سامانه یکپارچه">
+<meta name="description" content="سامانه هوشمند یکپارچه — منشی، دستیار، حسابداری، نقد و بانک، تنخواه، منابع انسانی">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
 <title>سامانه هوشمند یکپارچه</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Tahoma,system-ui,sans-serif;background:radial-gradient(1000px 500px at 80% -20%,#1e3a5f 0%,transparent 50%),#0f172a;color:#e2e8f0;min-height:100vh;padding:24px 16px}
-.wrap{max-width:960px;margin:0 auto}
-h1{text-align:center;font-size:1.4rem;margin-bottom:6px}
-.sub{text-align:center;color:#94a3b8;font-size:.85rem;margin-bottom:28px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
-.card{background:rgba(30,41,59,.9);border:1px solid #334155;border-radius:16px;padding:18px;text-decoration:none;color:inherit;display:block;transition:.15s}
-.card:hover{transform:translateY(-3px);border-color:#fb923c}
-.icon{font-size:1.8rem;margin-bottom:8px}
-.card h2{font-size:.95rem;margin-bottom:6px}
-.card p{font-size:.78rem;color:#94a3b8;line-height:1.45}
-.tag{display:inline-block;margin-top:8px;font-size:.65rem;padding:3px 8px;border-radius:999px;background:#7c2d12;color:#fed7aa}
-.foot{text-align:center;margin-top:28px;font-size:.72rem;color:#64748b}
+:root{
+  --bg:#0f172a;--card:rgba(30,41,59,.95);--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;
+  --accent:#38bdf8;--safe:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{
+  font-family:Tahoma,"Segoe UI",system-ui,sans-serif;
+  background:
+    radial-gradient(1000px 500px at 90% -10%,#1e3a5f 0%,transparent 50%),
+    radial-gradient(800px 400px at 0% 100%,#312e81 0%,transparent 45%),
+    var(--bg);
+  color:var(--txt);
+  min-height:100dvh;
+  padding:20px 16px calc(24px + var(--safe));
+  line-height:1.55;
+}
+.wrap{max-width:1100px;margin:0 auto}
+.header{text-align:center;margin-bottom:28px}
+.logo{
+  width:64px;height:64px;border-radius:18px;margin:0 auto 12px;
+  background:linear-gradient(135deg,#0ea5e9,#6366f1);
+  display:grid;place-items:center;font-size:30px;
+  box-shadow:0 10px 30px rgba(14,165,233,.35);
+}
+h1{font-size:clamp(1.25rem,3.5vw,1.6rem);font-weight:700;color:#f8fafc;margin-bottom:6px}
+.sub{font-size:.88rem;color:var(--muted)}
+.status{
+  margin:16px auto 0;max-width:520px;padding:10px 14px;border-radius:12px;
+  background:rgba(15,23,42,.6);border:1px solid var(--line);font-size:.78rem;color:var(--muted);
+}
+.status b{color:#e2e8f0}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:16px;
+  width:100%;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:20px 18px;
+  text-decoration:none;
+  color:inherit;
+  display:flex;
+  flex-direction:column;
+  min-height:160px;
+  transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease;
+  box-shadow:0 4px 20px rgba(0,0,0,.2);
+}
+.card:hover,.card:focus-visible{
+  transform:translateY(-4px);
+  border-color:#38bdf8;
+  box-shadow:0 12px 28px rgba(56,189,248,.15);
+  outline:none;
+}
+.card:active{transform:translateY(-1px)}
+.icon{
+  width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
+  font-size:24px;margin-bottom:12px;flex-shrink:0;
+}
+.card h2{font-size:1.02rem;color:#f1f5f9;margin-bottom:8px;font-weight:700}
+.card p{font-size:.82rem;color:var(--muted);line-height:1.5;flex:1}
+.tag{
+  display:inline-block;margin-top:12px;align-self:flex-start;
+  font-size:.68rem;padding:4px 10px;border-radius:999px;font-weight:600;
+}
+.t-admin{background:#1e3a5f;color:#7dd3fc}
+.t-ai{background:#312e81;color:#c4b5fd}
+.t-fin{background:#064e3b;color:#6ee7b7}
+.t-bank{background:#115e59;color:#99f6e4}
+.t-petty{background:#7c2d12;color:#fdba74}
+.t-hr{background:#4c1d95;color:#ddd6fe}
+.foot{
+  text-align:center;margin-top:32px;font-size:.75rem;color:#64748b;
+  padding-bottom:8px;
+}
+.hint{
+  margin-top:20px;padding:14px 16px;border-radius:14px;
+  background:rgba(30,41,59,.7);border:1px dashed #475569;
+  font-size:.8rem;color:var(--muted);
+}
+.hint code{color:#7dd3fc;font-size:.78rem}
+@media(max-width:560px){
+  .grid{grid-template-columns:1fr}
+  .card{min-height:140px}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>سامانه هوشمند یکپارچه</h1>
-  <p class="sub">منشی · حسابداری · نقد و بانک · تنخواه · منابع انسانی</p>
-  <div class="grid">
-    <a class="card" href="index.html"><div class="icon">🤖</div><h2>منشی</h2><p>یادآوری و جلسات</p><span class="tag">اداری</span></a>
-    <a class="card" href="accounting.html"><div class="icon">📒</div><h2>حسابداری</h2><p>سند و گزارش</p><span class="tag">مالی</span></a>
-    <a class="card" href="cash-bank.html"><div class="icon">🏦</div><h2>نقد و بانک</h2><p>دریافت و پرداخت</p><span class="tag">خزانه</span></a>
-    <a class="card" href="petty-cash.html"><div class="icon">💵</div><h2>تنخواه</h2><p>شارژ، هزینه، تسویه</p><span class="tag">تنخواه</span></a>
-    <a class="card" href="hr-payroll.html"><div class="icon">👥</div><h2>منابع انسانی</h2><p>حقوق و حضور</p><span class="tag">HR</span></a>
+  <header class="header">
+    <div class="logo" aria-hidden="true">◈</div>
+    <h1>سامانه هوشمند یکپارچه</h1>
+    <p class="sub">همه ماژول‌ها در یک صفحه — بدون محدودیت نمایش</p>
+    <div class="status" id="status">در حال بررسی ماژول‌ها…</div>
+  </header>
+
+  <div class="grid" id="grid" role="navigation" aria-label="ماژول‌های سامانه">
+    <!-- cards injected by JS so all are always listed; links work even offline as relative paths -->
   </div>
-  <p class="foot">یک مرورگر · localStorage مشترک</p>
+
+  <div class="hint">
+    <strong style="color:#e2e8f0">نکته:</strong>
+    فایل‌های HTML همه ماژول‌ها باید <b style="color:#e2e8f0">کنار همین suite.html</b> باشند
+    (یا مسیر نسبی درست باشد). برای اتصال داده، همه را در
+    <b style="color:#e2e8f0">یک مرورگر و یک دامنه</b> باز کنید.
+    <br><br>
+    نام فایل‌ها:
+    <code>index.html</code> ·
+    <code>assistant.html</code> ·
+    <code>accounting.html</code> ·
+    <code>cash-bank.html</code> ·
+    <code>petty-cash.html</code> ·
+    <code>hr-payroll.html</code>
+  </div>
+
+  <p class="foot">سامانه یکپارچه · داده محلی · نسخه Suite بدون محدودیت شبکه کارت‌ها</p>
 </div>
+<script>
+(function () {
+  "use strict";
+
+  var MODULES = [
+    {
+      href: "index.html",
+      icon: "🤖",
+      iconBg: "linear-gradient(135deg,#0ea5e9,#0284c7)",
+      title: "منشی هوشمند",
+      desc: "جلسه، یادداشت، یادآوری، تقویم، داشبورد روزانه",
+      tag: "اداری",
+      tagClass: "t-admin",
+      keys: ["items"]
+    },
+    {
+      href: "assistant.html",
+      icon: "🧠",
+      iconBg: "linear-gradient(135deg,#8b5cf6,#6d28d9)",
+      title: "دستیار هوشمند",
+      desc: "موتور دانش، پرامپت، جستجو و کنترل منشی",
+      tag: "هوش مصنوعی",
+      tagClass: "t-ai",
+      keys: []
+    },
+    {
+      href: "accounting.html",
+      icon: "📒",
+      iconBg: "linear-gradient(135deg,#10b981,#047857)",
+      title: "حسابداری هوشمند",
+      desc: "سند، کدینگ، بانک، ترازنامه، سود و زیان",
+      tag: "مالی",
+      tagClass: "t-fin",
+      keys: ["smart_acc_v2"]
+    },
+    {
+      href: "cash-bank.html",
+      icon: "🏦",
+      iconBg: "linear-gradient(135deg,#14b8a6,#0f766e)",
+      title: "نقد و بانک",
+      desc: "برگه دریافت و پرداخت، مغایرت بانکی، گزارش جریان",
+      tag: "خزانه",
+      tagClass: "t-bank",
+      keys: ["smart_cash_v2", "smart_cash_v1"]
+    },
+    {
+      href: "petty-cash.html",
+      icon: "💵",
+      iconBg: "linear-gradient(135deg,#f97316,#c2410c)",
+      title: "تنخواه هوشمند",
+      desc: "تعریف، شارژ، هزینه، تسویه، اتصال بانک و حسابداری",
+      tag: "تنخواه",
+      tagClass: "t-petty",
+      keys: ["smart_petty_v2", "smart_petty_v1"]
+    },
+    {
+      href: "hr-payroll.html",
+      icon: "👥",
+      iconBg: "linear-gradient(135deg,#a78bfa,#6d28d9)",
+      title: "منابع انسانی و حقوق",
+      desc: "پرسنل، حضور، مرخصی، فیش، بیمه، سند حقوق",
+      tag: "HR",
+      tagClass: "t-hr",
+      keys: ["smart_hr_v2", "smart_hr_v1"]
+    }
+  ];
+
+  function hasData(keys) {
+    if (!keys || !keys.length) return null;
+    try {
+      for (var i = 0; i < keys.length; i++) {
+        if (localStorage.getItem(keys[i])) return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function render() {
+    var grid = document.getElementById("grid");
+    grid.textContent = "";
+    var withData = 0;
+
+    MODULES.forEach(function (m) {
+      var a = document.createElement("a");
+      a.className = "card";
+      a.href = m.href;
+      a.setAttribute("aria-label", m.title);
+
+      var icon = document.createElement("div");
+      icon.className = "icon";
+      icon.style.background = m.iconBg;
+      icon.textContent = m.icon;
+      a.appendChild(icon);
+
+      var h2 = document.createElement("h2");
+      h2.textContent = m.title;
+      a.appendChild(h2);
+
+      var p = document.createElement("p");
+      p.textContent = m.desc;
+      a.appendChild(p);
+
+      var tag = document.createElement("span");
+      tag.className = "tag " + m.tagClass;
+      var data = hasData(m.keys);
+      if (data === true) {
+        tag.textContent = m.tag + " · داده دارد";
+        withData++;
+      } else {
+        tag.textContent = m.tag;
+      }
+      a.appendChild(tag);
+
+      grid.appendChild(a);
+    });
+
+    var st = document.getElementById("status");
+    st.innerHTML = "<b>" + MODULES.length + " ماژول</b> در فهرست · " +
+      (withData ? withData + " مورد با داده محلی" : "هنوز داده‌ای در این مرورگر نیست") +
+      " · همه کارت‌ها قابل کلیک هستند";
+  }
+
+  render();
+})();
+</script>
 </body>
 </html>
