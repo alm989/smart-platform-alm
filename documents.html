@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#334155">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="اسناد هوشمند">
+<meta name="description" content="مدیریت اسناد هوشمند — نامه وارده، صادره، بایگانی، پیگیری">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>مدیریت اسناد هوشمند</title>
+<style>
+:root{
+  --bg:#f8fafc;--card:#fff;--line:#cbd5e1;--txt:#1e293b;--muted:#475569;
+  --b:#475569;--b2:#334155;--g:#059669;--r:#dc2626;--o:#d97706;--p:#7c3aed;--c:#0ea5e9;
+  --shadow:0 4px 22px rgba(51,65,85,.1);--safe:env(safe-area-inset-bottom,0px);--radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 400px at 50% 0%,#e2e8f0 0%,transparent 55%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55}
+.box{max-width:980px;margin:0 auto}
+.header{text-align:center;margin-bottom:12px}
+.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#64748b,#334155);color:#fff;display:grid;place-items:center;font-size:26px;margin:0 auto 8px;box-shadow:0 8px 24px rgba(51,65,85,.35)}
+h1{font-size:clamp(1.1rem,3vw,1.3rem);color:#0f172a;font-weight:700}
+.sub{font-size:.8rem;color:var(--muted)}
+.nav{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(248,250,252,.94);backdrop-filter:blur(12px)}
+.nav button{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.46rem,1.15vw,.64rem);color:var(--muted);cursor:pointer;font-family:inherit;transition:.12s}
+.nav button.on{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;border-color:transparent}
+.panel{display:none!important}.panel.on{display:block!important;animation:fi .15s ease}
+@keyframes fi{from{opacity:.4}to{opacity:1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card h2{font-size:.92rem;margin-bottom:12px;color:#0f172a}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
+.btn:disabled{opacity:.45}.btn-b{background:linear-gradient(135deg,#64748b,#334155)}.btn-g{background:linear-gradient(135deg,var(--g),#047857)}
+.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#b45309)}
+.btn-c{background:linear-gradient(135deg,var(--c),#0284c7)}.btn-p{background:linear-gradient(135deg,var(--p),#6d28d9)}
+.btn-gr{background:#e2e8f0;color:#334155}.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;font-size:16px;font-family:inherit;color:var(--txt)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#64748b;box-shadow:0 0 0 3px rgba(100,116,139,.15)}
+textarea{min-height:80px;resize:vertical}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th,td{border:1px solid var(--line);padding:8px 5px;text-align:right}
+th{background:#e2e8f0;color:#0f172a;font-weight:700}
+tr:nth-child(even){background:#f8fafc}
+.num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
+.scroll{overflow:auto;max-height:420px;border-radius:10px}
+.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
+.stat .n{font-size:1.05rem;font-weight:700;color:#334155}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
+.toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center}
+.toast.show{opacity:1}.toast.err{background:var(--r)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
+.ok{background:#d1fae5;color:#065f46}.bad{background:#fee2e2;color:#991b1b}.warn{background:#fef3c7;color:#92400e}.info{background:#e0e7ff;color:#3730a3}.arch{background:#e2e8f0;color:#334155}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.filters button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:.72rem;cursor:pointer;font-family:inherit;color:var(--muted)}
+.filters button.on{background:#334155;color:#fff;border-color:#334155}
+.doc-card{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px;background:#fff;cursor:pointer;transition:.12s}
+.doc-card:hover{border-color:#64748b;box-shadow:var(--shadow)}
+.doc-card .t{font-weight:700}.doc-card .m{font-size:.78rem;color:var(--muted);margin-top:4px}
+.footer{text-align:center;font-size:.7rem;color:#94a3b8;margin-top:14px}
+@media(max-width:720px){.nav{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
+@media print{.nav,.btn,nav{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="box">
+  <header class="header">
+    <div class="logo">📄</div>
+    <h1>مدیریت اسناد هوشمند</h1>
+    <p class="sub">وارده · صادره · داخلی · بایگانی · پیگیری · طبقه‌بندی</p>
+  </header>
+  <nav class="nav" id="nav" role="tablist">
+    <button type="button" class="on" data-tab="dash">داشبورد</button>
+    <button type="button" data-tab="in">وارده</button>
+    <button type="button" data-tab="out">صادره</button>
+    <button type="button" data-tab="int">داخلی</button>
+    <button type="button" data-tab="arch">بایگانی</button>
+    <button type="button" data-tab="fu">پیگیری</button>
+    <button type="button" data-tab="rep">گزارش</button>
+  </nav>
+
+  <main id="dash" class="panel on">
+    <div class="stats">
+      <div class="stat"><div class="n" id="stIn">۰</div><div class="l">وارده باز</div></div>
+      <div class="stat"><div class="n" id="stOut">۰</div><div class="l">صادره ماه</div></div>
+      <div class="stat"><div class="n" id="stFu">۰</div><div class="l">پیگیری باز</div></div>
+      <div class="stat"><div class="n" id="stArch">۰</div><div class="l">بایگانی</div></div>
+    </div>
+    <section class="card">
+      <h2>اتصال منشی</h2>
+      <p class="note" id="linkStatus">—</p>
+      <button type="button" class="btn btn-c" id="btnOpenSec">منشی هوشمند</button>
+    </section>
+    <section class="card">
+      <h2>آخرین اسناد</h2>
+      <div class="scroll"><table><thead><tr><th>نوع</th><th>شماره</th><th>تاریخ</th><th>موضوع</th><th>وضعیت</th></tr></thead><tbody id="lastDocs"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="in" class="panel">
+    <section class="card">
+      <h2>نامه وارده</h2>
+      <input type="hidden" id="inId">
+      <div class="grid3">
+        <div><label>شماره ثبت *</label><input id="inNo" maxlength="40" autocomplete="off"></div>
+        <div><label>تاریخ نامه</label><input id="inDate" type="date"></div>
+        <div><label>تاریخ وصول</label><input id="inRecv" type="date"></div>
+      </div>
+      <div class="grid2">
+        <div><label>فرستنده *</label><input id="inFrom" maxlength="150" autocomplete="off"></div>
+        <div><label>شماره نامه فرستنده</label><input id="inRef" maxlength="60"></div>
+      </div>
+      <label>موضوع *</label><input id="inSubj" maxlength="250">
+      <div class="grid3">
+        <div><label>طبقه</label>
+          <select id="inCat">
+            <option value="admin">اداری</option>
+            <option value="finance">مالی</option>
+            <option value="legal">حقوقی</option>
+            <option value="hr">منابع انسانی</option>
+            <option value="tech">فنی</option>
+            <option value="other">سایر</option>
+          </select>
+        </div>
+        <div><label>محرمانگی</label>
+          <select id="inConf">
+            <option value="normal">عادی</option>
+            <option value="conf">محرمانه</option>
+            <option value="secret">خیلی محرمانه</option>
+          </select>
+        </div>
+        <div><label>وضعیت</label>
+          <select id="inStatus">
+            <option value="new">جدید</option>
+            <option value="review">در حال بررسی</option>
+            <option value="replied">پاسخ داده شده</option>
+            <option value="archived">بایگانی</option>
+          </select>
+        </div>
+      </div>
+      <label>خلاصه / متن</label><textarea id="inBody" maxlength="2000"></textarea>
+      <label>پیوست (شرح فایل)</label><input id="inAtt" maxlength="200" placeholder="نام فایل یا توضیح پیوست">
+      <div class="grid2">
+        <button type="button" class="btn btn-g" id="btnIn">ذخیره وارده</button>
+        <button type="button" class="btn btn-gr" id="btnInClr">جدید</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>فهرست وارده</h2>
+      <input id="inSearch" placeholder="جستجو…" maxlength="80">
+      <div class="filters" id="inFilt">
+        <button type="button" class="on" data-f="all">همه</button>
+        <button type="button" data-f="new">جدید</button>
+        <button type="button" data-f="review">بررسی</button>
+        <button type="button" data-f="replied">پاسخ‌شده</button>
+      </div>
+      <div id="inCards"></div>
+    </section>
+  </main>
+
+  <main id="out" class="panel">
+    <section class="card">
+      <h2>نامه صادره</h2>
+      <input type="hidden" id="outId">
+      <div class="grid3">
+        <div><label>شماره صادره *</label><input id="outNo" maxlength="40" autocomplete="off"></div>
+        <div><label>تاریخ</label><input id="outDate" type="date"></div>
+        <div><label>وضعیت</label>
+          <select id="outStatus">
+            <option value="draft">پیش‌نویس</option>
+            <option value="sent">ارسال‌شده</option>
+            <option value="archived">بایگانی</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div><label>گیرنده *</label><input id="outTo" maxlength="150" autocomplete="off"></div>
+        <div><label>در پاسخ به (شماره وارده)</label><input id="outReply" maxlength="40"></div>
+      </div>
+      <label>موضوع *</label><input id="outSubj" maxlength="250">
+      <div class="grid2">
+        <div><label>طبقه</label>
+          <select id="outCat">
+            <option value="admin">اداری</option>
+            <option value="finance">مالی</option>
+            <option value="legal">حقوقی</option>
+            <option value="hr">منابع انسانی</option>
+            <option value="tech">فنی</option>
+            <option value="other">سایر</option>
+          </select>
+        </div>
+        <div><label>محرمانگی</label>
+          <select id="outConf">
+            <option value="normal">عادی</option>
+            <option value="conf">محرمانه</option>
+            <option value="secret">خیلی محرمانه</option>
+          </select>
+        </div>
+      </div>
+      <label>متن نامه</label><textarea id="outBody" maxlength="3000"></textarea>
+      <label>پیوست (شرح)</label><input id="outAtt" maxlength="200">
+      <div class="grid2">
+        <button type="button" class="btn btn-g" id="btnOut">ذخیره صادره</button>
+        <button type="button" class="btn btn-gr" id="btnOutClr">جدید</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>فهرست صادره</h2>
+      <input id="outSearch" placeholder="جستجو…" maxlength="80">
+      <div class="filters" id="outFilt">
+        <button type="button" class="on" data-f="all">همه</button>
+        <button type="button" data-f="draft">پیش‌نویس</button>
+        <button type="button" data-f="sent">ارسال‌شده</button>
+      </div>
+      <div class="scroll"><table><thead><tr><th>شماره</th><th>تاریخ</th><th>گیرنده</th><th>موضوع</th><th>وضعیت</th><th></th></tr></thead><tbody id="outList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="int" class="panel">
+    <section class="card">
+      <h2>نامه / یادداشت داخلی</h2>
+      <div class="grid3">
+        <div><label>شماره</label><input id="intNo" maxlength="40"></div>
+        <div><label>تاریخ</label><input id="intDate" type="date"></div>
+        <div><label>اولویت</label>
+          <select id="intPri">
+            <option value="normal">عادی</option>
+            <option value="high">مهم</option>
+            <option value="urgent">فوری</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div><label>از واحد / شخص</label><input id="intFrom" maxlength="100"></div>
+        <div><label>به واحد / شخص</label><input id="intTo" maxlength="100"></div>
+      </div>
+      <label>موضوع *</label><input id="intSubj" maxlength="250">
+      <label>متن</label><textarea id="intBody" maxlength="2000"></textarea>
+      <button type="button" class="btn btn-b" id="btnInt">ثبت داخلی</button>
+    </section>
+    <section class="card">
+      <h2>فهرست داخلی</h2>
+      <div class="scroll"><table><thead><tr><th>شماره</th><th>تاریخ</th><th>از</th><th>به</th><th>موضوع</th><th></th></tr></thead><tbody id="intList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="arch" class="panel">
+    <section class="card">
+      <h2>بایگانی و طبقه‌بندی</h2>
+      <p class="note">اسناد با وضعیت «بایگانی» اینجا نمایش داده می‌شوند. می‌توانید پرونده بایگانی دستی هم ثبت کنید.</p>
+      <div class="grid2">
+        <div><label>عنوان پرونده</label><input id="arTitle" maxlength="200"></div>
+        <div><label>کد پرونده</label><input id="arCode" maxlength="40"></div>
+      </div>
+      <div class="grid2">
+        <div><label>طبقه</label>
+          <select id="arCat">
+            <option value="admin">اداری</option>
+            <option value="finance">مالی</option>
+            <option value="legal">حقوقی</option>
+            <option value="hr">منابع انسانی</option>
+            <option value="tech">فنی</option>
+            <option value="other">سایر</option>
+          </select>
+        </div>
+        <div><label>سال</label><input id="arYear" type="number" min="1300" max="1500"></div>
+      </div>
+      <label>توضیح</label><input id="arNote" maxlength="300">
+      <button type="button" class="btn btn-b" id="btnArch">ثبت پرونده بایگانی</button>
+    </section>
+    <section class="card">
+      <h2>پرونده‌ها و اسناد بایگانی‌شده</h2>
+      <input id="archSearch" placeholder="جستجو در بایگانی…" maxlength="80">
+      <div class="scroll" style="margin-top:8px"><table><thead><tr><th>نوع</th><th>کد/شماره</th><th>عنوان</th><th>طبقه</th><th>تاریخ</th><th></th></tr></thead><tbody id="archList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="fu" class="panel">
+    <section class="card">
+      <h2>پیگیری سند / نامه</h2>
+      <div class="grid2">
+        <div><label>مرتبط با</label>
+          <select id="fuRefType">
+            <option value="in">وارده</option>
+            <option value="out">صادره</option>
+            <option value="int">داخلی</option>
+            <option value="other">سایر</option>
+          </select>
+        </div>
+        <div><label>شماره مرجع</label><input id="fuRefNo" maxlength="40"></div>
+      </div>
+      <div class="grid2">
+        <div><label>موعد *</label><input id="fuDate" type="date"></div>
+        <div><label>مسئول</label><input id="fuOwner" maxlength="80"></div>
+      </div>
+      <label>موضوع پیگیری *</label><input id="fuTitle" maxlength="200">
+      <label>توضیح</label><textarea id="fuNote" maxlength="400"></textarea>
+      <div class="grid2">
+        <button type="button" class="btn btn-o" id="btnFu">ثبت پیگیری</button>
+        <button type="button" class="btn btn-p" id="btnFuSec">ثبت + یادآوری منشی</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>پیگیری‌های باز</h2>
+      <div class="filters" id="fuFilt">
+        <button type="button" class="on" data-f="open">باز</button>
+        <button type="button" data-f="done">انجام‌شده</button>
+        <button type="button" data-f="all">همه</button>
+      </div>
+      <div class="scroll"><table><thead><tr><th>موعد</th><th>مرجع</th><th>موضوع</th><th>مسئول</th><th>وضعیت</th><th></th></tr></thead><tbody id="fuList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="rep" class="panel">
+    <section class="card">
+      <h2>گزارش‌ها</h2>
+      <div class="filters" id="repTabs">
+        <button type="button" class="on" data-r="in">وارده</button>
+        <button type="button" data-r="out">صادره</button>
+        <button type="button" data-r="int">داخلی</button>
+        <button type="button" data-r="cat">بر اساس طبقه</button>
+        <button type="button" data-r="conf">محرمانگی</button>
+        <button type="button" data-r="fu">پیگیری</button>
+        <button type="button" data-r="arch">بایگانی</button>
+      </div>
+      <div class="grid2">
+        <div><label>از</label><input type="date" id="repFrom"></div>
+        <div><label>تا</label><input type="date" id="repTo"></div>
+      </div>
+      <button type="button" class="btn btn-b" id="btnRep">اجرا</button>
+      <button type="button" class="btn btn-gr" id="btnPrint">چاپ</button>
+      <button type="button" class="btn btn-g" id="btnBackup">پشتیبان</button>
+      <label>بازیابی</label>
+      <input type="file" id="restoreFile" accept=".json,application/json">
+      <button type="button" class="btn btn-r" id="btnWipe">حذف همه</button>
+    </section>
+    <section class="card">
+      <h2 id="repTitle">نتیجه</h2>
+      <div class="scroll" id="repOut"><p class="note">گزارش را اجرا کنید.</p></div>
+    </section>
+  </main>
+  <p class="footer">مدیریت اسناد هوشمند · نامه و بایگانی · داده محلی</p>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+var KEY="smart_docs_v1", SEC_KEY="items";
+var busy=false, toastTimer=null, inFilt="all", outFilt="all", fuFilt="open", repMode="in";
+var CAT={admin:"اداری",finance:"مالی",legal:"حقوقی",hr:"منابع انسانی",tech:"فنی",other:"سایر"};
+var CONF={normal:"عادی",conf:"محرمانه",secret:"خیلی محرمانه"};
+
+function $(id){return document.getElementById(id);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2200);}
+function today(){return new Date().toISOString().slice(0,10);}
+function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+
+function def(){return {incoming:[],outgoing:[],internal:[],archives:[],followups:[],version:1};}
+function load(){
+  try{
+    var d=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(!d) return def();
+    ["incoming","outgoing","internal","archives","followups"].forEach(function(k){if(!Array.isArray(d[k]))d[k]=[];});
+    return d;
+  }catch(e){return def();}
+}
+function save(x){try{localStorage.setItem(KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره — حجم داده زیاد؟",true);return false;}}
+var db=load();
+
+function lock(fn){return function(){if(busy)return;busy=true;try{fn();}catch(e){toast("خطا",true);}finally{busy=false;};};}
+function pushSec(title,note,date){
+  try{
+    var items=JSON.parse(localStorage.getItem(SEC_KEY)||"[]");
+    if(!Array.isArray(items)) items=[];
+    items.unshift({id:uid(),type:"reminder",title:title,note:note||"",date:date||today(),status:"pending",priority:"high",source:"docs",created:Date.now()});
+    localStorage.setItem(SEC_KEY,JSON.stringify(items));
+    return true;
+  }catch(e){return false;}
+}
+
+function go(tab,btn){
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
+  document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
+  var el=$(tab); if(el) el.classList.add("on");
+  if(btn) btn.classList.add("on");
+  else {var n=document.querySelector('#nav button[data-tab="'+tab+'"]'); if(n) n.classList.add("on");}
+  if(tab==="dash") renderDash();
+  if(tab==="in"){ if(!$("inDate").value)$("inDate").value=today(); if(!$("inRecv").value)$("inRecv").value=today(); renderIn(); }
+  if(tab==="out"){ if(!$("outDate").value)$("outDate").value=today(); renderOut(); }
+  if(tab==="int"){ if(!$("intDate").value)$("intDate").value=today(); renderInt(); }
+  if(tab==="arch"){ if(!$("arYear").value)$("arYear").value=new Date().getFullYear(); renderArch(); }
+  if(tab==="fu"){ if(!$("fuDate").value)$("fuDate").value=today(); renderFu(); }
+}
+
+function renderDash(){
+  var ym=today().slice(0,7);
+  $("stIn").textContent=String(db.incoming.filter(function(d){return d.status==="new"||d.status==="review";}).length);
+  $("stOut").textContent=String(db.outgoing.filter(function(d){return String(d.date).slice(0,7)===ym;}).length);
+  $("stFu").textContent=String(db.followups.filter(function(f){return f.status==="open";}).length);
+  $("stArch").textContent=String(db.archives.length+db.incoming.filter(function(d){return d.status==="archived";}).length+db.outgoing.filter(function(d){return d.status==="archived";}).length);
+  var sec=false; try{sec=!!localStorage.getItem(SEC_KEY);}catch(e){}
+  $("linkStatus").innerHTML=sec?'<span class="badge ok">منشی متصل</span>':'<span class="badge warn">منشی نیست — index.html را در همین مرورگر باز کنید</span>';
+
+  var docs=[];
+  db.incoming.forEach(function(d){docs.push({t:"وارده",no:d.no,date:d.date,subj:d.subject,st:d.status,ts:d.id});});
+  db.outgoing.forEach(function(d){docs.push({t:"صادره",no:d.no,date:d.date,subj:d.subject,st:d.status,ts:d.id});});
+  db.internal.forEach(function(d){docs.push({t:"داخلی",no:d.no,date:d.date,subj:d.subject,st:"—",ts:d.id});});
+  docs.sort(function(a,b){return (b.ts||0)-(a.ts||0);});
+  var tb=$("lastDocs"); tb.textContent="";
+  docs.slice(0,12).forEach(function(d){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+esc(d.t)+"</td><td class='num'>"+esc(d.no)+"</td><td class='num'>"+esc(d.date)+"</td><td>"+esc(d.subj)+"</td><td>"+esc(d.st)+"</td>";
+    tb.appendChild(tr);
+  });
+}
+
+/* Incoming */
+function clearIn(){ $("inId").value="";$("inNo").value="";$("inFrom").value="";$("inRef").value="";$("inSubj").value="";$("inBody").value="";$("inAtt").value="";$("inStatus").value="new";$("inCat").value="admin";$("inConf").value="normal"; }
+$("btnInClr").onclick=clearIn;
+function renderIn(){
+  var q=($("inSearch").value||"").trim().toLowerCase();
+  var box=$("inCards"); box.textContent="";
+  var list=db.incoming.slice().reverse().filter(function(d){
+    if(inFilt!=="all"&&d.status!==inFilt) return false;
+    if(!q) return true;
+    return (d.no+" "+d.from+" "+d.subject+" "+(d.body||"")).toLowerCase().indexOf(q)>=0;
+  });
+  if(!list.length){ box.innerHTML='<p class="note">موردی نیست.</p>'; return; }
+  list.forEach(function(d){
+    var div=document.createElement("div");
+    div.className="doc-card";
+    div.innerHTML='<div class="t">'+esc(d.subject)+' <span class="badge info">'+esc(d.status)+'</span></div>'+
+      '<div class="m">'+esc(d.no)+' · از: '+esc(d.from)+' · '+esc(d.date)+' · '+esc(CAT[d.cat]||"")+'</div>';
+    div.onclick=function(){
+      $("inId").value=d.id;$("inNo").value=d.no;$("inDate").value=d.date||"";$("inRecv").value=d.recvDate||"";
+      $("inFrom").value=d.from;$("inRef").value=d.ref||"";$("inSubj").value=d.subject;$("inCat").value=d.cat||"admin";
+      $("inConf").value=d.conf||"normal";$("inStatus").value=d.status||"new";$("inBody").value=d.body||"";$("inAtt").value=d.att||"";
+    };
+    box.appendChild(div);
+  });
+}
+$("inSearch").oninput=renderIn;
+$("btnIn").onclick=lock(function(){
+  var no=($("inNo").value||"").trim(), from=($("inFrom").value||"").trim(), subj=($("inSubj").value||"").trim();
+  if(!no||!from||!subj){toast("شماره، فرستنده و موضوع الزامی",true);return;}
+  var row={id:$("inId").value?Number($("inId").value):uid(),no:no.slice(0,40),date:$("inDate").value||today(),recvDate:$("inRecv").value||today(),from:from.slice(0,150),ref:($("inRef").value||"").slice(0,60),subject:subj.slice(0,250),cat:$("inCat").value,conf:$("inConf").value,status:$("inStatus").value,body:($("inBody").value||"").slice(0,2000),att:($("inAtt").value||"").slice(0,200)};
+  var i=db.incoming.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0) db.incoming[i]=row; else db.incoming.push(row);
+  if(!save(db)) return;
+  clearIn(); renderIn(); renderDash(); toast("وارده ذخیره شد");
+});
+
+/* Outgoing */
+function clearOut(){ $("outId").value="";$("outNo").value="";$("outTo").value="";$("outReply").value="";$("outSubj").value="";$("outBody").value="";$("outAtt").value="";$("outStatus").value="draft"; }
+$("btnOutClr").onclick=clearOut;
+function renderOut(){
+  var q=($("outSearch").value||"").trim().toLowerCase();
+  var list=db.outgoing.slice().reverse().filter(function(d){
+    if(outFilt!=="all"&&d.status!==outFilt) return false;
+    if(!q) return true;
+    return (d.no+" "+d.to+" "+d.subject).toLowerCase().indexOf(q)>=0;
+  });
+  var tb=$("outList"); tb.textContent="";
+  list.forEach(function(d){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(d.no)+"</td><td class='num'>"+esc(d.date)+"</td><td>"+esc(d.to)+"</td><td>"+esc(d.subject)+"</td><td>"+esc(d.status)+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-edit-out='"+d.id+"'>ویرایش</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-out='"+d.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("outSearch").oninput=renderOut;
+$("btnOut").onclick=lock(function(){
+  var no=($("outNo").value||"").trim(), to=($("outTo").value||"").trim(), subj=($("outSubj").value||"").trim();
+  if(!no||!to||!subj){toast("شماره، گیرنده و موضوع الزامی",true);return;}
+  var row={id:$("outId").value?Number($("outId").value):uid(),no:no.slice(0,40),date:$("outDate").value||today(),to:to.slice(0,150),replyTo:($("outReply").value||"").slice(0,40),subject:subj.slice(0,250),cat:$("outCat").value,conf:$("outConf").value,status:$("outStatus").value,body:($("outBody").value||"").slice(0,3000),att:($("outAtt").value||"").slice(0,200)};
+  var i=db.outgoing.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0) db.outgoing[i]=row; else db.outgoing.push(row);
+  if(!save(db)) return;
+  clearOut(); renderOut(); renderDash(); toast("صادره ذخیره شد");
+});
+
+/* Internal */
+function renderInt(){
+  var tb=$("intList"); tb.textContent="";
+  db.internal.slice().reverse().forEach(function(d){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(d.no)+"</td><td class='num'>"+esc(d.date)+"</td><td>"+esc(d.from)+"</td><td>"+esc(d.to)+"</td><td>"+esc(d.subject)+"</td>"+
+      "<td><button type='button' class='btn btn-r btn-sm' data-del-int='"+d.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("btnInt").onclick=lock(function(){
+  var subj=($("intSubj").value||"").trim();
+  if(!subj){toast("موضوع؟",true);return;}
+  db.internal.push({id:uid(),no:($("intNo").value||"").slice(0,40),date:$("intDate").value||today(),from:($("intFrom").value||"").slice(0,100),to:($("intTo").value||"").slice(0,100),subject:subj.slice(0,250),priority:$("intPri").value,body:($("intBody").value||"").slice(0,2000)});
+  if(!save(db)) return;
+  $("intNo").value="";$("intFrom").value="";$("intTo").value="";$("intSubj").value="";$("intBody").value="";
+  renderInt(); renderDash(); toast("ثبت شد");
+});
+
+/* Archive */
+function renderArch(){
+  var q=($("archSearch").value||"").trim().toLowerCase();
+  var rows=[];
+  db.archives.forEach(function(a){rows.push({t:"پرونده",code:a.code,title:a.title,cat:a.cat,date:String(a.year||""),id:a.id,kind:"arch"});});
+  db.incoming.filter(function(d){return d.status==="archived";}).forEach(function(d){rows.push({t:"وارده",code:d.no,title:d.subject,cat:d.cat,date:d.date,id:d.id,kind:"in"});});
+  db.outgoing.filter(function(d){return d.status==="archived";}).forEach(function(d){rows.push({t:"صادره",code:d.no,title:d.subject,cat:d.cat,date:d.date,id:d.id,kind:"out"});});
+  if(q) rows=rows.filter(function(r){return (r.code+" "+r.title).toLowerCase().indexOf(q)>=0;});
+  var tb=$("archList"); tb.textContent="";
+  rows.forEach(function(r){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+esc(r.t)+"</td><td class='num'>"+esc(r.code)+"</td><td>"+esc(r.title)+"</td><td>"+esc(CAT[r.cat]||r.cat||"")+"</td><td class='num'>"+esc(r.date)+"</td>"+
+      "<td>"+(r.kind==="arch"?'<button type="button" class="btn btn-r btn-sm" data-del-arch="'+r.id+'">حذف</button>':"")+"</td>";
+    tb.appendChild(tr);
+  });
+}
+$("archSearch").oninput=renderArch;
+$("btnArch").onclick=lock(function(){
+  var title=($("arTitle").value||"").trim();
+  if(!title){toast("عنوان؟",true);return;}
+  db.archives.push({id:uid(),title:title.slice(0,200),code:($("arCode").value||"").slice(0,40),cat:$("arCat").value,year:parseInt($("arYear").value,10)||new Date().getFullYear(),note:($("arNote").value||"").slice(0,300)});
+  if(!save(db)) return;
+  $("arTitle").value="";$("arCode").value="";$("arNote").value="";
+  renderArch(); renderDash(); toast("پرونده ثبت شد");
+});
+
+/* Follow-up */
+function renderFu(){
+  var list=db.followups.slice().reverse();
+  if(fuFilt!=="all") list=list.filter(function(f){return f.status===fuFilt;});
+  var tb=$("fuList"); tb.textContent="";
+  list.forEach(function(f){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(f.date)+"</td><td>"+esc(f.refType+" "+(f.refNo||""))+"</td><td>"+esc(f.title)+"</td><td>"+esc(f.owner||"—")+"</td>"+
+      "<td><span class='badge "+(f.status==="open"?"warn":"ok")+"'>"+(f.status==="open"?"باز":"انجام")+"</span></td>"+
+      "<td><button type='button' class='btn btn-g btn-sm' data-done-f='"+f.id+"'>انجام</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-f='"+f.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+function saveFu(toSec){
+  var title=($("fuTitle").value||"").trim(), date=$("fuDate").value;
+  if(!title||!date){toast("موضوع و موعد الزامی",true);return;}
+  var row={id:uid(),refType:$("fuRefType").value,refNo:($("fuRefNo").value||"").slice(0,40),date:date,owner:($("fuOwner").value||"").slice(0,80),title:title.slice(0,200),note:($("fuNote").value||"").slice(0,400),status:"open"};
+  db.followups.push(row);
+  if(!save(db)) return;
+  if(toSec){
+    var ok=pushSec("پیگیری سند: "+title, (row.refType+" "+row.refNo+" — "+row.note).slice(0,400), date);
+    toast(ok?"پیگیری + منشی":"ثبت شد — منشی در دسترس نیست", !ok);
+  } else toast("پیگیری ثبت شد");
+  $("fuTitle").value="";$("fuNote").value="";$("fuRefNo").value="";
+  renderFu(); renderDash();
+}
+$("btnFu").onclick=lock(function(){saveFu(false);});
+$("btnFuSec").onclick=lock(function(){saveFu(true);});
+
+function runRep(){
+  var from=$("repFrom").value, to=$("repTo").value;
+  function inR(d){if(!d)return true;if(from&&d<from)return false;if(to&&d>to)return false;return true;}
+  var h="", title="";
+  if(repMode==="in"){
+    title="نامه‌های وارده";
+    h="<table><thead><tr><th>شماره</th><th>تاریخ</th><th>فرستنده</th><th>موضوع</th><th>وضعیت</th></tr></thead><tbody>";
+    db.incoming.filter(function(d){return inR(d.date);}).forEach(function(d){
+      h+="<tr><td class='num'>"+esc(d.no)+"</td><td class='num'>"+esc(d.date)+"</td><td>"+esc(d.from)+"</td><td>"+esc(d.subject)+"</td><td>"+esc(d.status)+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else if(repMode==="out"){
+    title="نامه‌های صادره";
+    h="<table><thead><tr><th>شماره</th><th>تاریخ</th><th>گیرنده</th><th>موضوع</th><th>وضعیت</th></tr></thead><tbody>";
+    db.outgoing.filter(function(d){return inR(d.date);}).forEach(function(d){
+      h+="<tr><td class='num'>"+esc(d.no)+"</td><td class='num'>"+esc(d.date)+"</td><td>"+esc(d.to)+"</td><td>"+esc(d.subject)+"</td><td>"+esc(d.status)+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else if(repMode==="int"){
+    title="اسناد داخلی";
+    h="<table><thead><tr><th>شماره</th><th>تاریخ</th><th>از</th><th>به</th><th>موضوع</th></tr></thead><tbody>";
+    db.internal.filter(function(d){return inR(d.date);}).forEach(function(d){
+      h+="<tr><td class='num'>"+esc(d.no)+"</td><td class='num'>"+esc(d.date)+"</td><td>"+esc(d.from)+"</td><td>"+esc(d.to)+"</td><td>"+esc(d.subject)+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else if(repMode==="cat"){
+    title="بر اساس طبقه";
+    var map={};
+    function add(d){if(!inR(d.date))return; map[d.cat]=(map[d.cat]||0)+1;}
+    db.incoming.forEach(add); db.outgoing.forEach(add);
+    h="<table><thead><tr><th>طبقه</th><th>تعداد</th></tr></thead><tbody>";
+    Object.keys(map).forEach(function(k){h+="<tr><td>"+esc(CAT[k]||k)+"</td><td class='num'>"+map[k]+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="conf"){
+    title="محرمانگی";
+    var map2={};
+    db.incoming.forEach(function(d){if(!inR(d.date))return; map2[d.conf]=(map2[d.conf]||0)+1;});
+    db.outgoing.forEach(function(d){if(!inR(d.date))return; map2[d.conf]=(map2[d.conf]||0)+1;});
+    h="<table><thead><tr><th>سطح</th><th>تعداد</th></tr></thead><tbody>";
+    Object.keys(map2).forEach(function(k){h+="<tr><td>"+esc(CONF[k]||k)+"</td><td class='num'>"+map2[k]+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="fu"){
+    title="پیگیری‌ها";
+    h="<table><thead><tr><th>موعد</th><th>مرجع</th><th>موضوع</th><th>وضعیت</th></tr></thead><tbody>";
+    db.followups.forEach(function(f){
+      h+="<tr><td class='num'>"+esc(f.date)+"</td><td>"+esc(f.refType+" "+(f.refNo||""))+"</td><td>"+esc(f.title)+"</td><td>"+esc(f.status)+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else {
+    title="بایگانی";
+    h="<table><thead><tr><th>کد</th><th>عنوان</th><th>طبقه</th><th>سال</th></tr></thead><tbody>";
+    db.archives.forEach(function(a){
+      h+="<tr><td class='num'>"+esc(a.code)+"</td><td>"+esc(a.title)+"</td><td>"+esc(CAT[a.cat]||"")+"</td><td class='num'>"+esc(a.year)+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  }
+  $("repTitle").textContent=title;
+  $("repOut").innerHTML=h||"<p class='note'>موردی نیست.</p>";
+  toast("گزارش آماده");
+}
+$("btnRep").onclick=lock(runRep);
+$("btnPrint").onclick=function(){window.print();};
+$("btnOpenSec").onclick=function(){window.open("index.html","_blank","noopener,noreferrer");};
+$("btnBackup").onclick=function(){
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
+  a.download="docs-backup-"+today()+".json"; a.click();
+};
+$("restoreFile").onchange=function(e){
+  var f=e.target.files&&e.target.files[0]; if(!f)return;
+  if(f.size>20*1024*1024){toast("فایل بزرگ",true);return;}
+  var r=new FileReader();
+  r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.incoming))throw new Error("x");db=d;["outgoing","internal","archives","followups"].forEach(function(k){if(!Array.isArray(db[k]))db[k]=[];});save(db);toast("بازیابی شد");renderDash();}catch(err){toast("نامعتبر",true);}};
+  r.readAsText(f);
+};
+$("btnWipe").onclick=lock(function(){if(!confirm("حذف همه اسناد؟"))return;if(!confirm("نهایی؟"))return;db=def();save(db);toast("حذف شد");renderDash();});
+
+$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
+document.body.addEventListener("click",function(e){
+  var eo=e.target.closest("[data-edit-out]");
+  if(eo){var d=db.outgoing.find(function(x){return String(x.id)===eo.getAttribute("data-edit-out");});if(!d)return;
+    $("outId").value=d.id;$("outNo").value=d.no;$("outDate").value=d.date||"";$("outTo").value=d.to;$("outReply").value=d.replyTo||"";
+    $("outSubj").value=d.subject;$("outCat").value=d.cat||"admin";$("outConf").value=d.conf||"normal";$("outStatus").value=d.status||"draft";
+    $("outBody").value=d.body||"";$("outAtt").value=d.att||"";go("out");return;}
+  var dout=e.target.closest("[data-del-out]");
+  if(dout){if(!confirm("حذف؟"))return;db.outgoing=db.outgoing.filter(function(x){return String(x.id)!==dout.getAttribute("data-del-out");});save(db);renderOut();renderDash();return;}
+  var di=e.target.closest("[data-del-int]");
+  if(di){db.internal=db.internal.filter(function(x){return String(x.id)!==di.getAttribute("data-del-int");});save(db);renderInt();renderDash();return;}
+  var da=e.target.closest("[data-del-arch]");
+  if(da){db.archives=db.archives.filter(function(x){return String(x.id)!==da.getAttribute("data-del-arch");});save(db);renderArch();renderDash();return;}
+  var df=e.target.closest("[data-del-f]");
+  if(df){db.followups=db.followups.filter(function(x){return String(x.id)!==df.getAttribute("data-del-f");});save(db);renderFu();renderDash();return;}
+  var done=e.target.closest("[data-done-f]");
+  if(done){var f=db.followups.find(function(x){return String(x.id)===done.getAttribute("data-done-f");});if(f){f.status="done";save(db);renderFu();renderDash();}return;}
+});
+$("inFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;inFilt=b.getAttribute("data-f");document.querySelectorAll("#inFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderIn();});
+$("outFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;outFilt=b.getAttribute("data-f");document.querySelectorAll("#outFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderOut();});
+$("fuFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;fuFilt=b.getAttribute("data-f");document.querySelectorAll("#fuFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderFu();});
+$("repTabs").addEventListener("click",function(e){var b=e.target.closest("[data-r]");if(!b)return;repMode=b.getAttribute("data-r");document.querySelectorAll("#repTabs button").forEach(function(x){x.classList.toggle("on",x===b);});});
+
+renderDash();
+})();
+</script>
+</body>
+</html>
