@@ -3,46 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#4f46e5">
+<meta name="theme-color" content="#6d28d9">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="منابع انسانی هوشمند">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'">
+<meta name="apple-mobile-web-app-title" content="منابع انسانی">
+<meta name="description" content="منابع انسانی و حقوق هوشمند — پرسنل، حضور، حقوق، بیمه، سند حسابداری">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
 <title>منابع انسانی و حقوق هوشمند</title>
 <style>
-:root{--bg:#eef2ff;--card:#fff;--line:#c7d2fe;--txt:#1e1b4b;--muted:#6366f1;--b:#4f46e5;--b2:#4338ca;--g:#059669;--r:#dc2626;--o:#d97706;--c:#0d9488;--shadow:0 4px 22px rgba(79,70,229,.1);--safe:env(safe-area-inset-bottom,0px)}
+:root{
+  --bg:#f5f3ff;--card:#fff;--line:#ddd6fe;--txt:#4c1d95;--muted:#7c3aed;
+  --b:#8b5cf6;--b2:#6d28d9;--g:#059669;--r:#dc2626;--o:#d97706;--c:#0d9488;
+  --shadow:0 4px 22px rgba(109,40,217,.1);--safe:env(safe-area-inset-bottom,0px);--radius:14px;
+}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(800px 360px at 0% 0%,#ddd6fe 0%,transparent 50%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 400px at 100% 0%,#ede9fe 0%,transparent 55%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55}
 .box{max-width:980px;margin:0 auto}
 .header{text-align:center;margin-bottom:12px}
-.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--b),#7c3aed);color:#fff;display:grid;place-items:center;font-size:26px;margin:0 auto 8px;box-shadow:0 8px 24px rgba(79,70,229,.35)}
-h1{font-size:clamp(1.1rem,3vw,1.3rem);color:#312e81}
+.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;display:grid;place-items:center;font-size:26px;margin:0 auto 8px;box-shadow:0 8px 24px rgba(139,92,246,.35)}
+h1{font-size:clamp(1.1rem,3vw,1.3rem);color:#5b21b6;font-weight:700}
 .sub{font-size:.8rem;color:var(--muted)}
-.nav{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(238,242,255,.94);backdrop-filter:blur(12px)}
-.nav button{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.48rem,1.2vw,.64rem);color:var(--muted);cursor:pointer;font-family:inherit}
-.nav button.on{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;border-color:transparent}
-.panel{display:none!important}.panel.on{display:block!important}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
-.card h2{font-size:.92rem;margin-bottom:12px;color:#312e81}
-.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center;text-decoration:none}
-.btn:disabled{opacity:.5}.btn-b{background:linear-gradient(135deg,var(--b),var(--b2))}.btn-g{background:linear-gradient(135deg,var(--g),#047857)}
+.nav{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(245,243,255,.94);backdrop-filter:blur(12px)}
+.nav button{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.48rem,1.2vw,.66rem);color:var(--muted);cursor:pointer;font-family:inherit;transition:.12s}
+.nav button.on{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(139,92,246,.3)}
+.panel{display:none!important}.panel.on{display:block!important;animation:fi .15s ease}
+@keyframes fi{from{opacity:.4}to{opacity:1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card h2{font-size:.92rem;margin-bottom:12px;color:#5b21b6}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
+.btn:disabled{opacity:.45}.btn-b{background:linear-gradient(135deg,var(--b),var(--b2))}.btn-g{background:linear-gradient(135deg,var(--g),#047857)}
 .btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#b45309)}
-.btn-c{background:linear-gradient(135deg,var(--c),#0f766e)}.btn-p{background:linear-gradient(135deg,#7c3aed,#6d28d9)}.btn-gr{background:#e2e8f0;color:#334155}
+.btn-c{background:linear-gradient(135deg,var(--c),#0f766e)}.btn-gr{background:#e2e8f0;color:#334155}
+.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
-input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;font-size:16px;font-family:inherit}
-input:focus,select:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(79,70,229,.15)}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#faf5ff;font-size:16px;font-family:inherit;color:var(--txt)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(139,92,246,.15)}
+textarea{min-height:60px;resize:vertical}
 table{width:100%;border-collapse:collapse;font-size:.8rem}
 th,td{border:1px solid var(--line);padding:8px 6px;text-align:right}
-th{background:#e0e7ff;color:#312e81}
+th{background:#ede9fe;color:#5b21b6;font-weight:700}
+tr:nth-child(even){background:#f5f3ff}
 .num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
 .scroll{overflow:auto;max-height:420px;border-radius:10px}
-.note{font-size:.74rem;color:var(--muted);margin-top:8px}
+.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
 .stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
-.stat .n{font-size:1.1rem;font-weight:700;color:var(--b)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
+.stat .n{font-size:1.05rem;font-weight:700;color:var(--b)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
 .toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center}
 .toast.show{opacity:1}.toast.err{background:var(--r)}
 .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
@@ -50,10 +59,7 @@ th{background:#e0e7ff;color:#312e81}
 .filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
 .filters button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:.72rem;cursor:pointer;font-family:inherit;color:var(--muted)}
 .filters button.on{background:var(--b);color:#fff;border-color:var(--b)}
-.day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.day-cell{background:#f5f3ff;border:1px solid var(--line);border-radius:8px;padding:6px 2px;text-align:center;font-size:.7rem;min-height:42px}
-.day-cell.present{background:#d1fae5}.day-cell.absent{background:#fee2e2}.day-cell.leave{background:#fef3c7}
-.footer{text-align:center;font-size:.7rem;color:#a5b4fc;margin-top:14px}
+.footer{text-align:center;font-size:.7rem;color:#a78bfa;margin-top:14px}
 @media(max-width:720px){.nav{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
 @media print{.nav,.btn,nav{display:none!important}body{background:#fff}}
 </style>
@@ -63,151 +69,94 @@ th{background:#e0e7ff;color:#312e81}
   <header class="header">
     <div class="logo">👥</div>
     <h1>منابع انسانی و حقوق هوشمند</h1>
-    <p class="sub">پرسنل · حضور · حقوق · یادآوری منشی · لیست بیمه</p>
+    <p class="sub">پرسنل · حضور · حقوق · بیمه · سند حسابداری · یادآوری منشی</p>
   </header>
-  <nav class="nav" id="nav">
+  <nav class="nav" id="nav" role="tablist">
     <button type="button" class="on" data-tab="dash">داشبورد</button>
     <button type="button" data-tab="emp">پرسنل</button>
-    <button type="button" data-tab="shift">شیفت</button>
     <button type="button" data-tab="att">حضور</button>
     <button type="button" data-tab="leave">مرخصی</button>
     <button type="button" data-tab="pay">حقوق</button>
-    <button type="button" data-tab="ins">بیمه</button>
-    <button type="button" data-tab="acc">حسابداری</button>
+    <button type="button" data-tab="rep">گزارش</button>
+    <button type="button" data-tab="set">تنظیمات</button>
   </nav>
 
   <main id="dash" class="panel on">
     <div class="stats">
       <div class="stat"><div class="n" id="stEmp">۰</div><div class="l">پرسنل فعال</div></div>
-      <div class="stat"><div class="n" id="stAtt">۰</div><div class="l">حضور امروز</div></div>
-      <div class="stat"><div class="n" id="stPayDay">—</div><div class="l">روز پرداخت حقوق</div></div>
-      <div class="stat"><div class="n num" id="stPay">۰</div><div class="l">جمع خالص</div></div>
+      <div class="stat"><div class="n num" id="stPayroll">۰</div><div class="l">جمع حقوق ماه</div></div>
+      <div class="stat"><div class="n" id="stLeave">۰</div><div class="l">مرخصی باز</div></div>
+      <div class="stat"><div class="n" id="stAtt">۰</div><div class="l">رکورد حضور</div></div>
     </div>
     <section class="card">
-      <h2>یادآوری روز پرداخت در منشی</h2>
+      <h2>اتصال حسابداری و منشی</h2>
+      <p class="note" id="linkStatus">—</p>
       <div class="grid2">
-        <div><label>روز پرداخت هر ماه (۱–۲۸)</label><input id="payDay" type="number" min="1" max="28" value="5"></div>
-        <div><label>ساعت یادآوری</label><input id="payTime" type="time" value="09:00"></div>
+        <button type="button" class="btn btn-c" id="btnOpenAcc">حسابداری</button>
+        <button type="button" class="btn btn-gr" id="btnOpenSec">منشی هوشمند</button>
       </div>
-      <label>متن یادآوری</label>
-      <input id="payMsg" value="روز پرداخت حقوق کارکنان — فیش‌ها و سند حسابداری را بررسی کنید">
-      <button type="button" class="btn btn-p" id="btnSyncSec">ثبت / به‌روزرسانی یادآوری در منشی هوشمند</button>
-      <button type="button" class="btn btn-gr" id="btnOpenSec">باز کردن منشی</button>
-      <p class="note" id="syncMsg">یادآوری با برچسب HR در حافظه منشی ذخیره می‌شود.</p>
+      <button type="button" class="btn btn-b" id="btnRemindPay">یادآوری روز پرداخت حقوق در منشی</button>
     </section>
     <section class="card">
       <h2>میانبر</h2>
       <div class="grid2">
-        <button type="button" class="btn btn-b" data-go="emp">پرسنل</button>
-        <button type="button" class="btn btn-g" data-go="att">حضور</button>
-      </div>
-      <div class="grid2" style="margin-top:8px">
+        <button type="button" class="btn btn-g" data-go="emp">ثبت پرسنل</button>
         <button type="button" class="btn btn-o" data-go="pay">محاسبه حقوق</button>
-        <button type="button" class="btn btn-c" data-go="ins">گزارش بیمه</button>
       </div>
     </section>
-    <section class="card"><h2>فعالیت</h2><div id="activity" class="note">—</div></section>
   </main>
 
   <main id="emp" class="panel">
     <section class="card">
       <h2>پرسنل</h2>
       <input type="hidden" id="eId">
-      <div class="grid3">
-        <div><label>کد *</label><input id="eCode" maxlength="20"></div>
-        <div><label>نام *</label><input id="eName" maxlength="80"></div>
-        <div><label>نام خانوادگی *</label><input id="eFamily" maxlength="80"></div>
+      <div class="grid2">
+        <div><label>کد پرسنلی *</label><input id="eCode" maxlength="20" autocomplete="off"></div>
+        <div><label>نام و نام خانوادگی *</label><input id="eName" maxlength="100" autocomplete="off"></div>
       </div>
       <div class="grid3">
-        <div><label>کد ملی</label><input id="eNid" maxlength="10"></div>
-        <div><label>موبایل</label><input id="eMobile" maxlength="15"></div>
-        <div><label>سمت</label><input id="eJob" maxlength="80"></div>
+        <div><label>سمت</label><input id="eJob" maxlength="60"></div>
+        <div><label>دپارتمان</label><input id="eDept" maxlength="60"></div>
+        <div><label>وضعیت</label><select id="eStatus"><option value="active">فعال</option><option value="left">خروج</option></select></div>
       </div>
-      <div class="grid3">
-        <div><label>بخش</label><input id="eDept" maxlength="80"></div>
-        <div><label>استخدام</label><input id="eHire" type="date"></div>
-        <div><label>وضعیت</label><select id="eStatus"><option value="active">فعال</option><option value="leave">مرخصی بلند</option><option value="exit">خروج</option></select></div>
+      <div class="grid2">
+        <div><label>حقوق پایه ماهانه</label><input id="eBase" type="number" min="0" step="1000" class="num"></div>
+        <div><label>شماره بیمه</label><input id="eIns" maxlength="20" class="num"></div>
       </div>
-      <div class="grid3">
-        <div><label>حقوق پایه</label><input id="eBase" type="number" min="0" step="1000" class="num"></div>
-        <div><label>حق مسکن</label><input id="eHouse" type="number" min="0" step="1000" class="num"></div>
-        <div><label>بن خواربار</label><input id="eFood" type="number" min="0" step="1000" class="num"></div>
+      <div class="grid2">
+        <div><label>تاریخ استخدام</label><input id="eHire" type="date"></div>
+        <div><label>موبایل</label><input id="eMobile" maxlength="20" class="num"></div>
       </div>
-      <div class="grid3">
-        <div><label>کد دستگاه حضور</label><input id="eDeviceId" maxlength="30"></div>
-        <div><label>شیفت</label><select id="eShift"><option value="">—</option></select></div>
-        <div><label>شبا</label><input id="eBank" maxlength="34"></div>
-      </div>
-      <button type="button" class="btn btn-g" id="btnEmp">ذخیره</button>
+      <button type="button" class="btn btn-g" id="btnEmp">ذخیره پرسنل</button>
       <button type="button" class="btn btn-gr" id="btnEmpClr">جدید</button>
     </section>
     <section class="card">
-      <input id="empSearch" placeholder="جستجو…">
-      <div class="scroll" style="margin-top:8px"><table><thead><tr><th>کد</th><th>نام</th><th>سمت</th><th>پایه</th><th>دستگاه</th><th></th></tr></thead><tbody id="empList"></tbody></table></div>
+      <h2>فهرست</h2>
+      <input id="empSearch" placeholder="جستجو…" maxlength="80" autocomplete="off">
+      <div class="scroll" style="margin-top:8px"><table><thead><tr><th>کد</th><th>نام</th><th>سمت</th><th>پایه</th><th>وضعیت</th><th></th></tr></thead><tbody id="empList"></tbody></table></div>
     </section>
-  </main>
-
-  <main id="shift" class="panel">
-    <section class="card">
-      <h2>شیفت</h2>
-      <div class="grid3">
-        <div><label>نام</label><input id="shName"></div>
-        <div><label>شروع</label><input id="shIn" type="time" value="08:00"></div>
-        <div><label>پایان</label><input id="shOut" type="time" value="17:00"></div>
-      </div>
-      <div class="grid2">
-        <div><label>تأخیر مجاز (دقیقه)</label><input id="shGrace" type="number" min="0" value="10"></div>
-        <div><label>ساعت موظف</label><input id="shHours" type="number" min="1" max="24" step="0.5" value="8"></div>
-      </div>
-      <button type="button" class="btn btn-b" id="btnShift">ذخیره شیفت</button>
-    </section>
-    <section class="card"><div class="scroll"><table><thead><tr><th>نام</th><th>ورود</th><th>خروج</th><th>موظف</th><th></th></tr></thead><tbody id="shList"></tbody></table></div></section>
   </main>
 
   <main id="att" class="panel">
     <section class="card">
-      <h2>ثبت حضور</h2>
-      <div class="grid3">
-        <div><label>پرسنل</label><select id="attEmp"></select></div>
-        <div><label>تاریخ</label><input id="attDate" type="date"></div>
-        <div><label>وضعیت</label>
-          <select id="attStatus">
-            <option value="present">حاضر</option><option value="absent">غایب</option>
-            <option value="late">تأخیر</option><option value="mission">مأموریت</option><option value="remote">دورکاری</option>
-          </select>
-        </div>
-      </div>
-      <div class="grid3">
-        <div><label>ورود</label><input id="attIn" type="time"></div>
-        <div><label>خروج</label><input id="attOut" type="time"></div>
-        <div><label>اضافه‌کار (دقیقه)</label><input id="attOt" type="number" min="0" value="0"></div>
-      </div>
-      <button type="button" class="btn btn-b" id="btnAtt">ثبت</button>
-    </section>
-    <section class="card">
-      <h2>ورود از دستگاه</h2>
-      <p class="note">CSV: device_id,date,time,type(in/out)</p>
-      <input type="file" id="attFile" accept=".csv,.txt,.json,text/csv,application/json">
-      <button type="button" class="btn btn-o" id="btnImportAtt">ورود فایل</button>
-      <button type="button" class="btn btn-gr" id="btnSampleAtt">نمونه CSV</button>
-    </section>
-    <section class="card">
-      <h2>تقویم ماهانه</h2>
-      <div class="grid3">
-        <div><label>پرسنل</label><select id="calEmp"></select></div>
-        <div><label>سال</label><input id="calYear" type="number" value="2026"></div>
-        <div><label>ماه</label><input id="calMonth" type="number" min="1" max="12" value="3"></div>
-      </div>
-      <button type="button" class="btn btn-b" id="btnCal">نمایش</button>
-      <div class="day-grid" id="dayGrid" style="margin-top:10px"></div>
-    </section>
-    <section class="card">
+      <h2>ورود حضور (دستی / فایل دستگاه)</h2>
       <div class="grid2">
-        <div><label>از</label><input type="date" id="attFrom"></div>
-        <div><label>تا</label><input type="date" id="attTo"></div>
+        <div><label>پرسنل</label><select id="aEmp"></select></div>
+        <div><label>تاریخ</label><input id="aDate" type="date"></div>
       </div>
-      <button type="button" class="btn btn-gr" id="btnAttRep">فیلتر</button>
-      <div class="scroll" style="margin-top:8px"><table><thead><tr><th>تاریخ</th><th>پرسنل</th><th>وضعیت</th><th>ورود</th><th>خروج</th><th>اضافه</th><th></th></tr></thead><tbody id="attList"></tbody></table></div>
+      <div class="grid3">
+        <div><label>ورود</label><input id="aIn" type="time"></div>
+        <div><label>خروج</label><input id="aOut" type="time"></div>
+        <div><label>نوع</label><select id="aType"><option value="work">کارکرد</option><option value="absent">غیبت</option><option value="holiday">تعطیل</option></select></div>
+      </div>
+      <button type="button" class="btn btn-g" id="btnAtt">ثبت حضور</button>
+      <label>ورود از فایل دستگاه (CSV: code,date,in,out)</label>
+      <input type="file" id="attFile" accept=".csv,text/csv,text/plain">
+      <p class="note">مثال خط: 1001,2026-10-20,08:00,17:00</p>
+    </section>
+    <section class="card">
+      <h2>رکوردها</h2>
+      <div class="scroll"><table><thead><tr><th>تاریخ</th><th>پرسنل</th><th>ورود</th><th>خروج</th><th>نوع</th><th></th></tr></thead><tbody id="attList"></tbody></table></div>
     </section>
   </main>
 
@@ -215,540 +164,417 @@ th{background:#e0e7ff;color:#312e81}
     <section class="card">
       <h2>مرخصی</h2>
       <div class="grid2">
-        <div><label>پرسنل</label><select id="lvEmp"></select></div>
-        <div><label>نوع</label>
-          <select id="lvType">
-            <option value="annual">استحقاقی</option><option value="sick">استعلاجی</option>
-            <option value="unpaid">بدون حقوق</option><option value="other">سایر</option>
-          </select>
-        </div>
+        <div><label>پرسنل</label><select id="lEmp"></select></div>
+        <div><label>نوع</label><select id="lType"><option value="annual">استحقاقی</option><option value="sick">استعلاجی</option><option value="unpaid">بدون حقوق</option></select></div>
       </div>
       <div class="grid2">
-        <div><label>از</label><input type="date" id="lvFrom"></div>
-        <div><label>تا</label><input type="date" id="lvTo"></div>
+        <div><label>از</label><input id="lFrom" type="date"></div>
+        <div><label>تا</label><input id="lTo" type="date"></div>
       </div>
-      <button type="button" class="btn btn-b" id="btnLeave">ثبت</button>
+      <label>توضیح</label><input id="lNote" maxlength="200">
+      <button type="button" class="btn btn-o" id="btnLeave">ثبت مرخصی</button>
     </section>
-    <section class="card"><div class="scroll"><table><thead><tr><th>پرسنل</th><th>نوع</th><th>از</th><th>تا</th><th>روز</th><th>وضعیت</th><th></th></tr></thead><tbody id="lvList"></tbody></table></div></section>
+    <section class="card">
+      <h2>لیست مرخصی</h2>
+      <div class="scroll"><table><thead><tr><th>پرسنل</th><th>نوع</th><th>از</th><th>تا</th><th>وضعیت</th><th></th></tr></thead><tbody id="leaveList"></tbody></table></div>
+    </section>
   </main>
 
   <main id="pay" class="panel">
     <section class="card">
-      <h2>محاسبه حقوق</h2>
+      <h2>محاسبه حقوق ماه</h2>
       <div class="grid3">
-        <div><label>سال</label><input id="payYear" type="number" value="1404"></div>
-        <div><label>ماه</label><input id="payMonth" type="number" min="1" max="12" value="1"></div>
-        <div><label>نرخ اضافه‌کار ساعتی</label><input id="otRate" type="number" min="0" step="1000" class="num" value="0"></div>
+        <div><label>سال</label><input id="pYear" type="number" min="1400" max="1500"></div>
+        <div><label>ماه (۱–۱۲)</label><input id="pMonth" type="number" min="1" max="12"></div>
+        <div><label>روز پرداخت</label><input id="pPayDay" type="number" min="1" max="31" value="5"></div>
       </div>
-      <div class="grid3">
-        <div><label>بیمه کارمند ٪</label><input id="insEmp" type="number" min="0" max="100" step="0.1" value="7"></div>
-        <div><label>بیمه کارفرما ٪</label><input id="insEr" type="number" min="0" max="100" step="0.1" value="23"></div>
-        <div><label>مالیات ٪</label><input id="taxPct" type="number" min="0" max="50" step="0.1" value="0"></div>
+      <div class="grid2">
+        <div><label>درصد بیمه کارگر</label><input id="pInsEmp" type="number" min="0" max="100" step="0.1" value="7"></div>
+        <div><label>درصد بیمه کارفرما</label><input id="pInsCo" type="number" min="0" max="100" step="0.1" value="23"></div>
       </div>
-      <button type="button" class="btn btn-g" id="btnCalcPay">محاسبه همه فعال‌ها</button>
-      <button type="button" class="btn btn-p" id="btnSyncAfterPay">پس از محاسبه: یادآوری پرداخت در منشی</button>
+      <div class="grid2">
+        <div><label>کد هزینه حقوق (حسابداری)</label><input id="pExpCode" value="5101" maxlength="20"></div>
+        <div><label>کد بیمه پرداختنی</label><input id="pInsCode" value="2105" maxlength="20"></div>
+      </div>
+      <div class="grid2">
+        <div><label>کد حقوق پرداختنی</label><input id="pPayCode" value="2104" maxlength="20"></div>
+        <div><label>کد بانک پرداخت</label><input id="pBankCode" value="110102" maxlength="20"></div>
+      </div>
+      <button type="button" class="btn btn-b" id="btnCalc">محاسبه فیش‌ها</button>
+      <button type="button" class="btn btn-c" id="btnPostPay">صدور سند حسابداری حقوق</button>
+      <button type="button" class="btn btn-g" id="btnInsRep">گزارش لیست بیمه + یادآوری منشی</button>
     </section>
     <section class="card">
-      <h2>فیش‌ها</h2>
-      <div class="scroll"><table><thead><tr><th>پرسنل</th><th>ناخالص</th><th>کسورات</th><th>خالص</th><th>بیمه کارفرما</th><th></th></tr></thead><tbody id="payList"></tbody></table></div>
-      <p class="note">جمع خالص: <b class="num" id="paySum">۰</b> · هزینه کارفرما: <b class="num" id="payCost">۰</b></p>
-      <button type="button" class="btn btn-gr" id="btnPrintPay">چاپ</button>
+      <h2>فیش‌های محاسبه‌شده</h2>
+      <div class="scroll"><table><thead><tr><th>کد</th><th>نام</th><th>پایه</th><th>بیمه کارگر</th><th>خالص</th><th>بیمه کارفرما</th></tr></thead><tbody id="payList"></tbody></table></div>
+      <p class="note" id="paySum">—</p>
     </section>
   </main>
 
-  <main id="ins" class="panel">
+  <main id="rep" class="panel">
     <section class="card">
-      <h2>گزارش لیست بیمه کارکنان</h2>
-      <div class="grid3">
-        <div><label>بیمه کارمند ٪</label><input id="insREmp" type="number" step="0.1" value="7"></div>
-        <div><label>بیمه کارفرما ٪</label><input id="insREr" type="number" step="0.1" value="23"></div>
-        <div><label>مبنای محاسبه</label>
-          <select id="insBase">
-            <option value="base">فقط حقوق پایه</option>
-            <option value="gross" selected>پایه + مسکن + بن</option>
-          </select>
-        </div>
+      <h2>گزارش‌ها</h2>
+      <div class="filters" id="repTabs">
+        <button type="button" class="on" data-r="emp">پرسنل</button>
+        <button type="button" data-r="pay">حقوق</button>
+        <button type="button" data-r="ins">بیمه</button>
+        <button type="button" data-r="leave">مرخصی</button>
+        <button type="button" data-r="att">حضور</button>
       </div>
-      <button type="button" class="btn btn-c" id="btnInsRep">تولید گزارش بیمه</button>
-      <button type="button" class="btn btn-g" id="btnInsCsv">دانلود CSV</button>
-      <button type="button" class="btn btn-p" id="btnInsToSec">ارسال خلاصه گزارش به منشی (یادداشت)</button>
+      <button type="button" class="btn btn-b" id="btnRep">اجرا</button>
+      <button type="button" class="btn btn-gr" id="btnPrint">چاپ</button>
     </section>
     <section class="card">
-      <h2>لیست بیمه</h2>
-      <div class="scroll"><table><thead><tr><th>کد</th><th>نام</th><th>کد ملی</th><th>مبنای بیمه</th><th>سهم کارمند</th><th>سهم کارفرما</th><th>جمع</th></tr></thead><tbody id="insList"></tbody></table></div>
-      <p class="note">جمع سهم کارمند: <b class="num" id="insSumE">۰</b> · کارفرما: <b class="num" id="insSumR">۰</b> · کل: <b class="num" id="insSumT">۰</b></p>
+      <h2 id="repTitle">نتیجه</h2>
+      <div class="scroll" id="repOut"><p class="note">گزارش را اجرا کنید.</p></div>
     </section>
   </main>
 
-  <main id="acc" class="panel">
+  <main id="set" class="panel">
     <section class="card">
-      <h2>سند خودکار حسابداری</h2>
-      <div class="grid2">
-        <div><label>کد هزینه حقوق</label><input id="accExp" value="5101"></div>
-        <div><label>کد بانک</label><input id="accBank" value="110102"></div>
-      </div>
-      <div class="grid2">
-        <div><label>بیمه پرداختنی</label><input id="accIns" value="2101"></div>
-        <div><label>تاریخ سند</label><input type="date" id="accDate"></div>
-      </div>
-      <select id="accMode">
-        <option value="full" selected>کامل: ناخالص + بانک + کسور</option>
-        <option value="net">فقط خالص</option>
-        <option value="employer">با بیمه کارفرما</option>
-      </select>
-      <button type="button" class="btn btn-c" id="btnPostAcc">صدور سند</button>
-      <button type="button" class="btn btn-gr" id="btnOpenAcc">حسابداری</button>
-      <p class="note" id="accMsg">—</p>
-      <p class="note" id="accStatus">—</p>
-    </section>
-    <section class="card">
-      <h2>تنظیمات و پشتیبان</h2>
-      <button type="button" class="btn btn-g" id="btnBackup">پشتیبان HR</button>
+      <h2>امنیت و پشتیبان</h2>
+      <p class="note">داده فقط محلی · CSP · بدون شبکه · تأیید دو مرحله‌ای برای حذف</p>
+      <button type="button" class="btn btn-g" id="btnBackup">دانلود JSON</button>
       <label>بازیابی</label>
       <input type="file" id="restoreFile" accept=".json,application/json">
       <button type="button" class="btn btn-r" id="btnWipe">حذف همه</button>
     </section>
   </main>
-
-  <p class="footer">HR · منشی · حسابداری · لیست بیمه</p>
+  <p class="footer">منابع انسانی هوشمند v2 · متصل به حسابداری و منشی</p>
 </div>
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 (function(){
 "use strict";
-var HR_KEY="smart_hr_v2", ACC_KEY="smart_acc_v2";
-var SEC_ITEMS_KEY="items";
-var SEC_BRIDGE="smart_suite_bridge";
-var HR_REMINDER_TAG="hr-payroll-day";
-var saving=false, lastInsRows=[];
+var KEY="smart_hr_v2", KEY_LEGACY="smart_hr_v1";
+var ACC_KEY="smart_acc_v2", SEC_KEY="items";
+var repMode="emp", busy=false, toastTimer=null, lastPays=[];
 
 function $(id){return document.getElementById(id);}
-function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2200);}
-function fmt(n){return (Number(n)||0).toLocaleString("fa-IR",{maximumFractionDigits:0});}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2200);}
+function fmt(n){n=Number(n);if(!isFinite(n))n=0;return n.toLocaleString("fa-IR",{maximumFractionDigits:0});}
 function today(){return new Date().toISOString().slice(0,10);}
 function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
 function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+function isCode(s){return /^[0-9A-Za-z.\-]{1,20}$/.test(s);}
+function money(n){n=Number(n);if(!isFinite(n)||n<0)return null;return Math.round(n);}
 
-function def(){return {employees:[],shifts:[],attendance:[],leaves:[],payslips:[],activity:[],settings:{payDay:5,payTime:"09:00",payMsg:"روز پرداخت حقوق کارکنان"},version:2};}
-function load(){
-  try{
-    var d=JSON.parse(localStorage.getItem(HR_KEY)||localStorage.getItem("smart_hr_v1")||"null");
-    if(!d) return def();
-    ["employees","shifts","attendance","leaves","payslips","activity"].forEach(function(k){if(!Array.isArray(d[k]))d[k]=[];});
-    if(!d.settings) d.settings={payDay:5,payTime:"09:00",payMsg:"روز پرداخت حقوق کارکنان"};
-    return d;
-  }catch(e){return def();}
+function def(){return {employees:[],attendance:[],leaves:[],payrolls:[],settings:{payDay:5,insEmp:7,insCo:23},version:2};}
+function normalize(d){
+  if(!d||typeof d!=="object") return def();
+  ["employees","attendance","leaves","payrolls"].forEach(function(k){if(!Array.isArray(d[k]))d[k]=[];});
+  if(!d.settings) d.settings={payDay:5,insEmp:7,insCo:23};
+  d.version=2; return d;
 }
-function save(x){try{localStorage.setItem(HR_KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
-function log(m){db.activity.unshift({t:new Date().toISOString(),msg:m});if(db.activity.length>40)db.activity=db.activity.slice(0,40);}
+function load(){try{var r=localStorage.getItem(KEY)||localStorage.getItem(KEY_LEGACY);if(!r)return def();return normalize(JSON.parse(r));}catch(e){return def();}}
+function save(x){try{localStorage.setItem(KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
 var db=load();
 
-/* ─── Bridge to Smart Secretary ─── */
-function nextPayDateISO(day){
-  day=Math.min(28,Math.max(1,Number(day)||5));
-  var now=new Date();
-  var y=now.getFullYear(), m=now.getMonth();
-  var candidate=new Date(y,m,day);
-  if(candidate < new Date(y,m,now.getDate())) candidate=new Date(y,m+1,day);
-  return candidate.toISOString().slice(0,10);
+function loadAcc(){try{return JSON.parse(localStorage.getItem(ACC_KEY)||"null");}catch(e){return null;}}
+function saveAcc(a){try{localStorage.setItem(ACC_KEY,JSON.stringify(a));return true;}catch(e){toast("خطا حسابداری",true);return false;}}
+function ensureAcc(){
+  var a=loadAcc();
+  if(!a||typeof a!=="object") a={accounts:[],journals:[],ap:[],ar:[],bankRecs:[],nextJe:1,version:2};
+  if(!Array.isArray(a.accounts)) a.accounts=[];
+  if(!Array.isArray(a.journals)) a.journals=[];
+  a.nextJe=Math.max(1,parseInt(a.nextJe,10)||1);
+  return a;
 }
-function loadSecItems(){
-  try{
-    var raw=localStorage.getItem(SEC_ITEMS_KEY);
-    if(!raw) return [];
-    var arr=JSON.parse(raw);
-    return Array.isArray(arr)?arr:[];
-  }catch(e){return [];}
+function postJe(desc,lines,date){
+  var a=ensureAcc(),dr=0,cr=0,clean=[];
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i],d=Number(l.dr)||0,c=Number(l.cr)||0;
+    if(!isCode(l.code)) return null;
+    if(d===0&&c===0) continue;
+    dr+=d;cr+=c;
+    clean.push({code:l.code,desc:String(l.desc||"").slice(0,200),dr:d,cr:c});
+  }
+  if(clean.length<2||Math.abs(dr-cr)>1||dr<=0) return null;
+  var je={id:Date.now(),no:a.nextJe,date:date||today(),type:"payroll",desc:String(desc||"").slice(0,300),lines:clean,total:dr};
+  a.journals.push(je);a.nextJe++;
+  if(!saveAcc(a)) return null;
+  return je;
 }
-function saveSecItems(items){
-  localStorage.setItem(SEC_ITEMS_KEY, JSON.stringify(items));
-  try{
-    localStorage.setItem(SEC_BRIDGE, JSON.stringify({
-      source:"hr",
-      updated:new Date().toISOString(),
-      payrollDay: db.settings.payDay,
-      nextPay: nextPayDateISO(db.settings.payDay)
-    }));
-  }catch(e){}
+function empName(id){var e=db.employees.find(function(x){return String(x.id)===String(id);});return e?e.name:"—";}
+function empById(id){return db.employees.find(function(x){return String(x.id)===String(id);});}
+function activeEmps(){return db.employees.filter(function(e){return e.status==="active";});}
+function fillEmpSelects(){
+  var o='<option value="">— انتخاب —</option>';
+  activeEmps().forEach(function(e){o+='<option value="'+e.id+'">'+esc(e.code+" — "+e.name)+'</option>';});
+  $("aEmp").innerHTML=o; $("lEmp").innerHTML=o;
 }
-function syncPayrollReminder(){
-  var day=Math.min(28,Math.max(1,Number($("payDay").value)||5));
-  var time=$("payTime").value||"09:00";
-  var msg=($("payMsg").value||"روز پرداخت حقوق").trim().slice(0,300);
-  db.settings.payDay=day;
-  db.settings.payTime=time;
-  db.settings.payMsg=msg;
-  save(db);
+function lock(fn){return function(){if(busy)return;busy=true;try{fn();}catch(e){toast("خطا",true);}finally{busy=false;};};}
 
-  var when=nextPayDateISO(day);
-  var items=loadSecItems();
-  items=items.filter(function(it){ return !(it && (it.tag===HR_REMINDER_TAG || (it.title&&String(it.title).indexOf("روز پرداخت حقوق")===0))); });
-  var reminder={
-    id: uid(),
-    type: "reminder",
-    title: "روز پرداخت حقوق",
-    desc: msg,
-    when: when,
-    date: when,
-    time: time,
-    status: "open",
-    priority: "مهم",
-    tag: HR_REMINDER_TAG,
-    source: "hr-payroll",
-    updated: new Date().toISOString()
-  };
-  items.unshift(reminder);
-  saveSecItems(items);
-  $("stPayDay").textContent=String(day);
-  $("syncMsg").innerHTML='<span class="badge ok">یادآوری در منشی ثبت شد</span> · تاریخ: <span class="num">'+when+'</span> · ساعت '+time;
-  log("یادآوری پرداخت حقوق → منشی ("+when+")");
-  save(db);
-  toast("یادآوری در منشی ذخیره شد");
-  return when;
-}
-function pushNoteToSecretary(title, body){
-  var items=loadSecItems();
-  items.unshift({
-    id: uid(),
-    type: "note",
-    title: title,
-    desc: body,
-    status: "open",
-    priority: "عادی",
-    tag: "hr-insurance",
-    source: "hr-payroll",
-    updated: new Date().toISOString(),
-    when: today(),
-    date: today()
-  });
-  saveSecItems(items);
-  toast("یادداشت در منشی ثبت شد");
+function pushSecretaryReminder(title, note, when){
+  try{
+    var items=JSON.parse(localStorage.getItem(SEC_KEY)||"[]");
+    if(!Array.isArray(items)) items=[];
+    items.unshift({
+      id:uid(), type:"reminder", title:title, note:note||"",
+      date:when||today(), status:"pending", priority:"high", source:"hr-payroll", created:Date.now()
+    });
+    localStorage.setItem(SEC_KEY, JSON.stringify(items));
+    return true;
+  }catch(e){return false;}
 }
 
 function go(tab,btn){
   document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
   document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
   var el=$(tab); if(el) el.classList.add("on");
-  if(btn) btn.classList.add("on"); else {var n=document.querySelector('#nav button[data-tab="'+tab+'"]'); if(n) n.classList.add("on");}
+  if(btn) btn.classList.add("on");
+  else {var n=document.querySelector('#nav button[data-tab="'+tab+'"]'); if(n) n.classList.add("on");}
   if(tab==="dash") renderDash();
-  if(tab==="emp"){ fillShiftSelect(); renderEmp(); }
-  if(tab==="shift") renderShifts();
-  if(tab==="att"){ fillEmpSelects(); renderAtt(); }
+  if(tab==="emp") renderEmp();
+  if(tab==="att"){ fillEmpSelects(); if(!$("aDate").value)$("aDate").value=today(); renderAtt(); }
   if(tab==="leave"){ fillEmpSelects(); renderLeave(); }
-  if(tab==="pay") renderPay();
-  if(tab==="ins") {}
-  if(tab==="acc") checkAcc();
-}
-
-function activeEmp(){return db.employees.filter(function(e){return e.status==="active";});}
-function empName(id){var e=db.employees.find(function(x){return String(x.id)===String(id);});return e?(e.name+" "+e.family):"—";}
-function fillEmpSelects(){
-  var o='<option value="">—</option>';
-  activeEmp().forEach(function(e){o+='<option value="'+e.id+'">'+esc(e.code+" — "+e.name+" "+e.family)+'</option>';});
-  $("attEmp").innerHTML=o; $("lvEmp").innerHTML=o; $("calEmp").innerHTML=o;
-}
-function fillShiftSelect(){
-  var o='<option value="">—</option>';
-  db.shifts.forEach(function(s){o+='<option value="'+s.id+'">'+esc(s.name)+'</option>';});
-  $("eShift").innerHTML=o;
+  if(tab==="pay"){
+    if(!$("pYear").value) $("pYear").value=new Date().getFullYear();
+    if(!$("pMonth").value) $("pMonth").value=new Date().getMonth()+1;
+  }
 }
 
 function renderDash(){
-  $("stEmp").textContent=String(activeEmp().length);
-  var td=today();
-  $("stAtt").textContent=String(db.attendance.filter(function(a){return a.date===td&&a.status!=="absent";}).length);
-  $("stPayDay").textContent=String(db.settings.payDay||5);
-  $("stPay").textContent=fmt(db.payslips.reduce(function(s,p){return s+(Number(p.net)||0);},0));
-  $("payDay").value=db.settings.payDay||5;
-  $("payTime").value=db.settings.payTime||"09:00";
-  if(db.settings.payMsg) $("payMsg").value=db.settings.payMsg;
-  $("activity").innerHTML=db.activity.slice(0,8).map(function(a){return "• "+esc(a.msg);}).join("<br>")||"فعالیتی نیست.";
+  $("stEmp").textContent=String(activeEmps().length);
+  var ym=today().slice(0,7);
+  var sum=0;
+  db.payrolls.forEach(function(p){ if(String(p.period)===ym) sum+=Number(p.net)||0; });
+  if(!sum && lastPays.length) lastPays.forEach(function(p){sum+=p.net;});
+  $("stPayroll").textContent=fmt(sum);
+  $("stLeave").textContent=String(db.leaves.filter(function(l){return l.status==="open";}).length);
+  $("stAtt").textContent=String(db.attendance.length);
+  var acc=loadAcc();
+  var sec=false; try{ sec=!!localStorage.getItem(SEC_KEY); }catch(e){}
+  $("linkStatus").innerHTML=
+    (acc&&Array.isArray(acc.accounts)?'<span class="badge ok">حسابداری متصل</span>':'<span class="badge warn">حسابداری نیست</span>')+
+    " · "+
+    (sec?'<span class="badge ok">منشی متصل</span>':'<span class="badge warn">منشی نیست</span>');
 }
 
 function renderEmp(){
   var q=($("empSearch").value||"").trim().toLowerCase();
-  var list=db.employees.slice().reverse();
-  if(q) list=list.filter(function(e){return (e.code+" "+e.name+" "+e.family+" "+(e.dept||"")+" "+(e.job||"")).toLowerCase().indexOf(q)>=0;});
+  var list=db.employees.slice();
+  if(q) list=list.filter(function(e){return (e.code+" "+e.name+" "+(e.job||"")).toLowerCase().indexOf(q)>=0;});
   var tb=$("empList"); tb.textContent="";
   list.forEach(function(e){
     var tr=document.createElement("tr");
-    tr.innerHTML="<td class='num'>"+esc(e.code)+"</td><td>"+esc(e.name+" "+e.family)+"</td><td>"+esc(e.job||"")+"</td><td class='num'>"+fmt(e.base)+"</td><td class='num'>"+esc(e.deviceId||"—")+"</td>"+
-      "<td><button type='button' data-edit-emp='"+e.id+"' class='btn btn-b' style='padding:4px 8px;margin:0;width:auto;font-size:.7rem'>ویرایش</button> "+
-      "<button type='button' data-del-emp='"+e.id+"' class='btn btn-r' style='padding:4px 8px;margin:0;width:auto;font-size:.7rem'>حذف</button></td>";
+    tr.innerHTML="<td class='num'>"+esc(e.code)+"</td><td>"+esc(e.name)+"</td><td>"+esc(e.job||"—")+"</td><td class='num'>"+fmt(e.base)+"</td>"+
+      "<td><span class='badge "+(e.status==="active"?"ok":"bad")+"'>"+(e.status==="active"?"فعال":"خروج")+"</span></td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-edit-e='"+e.id+"'>ویرایش</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-e='"+e.id+"'>حذف</button></td>";
     tb.appendChild(tr);
   });
 }
-function clearEmp(){
-  ["eId","eCode","eName","eFamily","eNid","eMobile","eJob","eDept","eHire","eBase","eHouse","eFood","eDeviceId","eBank"].forEach(function(i){$(i).value="";});
-  $("eStatus").value="active"; $("eShift").value="";
-}
+function clearEmp(){ $("eId").value="";$("eCode").value="";$("eName").value="";$("eJob").value="";$("eDept").value="";$("eBase").value="";$("eIns").value="";$("eHire").value="";$("eMobile").value="";$("eStatus").value="active"; }
 $("btnEmpClr").onclick=clearEmp;
-$("btnEmp").onclick=function(){
-  var code=($("eCode").value||"").trim(), name=($("eName").value||"").trim(), family=($("eFamily").value||"").trim();
-  if(!code||!name||!family){toast("کد و نام الزامی",true);return;}
-  var row={id:$("eId").value?Number($("eId").value):uid(),code:code.slice(0,20),name:name.slice(0,80),family:family.slice(0,80),
-    nid:($("eNid").value||"").slice(0,10),mobile:($("eMobile").value||"").slice(0,15),job:($("eJob").value||"").slice(0,80),
-    dept:($("eDept").value||"").slice(0,80),hire:$("eHire").value||"",status:$("eStatus").value,
-    base:Number($("eBase").value)||0,house:Number($("eHouse").value)||0,food:Number($("eFood").value)||0,
-    deviceId:($("eDeviceId").value||"").trim().slice(0,30),bank:($("eBank").value||"").slice(0,34),shiftId:$("eShift").value||""};
+$("empSearch").oninput=renderEmp;
+$("btnEmp").onclick=lock(function(){
+  var code=($("eCode").value||"").trim(), name=($("eName").value||"").trim();
+  if(!code||!name){toast("کد و نام الزامی",true);return;}
+  var row={
+    id:$("eId").value?Number($("eId").value):uid(),
+    code:code.slice(0,20), name:name.slice(0,100), job:($("eJob").value||"").slice(0,60),
+    dept:($("eDept").value||"").slice(0,60), status:$("eStatus").value==="left"?"left":"active",
+    base:money($("eBase").value)||0, insurance:($("eIns").value||"").slice(0,20),
+    hire:$("eHire").value||"", mobile:($("eMobile").value||"").slice(0,20)
+  };
   var i=db.employees.findIndex(function(x){return String(x.id)===String(row.id);});
   if(i>=0) db.employees[i]=row;
-  else{ if(db.employees.some(function(x){return x.code===row.code;})){toast("کد تکراری",true);return;} db.employees.push(row); }
-  log("پرسنل: "+row.name+" "+row.family); save(db); clearEmp(); renderEmp(); renderDash(); toast("ذخیره شد");
-};
-$("empSearch").oninput=renderEmp;
-
-function renderShifts(){
-  var tb=$("shList"); tb.textContent="";
-  db.shifts.forEach(function(s){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td>"+esc(s.name)+"</td><td class='num'>"+esc(s.in)+"</td><td class='num'>"+esc(s.out)+"</td><td class='num'>"+esc(s.hours)+"</td>"+
-      "<td><button type='button' data-del-sh='"+s.id+"' class='btn btn-r' style='padding:4px 8px;margin:0;width:auto;font-size:.7rem'>حذف</button></td>";
-    tb.appendChild(tr);
-  });
-}
-$("btnShift").onclick=function(){
-  var name=($("shName").value||"").trim(); if(!name){toast("نام شیفت؟",true);return;}
-  db.shifts.push({id:uid(),name:name,in:$("shIn").value||"08:00",out:$("shOut").value||"17:00",grace:Number($("shGrace").value)||0,hours:Number($("shHours").value)||8});
-  log("شیفت: "+name); save(db); $("shName").value=""; renderShifts(); toast("ذخیره شد");
-};
+  else {
+    if(db.employees.some(function(x){return x.code===row.code;})){toast("کد تکراری",true);return;}
+    db.employees.push(row);
+  }
+  if(!save(db)) return;
+  clearEmp(); renderEmp(); renderDash(); toast("ذخیره شد");
+});
 
 function renderAtt(){
-  var from=$("attFrom").value,to=$("attTo").value;
-  var list=db.attendance.slice().reverse();
-  if(from) list=list.filter(function(a){return a.date>=from;});
-  if(to) list=list.filter(function(a){return a.date<=to;});
-  var st={present:"حاضر",absent:"غایب",late:"تأخیر",mission:"مأموریت",remote:"دورکاری"};
   var tb=$("attList"); tb.textContent="";
-  list.slice(0,250).forEach(function(a){
+  db.attendance.slice().reverse().slice(0,100).forEach(function(a){
     var tr=document.createElement("tr");
-    tr.innerHTML="<td class='num'>"+esc(a.date)+"</td><td>"+esc(empName(a.empId))+"</td><td>"+esc(st[a.status]||a.status)+"</td><td class='num'>"+esc(a.timeIn||"—")+"</td><td class='num'>"+esc(a.timeOut||"—")+"</td><td class='num'>"+esc(a.ot||0)+"</td>"+
-      "<td><button type='button' data-del-att='"+a.id+"' class='btn btn-r' style='padding:4px 8px;margin:0;width:auto;font-size:.7rem'>×</button></td>";
+    tr.innerHTML="<td class='num'>"+esc(a.date)+"</td><td>"+esc(empName(a.empId))+"</td><td class='num'>"+esc(a.in||"—")+"</td><td class='num'>"+esc(a.out||"—")+"</td><td>"+esc(a.type)+"</td>"+
+      "<td><button type='button' class='btn btn-r btn-sm' data-del-a='"+a.id+"'>حذف</button></td>";
     tb.appendChild(tr);
   });
 }
-$("btnAtt").onclick=function(){
-  var empId=$("attEmp").value; if(!empId){toast("پرسنل؟",true);return;}
-  db.attendance.push({id:uid(),empId:Number(empId),date:$("attDate").value||today(),status:$("attStatus").value,timeIn:$("attIn").value||"",timeOut:$("attOut").value||"",ot:Number($("attOt").value)||0,source:"manual"});
-  log("حضور "+empName(empId)); save(db); renderAtt(); renderDash(); toast("ثبت شد");
-};
-$("btnAttRep").onclick=renderAtt;
-$("btnSampleAtt").onclick=function(){
-  var s="device_id,date,time,type\n1001,"+today()+",08:00,in\n1001,"+today()+",17:00,out\n";
-  var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([s],{type:"text/csv"})); a.download="attendance-sample.csv"; a.click();
-};
-function parseAtt(text){
-  var rows=[];
-  if(text.trim()[0]==="["){ try{ JSON.parse(text).forEach(function(o){rows.push({deviceId:String(o.device_id||o.pin||o.id||""),date:o.date,time:o.time||"",type:(o.type||"in").toLowerCase()});}); }catch(e){} return rows; }
-  var lines=text.replace(/\r/g,"").split("\n").map(function(l){return l.trim();}).filter(Boolean);
-  var i0=/device|pin|date/i.test(lines[0])?1:0;
-  for(var i=i0;i<lines.length;i++){ var p=lines[i].split(",").map(function(x){return x.trim().replace(/^"|"$/g,"");}); if(p.length>=3) rows.push({deviceId:p[0],date:p[1],time:p[2],type:(p[3]||"in").toLowerCase()}); }
-  return rows;
-}
-function findByDevice(id){return db.employees.find(function(e){return String(e.deviceId)===String(id)||String(e.code)===String(id);});}
-$("btnImportAtt").onclick=function(){
-  var f=$("attFile").files&&$("attFile").files[0]; if(!f){toast("فایل؟",true);return;}
+$("btnAtt").onclick=lock(function(){
+  var eid=$("aEmp").value; if(!eid){toast("پرسنل؟",true);return;}
+  var row={id:uid(),empId:Number(eid),date:$("aDate").value||today(),in:$("aIn").value||"",out:$("aOut").value||"",type:$("aType").value};
+  db.attendance.push(row); if(!save(db)) return;
+  renderAtt(); renderDash(); toast("ثبت شد");
+});
+$("attFile").onchange=function(e){
+  var f=e.target.files&&e.target.files[0]; if(!f)return;
   var r=new FileReader();
   r.onload=function(){
-    var parsed=parseAtt(String(r.result||"")); if(!parsed.length){toast("داده نامعتبر",true);return;}
-    var map={};
-    parsed.forEach(function(p){ var k=p.deviceId+"|"+p.date; if(!map[k]) map[k]={deviceId:p.deviceId,date:p.date,in:"",out:""}; if(p.type==="out"||p.type==="checkout") map[k].out=p.time; else map[k].in=map[k].in||p.time; });
-    var n=0;
-    Object.keys(map).forEach(function(k){
-      var g=map[k], emp=findByDevice(g.deviceId); if(!emp) return;
-      if(db.attendance.some(function(a){return a.empId===emp.id&&a.date===g.date&&a.source==="device";})) return;
-      db.attendance.push({id:uid(),empId:emp.id,date:g.date,status:"present",timeIn:g.in,timeOut:g.out,ot:0,source:"device"}); n++;
-    });
-    log("ورود دستگاه: "+n); save(db); renderAtt(); renderDash(); toast(n+" رکورد");
+    try{
+      var lines=String(r.result).split(/\r?\n/).filter(Boolean);
+      var n=0;
+      lines.forEach(function(line){
+        var p=line.split(",");
+        if(p.length<2) return;
+        var code=p[0].trim();
+        var emp=db.employees.find(function(x){return x.code===code;});
+        if(!emp) return;
+        db.attendance.push({id:uid(),empId:emp.id,date:(p[1]||today()).trim(),in:(p[2]||"").trim(),out:(p[3]||"").trim(),type:"work"});
+        n++;
+      });
+      if(!save(db)) return;
+      renderAtt(); renderDash(); toast(n+" رکورد وارد شد");
+    }catch(err){toast("فایل نامعتبر",true);}
+    e.target.value="";
   };
   r.readAsText(f);
 };
-$("btnCal").onclick=function(){
-  var empId=$("calEmp").value; if(!empId){toast("پرسنل؟",true);return;}
-  var y=Number($("calYear").value)||2026, m=Number($("calMonth").value)||1;
-  var days=new Date(y,m,0).getDate();
-  var grid=$("dayGrid"); grid.textContent="";
-  for(var d=1;d<=days;d++){
-    var ds=y+"-"+String(m).padStart(2,"0")+"-"+String(d).padStart(2,"0");
-    var att=db.attendance.find(function(a){return String(a.empId)===String(empId)&&a.date===ds;});
-    var onLeave=db.leaves.some(function(l){return String(l.empId)===String(empId)&&l.status==="approved"&&l.from<=ds&&l.to>=ds;});
-    var cell=document.createElement("div"); cell.className="day-cell";
-    if(onLeave) cell.classList.add("leave");
-    else if(att&&att.status==="absent") cell.classList.add("absent");
-    else if(att) cell.classList.add("present");
-    cell.textContent=d; grid.appendChild(cell);
-  }
-};
-
-function daysBetween(a,b){ var d1=new Date(a+"T00:00:00"), d2=new Date(b+"T00:00:00"); return Math.max(0, Math.round((d2-d1)/864e5)+1); }
-function unpaidLeaveDays(empId){ return db.leaves.filter(function(l){return String(l.empId)===String(empId)&&l.status==="approved"&&l.type==="unpaid";}).reduce(function(s,l){return s+daysBetween(l.from,l.to);},0); }
-function absentDays(empId){ return db.attendance.filter(function(a){return String(a.empId)===String(empId)&&a.status==="absent";}).length; }
-function otMin(empId){ return db.attendance.filter(function(a){return String(a.empId)===String(empId);}).reduce(function(s,a){return s+(Number(a.ot)||0);},0); }
 
 function renderLeave(){
-  var type={annual:"استحقاقی",sick:"استعلاجی",unpaid:"بدون حقوق",other:"سایر"};
-  var st={pending:"انتظار",approved:"تأیید",rejected:"رد"};
-  var tb=$("lvList"); tb.textContent="";
+  var tb=$("leaveList"); tb.textContent="";
   db.leaves.slice().reverse().forEach(function(l){
     var tr=document.createElement("tr");
-    tr.innerHTML="<td>"+esc(empName(l.empId))+"</td><td>"+esc(type[l.type]||l.type)+"</td><td class='num'>"+esc(l.from)+"</td><td class='num'>"+esc(l.to)+"</td><td class='num'>"+daysBetween(l.from,l.to)+"</td>"+
-      "<td><span class='badge "+(l.status==="approved"?"ok":l.status==="rejected"?"bad":"warn")+"'>"+esc(st[l.status])+"</span></td>"+
-      "<td><button type='button' data-lv='"+l.id+"|approved' class='btn btn-g' style='padding:4px 8px;margin:0;width:auto;font-size:.68rem'>تأیید</button> "+
-      "<button type='button' data-lv='"+l.id+"|rejected' class='btn btn-r' style='padding:4px 8px;margin:0;width:auto;font-size:.68rem'>رد</button></td>";
+    tr.innerHTML="<td>"+esc(empName(l.empId))+"</td><td>"+esc(l.type)+"</td><td class='num'>"+esc(l.from)+"</td><td class='num'>"+esc(l.to)+"</td>"+
+      "<td><span class='badge "+(l.status==="open"?"warn":"ok")+"'>"+esc(l.status)+"</span></td>"+
+      "<td><button type='button' class='btn btn-g btn-sm' data-close-l='"+l.id+"'>بستن</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-l='"+l.id+"'>حذف</button></td>";
     tb.appendChild(tr);
   });
 }
-$("btnLeave").onclick=function(){
-  var empId=$("lvEmp").value; if(!empId||!$("lvFrom").value||!$("lvTo").value){toast("اطلاعات ناقص",true);return;}
-  db.leaves.push({id:uid(),empId:Number(empId),type:$("lvType").value,from:$("lvFrom").value,to:$("lvTo").value,status:"pending"});
-  log("مرخصی "+empName(empId)); save(db); renderLeave(); renderDash(); toast("ثبت شد");
-};
+$("btnLeave").onclick=lock(function(){
+  var eid=$("lEmp").value; if(!eid){toast("پرسنل؟",true);return;}
+  var row={id:uid(),empId:Number(eid),type:$("lType").value,from:$("lFrom").value||today(),to:$("lTo").value||today(),note:($("lNote").value||"").slice(0,200),status:"open"};
+  db.leaves.push(row); if(!save(db)) return;
+  $("lNote").value=""; renderLeave(); renderDash(); toast("مرخصی ثبت شد");
+});
 
-$("btnCalcPay").onclick=function(){
-  var year=Number($("payYear").value)||1404, month=Number($("payMonth").value)||1;
-  var otRate=Number($("otRate").value)||0, insP=Number($("insEmp").value)||0, insEr=Number($("insEr").value)||0, taxP=Number($("taxPct").value)||0;
-  db.payslips=db.payslips.filter(function(p){return !(p.year===year&&p.month===month);});
-  activeEmp().forEach(function(e){
-    var base=Number(e.base)||0, house=Number(e.house)||0, food=Number(e.food)||0;
-    var otPay=Math.round((otMin(e.id)/60)*otRate);
-    var gross=base+house+food+otPay;
-    var dedDays=absentDays(e.id)+unpaidLeaveDays(e.id);
-    var dayDed=base>0?Math.round((base/30)*dedDays):0;
-    var ins=Math.round(gross*(insP/100));
-    var tax=Math.round(gross*(taxP/100));
-    var erIns=Math.round(gross*(insEr/100));
-    var ded=dayDed+ins+tax;
-    var net=Math.max(0,gross-ded);
-    db.payslips.push({id:uid(),empId:e.id,year:year,month:month,gross:gross,ded:ded,net:net,ot:otPay,ins:ins,tax:tax,erIns:erIns,dedDays:dedDays,status:"calculated"});
-  });
-  log("محاسبه حقوق "+year+"/"+month); save(db); renderPay(); renderDash(); toast("انجام شد");
-};
-function renderPay(){
-  var tb=$("payList"); tb.textContent=""; var sum=0, cost=0;
-  db.payslips.slice().reverse().forEach(function(p){
-    sum+=Number(p.net)||0; cost+=(Number(p.gross)||0)+(Number(p.erIns)||0);
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td>"+esc(empName(p.empId))+"</td><td class='num'>"+fmt(p.gross)+"</td><td class='num'>"+fmt(p.ded)+"</td><td class='num'>"+fmt(p.net)+"</td><td class='num'>"+fmt(p.erIns)+"</td>"+
-      "<td><span class='badge info'>"+esc(p.year+"/"+p.month)+"</span></td>";
-    tb.appendChild(tr);
-  });
-  $("paySum").textContent=fmt(sum); $("payCost").textContent=fmt(cost);
-}
-$("btnPrintPay").onclick=function(){window.print();};
-$("btnSyncAfterPay").onclick=function(){ syncPayrollReminder(); };
-
-/* Insurance report */
-function buildInsReport(){
-  var pe=Number($("insREmp").value)||7, pr=Number($("insREr").value)||23;
-  var mode=$("insBase").value;
-  lastInsRows=[];
-  var se=0, sr=0;
-  activeEmp().forEach(function(e){
+$("btnCalc").onclick=lock(function(){
+  var year=parseInt($("pYear").value,10), month=parseInt($("pMonth").value,10);
+  if(!year||!month||month<1||month>12){toast("سال/ماه نامعتبر",true);return;}
+  var insE=Number($("pInsEmp").value)||0, insC=Number($("pInsCo").value)||0;
+  lastPays=[];
+  activeEmps().forEach(function(e){
     var base=Number(e.base)||0;
-    var gross=base+(Number(e.house)||0)+(Number(e.food)||0);
-    var m=mode==="base"?base:gross;
-    var ee=Math.round(m*(pe/100));
-    var er=Math.round(m*(pr/100));
-    lastInsRows.push({code:e.code,name:e.name+" "+e.family,nid:e.nid||"",base:m,emp:ee,er:er,total:ee+er});
-    se+=ee; sr+=er;
+    var empIns=Math.round(base*insE/100);
+    var coIns=Math.round(base*insC/100);
+    var net=base-empIns;
+    lastPays.push({empId:e.id,code:e.code,name:e.name,base:base,empIns:empIns,coIns:coIns,net:net,insurance:e.insurance||""});
   });
-  var tb=$("insList"); tb.textContent="";
-  lastInsRows.forEach(function(r){
+  var tb=$("payList"); tb.textContent="";
+  var tBase=0,tNet=0,tEi=0,tCi=0;
+  lastPays.forEach(function(p){
+    tBase+=p.base;tNet+=p.net;tEi+=p.empIns;tCi+=p.coIns;
     var tr=document.createElement("tr");
-    tr.innerHTML="<td class='num'>"+esc(r.code)+"</td><td>"+esc(r.name)+"</td><td class='num'>"+esc(r.nid)+"</td><td class='num'>"+fmt(r.base)+"</td><td class='num'>"+fmt(r.emp)+"</td><td class='num'>"+fmt(r.er)+"</td><td class='num'>"+fmt(r.total)+"</td>";
+    tr.innerHTML="<td class='num'>"+esc(p.code)+"</td><td>"+esc(p.name)+"</td><td class='num'>"+fmt(p.base)+"</td><td class='num'>"+fmt(p.empIns)+"</td><td class='num'>"+fmt(p.net)+"</td><td class='num'>"+fmt(p.coIns)+"</td>";
     tb.appendChild(tr);
   });
-  $("insSumE").textContent=fmt(se); $("insSumR").textContent=fmt(sr); $("insSumT").textContent=fmt(se+sr);
-  toast("گزارش بیمه آماده شد");
-}
-$("btnInsRep").onclick=buildInsReport;
-$("btnInsCsv").onclick=function(){
-  if(!lastInsRows.length) buildInsReport();
-  var lines=["code,name,national_id,base,employee_share,employer_share,total"];
-  lastInsRows.forEach(function(r){ lines.push([r.code,r.name,r.nid,r.base,r.emp,r.er,r.total].join(",")); });
-  var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([lines.join("\n")],{type:"text/csv"})); a.download="insurance-list.csv"; a.click();
-};
-$("btnInsToSec").onclick=function(){
-  if(!lastInsRows.length) buildInsReport();
-  var se=lastInsRows.reduce(function(s,r){return s+r.emp;},0);
-  var sr=lastInsRows.reduce(function(s,r){return s+r.er;},0);
-  var body="تعداد بیمه شده: "+lastInsRows.length+" نفر\nجمع سهم کارمند: "+fmt(se)+"\nجمع سهم کارفرما: "+fmt(sr)+"\nجمع کل: "+fmt(se+sr)+"\nتاریخ: "+today();
-  pushNoteToSecretary("گزارش لیست بیمه کارکنان", body);
-  log("گزارش بیمه → منشی"); save(db);
-};
+  $("paySum").textContent="جمع پایه: "+fmt(tBase)+" · خالص: "+fmt(tNet)+" · بیمه کارگر: "+fmt(tEi)+" · کارفرما: "+fmt(tCi);
+  var period=year+"-"+String(month).padStart(2,"0");
+  db.payrolls=db.payrolls.filter(function(p){return p.period!==period;});
+  lastPays.forEach(function(p){ db.payrolls.push({id:uid(),period:period,empId:p.empId,base:p.base,empIns:p.empIns,coIns:p.coIns,net:p.net}); });
+  save(db); renderDash(); toast(lastPays.length+" فیش محاسبه شد");
+});
 
-/* Accounting */
-function loadAcc(){try{return JSON.parse(localStorage.getItem(ACC_KEY)||"null");}catch(e){return null;}}
-function checkAcc(){
-  var a=loadAcc();
-  $("accStatus").innerHTML=a&&Array.isArray(a.journals)?'<span class="badge ok">حسابداری متصل</span> · اسناد: '+a.journals.length:'<span class="badge warn">حسابداری یافت نشد</span>';
-  if(!$("accDate").value)$("accDate").value=today();
-}
-$("btnOpenAcc").onclick=function(){window.open("accounting.html","_blank","noopener,noreferrer");};
-$("btnPostAcc").onclick=function(){
-  if(saving)return;
-  var slips=db.payslips.filter(function(p){return p.status==="calculated";});
-  if(!slips.length){toast("ابتدا حقوق را محاسبه کنید",true);return;}
-  var mode=$("accMode").value;
-  var net=slips.reduce(function(s,p){return s+(Number(p.net)||0);},0);
-  var gross=slips.reduce(function(s,p){return s+(Number(p.gross)||0);},0);
-  var erIns=slips.reduce(function(s,p){return s+(Number(p.erIns)||0);},0);
-  var exp=($("accExp").value||"5101").trim(), bank=($("accBank").value||"110102").trim(), ins=($("accIns").value||"2101").trim();
-  var lines=[];
-  if(mode==="net") lines=[{code:exp,desc:"هزینه حقوق خالص",dr:net,cr:0},{code:bank,desc:"پرداخت حقوق",dr:0,cr:net}];
-  else if(mode==="employer"){
-    var cost=gross+erIns;
-    lines=[{code:exp,desc:"هزینه حقوق + بیمه کارفرما",dr:cost,cr:0},{code:bank,desc:"پرداخت خالص",dr:0,cr:net}];
-    var rest=cost-net; if(rest>0.001) lines.push({code:ins,desc:"بیمه و کسورات",dr:0,cr:rest});
+$("btnPostPay").onclick=lock(function(){
+  if(!lastPays.length){toast("اول محاسبه کنید",true);return;}
+  var exp=($("pExpCode").value||"").trim(), pay=($("pPayCode").value||"").trim(), ins=($("pInsCode").value||"").trim();
+  if(!isCode(exp)||!isCode(pay)||!isCode(ins)){toast("کد حساب نامعتبر",true);return;}
+  var tBase=0,tEi=0,tCi=0,tNet=0;
+  lastPays.forEach(function(p){tBase+=p.base;tEi+=p.empIns;tCi+=p.coIns;tNet+=p.net;});
+  var totalCost=tBase+tCi;
+  var lines=[
+    {code:exp,desc:"هزینه حقوق و بیمه",dr:totalCost,cr:0},
+    {code:pay,desc:"حقوق پرداختنی",dr:0,cr:tNet},
+    {code:ins,desc:"بیمه پرداختنی",dr:0,cr:tEi+tCi}
+  ];
+  var je=postJe("سند حقوق ماه",lines,today());
+  if(!je){toast("صدور سند ناموفق",true);return;}
+  toast("سند شماره "+je.no+" ثبت شد");
+});
+
+$("btnInsRep").onclick=lock(function(){
+  if(!lastPays.length){toast("اول محاسبه کنید",true);return;}
+  var lines=["لیست بیمه — "+today()];
+  lastPays.forEach(function(p){ lines.push(p.code+" | "+p.name+" | بیمه: "+(p.insurance||"—")+" | کارگر: "+p.empIns+" | کارفرما: "+p.coIns); });
+  var ok=pushSecretaryReminder("گزارش لیست بیمه کارکنان", lines.join("\n"), today());
+  toast(ok?"در منشی ثبت شد":"منشی در دسترس نیست", !ok);
+});
+
+$("btnRemindPay").onclick=lock(function(){
+  var day=parseInt($("pPayDay").value,10)||(db.settings.payDay||5);
+  var d=new Date();
+  var when=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(Math.min(day,28)).padStart(2,"0");
+  var ok=pushSecretaryReminder("روز پرداخت حقوق", "یادآوری پرداخت حقوق کارکنان (روز "+day+")", when);
+  toast(ok?"یادآوری در منشی ثبت شد":"منشی در دسترس نیست — index.html را در همین مرورگر باز کنید", !ok);
+});
+
+function runRep(){
+  var h="", title="";
+  if(repMode==="emp"){
+    title="پرسنل";
+    h="<table><thead><tr><th>کد</th><th>نام</th><th>سمت</th><th>پایه</th><th>بیمه</th></tr></thead><tbody>";
+    db.employees.forEach(function(e){h+="<tr><td class='num'>"+esc(e.code)+"</td><td>"+esc(e.name)+"</td><td>"+esc(e.job||"")+"</td><td class='num'>"+fmt(e.base)+"</td><td class='num'>"+esc(e.insurance||"")+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="pay"){
+    title="حقوق";
+    h="<table><thead><tr><th>دوره</th><th>پرسنل</th><th>پایه</th><th>خالص</th></tr></thead><tbody>";
+    db.payrolls.slice().reverse().forEach(function(p){h+="<tr><td class='num'>"+esc(p.period)+"</td><td>"+esc(empName(p.empId))+"</td><td class='num'>"+fmt(p.base)+"</td><td class='num'>"+fmt(p.net)+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="ins"){
+    title="بیمه";
+    h="<table><thead><tr><th>کد</th><th>نام</th><th>شماره بیمه</th><th>پایه</th></tr></thead><tbody>";
+    activeEmps().forEach(function(e){h+="<tr><td class='num'>"+esc(e.code)+"</td><td>"+esc(e.name)+"</td><td class='num'>"+esc(e.insurance||"—")+"</td><td class='num'>"+fmt(e.base)+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="leave"){
+    title="مرخصی";
+    h="<table><thead><tr><th>پرسنل</th><th>نوع</th><th>از</th><th>تا</th><th>وضعیت</th></tr></thead><tbody>";
+    db.leaves.forEach(function(l){h+="<tr><td>"+esc(empName(l.empId))+"</td><td>"+esc(l.type)+"</td><td class='num'>"+esc(l.from)+"</td><td class='num'>"+esc(l.to)+"</td><td>"+esc(l.status)+"</td></tr>";});
+    h+="</tbody></table>";
   } else {
-    lines=[{code:exp,desc:"هزینه حقوق ناخالص",dr:gross,cr:0},{code:bank,desc:"پرداخت خالص",dr:0,cr:net}];
-    var rest=gross-net; if(rest>0.001) lines.push({code:ins,desc:"بیمه/کسور",dr:0,cr:rest});
+    title="حضور";
+    h="<table><thead><tr><th>تاریخ</th><th>پرسنل</th><th>ورود</th><th>خروج</th></tr></thead><tbody>";
+    db.attendance.slice(-50).reverse().forEach(function(a){h+="<tr><td class='num'>"+esc(a.date)+"</td><td>"+esc(empName(a.empId))+"</td><td class='num'>"+esc(a.in)+"</td><td class='num'>"+esc(a.out)+"</td></tr>";});
+    h+="</tbody></table>";
   }
-  var dr=lines.reduce(function(s,l){return s+l.dr;},0), cr=lines.reduce(function(s,l){return s+l.cr;},0);
-  if(Math.abs(dr-cr)>0.05){toast("تراز سند برقرار نشد",true);return;}
-  var acc=loadAcc();
-  if(!acc||!Array.isArray(acc.journals)) acc={accounts:[],journals:[],ap:[],ar:[],bankRecs:[],nextJe:1,version:2};
-  saving=true;
-  try{
-    var je={id:Date.now(),no:acc.nextJe||1,date:$("accDate").value||today(),type:"payroll",desc:"سند خودکار حقوق از منابع انسانی",lines:lines,total:dr};
-    acc.journals.push(je); acc.nextJe=(acc.nextJe||1)+1;
-    localStorage.setItem(ACC_KEY,JSON.stringify(acc));
-    slips.forEach(function(p){p.status="posted";});
-    log("سند حسابداری "+je.no); save(db);
-    $("accMsg").innerHTML='<span class="badge ok">سند '+je.no+' ثبت شد</span> · '+fmt(dr);
-    renderPay(); checkAcc(); toast("سند صادر شد");
-  }catch(e){toast("خطا",true);} finally{saving=false;}
-};
+  $("repTitle").textContent=title;
+  $("repOut").innerHTML=h||"<p class='note'>موردی نیست.</p>";
+  toast("گزارش آماده");
+}
+$("btnRep").onclick=lock(runRep);
+$("btnPrint").onclick=function(){window.print();};
+$("btnOpenAcc").onclick=function(){window.open("accounting.html","_blank","noopener,noreferrer");};
+$("btnOpenSec").onclick=function(){window.open("index.html","_blank","noopener,noreferrer");};
 
 $("btnBackup").onclick=function(){
-  var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"})); a.download="hr-backup.json"; a.click();
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
+  a.download="hr-backup-"+today()+".json"; a.click();
 };
 $("restoreFile").onchange=function(e){
   var f=e.target.files&&e.target.files[0]; if(!f)return;
+  if(f.size>15*1024*1024){toast("فایل بزرگ",true);return;}
   var r=new FileReader();
-  r.onload=function(){ try{ var d=JSON.parse(r.result); if(!d||!Array.isArray(d.employees))throw new Error("x"); db=d; ["shifts","attendance","leaves","payslips","activity"].forEach(function(k){if(!Array.isArray(db[k]))db[k]=[];}); if(!db.settings)db.settings={payDay:5,payTime:"09:00",payMsg:""}; save(db); toast("بازیابی شد"); renderDash(); }catch(err){toast("نامعتبر",true);} };
+  r.onload=function(){try{db=normalize(JSON.parse(r.result));if(!Array.isArray(db.employees))throw new Error("x");save(db);toast("بازیابی شد");renderDash();}catch(err){toast("نامعتبر",true);}};
   r.readAsText(f);
 };
-$("btnWipe").onclick=function(){ if(!confirm("حذف همه؟"))return; if(!confirm("نهایی؟"))return; db=def(); save(db); toast("حذف شد"); renderDash(); };
+$("btnWipe").onclick=lock(function(){if(!confirm("حذف همه؟"))return;if(!confirm("نهایی؟"))return;db=def();save(db);toast("حذف شد");renderDash();});
 
-$("btnSyncSec").onclick=function(){ syncPayrollReminder(); };
-$("btnOpenSec").onclick=function(){ window.open("index.html","_blank","noopener,noreferrer"); };
-
-$("nav").addEventListener("click",function(e){ var b=e.target.closest("[data-tab]"); if(b) go(b.getAttribute("data-tab"),b); });
+$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
 document.body.addEventListener("click",function(e){
   var g=e.target.closest("[data-go]"); if(g){go(g.getAttribute("data-go"));return;}
-  var de=e.target.closest("[data-del-emp]"); if(de){ if(!confirm("حذف؟"))return; db.employees=db.employees.filter(function(x){return String(x.id)!==de.getAttribute("data-del-emp");}); save(db); renderEmp(); renderDash(); return; }
-  var ee=e.target.closest("[data-edit-emp]"); if(ee){ var emp=db.employees.find(function(x){return String(x.id)===ee.getAttribute("data-edit-emp");}); if(!emp)return;
-    $("eId").value=emp.id; $("eCode").value=emp.code; $("eName").value=emp.name; $("eFamily").value=emp.family; $("eNid").value=emp.nid||""; $("eMobile").value=emp.mobile||"";
-    $("eJob").value=emp.job||""; $("eDept").value=emp.dept||""; $("eHire").value=emp.hire||""; $("eStatus").value=emp.status||"active";
-    $("eBase").value=emp.base||""; $("eHouse").value=emp.house||""; $("eFood").value=emp.food||""; $("eDeviceId").value=emp.deviceId||""; $("eBank").value=emp.bank||"";
-    fillShiftSelect(); $("eShift").value=emp.shiftId||""; go("emp"); return; }
-  var ds=e.target.closest("[data-del-sh]"); if(ds){ db.shifts=db.shifts.filter(function(x){return String(x.id)!==ds.getAttribute("data-del-sh");}); save(db); renderShifts(); return; }
-  var da=e.target.closest("[data-del-att]"); if(da){ db.attendance=db.attendance.filter(function(x){return String(x.id)!==da.getAttribute("data-del-att");}); save(db); renderAtt(); return; }
-  var lv=e.target.closest("[data-lv]"); if(lv){ var p=lv.getAttribute("data-lv").split("|"); var L=db.leaves.find(function(x){return String(x.id)===p[0];}); if(L){L.status=p[1]; save(db); renderLeave(); renderDash();} }
+  var ee=e.target.closest("[data-edit-e]");
+  if(ee){var emp=empById(ee.getAttribute("data-edit-e"));if(!emp)return;
+    $("eId").value=emp.id;$("eCode").value=emp.code;$("eName").value=emp.name;$("eJob").value=emp.job||"";
+    $("eDept").value=emp.dept||"";$("eBase").value=emp.base||"";$("eIns").value=emp.insurance||"";
+    $("eHire").value=emp.hire||"";$("eMobile").value=emp.mobile||"";$("eStatus").value=emp.status||"active";go("emp");return;}
+  var de=e.target.closest("[data-del-e]");
+  if(de){if(!confirm("حذف؟"))return;db.employees=db.employees.filter(function(x){return String(x.id)!==de.getAttribute("data-del-e");});save(db);renderEmp();renderDash();return;}
+  var da=e.target.closest("[data-del-a]");
+  if(da){db.attendance=db.attendance.filter(function(x){return String(x.id)!==da.getAttribute("data-del-a");});save(db);renderAtt();renderDash();return;}
+  var dl=e.target.closest("[data-del-l]");
+  if(dl){db.leaves=db.leaves.filter(function(x){return String(x.id)!==dl.getAttribute("data-del-l");});save(db);renderLeave();renderDash();return;}
+  var cl=e.target.closest("[data-close-l]");
+  if(cl){var L=db.leaves.find(function(x){return String(x.id)===cl.getAttribute("data-close-l");});if(L){L.status="closed";save(db);renderLeave();renderDash();}return;}
 });
+$("repTabs").addEventListener("click",function(e){var b=e.target.closest("[data-r]");if(!b)return;repMode=b.getAttribute("data-r");document.querySelectorAll("#repTabs button").forEach(function(x){x.classList.toggle("on",x===b);});});
 
-if(!$("attDate").value) $("attDate").value=today();
 renderDash();
 })();
 </script>
