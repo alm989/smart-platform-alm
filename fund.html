@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#b45309">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="صندوق هوشمند">
+<meta name="description" content="صندوق هوشمند — دریافت، پرداخت، نقد، چک، طلا، سکه، سفته، برات، اوراق">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>صندوق هوشمند</title>
+<style>
+:root{
+  --bg:#fffbeb;--card:#fff;--line:#fde68a;--txt:#78350f;--muted:#b45309;
+  --b:#d97706;--b2:#b45309;--g:#059669;--r:#dc2626;--o:#ea580c;--c:#0d9488;--p:#7c3aed;
+  --shadow:0 4px 22px rgba(180,83,9,.12);--safe:env(safe-area-inset-bottom,0px);--radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 400px at 100% 0%,#fef3c7 0%,transparent 55%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55}
+.box{max-width:980px;margin:0 auto}
+.header{text-align:center;margin-bottom:12px}
+.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#f59e0b,#b45309);color:#fff;display:grid;place-items:center;font-size:26px;margin:0 auto 8px;box-shadow:0 8px 24px rgba(217,119,6,.35)}
+h1{font-size:clamp(1.1rem,3vw,1.3rem);color:#92400e;font-weight:700}
+.sub{font-size:.8rem;color:var(--muted)}
+.nav{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(255,251,235,.94);backdrop-filter:blur(12px)}
+.nav button{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.52rem,1.3vw,.7rem);color:var(--muted);cursor:pointer;font-family:inherit;transition:.12s}
+.nav button.on{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(217,119,6,.3)}
+.panel{display:none!important}.panel.on{display:block!important;animation:fi .15s ease}
+@keyframes fi{from{opacity:.4}to{opacity:1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card h2{font-size:.92rem;margin-bottom:12px;color:#92400e}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
+.btn:disabled{opacity:.45}.btn-b{background:linear-gradient(135deg,var(--b),var(--b2))}.btn-g{background:linear-gradient(135deg,var(--g),#047857)}
+.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#c2410c)}
+.btn-c{background:linear-gradient(135deg,var(--c),#0f766e)}.btn-p{background:linear-gradient(135deg,var(--p),#6d28d9)}
+.btn-gr{background:#e2e8f0;color:#334155}.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fffbeb;font-size:16px;font-family:inherit;color:var(--txt)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(217,119,6,.15)}
+textarea{min-height:56px;resize:vertical}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th,td{border:1px solid var(--line);padding:8px 6px;text-align:right}
+th{background:#fef3c7;color:#92400e;font-weight:700}
+tr:nth-child(even){background:#fffbeb}
+.num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
+.scroll{overflow:auto;max-height:420px;border-radius:10px}
+.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
+.stat .n{font-size:1.05rem;font-weight:700;color:var(--b)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
+.toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center}
+.toast.show{opacity:1}.toast.err{background:var(--r)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
+.ok{background:#d1fae5;color:#065f46}.bad{background:#fee2e2;color:#991b1b}.warn{background:#fef3c7;color:#92400e}.info{background:#e0e7ff;color:#3730a3}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:.72rem;cursor:pointer;font-family:inherit;color:var(--muted)}
+.chip.on{background:var(--b);color:#fff;border-color:var(--b)}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.filters button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:.72rem;cursor:pointer;font-family:inherit;color:var(--muted)}
+.filters button.on{background:var(--b);color:#fff;border-color:var(--b)}
+.footer{text-align:center;font-size:.7rem;color:#fbbf24;margin-top:14px}
+@media(max-width:720px){.nav{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
+@media print{.nav,.btn,nav{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="box">
+  <header class="header">
+    <div class="logo">🗃️</div>
+    <h1>صندوق هوشمند</h1>
+    <p class="sub">دریافت · پرداخت · نقد · ارز · چک · طلا · سکه · سفته · برات · اوراق</p>
+  </header>
+  <nav class="nav" id="nav" role="tablist">
+    <button type="button" class="on" data-tab="dash">داشبورد</button>
+    <button type="button" data-tab="setup">صندوق‌ها</button>
+    <button type="button" data-tab="recv">برگه دریافت</button>
+    <button type="button" data-tab="pay">برگه پرداخت</button>
+    <button type="button" data-tab="rep">گزارش</button>
+    <button type="button" data-tab="set">تنظیمات</button>
+  </nav>
+
+  <main id="dash" class="panel on">
+    <div class="stats">
+      <div class="stat"><div class="n num" id="stCash">۰</div><div class="l">مانده نقد/ارز</div></div>
+      <div class="stat"><div class="n num" id="stPaper">۰</div><div class="l">اوراق و چک</div></div>
+      <div class="stat"><div class="n" id="stRecv">۰</div><div class="l">دریافت امروز</div></div>
+      <div class="stat"><div class="n" id="stPay">۰</div><div class="l">پرداخت امروز</div></div>
+    </div>
+    <section class="card">
+      <h2>اتصال بانک و حسابداری</h2>
+      <p class="note" id="linkStatus">—</p>
+      <div class="grid2">
+        <button type="button" class="btn btn-c" id="btnOpenBank">نقد و بانک</button>
+        <button type="button" class="btn btn-gr" id="btnOpenAcc">حسابداری</button>
+      </div>
+      <button type="button" class="btn btn-b" id="btnSyncCode">همسان‌سازی کدینگ صندوق‌ها با حسابداری</button>
+    </section>
+    <section class="card">
+      <h2>میانبر</h2>
+      <div class="grid2">
+        <button type="button" class="btn btn-g" data-go="recv">برگه دریافت</button>
+        <button type="button" class="btn btn-o" data-go="pay">برگه پرداخت</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>آخرین اسناد</h2>
+      <div class="scroll"><table><thead><tr><th>نوع</th><th>شماره</th><th>تاریخ</th><th>ابزار</th><th>مبلغ</th><th>وضعیت</th></tr></thead><tbody id="lastDocs"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="setup" class="panel">
+    <section class="card">
+      <h2>تعریف صندوق</h2>
+      <input type="hidden" id="fId">
+      <div class="grid2">
+        <div><label>کد حسابداری *</label><input id="fCode" maxlength="20" placeholder="110101" autocomplete="off"></div>
+        <div><label>نام صندوق *</label><input id="fName" maxlength="100" placeholder="صندوق مرکزی" autocomplete="off"></div>
+      </div>
+      <div class="grid2">
+        <div><label>مسئول</label><input id="fKeeper" maxlength="80"></div>
+        <div><label>وضعیت</label><select id="fStatus"><option value="active">فعال</option><option value="closed">بسته</option></select></div>
+      </div>
+      <button type="button" class="btn btn-g" id="btnFund">ذخیره + همسان کدینگ</button>
+      <button type="button" class="btn btn-gr" id="btnFundClr">جدید</button>
+    </section>
+    <section class="card">
+      <h2>فهرست صندوق‌ها</h2>
+      <div class="scroll"><table><thead><tr><th>کد</th><th>نام</th><th>مسئول</th><th>مانده</th><th></th></tr></thead><tbody id="fundList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="recv" class="panel">
+    <section class="card">
+      <h2>برگه دریافت صندوق</h2>
+      <div class="grid3">
+        <div><label>شماره</label><input id="rNo" readonly></div>
+        <div><label>تاریخ</label><input id="rDate" type="date"></div>
+        <div><label>صندوق *</label><select id="rFund"></select></div>
+      </div>
+      <label>ابزار دریافت *</label>
+      <div class="chip-row" id="rInstChips"></div>
+      <input type="hidden" id="rInst" value="cash">
+      <div class="grid2">
+        <div><label>مبلغ / ارزش *</label><input id="rAmt" type="number" min="0" step="0.01" class="num"></div>
+        <div><label>ارز / واحد</label>
+          <select id="rCur">
+            <option value="IRR">ریال</option>
+            <option value="USD">دلار</option>
+            <option value="EUR">یورو</option>
+            <option value="AED">درهم</option>
+            <option value="TRY">لیر</option>
+            <option value="GOLD">طلا (گرم)</option>
+            <option value="COIN">سکه</option>
+            <option value="OTHER">سایر</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2" id="rExtra">
+        <div><label>شماره / سریال / پیگیری</label><input id="rRef" maxlength="80" autocomplete="off"></div>
+        <div><label>سررسید (چک/سفته/برات)</label><input id="rDue" type="date"></div>
+      </div>
+      <div class="grid2">
+        <div><label>طرف حساب</label><input id="rParty" maxlength="120" autocomplete="off"></div>
+        <div><label>کد طرف (حسابداری)</label><input id="rPartyCode" maxlength="20" placeholder="1102 یا بانک" autocomplete="off"></div>
+      </div>
+      <label>شرح</label><input id="rDesc" maxlength="300">
+      <div class="grid2">
+        <button type="button" class="btn btn-g" id="btnRecv">ثبت دریافت</button>
+        <button type="button" class="btn btn-c" id="btnRecvPost">ثبت + سند حسابداری</button>
+      </div>
+      <p class="note">سند نمونه: بدهکار صندوق / بستانکار طرف یا بانک</p>
+    </section>
+    <section class="card">
+      <h2>اسناد دریافت</h2>
+      <div class="filters" id="recvFilt">
+        <button type="button" class="on" data-f="all">همه</button>
+        <button type="button" data-f="cash">نقد</button>
+        <button type="button" data-f="check">چک</button>
+        <button type="button" data-f="gold">طلا/سکه</button>
+        <button type="button" data-f="paper">اوراق</button>
+      </div>
+      <div class="scroll"><table><thead><tr><th>شماره</th><th>تاریخ</th><th>ابزار</th><th>مبلغ</th><th>طرف</th><th></th></tr></thead><tbody id="recvList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="pay" class="panel">
+    <section class="card">
+      <h2>برگه پرداخت صندوق</h2>
+      <div class="grid3">
+        <div><label>شماره</label><input id="pNo" readonly></div>
+        <div><label>تاریخ</label><input id="pDate" type="date"></div>
+        <div><label>صندوق *</label><select id="pFund"></select></div>
+      </div>
+      <label>ابزار پرداخت *</label>
+      <div class="chip-row" id="pInstChips"></div>
+      <input type="hidden" id="pInst" value="cash">
+      <div class="grid2">
+        <div><label>مبلغ / ارزش *</label><input id="pAmt" type="number" min="0" step="0.01" class="num"></div>
+        <div><label>ارز / واحد</label>
+          <select id="pCur">
+            <option value="IRR">ریال</option>
+            <option value="USD">دلار</option>
+            <option value="EUR">یورو</option>
+            <option value="AED">درهم</option>
+            <option value="TRY">لیر</option>
+            <option value="GOLD">طلا (گرم)</option>
+            <option value="COIN">سکه</option>
+            <option value="OTHER">سایر</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div><label>شماره / سریال / پیگیری</label><input id="pRef" maxlength="80" autocomplete="off"></div>
+        <div><label>سررسید</label><input id="pDue" type="date"></div>
+      </div>
+      <div class="grid2">
+        <div><label>طرف حساب</label><input id="pParty" maxlength="120" autocomplete="off"></div>
+        <div><label>کد طرف (حسابداری)</label><input id="pPartyCode" maxlength="20" placeholder="2101" autocomplete="off"></div>
+      </div>
+      <label>شرح</label><input id="pDesc" maxlength="300">
+      <p class="note">مانده صندوق انتخابی: <b class="num" id="pBal">۰</b></p>
+      <div class="grid2">
+        <button type="button" class="btn btn-o" id="btnPay">ثبت پرداخت</button>
+        <button type="button" class="btn btn-c" id="btnPayPost">ثبت + سند حسابداری</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>اسناد پرداخت</h2>
+      <div class="filters" id="payFilt">
+        <button type="button" class="on" data-f="all">همه</button>
+        <button type="button" data-f="cash">نقد</button>
+        <button type="button" data-f="check">چک</button>
+        <button type="button" data-f="gold">طلا/سکه</button>
+        <button type="button" data-f="paper">اوراق</button>
+      </div>
+      <div class="scroll"><table><thead><tr><th>شماره</th><th>تاریخ</th><th>ابزار</th><th>مبلغ</th><th>طرف</th><th></th></tr></thead><tbody id="payList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="rep" class="panel">
+    <section class="card">
+      <h2>گزارش‌ها</h2>
+      <div class="filters" id="repTabs">
+        <button type="button" class="on" data-r="bal">مانده صندوق</button>
+        <button type="button" data-r="recv">دریافت‌ها</button>
+        <button type="button" data-r="pay">پرداخت‌ها</button>
+        <button type="button" data-r="inst">بر اساس ابزار</button>
+        <button type="button" data-r="check">چک و اوراق باز</button>
+        <button type="button" data-r="daily">گردش روزانه</button>
+      </div>
+      <div class="grid2">
+        <div><label>از</label><input type="date" id="repFrom"></div>
+        <div><label>تا</label><input type="date" id="repTo"></div>
+      </div>
+      <button type="button" class="btn btn-b" id="btnRep">اجرا</button>
+      <button type="button" class="btn btn-gr" id="btnPrint">چاپ</button>
+    </section>
+    <section class="card">
+      <h2 id="repTitle">نتیجه</h2>
+      <div class="scroll" id="repOut"><p class="note">گزارش را اجرا کنید.</p></div>
+    </section>
+  </main>
+
+  <main id="set" class="panel">
+    <section class="card">
+      <h2>کدهای پیش‌فرض سند</h2>
+      <div class="grid2">
+        <div><label>طرف پیش‌فرض دریافت (بستانکار)</label><input id="defRecvCr" value="1102" maxlength="20"></div>
+        <div><label>طرف پیش‌فرض پرداخت (بدهکار)</label><input id="defPayDr" value="2101" maxlength="20"></div>
+      </div>
+      <button type="button" class="btn btn-b" id="btnSaveDef">ذخیره</button>
+    </section>
+    <section class="card">
+      <h2>پشتیبان</h2>
+      <button type="button" class="btn btn-g" id="btnBackup">دانلود JSON</button>
+      <label>بازیابی</label>
+      <input type="file" id="restoreFile" accept=".json,application/json">
+      <button type="button" class="btn btn-r" id="btnWipe">حذف همه</button>
+    </section>
+  </main>
+  <p class="footer">صندوق هوشمند · متصل به بانک و حسابداری</p>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+var KEY="smart_fund_v1", ACC_KEY="smart_acc_v2", CASH_KEY="smart_cash_v2";
+var EPS=0.01, busy=false, toastTimer=null, recvFilt="all", payFilt="all", repMode="bal";
+
+var INST={
+  bank:"دریافت/پرداخت بانکی",
+  cash:"نقد",
+  fx:"ارز",
+  check:"چک",
+  gold:"طلا",
+  coin:"سکه",
+  promissory:"سفته",
+  draft:"برات",
+  security:"اوراق بهادار",
+  other:"سایر"
+};
+var PAPER=["check","promissory","draft","security"];
+var GOLD=["gold","coin"];
+
+function $(id){return document.getElementById(id);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2200);}
+function fmt(n){n=Number(n);if(!isFinite(n))n=0;return n.toLocaleString("fa-IR",{maximumFractionDigits:2});}
+function today(){return new Date().toISOString().slice(0,10);}
+function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+function isCode(s){return /^[0-9A-Za-z.\-]{1,20}$/.test(s);}
+function money(n){n=Number(n);if(!isFinite(n)||n<0)return null;return Math.round(n*100)/100;}
+
+function def(){return {funds:[],receipts:[],payments:[],nextR:1,nextP:1,settings:{defRecvCr:"1102",defPayDr:"2101"},version:1};}
+function load(){
+  try{
+    var d=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(!d) return def();
+    ["funds","receipts","payments"].forEach(function(k){if(!Array.isArray(d[k]))d[k]=[];});
+    if(!d.settings) d.settings={defRecvCr:"1102",defPayDr:"2101"};
+    d.nextR=Math.max(1,parseInt(d.nextR,10)||1);
+    d.nextP=Math.max(1,parseInt(d.nextP,10)||1);
+    return d;
+  }catch(e){return def();}
+}
+function save(x){try{localStorage.setItem(KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
+var db=load();
+
+function loadAcc(){try{return JSON.parse(localStorage.getItem(ACC_KEY)||"null");}catch(e){return null;}}
+function saveAcc(a){try{localStorage.setItem(ACC_KEY,JSON.stringify(a));return true;}catch(e){toast("خطا حسابداری",true);return false;}}
+function ensureAcc(){
+  var a=loadAcc();
+  if(!a||typeof a!=="object") a={accounts:[],journals:[],ap:[],ar:[],bankRecs:[],nextJe:1,version:2};
+  if(!Array.isArray(a.accounts)) a.accounts=[];
+  if(!Array.isArray(a.journals)) a.journals=[];
+  a.nextJe=Math.max(1,parseInt(a.nextJe,10)||1);
+  return a;
+}
+function syncFundAcc(f){
+  var a=ensureAcc();
+  if(!isCode(f.code)) return false;
+  var i=a.accounts.findIndex(function(x){return x.code===f.code;});
+  var row={code:f.code,name:("صندوق — "+f.name).slice(0,120),level:4,nat:"debit",type:"asset"};
+  if(i>=0){a.accounts[i].name=row.name;a.accounts[i].type="asset";}
+  else a.accounts.push(row);
+  return saveAcc(a);
+}
+function postJe(desc,lines,date,type){
+  var a=ensureAcc(),dr=0,cr=0,clean=[];
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i],d=money(l.dr)||0,c=money(l.cr)||0;
+    if(!isCode(l.code)) return null;
+    if(d===0&&c===0) continue;
+    dr+=d;cr+=c;
+    clean.push({code:l.code,desc:String(l.desc||"").slice(0,200),dr:d,cr:c});
+  }
+  if(clean.length<2||Math.abs(dr-cr)>EPS||dr<=0) return null;
+  var je={id:Date.now(),no:a.nextJe,date:date||today(),type:type||"fund",desc:String(desc||"").slice(0,300),lines:clean,total:dr};
+  a.journals.push(je);a.nextJe++;
+  if(!saveAcc(a)) return null;
+  return je;
+}
+
+function fundById(id){return db.funds.find(function(x){return String(x.id)===String(id);});}
+function fundName(id){var f=fundById(id);return f?f.name:"—";}
+function balanceFund(id){
+  var bal=0;
+  db.receipts.forEach(function(r){if(String(r.fundId)===String(id)&&r.status!=="cancel") bal+=Number(r.amount)||0;});
+  db.payments.forEach(function(p){if(String(p.fundId)===String(id)&&p.status!=="cancel") bal-=Number(p.amount)||0;});
+  return Math.round(bal*100)/100;
+}
+function activeFunds(){return db.funds.filter(function(f){return f.status==="active";});}
+function fillFundSelects(){
+  var o='<option value="">— انتخاب —</option>';
+  activeFunds().forEach(function(f){
+    o+='<option value="'+f.id+'">'+esc(f.code+" — "+f.name)+" ("+fmt(balanceFund(f.id))+")</option>";
+  });
+  $("rFund").innerHTML=o; $("pFund").innerHTML=o;
+}
+function buildChips(containerId, hiddenId){
+  var el=$(containerId); el.textContent="";
+  Object.keys(INST).forEach(function(k){
+    var b=document.createElement("button");
+    b.type="button"; b.className="chip"+(k==="cash"?" on":""); b.textContent=INST[k];
+    b.setAttribute("data-inst",k);
+    b.onclick=function(){
+      el.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
+      b.classList.add("on");
+      $(hiddenId).value=k;
+    };
+    el.appendChild(b);
+  });
+}
+function instGroup(inst){
+  if(inst==="cash"||inst==="fx"||inst==="bank") return "cash";
+  if(GOLD.indexOf(inst)>=0) return "gold";
+  if(PAPER.indexOf(inst)>=0) return "paper";
+  if(inst==="check") return "check";
+  return "other";
+}
+function lock(fn){return function(){if(busy)return;busy=true;try{fn();}catch(e){toast("خطا",true);}finally{busy=false;};};}
+
+function go(tab,btn){
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
+  document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
+  var el=$(tab); if(el) el.classList.add("on");
+  if(btn) btn.classList.add("on");
+  else {var n=document.querySelector('#nav button[data-tab="'+tab+'"]'); if(n) n.classList.add("on");}
+  if(tab==="dash") renderDash();
+  if(tab==="setup") renderFunds();
+  if(tab==="recv"){ fillFundSelects(); $("rNo").value=String(db.nextR); if(!$("rDate").value)$("rDate").value=today(); renderRecv(); }
+  if(tab==="pay"){ fillFundSelects(); $("pNo").value=String(db.nextP); if(!$("pDate").value)$("pDate").value=today(); renderPay(); }
+  if(tab==="set"){ $("defRecvCr").value=db.settings.defRecvCr||"1102"; $("defPayDr").value=db.settings.defPayDr||"2101"; }
+}
+
+function renderDash(){
+  var cash=0, paper=0, t=today(), rc=0, pc=0;
+  db.funds.forEach(function(f){
+    db.receipts.forEach(function(r){
+      if(String(r.fundId)!==String(f.id)||r.status==="cancel") return;
+      if(PAPER.indexOf(r.inst)>=0||r.inst==="check") paper+=Number(r.amount)||0;
+      else cash+=Number(r.amount)||0;
+    });
+    db.payments.forEach(function(p){
+      if(String(p.fundId)!==String(f.id)||p.status==="cancel") return;
+      if(PAPER.indexOf(p.inst)>=0||p.inst==="check") paper-=Number(p.amount)||0;
+      else cash-=Number(p.amount)||0;
+    });
+  });
+  // simpler total balance
+  var total=0;
+  db.funds.forEach(function(f){total+=balanceFund(f.id);});
+  $("stCash").textContent=fmt(total);
+  $("stPaper").textContent=fmt(Math.max(0,paper));
+  db.receipts.forEach(function(r){if(r.date===t&&r.status!=="cancel")rc++;});
+  db.payments.forEach(function(p){if(p.date===t&&p.status!=="cancel")pc++;});
+  $("stRecv").textContent=String(rc);
+  $("stPay").textContent=String(pc);
+
+  var acc=loadAcc(), cashMod=null;
+  try{cashMod=JSON.parse(localStorage.getItem(CASH_KEY)||localStorage.getItem("smart_cash_v1")||"null");}catch(e){}
+  $("linkStatus").innerHTML=
+    (acc&&Array.isArray(acc.accounts)?'<span class="badge ok">حسابداری متصل</span>':'<span class="badge warn">حسابداری نیست</span>')+
+    " · "+
+    (cashMod&&Array.isArray(cashMod.banks)?'<span class="badge ok">نقد و بانک متصل</span>':'<span class="badge warn">نقد و بانک نیست</span>');
+
+  var docs=[];
+  db.receipts.forEach(function(r){docs.push({t:"دریافت",no:r.no,date:r.date,inst:INST[r.inst]||r.inst,amt:r.amount,st:r.posted?"سند":"—",ts:r.id});});
+  db.payments.forEach(function(p){docs.push({t:"پرداخت",no:p.no,date:p.date,inst:INST[p.inst]||p.inst,amt:p.amount,st:p.posted?"سند":"—",ts:p.id});});
+  docs.sort(function(a,b){return (b.ts||0)-(a.ts||0);});
+  var tb=$("lastDocs"); tb.textContent="";
+  docs.slice(0,15).forEach(function(d){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+esc(d.t)+"</td><td class='num'>"+esc(d.no)+"</td><td class='num'>"+esc(d.date)+"</td><td>"+esc(d.inst)+"</td><td class='num'>"+fmt(d.amt)+"</td><td>"+esc(d.st)+"</td>";
+    tb.appendChild(tr);
+  });
+}
+
+function renderFunds(){
+  var tb=$("fundList"); tb.textContent="";
+  db.funds.forEach(function(f){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(f.code)+"</td><td>"+esc(f.name)+"</td><td>"+esc(f.keeper||"—")+"</td><td class='num'>"+fmt(balanceFund(f.id))+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-edit-f='"+f.id+"'>ویرایش</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-f='"+f.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+function clearFund(){ $("fId").value="";$("fCode").value="";$("fName").value="";$("fKeeper").value="";$("fStatus").value="active"; }
+$("btnFundClr").onclick=clearFund;
+$("btnFund").onclick=lock(function(){
+  var code=($("fCode").value||"").trim(), name=($("fName").value||"").trim();
+  if(!code||!name){toast("کد و نام الزامی",true);return;}
+  if(!isCode(code)){toast("کد نامعتبر",true);return;}
+  var row={id:$("fId").value?Number($("fId").value):uid(),code:code,name:name.slice(0,100),keeper:($("fKeeper").value||"").slice(0,80),status:$("fStatus").value==="closed"?"closed":"active"};
+  var i=db.funds.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0) db.funds[i]=row;
+  else {
+    if(db.funds.some(function(x){return x.code===row.code;})){toast("کد تکراری",true);return;}
+    db.funds.push(row);
+  }
+  if(!syncFundAcc(row)) return;
+  if(!save(db)) return;
+  clearFund(); renderFunds(); renderDash(); toast("ذخیره و همسان شد");
+});
+
+function renderRecv(){
+  var list=db.receipts.slice().reverse();
+  if(recvFilt!=="all") list=list.filter(function(r){
+    if(recvFilt==="check") return r.inst==="check";
+    if(recvFilt==="gold") return GOLD.indexOf(r.inst)>=0;
+    if(recvFilt==="paper") return PAPER.indexOf(r.inst)>=0;
+    if(recvFilt==="cash") return r.inst==="cash"||r.inst==="fx"||r.inst==="bank";
+    return true;
+  });
+  var tb=$("recvList"); tb.textContent="";
+  list.forEach(function(r){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(r.no)+"</td><td class='num'>"+esc(r.date)+"</td><td>"+esc(INST[r.inst]||r.inst)+"</td><td class='num'>"+fmt(r.amount)+"</td><td>"+esc(r.party||"")+"</td>"+
+      "<td><button type='button' class='btn btn-r btn-sm' data-del-r='"+r.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+function saveRecv(post){
+  var fid=$("rFund").value, amt=money($("rAmt").value), inst=$("rInst").value||"cash";
+  if(!fid){toast("صندوق؟",true);return;}
+  if(amt==null||amt<=0){toast("مبلغ؟",true);return;}
+  var f=fundById(fid); if(!f||f.status!=="active"){toast("صندوق فعال نیست",true);return;}
+  var partyCode=($("rPartyCode").value||db.settings.defRecvCr||"1102").trim();
+  var row={
+    id:uid(),no:db.nextR,date:$("rDate").value||today(),fundId:Number(fid),inst:inst,
+    amount:amt,currency:$("rCur").value,ref:($("rRef").value||"").slice(0,80),due:$("rDue").value||"",
+    party:($("rParty").value||"").slice(0,120),partyCode:partyCode,desc:($("rDesc").value||"").slice(0,300),
+    posted:false,status:"ok"
+  };
+  if(post){
+    if(!isCode(f.code)||!isCode(partyCode)){toast("کد صندوق یا طرف نامعتبر",true);return;}
+    var je=postJe("دریافت صندوق "+f.name+" — "+(INST[inst]||inst),
+      [{code:f.code,desc:INST[inst]||"دریافت",dr:amt,cr:0},{code:partyCode,desc:row.party||"طرف دریافت",dr:0,cr:amt}],
+      row.date,"fund-recv");
+    if(!je){toast("صدور سند ناموفق",true);return;}
+    row.posted=true; row.jeNo=je.no;
+  }
+  db.receipts.push(row); db.nextR++;
+  if(!save(db)){db.receipts.pop();db.nextR--;return;}
+  $("rAmt").value="";$("rRef").value="";$("rParty").value="";$("rDesc").value="";$("rNo").value=String(db.nextR);
+  renderRecv(); renderDash(); toast(post?"دریافت + سند "+row.jeNo:"دریافت ثبت شد");
+}
+$("btnRecv").onclick=lock(function(){saveRecv(false);});
+$("btnRecvPost").onclick=lock(function(){saveRecv(true);});
+
+$("pFund").onchange=function(){ var id=$("pFund").value; $("pBal").textContent=id?fmt(balanceFund(id)):"۰"; };
+function renderPay(){
+  var list=db.payments.slice().reverse();
+  if(payFilt!=="all") list=list.filter(function(p){
+    if(payFilt==="check") return p.inst==="check";
+    if(payFilt==="gold") return GOLD.indexOf(p.inst)>=0;
+    if(payFilt==="paper") return PAPER.indexOf(p.inst)>=0;
+    if(payFilt==="cash") return p.inst==="cash"||p.inst==="fx"||p.inst==="bank";
+    return true;
+  });
+  var tb=$("payList"); tb.textContent="";
+  list.forEach(function(p){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(p.no)+"</td><td class='num'>"+esc(p.date)+"</td><td>"+esc(INST[p.inst]||p.inst)+"</td><td class='num'>"+fmt(p.amount)+"</td><td>"+esc(p.party||"")+"</td>"+
+      "<td><button type='button' class='btn btn-r btn-sm' data-del-p='"+p.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+function savePay(post){
+  var fid=$("pFund").value, amt=money($("pAmt").value), inst=$("pInst").value||"cash";
+  if(!fid){toast("صندوق؟",true);return;}
+  if(amt==null||amt<=0){toast("مبلغ؟",true);return;}
+  var f=fundById(fid); if(!f||f.status!=="active"){toast("صندوق فعال نیست",true);return;}
+  var bal=balanceFund(fid);
+  if(amt>bal+EPS){toast("مانده صندوق کافی نیست ("+fmt(bal)+")",true);return;}
+  var partyCode=($("pPartyCode").value||db.settings.defPayDr||"2101").trim();
+  var row={
+    id:uid(),no:db.nextP,date:$("pDate").value||today(),fundId:Number(fid),inst:inst,
+    amount:amt,currency:$("pCur").value,ref:($("pRef").value||"").slice(0,80),due:$("pDue").value||"",
+    party:($("pParty").value||"").slice(0,120),partyCode:partyCode,desc:($("pDesc").value||"").slice(0,300),
+    posted:false,status:"ok"
+  };
+  if(post){
+    if(!isCode(f.code)||!isCode(partyCode)){toast("کد نامعتبر",true);return;}
+    var je=postJe("پرداخت صندوق "+f.name+" — "+(INST[inst]||inst),
+      [{code:partyCode,desc:row.party||"طرف پرداخت",dr:amt,cr:0},{code:f.code,desc:INST[inst]||"پرداخت",dr:0,cr:amt}],
+      row.date,"fund-pay");
+    if(!je){toast("صدور سند ناموفق",true);return;}
+    row.posted=true; row.jeNo=je.no;
+  }
+  db.payments.push(row); db.nextP++;
+  if(!save(db)){db.payments.pop();db.nextP--;return;}
+  $("pAmt").value="";$("pRef").value="";$("pParty").value="";$("pDesc").value="";$("pNo").value=String(db.nextP);
+  $("pBal").textContent=fmt(balanceFund(fid));
+  renderPay(); renderDash(); toast(post?"پرداخت + سند "+row.jeNo:"پرداخت ثبت شد");
+}
+$("btnPay").onclick=lock(function(){savePay(false);});
+$("btnPayPost").onclick=lock(function(){savePay(true);});
+
+function runRep(){
+  var from=$("repFrom").value, to=$("repTo").value;
+  function inR(d){if(from&&d<from)return false;if(to&&d>to)return false;return true;}
+  var h="", title="";
+  if(repMode==="bal"){
+    title="مانده صندوق‌ها";
+    h="<table><thead><tr><th>کد</th><th>نام</th><th>مسئول</th><th>مانده</th></tr></thead><tbody>";
+    db.funds.forEach(function(f){h+="<tr><td class='num'>"+esc(f.code)+"</td><td>"+esc(f.name)+"</td><td>"+esc(f.keeper||"")+"</td><td class='num'>"+fmt(balanceFund(f.id))+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="recv"||repMode==="pay"){
+    title=repMode==="recv"?"دریافت‌ها":"پرداخت‌ها";
+    var src=repMode==="recv"?db.receipts:db.payments;
+    h="<table><thead><tr><th>شماره</th><th>تاریخ</th><th>صندوق</th><th>ابزار</th><th>مبلغ</th><th>طرف</th></tr></thead><tbody>";
+    src.filter(function(x){return inR(x.date)&&x.status!=="cancel";}).forEach(function(x){
+      h+="<tr><td class='num'>"+esc(x.no)+"</td><td class='num'>"+esc(x.date)+"</td><td>"+esc(fundName(x.fundId))+"</td><td>"+esc(INST[x.inst]||x.inst)+"</td><td class='num'>"+fmt(x.amount)+"</td><td>"+esc(x.party||"")+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else if(repMode==="inst"){
+    title="بر اساس ابزار";
+    var map={};
+    function add(x,sign){ if(!inR(x.date)||x.status==="cancel")return; map[x.inst]=(map[x.inst]||0)+sign*(Number(x.amount)||0); }
+    db.receipts.forEach(function(x){add(x,1);});
+    db.payments.forEach(function(x){add(x,-1);});
+    h="<table><thead><tr><th>ابزار</th><th>خالص</th></tr></thead><tbody>";
+    Object.keys(map).forEach(function(k){h+="<tr><td>"+esc(INST[k]||k)+"</td><td class='num'>"+fmt(map[k])+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="check"){
+    title="چک و اوراق باز";
+    h="<table><thead><tr><th>نوع</th><th>شماره سند</th><th>ابزار</th><th>مبلغ</th><th>سررسید</th><th>پیگیری</th></tr></thead><tbody>";
+    db.receipts.filter(function(r){return (PAPER.indexOf(r.inst)>=0||r.inst==="check")&&r.status!=="cancel";}).forEach(function(r){
+      h+="<tr><td>دریافتنی</td><td class='num'>"+esc(r.no)+"</td><td>"+esc(INST[r.inst])+"</td><td class='num'>"+fmt(r.amount)+"</td><td class='num'>"+esc(r.due||"—")+"</td><td>"+esc(r.ref||"")+"</td></tr>";
+    });
+    db.payments.filter(function(p){return (PAPER.indexOf(p.inst)>=0||p.inst==="check")&&p.status!=="cancel";}).forEach(function(p){
+      h+="<tr><td>پرداختنی</td><td class='num'>"+esc(p.no)+"</td><td>"+esc(INST[p.inst])+"</td><td class='num'>"+fmt(p.amount)+"</td><td class='num'>"+esc(p.due||"—")+"</td><td>"+esc(p.ref||"")+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else {
+    title="گردش روزانه";
+    var map2={};
+    db.receipts.filter(function(r){return r.status!=="cancel"&&inR(r.date);}).forEach(function(r){if(!map2[r.date])map2[r.date]={i:0,o:0};map2[r.date].i+=Number(r.amount)||0;});
+    db.payments.filter(function(p){return p.status!=="cancel"&&inR(p.date);}).forEach(function(p){if(!map2[p.date])map2[p.date]={i:0,o:0};map2[p.date].o+=Number(p.amount)||0;});
+    h="<table><thead><tr><th>تاریخ</th><th>دریافت</th><th>پرداخت</th><th>خالص</th></tr></thead><tbody>";
+    Object.keys(map2).sort().reverse().forEach(function(d){var x=map2[d];h+="<tr><td class='num'>"+esc(d)+"</td><td class='num'>"+fmt(x.i)+"</td><td class='num'>"+fmt(x.o)+"</td><td class='num'>"+fmt(x.i-x.o)+"</td></tr>";});
+    h+="</tbody></table>";
+  }
+  $("repTitle").textContent=title;
+  $("repOut").innerHTML=h||"<p class='note'>موردی نیست.</p>";
+  toast("گزارش آماده");
+}
+$("btnRep").onclick=lock(runRep);
+$("btnPrint").onclick=function(){window.print();};
+$("btnSyncCode").onclick=lock(function(){var n=0;db.funds.forEach(function(f){if(syncFundAcc(f))n++;});renderDash();toast(n+" حساب همسان شد");});
+$("btnOpenBank").onclick=function(){window.open("cash-bank.html","_blank","noopener,noreferrer");};
+$("btnOpenAcc").onclick=function(){window.open("accounting.html","_blank","noopener,noreferrer");};
+$("btnSaveDef").onclick=lock(function(){
+  var a=($("defRecvCr").value||"").trim(), b=($("defPayDr").value||"").trim();
+  if(!isCode(a)||!isCode(b)){toast("کد نامعتبر",true);return;}
+  db.settings.defRecvCr=a; db.settings.defPayDr=b; save(db); toast("ذخیره شد");
+});
+$("btnBackup").onclick=function(){
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
+  a.download="fund-backup-"+today()+".json"; a.click();
+};
+$("restoreFile").onchange=function(e){
+  var f=e.target.files&&e.target.files[0]; if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.funds))throw new Error("x");db=d;["receipts","payments"].forEach(function(k){if(!Array.isArray(db[k]))db[k]=[];});if(!db.settings)db.settings={defRecvCr:"1102",defPayDr:"2101"};save(db);toast("بازیابی شد");renderDash();}catch(err){toast("نامعتبر",true);}};
+  r.readAsText(f);
+};
+$("btnWipe").onclick=lock(function(){if(!confirm("حذف همه؟"))return;if(!confirm("نهایی؟"))return;db=def();save(db);toast("حذف شد");renderDash();});
+
+$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
+document.body.addEventListener("click",function(e){
+  var g=e.target.closest("[data-go]"); if(g){go(g.getAttribute("data-go"));return;}
+  var ef=e.target.closest("[data-edit-f]");
+  if(ef){var f=fundById(ef.getAttribute("data-edit-f"));if(!f)return;
+    $("fId").value=f.id;$("fCode").value=f.code;$("fName").value=f.name;$("fKeeper").value=f.keeper||"";$("fStatus").value=f.status||"active";go("setup");return;}
+  var df=e.target.closest("[data-del-f]");
+  if(df){if(!confirm("حذف صندوق؟"))return;db.funds=db.funds.filter(function(x){return String(x.id)!==df.getAttribute("data-del-f");});save(db);renderFunds();renderDash();return;}
+  var dr=e.target.closest("[data-del-r]");
+  if(dr){if(!confirm("حذف؟"))return;db.receipts=db.receipts.filter(function(x){return String(x.id)!==dr.getAttribute("data-del-r");});save(db);renderRecv();renderDash();return;}
+  var dp=e.target.closest("[data-del-p]");
+  if(dp){if(!confirm("حذف؟"))return;db.payments=db.payments.filter(function(x){return String(x.id)!==dp.getAttribute("data-del-p");});save(db);renderPay();renderDash();return;}
+});
+$("recvFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;recvFilt=b.getAttribute("data-f");document.querySelectorAll("#recvFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderRecv();});
+$("payFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;payFilt=b.getAttribute("data-f");document.querySelectorAll("#payFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderPay();});
+$("repTabs").addEventListener("click",function(e){var b=e.target.closest("[data-r]");if(!b)return;repMode=b.getAttribute("data-r");document.querySelectorAll("#repTabs button").forEach(function(x){x.classList.toggle("on",x===b);});});
+
+buildChips("rInstChips","rInst");
+buildChips("pInstChips","pInst");
+renderDash();
+})();
+</script>
+</body>
+</html>
