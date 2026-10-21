@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#7c3aed">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="دارایی ثابت">
+<meta name="description" content="دارایی ثابت و استهلاک هوشمند — ثبت، روش استهلاک، جدول، سند حسابداری">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>دارایی ثابت و استهلاک هوشمند</title>
+<style>
+:root{
+  --bg:#f5f3ff;--card:#fff;--line:#ddd6fe;--txt:#4c1d95;--muted:#7c3aed;
+  --b:#8b5cf6;--b2:#6d28d9;--g:#059669;--r:#dc2626;--o:#d97706;--c:#0d9488;
+  --shadow:0 4px 22px rgba(109,40,217,.1);--safe:env(safe-area-inset-bottom,0px);--radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 400px at 100% 0%,#ede9fe 0%,transparent 55%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55}
+.box{max-width:980px;margin:0 auto}
+.header{text-align:center;margin-bottom:12px}
+.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;display:grid;place-items:center;font-size:26px;margin:0 auto 8px;box-shadow:0 8px 24px rgba(139,92,246,.35)}
+h1{font-size:clamp(1.05rem,3vw,1.25rem);color:#5b21b6;font-weight:700}
+.sub{font-size:.8rem;color:var(--muted)}
+.nav{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(245,243,255,.94);backdrop-filter:blur(12px)}
+.nav button{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.45rem,1.1vw,.64rem);color:var(--muted);cursor:pointer;font-family:inherit}
+.nav button.on{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;border-color:transparent}
+.panel{display:none!important}.panel.on{display:block!important;animation:fi .15s ease}
+@keyframes fi{from{opacity:.4}to{opacity:1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card h2{font-size:.92rem;margin-bottom:12px;color:#5b21b6}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
+.btn:disabled{opacity:.45}.btn-b{background:linear-gradient(135deg,var(--b),var(--b2))}.btn-g{background:linear-gradient(135deg,var(--g),#047857)}
+.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#b45309)}
+.btn-c{background:linear-gradient(135deg,var(--c),#0f766e)}.btn-gr{background:#e2e8f0;color:#334155}
+.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#faf5ff;font-size:16px;font-family:inherit;color:var(--txt)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(139,92,246,.15)}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th,td{border:1px solid var(--line);padding:7px 5px;text-align:right}
+th{background:#ede9fe;color:#5b21b6;font-weight:700}
+tr:nth-child(even){background:#f5f3ff}
+.num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
+.scroll{overflow:auto;max-height:420px;border-radius:10px}
+.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
+.stat .n{font-size:1.02rem;font-weight:700;color:var(--b)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
+.toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center}
+.toast.show{opacity:1}.toast.err{background:var(--r)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
+.ok{background:#d1fae5;color:#065f46}.warn{background:#fef3c7;color:#92400e}.info{background:#e0e7ff;color:#3730a3}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.filters button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:.72rem;cursor:pointer;font-family:inherit;color:var(--muted)}
+.filters button.on{background:var(--b);color:#fff;border-color:var(--b)}
+.footer{text-align:center;font-size:.7rem;color:#a78bfa;margin-top:14px}
+@media(max-width:720px){.nav{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
+@media print{.nav,.btn,nav{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="box">
+  <header class="header">
+    <div class="logo">🏢</div>
+    <h1>دارایی ثابت و استهلاک هوشمند</h1>
+    <p class="sub">ثبت دارایی · روش استهلاک · جدول · سند حسابداری · خروج</p>
+  </header>
+  <nav class="nav" id="nav" role="tablist">
+    <button type="button" class="on" data-tab="dash">داشبورد</button>
+    <button type="button" data-tab="cat">طبقه</button>
+    <button type="button" data-tab="asset">دارایی</button>
+    <button type="button" data-tab="dep">استهلاک</button>
+    <button type="button" data-tab="disp">خروج</button>
+    <button type="button" data-tab="rep">گزارش</button>
+    <button type="button" data-tab="set">تنظیمات</button>
+  </nav>
+
+  <main id="dash" class="panel on">
+    <div class="stats">
+      <div class="stat"><div class="n" id="stCnt">۰</div><div class="l">دارایی فعال</div></div>
+      <div class="stat"><div class="n num" id="stCost">۰</div><div class="l">بهای تمام‌شده</div></div>
+      <div class="stat"><div class="n num" id="stAcc">۰</div><div class="l">استهلاک انباشته</div></div>
+      <div class="stat"><div class="n num" id="stNbv">۰</div><div class="l">ارزش دفتری</div></div>
+    </div>
+    <section class="card">
+      <h2>اتصال حسابداری</h2>
+      <p class="note" id="linkStatus">—</p>
+      <div class="grid2">
+        <button type="button" class="btn btn-b" id="btnOpenAcc">حسابداری</button>
+        <button type="button" class="btn btn-g" id="btnSyncCode">همسان کدینگ دارایی‌ها</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>میانبر</h2>
+      <div class="grid2">
+        <button type="button" class="btn btn-g" data-go="asset">ثبت دارایی</button>
+        <button type="button" class="btn btn-o" data-go="dep">محاسبه استهلاک</button>
+      </div>
+    </section>
+  </main>
+
+  <main id="cat" class="panel">
+    <section class="card">
+      <h2>طبقه دارایی</h2>
+      <input type="hidden" id="catId">
+      <div class="grid2">
+        <div><label>کد طبقه *</label><input id="catCode" maxlength="20" placeholder="1301" autocomplete="off"></div>
+        <div><label>نام *</label><input id="catName" maxlength="100" placeholder="ماشین‌آلات" autocomplete="off"></div>
+      </div>
+      <div class="grid3">
+        <div><label>روش پیش‌فرض</label>
+          <select id="catMethod">
+            <option value="sl">خط مستقیم</option>
+            <option value="db">نزولی</option>
+            <option value="syd">مجموع ارقام سنوات</option>
+            <option value="uop">بر اساس کارکرد</option>
+          </select>
+        </div>
+        <div><label>عمر مفید (سال)</label><input id="catLife" type="number" min="1" max="100" value="10"></div>
+        <div><label>نرخ نزولی %</label><input id="catRate" type="number" min="0" max="100" step="0.1" value="25"></div>
+      </div>
+      <div class="grid3">
+        <div><label>کد حساب دارایی</label><input id="catAssetAcc" maxlength="20" value="1301"></div>
+        <div><label>کد استهلاک انباشته</label><input id="catAccDep" maxlength="20" value="1309"></div>
+        <div><label>کد هزینه استهلاک</label><input id="catExp" maxlength="20" value="5201"></div>
+      </div>
+      <button type="button" class="btn btn-g" id="btnCat">ذخیره طبقه + کدینگ</button>
+      <button type="button" class="btn btn-gr" id="btnCatClr">جدید</button>
+    </section>
+    <section class="card">
+      <h2>فهرست طبقات</h2>
+      <div class="scroll"><table><thead><tr><th>کد</th><th>نام</th><th>روش</th><th>عمر</th><th></th></tr></thead><tbody id="catList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="asset" class="panel">
+    <section class="card">
+      <h2>ثبت دارایی ثابت</h2>
+      <input type="hidden" id="aId">
+      <div class="grid2">
+        <div><label>کد دارایی *</label><input id="aCode" maxlength="30" autocomplete="off"></div>
+        <div><label>نام *</label><input id="aName" maxlength="150" autocomplete="off"></div>
+      </div>
+      <div class="grid2">
+        <div><label>طبقه *</label><select id="aCat"></select></div>
+        <div><label>تاریخ تحصیل *</label><input id="aDate" type="date"></div>
+      </div>
+      <div class="grid3">
+        <div><label>بهای تمام‌شده *</label><input id="aCost" type="number" min="0" step="0.01" class="num"></div>
+        <div><label>ارزش اسقاط</label><input id="aSalvage" type="number" min="0" step="0.01" value="0" class="num"></div>
+        <div><label>عمر مفید (سال)</label><input id="aLife" type="number" min="1" max="100" value="10"></div>
+      </div>
+      <div class="grid2">
+        <div><label>روش استهلاک</label>
+          <select id="aMethod">
+            <option value="sl">خط مستقیم (Straight Line)</option>
+            <option value="db">نزولی (Declining Balance)</option>
+            <option value="syd">مجموع ارقام سنوات (SYD)</option>
+            <option value="uop">کارکرد (Units of Production)</option>
+          </select>
+        </div>
+        <div><label>نرخ نزولی % (برای DB)</label><input id="aRate" type="number" min="0" max="100" step="0.1" value="25"></div>
+      </div>
+      <div class="grid2">
+        <div><label>کل واحد کارکرد (UOP)</label><input id="aUnits" type="number" min="0" step="1" value="0" class="num"></div>
+        <div><label>محل / شرح</label><input id="aLoc" maxlength="120"></div>
+      </div>
+      <div class="grid2">
+        <div><label>کد حساب دارایی</label><input id="aAssetAcc" maxlength="20" placeholder="از طبقه"></div>
+        <div><label>وضعیت</label>
+          <select id="aStatus">
+            <option value="active">فعال</option>
+            <option value="idle">راکد</option>
+            <option value="disposed">خارج‌شده</option>
+          </select>
+        </div>
+      </div>
+      <button type="button" class="btn btn-g" id="btnAsset">ذخیره دارایی</button>
+      <button type="button" class="btn btn-c" id="btnAssetPost">ذخیره + سند خرید دارایی</button>
+      <button type="button" class="btn btn-gr" id="btnAssetClr">جدید</button>
+      <p class="note">سند خرید: بدهکار دارایی / بستانکار بانک یا پرداختنی (کد در تنظیمات)</p>
+    </section>
+    <section class="card">
+      <h2>فهرست دارایی‌ها</h2>
+      <input id="assetSearch" placeholder="جستجو…" maxlength="80">
+      <div class="scroll" style="margin-top:8px"><table><thead><tr><th>کد</th><th>نام</th><th>بهای</th><th>استهلاک</th><th>دفتری</th><th></th></tr></thead><tbody id="assetList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="dep" class="panel">
+    <section class="card">
+      <h2>محاسبه و ثبت استهلاک دوره</h2>
+      <div class="grid3">
+        <div><label>سال</label><input id="dYear" type="number" min="1300" max="1600"></div>
+        <div><label>ماه (۱–۱۲)</label><input id="dMonth" type="number" min="1" max="12"></div>
+        <div><label>دارایی (خالی = همه فعال)</label><select id="dAsset"><option value="">همه</option></select></div>
+      </div>
+      <button type="button" class="btn btn-o" id="btnCalc">محاسبه جدول دوره</button>
+      <button type="button" class="btn btn-b" id="btnPostDep">ثبت استهلاک + سند حسابداری</button>
+      <p class="note" id="depSum">—</p>
+    </section>
+    <section class="card">
+      <h2>جدول محاسبه‌شده</h2>
+      <div class="scroll"><table><thead><tr><th>کد</th><th>نام</th><th>روش</th><th>استهلاک دوره</th><th>انباشته</th><th>دفتری</th></tr></thead><tbody id="depTable"></tbody></table></div>
+    </section>
+    <section class="card">
+      <h2>سوابق ثبت‌شده</h2>
+      <div class="scroll"><table><thead><tr><th>دوره</th><th>دارایی</th><th>مبلغ</th><th>سند</th><th></th></tr></thead><tbody id="depHist"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="disp" class="panel">
+    <section class="card">
+      <h2>خروج / فروش دارایی</h2>
+      <div class="grid2">
+        <div><label>دارایی *</label><select id="xAsset"></select></div>
+        <div><label>تاریخ خروج</label><input id="xDate" type="date"></div>
+      </div>
+      <div class="grid2">
+        <div><label>مبلغ فروش / وصول</label><input id="xSale" type="number" min="0" step="0.01" value="0" class="num"></div>
+        <div><label>کد طرف (بانک/صندوق)</label><input id="xBank" maxlength="20" value="110102"></div>
+      </div>
+      <p class="note" id="xInfo">—</p>
+      <label>توضیح</label><input id="xNote" maxlength="200">
+      <button type="button" class="btn btn-o" id="btnDisp">ثبت خروج + سند</button>
+    </section>
+    <section class="card">
+      <h2>سوابق خروج</h2>
+      <div class="scroll"><table><thead><tr><th>تاریخ</th><th>دارایی</th><th>فروش</th><th>سود/زیان</th><th>سند</th></tr></thead><tbody id="dispList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="rep" class="panel">
+    <section class="card">
+      <h2>گزارش‌ها</h2>
+      <div class="filters" id="repTabs">
+        <button type="button" class="on" data-r="reg">ثبت دارایی‌ها</button>
+        <button type="button" data-r="nbv">ارزش دفتری</button>
+        <button type="button" data-r="dep">استهلاک دوره‌ها</button>
+        <button type="button" data-r="sch">جدول عمر دارایی</button>
+        <button type="button" data-r="disp">خروج‌ها</button>
+        <button type="button" data-r="cat">بر اساس طبقه</button>
+      </div>
+      <label>دارایی (برای جدول عمر)</label><select id="repAsset"><option value="">—</option></select>
+      <button type="button" class="btn btn-b" id="btnRep">اجرا</button>
+      <button type="button" class="btn btn-gr" id="btnPrint">چاپ</button>
+    </section>
+    <section class="card">
+      <h2 id="repTitle">نتیجه</h2>
+      <div class="scroll" id="repOut"><p class="note">گزارش را اجرا کنید.</p></div>
+    </section>
+  </main>
+
+  <main id="set" class="panel">
+    <section class="card">
+      <h2>کدهای پیش‌فرض سند</h2>
+      <div class="grid2">
+        <div><label>طرف خرید (بانک/پرداختنی)</label><input id="defCredit" value="110102" maxlength="20"></div>
+        <div><label>سود/زیان خروج دارایی</label><input id="defGain" value="6101" maxlength="20"></div>
+      </div>
+      <button type="button" class="btn btn-b" id="btnSaveDef">ذخیره</button>
+    </section>
+    <section class="card">
+      <h2>پشتیبان</h2>
+      <button type="button" class="btn btn-g" id="btnBackup">دانلود JSON</button>
+      <label>بازیابی</label>
+      <input type="file" id="restoreFile" accept=".json,application/json">
+      <button type="button" class="btn btn-r" id="btnWipe">حذف همه</button>
+    </section>
+  </main>
+  <p class="footer">دارایی ثابت · خط مستقیم · نزولی · SYD · کارکرد · سند حسابداری</p>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+var KEY="smart_assets_v1", ACC_KEY="smart_acc_v2";
+var EPS=0.01, busy=false, toastTimer=null, repMode="reg", calcRows=[];
+var METHOD={sl:"خط مستقیم",db:"نزولی",syd:"مجموع سنوات",uop:"کارکرد"};
+
+function $(id){return document.getElementById(id);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2200);}
+function fmt(n){n=Number(n);if(!isFinite(n))n=0;return n.toLocaleString("fa-IR",{maximumFractionDigits:0});}
+function today(){return new Date().toISOString().slice(0,10);}
+function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+function isCode(s){return /^[0-9A-Za-z.\-]{1,20}$/.test(s);}
+function money(n){n=Number(n);if(!isFinite(n)||n<0)return null;return Math.round(n*100)/100;}
+
+function def(){return {categories:[],assets:[],depreciations:[],disposals:[],settings:{creditCode:"110102",gainCode:"6101"},version:1};}
+function load(){
+  try{
+    var d=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(!d) return def();
+    ["categories","assets","depreciations","disposals"].forEach(function(k){if(!Array.isArray(d[k]))d[k]=[];});
+    if(!d.settings) d.settings={creditCode:"110102",gainCode:"6101"};
+    return d;
+  }catch(e){return def();}
+}
+function save(x){try{localStorage.setItem(KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
+var db=load();
+
+function loadAcc(){try{return JSON.parse(localStorage.getItem(ACC_KEY)||"null");}catch(e){return null;}}
+function saveAcc(a){try{localStorage.setItem(ACC_KEY,JSON.stringify(a));return true;}catch(e){toast("خطا حسابداری",true);return false;}}
+function ensureAcc(){
+  var a=loadAcc();
+  if(!a||typeof a!=="object") a={accounts:[],journals:[],ap:[],ar:[],bankRecs:[],nextJe:1,version:2};
+  if(!Array.isArray(a.accounts)) a.accounts=[];
+  if(!Array.isArray(a.journals)) a.journals=[];
+  a.nextJe=Math.max(1,parseInt(a.nextJe,10)||1);
+  return a;
+}
+function upsertAcc(code,name,type){
+  var a=ensureAcc();
+  if(!isCode(code)) return false;
+  var i=a.accounts.findIndex(function(x){return x.code===code;});
+  var row={code:code,name:String(name).slice(0,120),level:4,nat:type==="expense"?"debit":"debit",type:type||"asset"};
+  if(i>=0) a.accounts[i].name=row.name; else a.accounts.push(row);
+  return saveAcc(a);
+}
+function postJe(desc,lines,date,type){
+  var a=ensureAcc(),dr=0,cr=0,clean=[];
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i],d=money(l.dr)||0,c=money(l.cr)||0;
+    if(!isCode(l.code)) return null;
+    if(d===0&&c===0) continue;
+    dr+=d;cr+=c;
+    clean.push({code:l.code,desc:String(l.desc||"").slice(0,200),dr:d,cr:c});
+  }
+  if(clean.length<2||Math.abs(dr-cr)>EPS||dr<=0) return null;
+  var je={id:Date.now(),no:a.nextJe,date:date||today(),type:type||"fixed-asset",desc:String(desc||"").slice(0,300),lines:clean,total:dr};
+  a.journals.push(je);a.nextJe++;
+  if(!saveAcc(a)) return null;
+  return je;
+}
+
+function catById(id){return db.categories.find(function(c){return String(c.id)===String(id);});}
+function assetById(id){return db.assets.find(function(a){return String(a.id)===String(id);});}
+function accumDep(assetId){
+  return db.depreciations.filter(function(d){return String(d.assetId)===String(assetId);})
+    .reduce(function(s,d){return s+(Number(d.amount)||0);},0);
+}
+function nbv(asset){
+  return Math.max(0, Math.round(((Number(asset.cost)||0)-accumDep(asset.id))*100)/100);
+}
+function monthsBetween(fromDate, year, month){
+  var d=new Date(fromDate+"T00:00:00");
+  if(isNaN(d.getTime())) return 0;
+  var y=d.getFullYear(), m=d.getMonth()+1;
+  return (year-y)*12+(month-m);
+}
+
+/** Monthly depreciation for one asset in a given year-month */
+function depForPeriod(asset, year, month){
+  if(asset.status==="disposed") return 0;
+  var cost=Number(asset.cost)||0;
+  var salv=Number(asset.salvage)||0;
+  var life=Math.max(1,Number(asset.life)||1);
+  var acc=accumDep(asset.id);
+  var book=cost-acc;
+  if(book<=salv+EPS) return 0;
+  var age=monthsBetween(asset.date, year, month);
+  if(age<0) return 0;
+  if(age>=life*12) return 0;
+  // already depreciated this period?
+  var period=year+"-"+String(month).padStart(2,"0");
+  if(db.depreciations.some(function(d){return String(d.assetId)===String(asset.id)&&d.period===period;})) return 0;
+
+  var method=asset.method||"sl";
+  var amount=0;
+  if(method==="sl"){
+    amount=(cost-salv)/(life*12);
+  } else if(method==="db"){
+    var rate=(Number(asset.rate)||25)/100;
+    amount=(book)*rate/12;
+    if(book-amount<salv) amount=book-salv;
+  } else if(method==="syd"){
+    var n=life;
+    var yearIndex=Math.min(n, Math.floor(age/12)+1);
+    var syd=n*(n+1)/2;
+    var yearDep=(cost-salv)*(n-yearIndex+1)/syd;
+    amount=yearDep/12;
+  } else if(method==="uop"){
+    // needs units this period - use average if total units set
+    var totalU=Number(asset.units)||0;
+    if(totalU<=0) return 0;
+    amount=(cost-salv)/totalU; // per unit — user should record units; here monthly estimate totalU/(life*12)
+    amount=amount*(totalU/(life*12));
+  }
+  amount=Math.round(amount*100)/100;
+  if(amount<0) amount=0;
+  if(book-amount<salv) amount=Math.round((book-salv)*100)/100;
+  return amount;
+}
+
+function lock(fn){return function(){if(busy)return;busy=true;try{fn();}catch(e){toast("خطا",true);}finally{busy=false;};};}
+
+function fillSelects(){
+  var co='<option value="">— طبقه —</option>';
+  db.categories.forEach(function(c){co+='<option value="'+c.id+'">'+esc(c.code+" — "+c.name)+'</option>';});
+  $("aCat").innerHTML=co;
+  var ao='<option value="">همه</option>';
+  var ao2='<option value="">—</option>';
+  db.assets.filter(function(a){return a.status!=="disposed";}).forEach(function(a){
+    ao+='<option value="'+a.id+'">'+esc(a.code+" — "+a.name)+'</option>';
+    ao2+='<option value="'+a.id+'">'+esc(a.code+" — "+a.name)+'</option>';
+  });
+  $("dAsset").innerHTML=ao;
+  $("xAsset").innerHTML=ao2;
+  $("repAsset").innerHTML=ao2;
+}
+
+function go(tab,btn){
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
+  document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
+  var el=$(tab); if(el) el.classList.add("on");
+  if(btn) btn.classList.add("on");
+  else {var n=document.querySelector('#nav button[data-tab="'+tab+'"]'); if(n) n.classList.add("on");}
+  if(tab==="dash") renderDash();
+  if(tab==="cat") renderCats();
+  if(tab==="asset"){ fillSelects(); if(!$("aDate").value)$("aDate").value=today(); renderAssets(); }
+  if(tab==="dep"){
+    fillSelects();
+    if(!$("dYear").value)$("dYear").value=new Date().getFullYear();
+    if(!$("dMonth").value)$("dMonth").value=new Date().getMonth()+1;
+    renderDepHist();
+  }
+  if(tab==="disp"){ fillSelects(); if(!$("xDate").value)$("xDate").value=today(); renderDisp(); }
+  if(tab==="rep") fillSelects();
+  if(tab==="set"){ $("defCredit").value=db.settings.creditCode||"110102"; $("defGain").value=db.settings.gainCode||"6101"; }
+}
+
+function renderDash(){
+  var cost=0,acc=0,cnt=0;
+  db.assets.forEach(function(a){
+    if(a.status==="disposed") return;
+    cnt++;
+    cost+=Number(a.cost)||0;
+    acc+=accumDep(a.id);
+  });
+  $("stCnt").textContent=String(cnt);
+  $("stCost").textContent=fmt(cost);
+  $("stAcc").textContent=fmt(acc);
+  $("stNbv").textContent=fmt(cost-acc);
+  var ac=loadAcc();
+  $("linkStatus").innerHTML=ac&&Array.isArray(ac.accounts)
+    ? '<span class="badge ok">حسابداری متصل</span> · حساب‌ها: '+ac.accounts.length
+    : '<span class="badge warn">حسابداری نیست</span>';
+}
+
+/* Categories */
+function clearCat(){ $("catId").value="";$("catCode").value="";$("catName").value="";$("catMethod").value="sl";$("catLife").value="10";$("catRate").value="25";$("catAssetAcc").value="1301";$("catAccDep").value="1309";$("catExp").value="5201"; }
+$("btnCatClr").onclick=clearCat;
+function renderCats(){
+  var tb=$("catList"); tb.textContent="";
+  db.categories.forEach(function(c){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(c.code)+"</td><td>"+esc(c.name)+"</td><td>"+esc(METHOD[c.method]||c.method)+"</td><td class='num'>"+esc(c.life)+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-edit-cat='"+c.id+"'>ویرایش</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-cat='"+c.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("btnCat").onclick=lock(function(){
+  var code=($("catCode").value||"").trim(), name=($("catName").value||"").trim();
+  if(!code||!name){toast("کد و نام؟",true);return;}
+  var assetAcc=($("catAssetAcc").value||code).trim();
+  var accDep=($("catAccDep").value||"1309").trim();
+  var exp=($("catExp").value||"5201").trim();
+  if(!isCode(assetAcc)||!isCode(accDep)||!isCode(exp)){toast("کد حساب نامعتبر",true);return;}
+  var row={id:$("catId").value?Number($("catId").value):uid(),code:code.slice(0,20),name:name.slice(0,100),method:$("catMethod").value,life:Math.max(1,parseInt($("catLife").value,10)||10),rate:Number($("catRate").value)||25,assetAcc:assetAcc,accDepAcc:accDep,expAcc:exp};
+  var i=db.categories.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0) db.categories[i]=row;
+  else { if(db.categories.some(function(x){return x.code===row.code;})){toast("کد تکراری",true);return;} db.categories.push(row); }
+  upsertAcc(assetAcc,"دارایی — "+name,"asset");
+  upsertAcc(accDep,"استهلاک انباشته — "+name,"asset");
+  upsertAcc(exp,"هزینه استهلاک — "+name,"expense");
+  if(!save(db)) return;
+  clearCat(); renderCats(); toast("طبقه ذخیره شد");
+});
+
+$("aCat").onchange=function(){
+  var c=catById($("aCat").value); if(!c) return;
+  $("aMethod").value=c.method||"sl";
+  $("aLife").value=c.life||10;
+  $("aRate").value=c.rate||25;
+  $("aAssetAcc").value=c.assetAcc||"";
+};
+
+function clearAsset(){ $("aId").value="";$("aCode").value="";$("aName").value="";$("aCost").value="";$("aSalvage").value="0";$("aLife").value="10";$("aMethod").value="sl";$("aRate").value="25";$("aUnits").value="0";$("aLoc").value="";$("aAssetAcc").value="";$("aStatus").value="active"; }
+$("btnAssetClr").onclick=clearAsset;
+function renderAssets(){
+  var q=($("assetSearch").value||"").trim().toLowerCase();
+  var tb=$("assetList"); tb.textContent="";
+  db.assets.filter(function(a){return !q||(a.code+" "+a.name).toLowerCase().indexOf(q)>=0;}).forEach(function(a){
+    var ad=accumDep(a.id), nv=nbv(a);
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(a.code)+"</td><td>"+esc(a.name)+(a.status==="disposed"?" <span class='badge warn'>خارج</span>":"")+"</td><td class='num'>"+fmt(a.cost)+"</td><td class='num'>"+fmt(ad)+"</td><td class='num'>"+fmt(nv)+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-edit-a='"+a.id+"'>ویرایش</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-a='"+a.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("assetSearch").oninput=renderAssets;
+function saveAsset(post){
+  var code=($("aCode").value||"").trim(), name=($("aName").value||"").trim();
+  var cost=money($("aCost").value);
+  if(!code||!name||cost==null||cost<=0){toast("کد، نام و بها الزامی",true);return;}
+  var catId=$("aCat").value;
+  var cat=catById(catId);
+  var assetAcc=($("aAssetAcc").value||(cat&&cat.assetAcc)||"1301").trim();
+  var row={
+    id:$("aId").value?Number($("aId").value):uid(),
+    code:code.slice(0,30), name:name.slice(0,150), catId:catId?Number(catId):null,
+    date:$("aDate").value||today(), cost:cost, salvage:money($("aSalvage").value)||0,
+    life:Math.max(1,parseInt($("aLife").value,10)||10), method:$("aMethod").value,
+    rate:Number($("aRate").value)||25, units:money($("aUnits").value)||0,
+    loc:($("aLoc").value||"").slice(0,120), assetAcc:assetAcc,
+    accDepAcc:(cat&&cat.accDepAcc)||"1309", expAcc:(cat&&cat.expAcc)||"5201",
+    status:$("aStatus").value||"active"
+  };
+  var i=db.assets.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0){
+    if(db.assets[i].status==="disposed"&&row.status!=="disposed"){toast("دارایی خارج‌شده",true);return;}
+    db.assets[i]=row;
+  } else {
+    if(db.assets.some(function(x){return x.code===row.code;})){toast("کد تکراری",true);return;}
+    db.assets.push(row);
+  }
+  if(post){
+    if(!isCode(assetAcc)){toast("کد دارایی نامعتبر",true);return;}
+    var credit=db.settings.creditCode||"110102";
+    if(!isCode(credit)){toast("کد طرف خرید نامعتبر",true);return;}
+    upsertAcc(assetAcc,"دارایی — "+name,"asset");
+    var je=postJe("خرید دارایی "+row.code+" — "+name,
+      [{code:assetAcc,desc:"تحصیل دارایی",dr:cost,cr:0},{code:credit,desc:"طرف خرید",dr:0,cr:cost}],
+      row.date,"fa-acquire");
+    if(!je){toast("صدور سند ناموفق",true);return;}
+    row.acqJe=je.no;
+    if(i>=0) db.assets[i]=row;
+  }
+  if(!save(db)) return;
+  clearAsset(); renderAssets(); renderDash(); toast(post?"دارایی + سند":"دارایی ذخیره شد");
+}
+$("btnAsset").onclick=lock(function(){saveAsset(false);});
+$("btnAssetPost").onclick=lock(function(){saveAsset(true);});
+
+/* Depreciation */
+function renderDepHist(){
+  var tb=$("depHist"); tb.textContent="";
+  db.depreciations.slice().reverse().slice(0,50).forEach(function(d){
+    var a=assetById(d.assetId);
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(d.period)+"</td><td>"+esc(a?a.name:"—")+"</td><td class='num'>"+fmt(d.amount)+"</td><td class='num'>"+esc(d.jeNo||"—")+"</td>"+
+      "<td><button type='button' class='btn btn-r btn-sm' data-del-dep='"+d.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("btnCalc").onclick=lock(function(){
+  var year=parseInt($("dYear").value,10), month=parseInt($("dMonth").value,10);
+  if(!year||!month||month<1||month>12){toast("سال/ماه نامعتبر",true);return;}
+  var filter=$("dAsset").value;
+  calcRows=[];
+  var total=0;
+  db.assets.forEach(function(a){
+    if(a.status==="disposed") return;
+    if(filter&&String(a.id)!==String(filter)) return;
+    var amt=depForPeriod(a, year, month);
+    if(amt<=0) return;
+    var ad=accumDep(a.id)+amt;
+    calcRows.push({assetId:a.id,code:a.code,name:a.name,method:a.method,amount:amt,accum:ad,nbv:Math.max(0,(Number(a.cost)||0)-ad),expAcc:a.expAcc,accDepAcc:a.accDepAcc});
+    total+=amt;
+  });
+  var tb=$("depTable"); tb.textContent="";
+  calcRows.forEach(function(r){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(r.code)+"</td><td>"+esc(r.name)+"</td><td>"+esc(METHOD[r.method]||r.method)+"</td><td class='num'>"+fmt(r.amount)+"</td><td class='num'>"+fmt(r.accum)+"</td><td class='num'>"+fmt(r.nbv)+"</td>";
+    tb.appendChild(tr);
+  });
+  $("depSum").textContent=calcRows.length+" قلم · جمع استهلاک دوره: "+fmt(total);
+  toast(calcRows.length?"محاسبه شد":"موردی برای استهلاک نیست", !calcRows.length);
+});
+$("btnPostDep").onclick=lock(function(){
+  if(!calcRows.length){toast("ابتدا محاسبه کنید",true);return;}
+  var year=parseInt($("dYear").value,10), month=parseInt($("dMonth").value,10);
+  var period=year+"-"+String(month).padStart(2,"0");
+  var posted=0;
+  calcRows.forEach(function(r){
+    if(db.depreciations.some(function(d){return String(d.assetId)===String(r.assetId)&&d.period===period;})) return;
+    var exp=r.expAcc||"5201", acc=r.accDepAcc||"1309";
+    if(!isCode(exp)||!isCode(acc)) return;
+    var je=postJe("استهلاک "+period+" — "+r.name,
+      [{code:exp,desc:"هزینه استهلاک",dr:r.amount,cr:0},{code:acc,desc:"استهلاک انباشته",dr:0,cr:r.amount}],
+      period+"-01","fa-dep");
+    if(!je) return;
+    db.depreciations.push({id:uid(),assetId:r.assetId,period:period,amount:r.amount,jeNo:je.no});
+    posted++;
+  });
+  if(!save(db)) return;
+  calcRows=[]; $("depTable").textContent=""; $("depSum").textContent="—";
+  renderDepHist(); renderDash(); toast(posted+" استهلاک ثبت شد");
+});
+
+/* Disposal */
+$("xAsset").onchange=function(){
+  var a=assetById($("xAsset").value);
+  if(!a){ $("xInfo").textContent="—"; return; }
+  $("xInfo").textContent="بهای: "+fmt(a.cost)+" · انباشته: "+fmt(accumDep(a.id))+" · دفتری: "+fmt(nbv(a));
+};
+function renderDisp(){
+  var tb=$("dispList"); tb.textContent="";
+  db.disposals.slice().reverse().forEach(function(d){
+    var a=assetById(d.assetId);
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(d.date)+"</td><td>"+esc(a?a.name:d.name||"—")+"</td><td class='num'>"+fmt(d.sale)+"</td><td class='num'>"+fmt(d.gain)+"</td><td class='num'>"+esc(d.jeNo||"—")+"</td>";
+    tb.appendChild(tr);
+  });
+}
+$("btnDisp").onclick=lock(function(){
+  var id=$("xAsset").value; var a=assetById(id);
+  if(!a||a.status==="disposed"){toast("دارایی؟",true);return;}
+  var sale=money($("xSale").value)||0;
+  var ad=accumDep(a.id);
+  var cost=Number(a.cost)||0;
+  var book=cost-ad;
+  var gain=Math.round((sale-book)*100)/100;
+  var bank=($("xBank").value||db.settings.creditCode||"110102").trim();
+  var gainAcc=db.settings.gainCode||"6101";
+  var assetAcc=a.assetAcc||"1301";
+  var accDep=a.accDepAcc||"1309";
+  if(!isCode(bank)||!isCode(assetAcc)||!isCode(accDep)||!isCode(gainAcc)){toast("کد حساب نامعتبر",true);return;}
+  var lines=[];
+  if(sale>0) lines.push({code:bank,desc:"وصول فروش دارایی",dr:sale,cr:0});
+  if(ad>0) lines.push({code:accDep,desc:"بستن استهلاک انباشته",dr:ad,cr:0});
+  if(gain<0) lines.push({code:gainAcc,desc:"زیان فروش دارایی",dr:Math.abs(gain),cr:0});
+  lines.push({code:assetAcc,desc:"خروج دارایی",dr:0,cr:cost});
+  if(gain>0) lines.push({code:gainAcc,desc:"سود فروش دارایی",dr:0,cr:gain});
+  var je=postJe("خروج دارایی "+a.code+" — "+a.name, lines, $("xDate").value||today(), "fa-dispose");
+  if(!je){toast("صدور سند ناموفق — تراز را بررسی کنید",true);return;}
+  a.status="disposed";
+  db.disposals.push({id:uid(),assetId:a.id,name:a.name,date:$("xDate").value||today(),sale:sale,book:book,gain:gain,jeNo:je.no,note:($("xNote").value||"").slice(0,200)});
+  if(!save(db)) return;
+  $("xSale").value="0";$("xNote").value="";
+  fillSelects(); renderDisp(); renderDash(); toast("خروج + سند "+je.no);
+});
+
+function scheduleAsset(asset){
+  var rows=[], cost=Number(asset.cost)||0, salv=Number(asset.salvage)||0, life=Math.max(1,Number(asset.life)||1);
+  var acc=0, book=cost;
+  for(var y=1;y<=life;y++){
+    var yearDep=0;
+    if(asset.method==="sl") yearDep=(cost-salv)/life;
+    else if(asset.method==="db"){
+      var rate=(Number(asset.rate)||25)/100;
+      yearDep=book*rate;
+      if(book-yearDep<salv) yearDep=book-salv;
+    } else if(asset.method==="syd"){
+      var syd=life*(life+1)/2;
+      yearDep=(cost-salv)*(life-y+1)/syd;
+    } else yearDep=(cost-salv)/life;
+    yearDep=Math.round(yearDep*100)/100;
+    acc+=yearDep; book=cost-acc;
+    if(book<salv){ yearDep-=(salv-book); acc=cost-salv; book=salv; }
+    rows.push({year:y,dep:Math.max(0,yearDep),accum:Math.round(acc*100)/100,nbv:Math.max(0,Math.round(book*100)/100)});
+    if(book<=salv+EPS) break;
+  }
+  return rows;
+}
+
+function runRep(){
+  var h="", title="";
+  if(repMode==="reg"||repMode==="nbv"){
+    title=repMode==="nbv"?"ارزش دفتری":"ثبت دارایی‌ها";
+    h="<table><thead><tr><th>کد</th><th>نام</th><th>تاریخ</th><th>بهای</th><th>انباشته</th><th>دفتری</th><th>روش</th></tr></thead><tbody>";
+    db.assets.forEach(function(a){
+      h+="<tr><td class='num'>"+esc(a.code)+"</td><td>"+esc(a.name)+"</td><td class='num'>"+esc(a.date)+"</td><td class='num'>"+fmt(a.cost)+"</td><td class='num'>"+fmt(accumDep(a.id))+"</td><td class='num'>"+fmt(nbv(a))+"</td><td>"+esc(METHOD[a.method]||"")+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else if(repMode==="dep"){
+    title="استهلاک ثبت‌شده";
+    h="<table><thead><tr><th>دوره</th><th>دارایی</th><th>مبلغ</th><th>سند</th></tr></thead><tbody>";
+    db.depreciations.slice().reverse().forEach(function(d){
+      var a=assetById(d.assetId);
+      h+="<tr><td class='num'>"+esc(d.period)+"</td><td>"+esc(a?a.name:"—")+"</td><td class='num'>"+fmt(d.amount)+"</td><td class='num'>"+esc(d.jeNo||"")+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else if(repMode==="sch"){
+    var id=$("repAsset").value; var a=assetById(id);
+    if(!a){toast("دارایی را انتخاب کنید",true);return;}
+    title="جدول عمر — "+a.name;
+    h="<table><thead><tr><th>سال</th><th>استهلاک</th><th>انباشته</th><th>دفتری</th></tr></thead><tbody>";
+    scheduleAsset(a).forEach(function(r){
+      h+="<tr><td class='num'>"+r.year+"</td><td class='num'>"+fmt(r.dep)+"</td><td class='num'>"+fmt(r.accum)+"</td><td class='num'>"+fmt(r.nbv)+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else if(repMode==="disp"){
+    title="خروج دارایی‌ها";
+    h="<table><thead><tr><th>تاریخ</th><th>دارایی</th><th>فروش</th><th>دفتری</th><th>سود/زیان</th></tr></thead><tbody>";
+    db.disposals.forEach(function(d){
+      h+="<tr><td class='num'>"+esc(d.date)+"</td><td>"+esc(d.name)+"</td><td class='num'>"+fmt(d.sale)+"</td><td class='num'>"+fmt(d.book)+"</td><td class='num'>"+fmt(d.gain)+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else {
+    title="بر اساس طبقه";
+    var map={};
+    db.assets.forEach(function(a){
+      if(a.status==="disposed") return;
+      var k=a.catId||"0";
+      if(!map[k]) map[k]={name:(catById(k)||{}).name||"بدون طبقه",cost:0,nbv:0,n:0};
+      map[k].cost+=Number(a.cost)||0;
+      map[k].nbv+=nbv(a);
+      map[k].n++;
+    });
+    h="<table><thead><tr><th>طبقه</th><th>تعداد</th><th>بهای</th><th>دفتری</th></tr></thead><tbody>";
+    Object.keys(map).forEach(function(k){var x=map[k];h+="<tr><td>"+esc(x.name)+"</td><td class='num'>"+x.n+"</td><td class='num'>"+fmt(x.cost)+"</td><td class='num'>"+fmt(x.nbv)+"</td></tr>";});
+    h+="</tbody></table>";
+  }
+  $("repTitle").textContent=title;
+  $("repOut").innerHTML=h||"<p class='note'>موردی نیست.</p>";
+  toast("گزارش آماده");
+}
+$("btnRep").onclick=lock(runRep);
+$("btnPrint").onclick=function(){window.print();};
+$("btnSyncCode").onclick=lock(function(){
+  var n=0;
+  db.categories.forEach(function(c){
+    if(upsertAcc(c.assetAcc,"دارایی — "+c.name,"asset")) n++;
+    if(upsertAcc(c.accDepAcc,"استهلاک انباشته — "+c.name,"asset")) n++;
+    if(upsertAcc(c.expAcc,"هزینه استهلاک — "+c.name,"expense")) n++;
+  });
+  renderDash(); toast(n+" کد همسان شد");
+});
+$("btnOpenAcc").onclick=function(){window.open("accounting.html","_blank","noopener,noreferrer");};
+$("btnSaveDef").onclick=lock(function(){
+  var a=($("defCredit").value||"").trim(), b=($("defGain").value||"").trim();
+  if(!isCode(a)||!isCode(b)){toast("کد نامعتبر",true);return;}
+  db.settings.creditCode=a; db.settings.gainCode=b; save(db); toast("ذخیره شد");
+});
+$("btnBackup").onclick=function(){
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
+  a.download="assets-backup-"+today()+".json"; a.click();
+};
+$("restoreFile").onchange=function(e){
+  var f=e.target.files&&e.target.files[0]; if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.assets))throw new Error("x");db=d;["categories","depreciations","disposals"].forEach(function(k){if(!Array.isArray(db[k]))db[k]=[];});if(!db.settings)db.settings={creditCode:"110102",gainCode:"6101"};save(db);toast("بازیابی شد");renderDash();}catch(err){toast("نامعتبر",true);}};
+  r.readAsText(f);
+};
+$("btnWipe").onclick=lock(function(){if(!confirm("حذف همه؟"))return;if(!confirm("نهایی؟"))return;db=def();save(db);toast("حذف شد");renderDash();});
+
+$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
+document.body.addEventListener("click",function(e){
+  var g=e.target.closest("[data-go]"); if(g){go(g.getAttribute("data-go"));return;}
+  var ec=e.target.closest("[data-edit-cat]");
+  if(ec){var c=catById(ec.getAttribute("data-edit-cat"));if(!c)return;
+    $("catId").value=c.id;$("catCode").value=c.code;$("catName").value=c.name;$("catMethod").value=c.method;$("catLife").value=c.life;$("catRate").value=c.rate;
+    $("catAssetAcc").value=c.assetAcc;$("catAccDep").value=c.accDepAcc;$("catExp").value=c.expAcc;go("cat");return;}
+  var dc=e.target.closest("[data-del-cat]");
+  if(dc){if(!confirm("حذف؟"))return;db.categories=db.categories.filter(function(x){return String(x.id)!==dc.getAttribute("data-del-cat");});save(db);renderCats();return;}
+  var ea=e.target.closest("[data-edit-a]");
+  if(ea){var a=assetById(ea.getAttribute("data-edit-a"));if(!a)return;
+    $("aId").value=a.id;$("aCode").value=a.code;$("aName").value=a.name;$("aCat").value=a.catId||"";$("aDate").value=a.date;
+    $("aCost").value=a.cost;$("aSalvage").value=a.salvage;$("aLife").value=a.life;$("aMethod").value=a.method;$("aRate").value=a.rate;
+    $("aUnits").value=a.units||0;$("aLoc").value=a.loc||"";$("aAssetAcc").value=a.assetAcc||"";$("aStatus").value=a.status||"active";go("asset");return;}
+  var da=e.target.closest("[data-del-a]");
+  if(da){if(!confirm("حذف؟"))return;db.assets=db.assets.filter(function(x){return String(x.id)!==da.getAttribute("data-del-a");});save(db);renderAssets();renderDash();return;}
+  var dd=e.target.closest("[data-del-dep]");
+  if(dd){if(!confirm("حذف این رکورد استهلاک؟"))return;db.depreciations=db.depreciations.filter(function(x){return String(x.id)!==dd.getAttribute("data-del-dep");});save(db);renderDepHist();renderDash();return;}
+});
+$("repTabs").addEventListener("click",function(e){var b=e.target.closest("[data-r]");if(!b)return;repMode=b.getAttribute("data-r");document.querySelectorAll("#repTabs button").forEach(function(x){x.classList.toggle("on",x===b);});});
+
+renderDash();
+})();
+</script>
+</body>
+</html>
