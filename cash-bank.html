@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="نقد و بانک">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>نقد و بانک هوشمند</title>
+<style>
+:root{--bg:#f0fdfa;--card:#fff;--line:#99f6e4;--txt:#134e4a;--muted:#0f766e;--b:#0d9488;--b2:#0f766e;--g:#059669;--r:#dc2626;--o:#d97706;--p:#6366f1;--shadow:0 4px 22px rgba(15,118,110,.1);--safe:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 400px at 100% -10%,#ccfbf1 0%,transparent 55%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(56px + var(--safe));line-height:1.55}
+.box{max-width:980px;margin:0 auto}
+.header{text-align:center;margin-bottom:12px}
+.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;display:grid;place-items:center;font-size:26px;margin:0 auto 8px;box-shadow:0 8px 24px rgba(13,148,136,.35)}
+h1{font-size:clamp(1.1rem,3vw,1.3rem);color:#115e59}
+.sub{font-size:.8rem;color:var(--muted)}
+.nav{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(240,253,250,.94);backdrop-filter:blur(12px)}
+.nav button{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.5rem,1.3vw,.68rem);color:var(--muted);cursor:pointer;font-family:inherit}
+.nav button.on{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;border-color:transparent}
+.panel{display:none!important}.panel.on{display:block!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card h2{font-size:.92rem;margin-bottom:12px;color:#115e59}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
+.btn:disabled{opacity:.5}.btn-b{background:linear-gradient(135deg,var(--b),var(--b2))}.btn-g{background:linear-gradient(135deg,var(--g),#047857)}
+.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#b45309)}
+.btn-p{background:linear-gradient(135deg,var(--p),#4f46e5)}.btn-gr{background:#e2e8f0;color:#334155}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;font-size:16px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(13,148,136,.15)}
+textarea{min-height:60px;resize:vertical}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th,td{border:1px solid var(--line);padding:8px 6px;text-align:right}
+th{background:#ccfbf1;color:#115e59}
+.num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
+.scroll{overflow:auto;max-height:420px;border-radius:10px}
+.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
+.stat .n{font-size:1.05rem;font-weight:700;color:var(--b)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
+.toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center}
+.toast.show{opacity:1}.toast.err{background:var(--r)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
+.ok{background:#d1fae5;color:#065f46}.bad{background:#fee2e2;color:#991b1b}.warn{background:#fef3c7;color:#92400e}.info{background:#e0e7ff;color:#3730a3}.flow{background:#ccfbf1;color:#115e59}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.filters button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:.72rem;cursor:pointer;font-family:inherit;color:var(--muted)}
+.filters button.on{background:var(--b);color:#fff;border-color:var(--b)}
+.footer{text-align:center;font-size:.7rem;color:#5eead4;margin-top:14px}
+@media(max-width:720px){.nav{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
+@media print{.nav,.btn,nav{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="box">
+  <header class="header">
+    <div class="logo">🏦</div>
+    <h1>نقد و بانک هوشمند</h1>
+    <p class="sub">دریافت · پرداخت · مغایرت بانکی · همسان با حسابداری</p>
+  </header>
+  <nav class="nav" id="nav">
+    <button type="button" class="on" data-tab="dash">داشبورد</button>
+    <button type="button" data-tab="banks">بانک‌ها</button>
+    <button type="button" data-tab="recv">دریافت</button>
+    <button type="button" data-tab="pay">پرداخت</button>
+    <button type="button" data-tab="rec">مغایرت</button>
+    <button type="button" data-tab="rep">گزارش</button>
+    <button type="button" data-tab="set">تنظیمات</button>
+  </nav>
+
+  <main id="dash" class="panel on">
+    <div class="stats">
+      <div class="stat"><div class="n num" id="stCash">۰</div><div class="l">مانده صندوق</div></div>
+      <div class="stat"><div class="n num" id="stBank">۰</div><div class="l">مانده بانک‌ها</div></div>
+      <div class="stat"><div class="n" id="stRecv">۰</div><div class="l">دریافت در جریان</div></div>
+      <div class="stat"><div class="n" id="stPay">۰</div><div class="l">پرداخت در جریان</div></div>
+    </div>
+    <section class="card">
+      <h2>همسان‌سازی با حسابداری</h2>
+      <p class="note" id="accLink">—</p>
+      <div class="grid2">
+        <button type="button" class="btn btn-b" id="btnSyncAcc">همسان‌سازی کدینگ</button>
+        <button type="button" class="btn btn-gr" id="btnOpenAcc">باز کردن حسابداری</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>میانبر</h2>
+      <div class="grid2">
+        <button type="button" class="btn btn-g" data-go="recv">برگه دریافت</button>
+        <button type="button" class="btn btn-o" data-go="pay">برگه پرداخت</button>
+      </div>
+      <div class="grid2" style="margin-top:8px">
+        <button type="button" class="btn btn-b" data-go="rec">صورت مغایرت</button>
+        <button type="button" class="btn btn-p" data-go="rep">گزارش‌ها</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>آخرین اسناد</h2>
+      <div class="scroll"><table><thead><tr><th>نوع</th><th>شماره</th><th>تاریخ</th><th>شرح</th><th>مبلغ</th><th>وضعیت</th></tr></thead><tbody id="lastDocs"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="banks" class="panel">
+    <section class="card">
+      <h2>ثبت بانک / صندوق</h2>
+      <input type="hidden" id="bId">
+      <div class="grid2">
+        <div><label>نوع</label><select id="bType"><option value="bank">بانک</option><option value="cash">صندوق</option></select></div>
+        <div><label>کد حسابداری *</label><input id="bCode" maxlength="20" placeholder="110102"></div>
+      </div>
+      <div class="grid2">
+        <div><label>نام *</label><input id="bName" maxlength="100"></div>
+        <div><label>شعبه</label><input id="bBranch" maxlength="100"></div>
+      </div>
+      <div class="grid3">
+        <div><label>شماره حساب</label><input id="bAccNo" maxlength="40" class="num"></div>
+        <div><label>شبا</label><input id="bIban" maxlength="34" class="num"></div>
+        <div><label>وضعیت</label><select id="bStatus"><option value="active">فعال</option><option value="inactive">غیرفعال</option></select></div>
+      </div>
+      <button type="button" class="btn btn-g" id="btnBank">ذخیره و همسان‌سازی کدینگ</button>
+      <button type="button" class="btn btn-gr" id="btnBankClr">جدید</button>
+      <p class="note">حساب در کدینگ حسابداری نیز ایجاد یا به‌روز می‌شود.</p>
+    </section>
+    <section class="card">
+      <h2>فهرست</h2>
+      <div class="scroll"><table><thead><tr><th>کد</th><th>نام</th><th>شعبه</th><th>نوع</th><th>مانده</th><th></th></tr></thead><tbody id="bankList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="recv" class="panel">
+    <section class="card">
+      <h2>برگه دریافت</h2>
+      <div class="grid3">
+        <div><label>شماره</label><input id="rNo" readonly></div>
+        <div><label>تاریخ</label><input id="rDate" type="date"></div>
+        <div><label>وضعیت</label>
+          <select id="rStatus">
+            <option value="draft">پیش‌نویس</option>
+            <option value="flow">در جریان دریافت</option>
+            <option value="done">وصول‌شده</option>
+            <option value="cancel">ابطال</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div><label>واریز به *</label><select id="rBank"></select></div>
+        <div><label>دریافت از</label><input id="rParty" maxlength="120"></div>
+      </div>
+      <div class="grid2">
+        <div><label>نحوه</label>
+          <select id="rMethod">
+            <option value="cash">نقد</option><option value="transfer">حواله</option>
+            <option value="check">چک</option><option value="pos">کارتخوان</option><option value="other">سایر</option>
+          </select>
+        </div>
+        <div><label>مبلغ *</label><input id="rAmt" type="number" min="0" step="0.01" class="num"></div>
+      </div>
+      <div class="grid2">
+        <div><label>پیگیری / چک</label><input id="rRef" maxlength="60"></div>
+        <div><label>سررسید چک</label><input id="rDue" type="date"></div>
+      </div>
+      <label>شرح</label><input id="rDesc" maxlength="300">
+      <div class="grid2">
+        <button type="button" class="btn btn-g" id="btnRecv">ثبت دریافت</button>
+        <button type="button" class="btn btn-b" id="btnRecvPost">ثبت + سند حسابداری</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>اسناد دریافت</h2>
+      <div class="filters" id="recvFilt">
+        <button type="button" class="on" data-f="all">همه</button>
+        <button type="button" data-f="flow">در جریان</button>
+        <button type="button" data-f="done">وصول‌شده</button>
+        <button type="button" data-f="draft">پیش‌نویس</button>
+      </div>
+      <div class="scroll"><table><thead><tr><th>شماره</th><th>تاریخ</th><th>طرف</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead><tbody id="recvList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="pay" class="panel">
+    <section class="card">
+      <h2>برگه پرداخت</h2>
+      <div class="grid3">
+        <div><label>شماره</label><input id="pNo" readonly></div>
+        <div><label>تاریخ</label><input id="pDate" type="date"></div>
+        <div><label>وضعیت</label>
+          <select id="pStatus">
+            <option value="draft">پیش‌نویس</option>
+            <option value="flow">در جریان پرداخت</option>
+            <option value="done">پرداخت‌شده</option>
+            <option value="cancel">ابطال</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div><label>برداشت از *</label><select id="pBank"></select></div>
+        <div><label>پرداخت به</label><input id="pParty" maxlength="120"></div>
+      </div>
+      <div class="grid2">
+        <div><label>نحوه</label>
+          <select id="pMethod">
+            <option value="cash">نقد</option><option value="transfer">حواله</option>
+            <option value="check">چک</option><option value="pos">کارت</option><option value="other">سایر</option>
+          </select>
+        </div>
+        <div><label>مبلغ *</label><input id="pAmt" type="number" min="0" step="0.01" class="num"></div>
+      </div>
+      <div class="grid2">
+        <div><label>پیگیری / چک</label><input id="pRef" maxlength="60"></div>
+        <div><label>سررسید چک</label><input id="pDue" type="date"></div>
+      </div>
+      <label>شرح</label><input id="pDesc" maxlength="300">
+      <div class="grid2">
+        <button type="button" class="btn btn-o" id="btnPay">ثبت پرداخت</button>
+        <button type="button" class="btn btn-b" id="btnPayPost">ثبت + سند حسابداری</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>اسناد پرداخت</h2>
+      <div class="filters" id="payFilt">
+        <button type="button" class="on" data-f="all">همه</button>
+        <button type="button" data-f="flow">در جریان</button>
+        <button type="button" data-f="done">پرداخت‌شده</button>
+        <button type="button" data-f="draft">پیش‌نویس</button>
+      </div>
+      <div class="scroll"><table><thead><tr><th>شماره</th><th>تاریخ</th><th>طرف</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead><tbody id="payList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="rec" class="panel">
+    <section class="card">
+      <h2>صورت مغایرت بانکی</h2>
+      <div class="grid2">
+        <div><label>بانک</label><select id="recBank"></select></div>
+        <div><label>تاریخ صورت‌حساب</label><input id="recDate" type="date"></div>
+      </div>
+      <div class="grid2">
+        <div><label>مانده دفتر (خودکار)</label><input id="recBook" class="num" readonly></div>
+        <div><label>مانده صورت‌حساب بانک *</label><input id="recStmt" type="number" step="0.01" class="num"></div>
+      </div>
+      <label>اقلام باز / توضیح</label>
+      <textarea id="recNote" maxlength="1500" placeholder="چک‌های وصول‌نشده، واریز ثبت‌نشده، کارمزد…"></textarea>
+      <p class="note">اختلاف: <b class="num" id="recDiff">۰</b></p>
+      <button type="button" class="btn btn-b" id="btnRec">ذخیره مغایرت + همسان با حسابداری</button>
+    </section>
+    <section class="card">
+      <h2>سوابق مغایرت</h2>
+      <div class="scroll"><table><thead><tr><th>تاریخ</th><th>بانک</th><th>دفتر</th><th>بانک</th><th>اختلاف</th><th>توضیح</th></tr></thead><tbody id="recList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="rep" class="panel">
+    <section class="card">
+      <h2>گزارش‌ها</h2>
+      <div class="filters" id="repTabs">
+        <button type="button" class="on" data-r="flowRecv">در جریان دریافت</button>
+        <button type="button" data-r="flowPay">در جریان پرداخت</button>
+        <button type="button" data-r="allRecv">همه دریافت‌ها</button>
+        <button type="button" data-r="allPay">همه پرداخت‌ها</button>
+        <button type="button" data-r="bal">مانده بانک/صندوق</button>
+        <button type="button" data-r="daily">گردش روزانه</button>
+        <button type="button" data-r="check">چک‌های باز</button>
+      </div>
+      <div class="grid2">
+        <div><label>از</label><input type="date" id="repFrom"></div>
+        <div><label>تا</label><input type="date" id="repTo"></div>
+      </div>
+      <button type="button" class="btn btn-b" id="btnRep">اجرا</button>
+      <button type="button" class="btn btn-gr" id="btnPrint">چاپ</button>
+    </section>
+    <section class="card">
+      <h2 id="repTitle">نتیجه</h2>
+      <div class="scroll" id="repOut"><p class="note">گزارش را اجرا کنید.</p></div>
+    </section>
+  </main>
+
+  <main id="set" class="panel">
+    <section class="card">
+      <h2>پشتیبان</h2>
+      <button type="button" class="btn btn-g" id="btnBackup">دانلود JSON</button>
+      <label>بازیابی</label>
+      <input type="file" id="restoreFile" accept=".json,application/json">
+      <button type="button" class="btn btn-r" id="btnWipe">حذف همه داده‌ها</button>
+    </section>
+    <section class="card">
+      <h2>حساب‌های پیش‌فرض سند</h2>
+      <div class="grid2">
+        <div><label>کد طرف دریافت (بستانکار)</label><input id="defRecvCr" value="1102"></div>
+        <div><label>کد طرف پرداخت (بدهکار)</label><input id="defPayDr" value="2101"></div>
+      </div>
+      <button type="button" class="btn btn-b" id="btnSaveDef">ذخیره پیش‌فرض‌ها</button>
+      <p class="note">در «ثبت + سند حسابداری» استفاده می‌شود. این کدها باید در حسابداری وجود داشته باشند.</p>
+    </section>
+  </main>
+  <p class="footer">نقد و بانک هوشمند · متصل به حسابداری · داده محلی</p>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+"use strict";
+var CASH_KEY="smart_cash_v1", ACC_KEY="smart_acc_v2";
+var recvFilt="all", payFilt="all", repMode="flowRecv";
+
+function $(id){return document.getElementById(id);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2000);}
+function fmt(n){return (Number(n)||0).toLocaleString("fa-IR",{maximumFractionDigits:2});}
+function today(){return new Date().toISOString().slice(0,10);}
+function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+
+function def(){return {banks:[],receipts:[],payments:[],reconciles:[],nextR:1,nextP:1,settings:{defRecvCr:"1102",defPayDr:"2101"},version:1};}
+function load(){
+  try{
+    var d=JSON.parse(localStorage.getItem(CASH_KEY)||"null");
+    if(!d) return def();
+    ["banks","receipts","payments","reconciles"].forEach(function(k){if(!Array.isArray(d[k]))d[k]=[];});
+    if(!d.settings) d.settings={defRecvCr:"1102",defPayDr:"2101"};
+    if(!d.nextR) d.nextR=1; if(!d.nextP) d.nextP=1;
+    return d;
+  }catch(e){return def();}
+}
+function save(x){try{localStorage.setItem(CASH_KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
+var db=load();
+
+function loadAcc(){try{return JSON.parse(localStorage.getItem(ACC_KEY)||"null");}catch(e){return null;}}
+function saveAcc(acc){localStorage.setItem(ACC_KEY,JSON.stringify(acc));}
+function ensureAccShell(){
+  var acc=loadAcc();
+  if(!acc||typeof acc!=="object") acc={accounts:[],journals:[],ap:[],ar:[],bankRecs:[],nextJe:1,version:2};
+  if(!Array.isArray(acc.accounts)) acc.accounts=[];
+  if(!Array.isArray(acc.journals)) acc.journals=[];
+  if(!Array.isArray(acc.bankRecs)) acc.bankRecs=[];
+  if(!acc.nextJe) acc.nextJe=1;
+  return acc;
+}
+function syncBankToAcc(bank){
+  var acc=ensureAccShell();
+  var name=bank.name+(bank.branch?" — "+bank.branch:"");
+  var i=acc.accounts.findIndex(function(a){return a.code===bank.code;});
+  var row={code:bank.code,name:name,level:4,nat:"debit",type:"asset"};
+  if(i>=0){acc.accounts[i].name=row.name;acc.accounts[i].type="asset";}
+  else acc.accounts.push(row);
+  saveAcc(acc);
+}
+function postJournal(desc, lines, date, docType){
+  var acc=ensureAccShell();
+  var dr=0,cr=0;
+  lines.forEach(function(l){dr+=Number(l.dr)||0;cr+=Number(l.cr)||0;});
+  if(Math.abs(dr-cr)>0.01||dr<=0) return null;
+  var je={id:Date.now(),no:acc.nextJe||1,date:date||today(),type:docType||"bank",desc:desc,
+    lines:lines.map(function(l){return {code:l.code,desc:l.desc||"",dr:Number(l.dr)||0,cr:Number(l.cr)||0};}),total:dr};
+  acc.journals.push(je);
+  acc.nextJe=(acc.nextJe||1)+1;
+  saveAcc(acc);
+  return je;
+}
+function balanceOf(code){
+  var acc=loadAcc();
+  if(acc&&Array.isArray(acc.journals)){
+    var fromAcc=0, has=false;
+    acc.journals.forEach(function(j){
+      (j.lines||[]).forEach(function(l){
+        if(l.code===code){has=true;fromAcc+=(Number(l.dr)||0)-(Number(l.cr)||0);}
+      });
+    });
+    if(has) return fromAcc;
+  }
+  var bal=0;
+  db.receipts.forEach(function(r){if(r.status==="done"&&r.bankCode===code) bal+=Number(r.amount)||0;});
+  db.payments.forEach(function(p){if(p.status==="done"&&p.bankCode===code) bal-=Number(p.amount)||0;});
+  return bal;
+}
+function stLabel(s){return {draft:"پیش‌نویس",flow:"در جریان",done:"نهایی",cancel:"ابطال"}[s]||s;}
+function stBadge(s){
+  var c={draft:"warn",flow:"flow",done:"ok",cancel:"bad"}[s]||"info";
+  return '<span class="badge '+c+'">'+esc(stLabel(s))+'</span>';
+}
+function activeBanks(){return db.banks.filter(function(b){return b.status==="active";});}
+function fillBankSelects(){
+  var o='<option value="">— انتخاب —</option>';
+  activeBanks().forEach(function(b){
+    o+='<option value="'+esc(b.code)+'">'+esc(b.code+" — "+b.name+(b.branch?" ("+b.branch+")":""))+'</option>';
+  });
+  $("rBank").innerHTML=o; $("pBank").innerHTML=o; $("recBank").innerHTML=o;
+}
+
+function go(tab,btn){
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
+  document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
+  var el=$(tab); if(el) el.classList.add("on");
+  if(btn) btn.classList.add("on");
+  else {var n=document.querySelector('#nav button[data-tab="'+tab+'"]'); if(n) n.classList.add("on");}
+  if(tab==="dash") renderDash();
+  if(tab==="banks") renderBanks();
+  if(tab==="recv"){ fillBankSelects(); $("rNo").value=String(db.nextR||1); if(!$("rDate").value)$("rDate").value=today(); renderRecv(); }
+  if(tab==="pay"){ fillBankSelects(); $("pNo").value=String(db.nextP||1); if(!$("pDate").value)$("pDate").value=today(); renderPay(); }
+  if(tab==="rec"){ fillBankSelects(); if(!$("recDate").value)$("recDate").value=today(); renderRecList(); }
+  if(tab==="set"){ $("defRecvCr").value=db.settings.defRecvCr||"1102"; $("defPayDr").value=db.settings.defPayDr||"2101"; }
+}
+
+function renderDash(){
+  var cash=0, bank=0;
+  db.banks.forEach(function(b){ var bal=balanceOf(b.code); if(b.type==="cash") cash+=bal; else bank+=bal; });
+  $("stCash").textContent=fmt(cash);
+  $("stBank").textContent=fmt(bank);
+  $("stRecv").textContent=String(db.receipts.filter(function(r){return r.status==="flow";}).length);
+  $("stPay").textContent=String(db.payments.filter(function(p){return p.status==="flow";}).length);
+  var acc=loadAcc();
+  $("accLink").innerHTML=acc&&Array.isArray(acc.accounts)
+    ? '<span class="badge ok">حسابداری متصل</span> · حساب‌ها: '+acc.accounts.length+' · اسناد: '+(acc.journals||[]).length+' · مغایرت‌ها: '+(acc.bankRecs||[]).length
+    : '<span class="badge warn">حسابداری یافت نشد</span> — accounting.html را در همین مرورگر باز کنید.';
+  var docs=[];
+  db.receipts.forEach(function(r){docs.push({t:"دریافت",no:r.no,date:r.date,desc:r.desc||r.party,amt:r.amount,st:r.status,ts:r.id});});
+  db.payments.forEach(function(p){docs.push({t:"پرداخت",no:p.no,date:p.date,desc:p.desc||p.party,amt:p.amount,st:p.status,ts:p.id});});
+  docs.sort(function(a,b){return (b.ts||0)-(a.ts||0);});
+  var tb=$("lastDocs"); tb.textContent="";
+  docs.slice(0,15).forEach(function(d){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+esc(d.t)+"</td><td class='num'>"+esc(d.no)+"</td><td class='num'>"+esc(d.date)+"</td><td>"+esc(d.desc)+"</td><td class='num'>"+fmt(d.amt)+"</td><td>"+stBadge(d.st)+"</td>";
+    tb.appendChild(tr);
+  });
+}
+
+function renderBanks(){
+  var tb=$("bankList"); tb.textContent="";
+  db.banks.forEach(function(b){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(b.code)+"</td><td>"+esc(b.name)+"</td><td>"+esc(b.branch||"—")+"</td><td>"+(b.type==="cash"?"صندوق":"بانک")+"</td><td class='num'>"+fmt(balanceOf(b.code))+"</td>"+
+      "<td><button type='button' data-edit-b='"+b.id+"' class='btn btn-b' style='padding:4px 8px;margin:0;width:auto;font-size:.7rem'>ویرایش</button> "+
+      "<button type='button' data-del-b='"+b.id+"' class='btn btn-r' style='padding:4px 8px;margin:0;width:auto;font-size:.7rem'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+function clearBank(){ $("bId").value="";$("bCode").value="";$("bName").value="";$("bBranch").value="";$("bAccNo").value="";$("bIban").value="";$("bType").value="bank";$("bStatus").value="active"; }
+$("btnBankClr").onclick=clearBank;
+$("btnBank").onclick=function(){
+  var code=($("bCode").value||"").trim(), name=($("bName").value||"").trim();
+  if(!code||!name){toast("کد و نام الزامی است",true);return;}
+  if(!/^[0-9A-Za-z.\-]+$/.test(code)){toast("کد نامعتبر",true);return;}
+  var row={id:$("bId").value?Number($("bId").value):uid(),type:$("bType").value,code:code.slice(0,20),name:name.slice(0,100),
+    branch:($("bBranch").value||"").slice(0,100),accNo:($("bAccNo").value||"").slice(0,40),iban:($("bIban").value||"").slice(0,34),status:$("bStatus").value};
+  var i=db.banks.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0) db.banks[i]=row;
+  else { if(db.banks.some(function(x){return x.code===row.code;})){toast("کد تکراری است",true);return;} db.banks.push(row); }
+  syncBankToAcc(row); save(db); clearBank(); renderBanks(); renderDash(); toast("ذخیره و همسان شد");
+};
+
+function renderRecv(){
+  var list=db.receipts.slice().reverse();
+  if(recvFilt!=="all") list=list.filter(function(r){return r.status===recvFilt;});
+  var tb=$("recvList"); tb.textContent="";
+  list.forEach(function(r){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(r.no)+"</td><td class='num'>"+esc(r.date)+"</td><td>"+esc(r.party||"")+"</td><td class='num'>"+fmt(r.amount)+"</td><td>"+stBadge(r.status)+"</td>"+
+      "<td><button type='button' data-st-r='"+r.id+"|done' class='btn btn-g' style='padding:4px 8px;margin:0;width:auto;font-size:.68rem'>وصول</button> "+
+      "<button type='button' data-st-r='"+r.id+"|flow' class='btn btn-b' style='padding:4px 8px;margin:0;width:auto;font-size:.68rem'>جریان</button> "+
+      "<button type='button' data-del-r='"+r.id+"' class='btn btn-r' style='padding:4px 8px;margin:0;width:auto;font-size:.68rem'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+function saveRecv(post){
+  var bank=($("rBank").value||"").trim(); var amt=Number($("rAmt").value)||0;
+  if(!bank||amt<=0){toast("بانک و مبلغ الزامی",true);return;}
+  var row={id:uid(),no:db.nextR||1,date:$("rDate").value||today(),status:$("rStatus").value,bankCode:bank,
+    party:($("rParty").value||"").slice(0,120),method:$("rMethod").value,amount:amt,ref:($("rRef").value||"").slice(0,60),
+    due:$("rDue").value||"",desc:($("rDesc").value||"").slice(0,300),posted:false};
+  if(post){
+    var cr=db.settings.defRecvCr||"1102";
+    var je=postJournal("دریافت "+row.no+" — "+(row.party||row.desc),[{code:bank,desc:"دریافت",dr:amt,cr:0},{code:cr,desc:row.party||"طرف دریافت",dr:0,cr:amt}],row.date,"receipt");
+    if(!je){toast("خطا در سند — کد طرف را در تنظیمات و حسابداری بررسی کنید",true);return;}
+    row.posted=true; row.jeNo=je.no; if(row.status==="draft") row.status="done";
+  }
+  db.receipts.push(row); db.nextR=(db.nextR||1)+1; save(db);
+  $("rAmt").value="";$("rParty").value="";$("rRef").value="";$("rDesc").value="";$("rNo").value=String(db.nextR);
+  renderRecv(); renderDash(); toast(post?"دریافت + سند "+(row.jeNo||"")+" ثبت شد":"برگه دریافت ثبت شد");
+}
+$("btnRecv").onclick=function(){saveRecv(false);};
+$("btnRecvPost").onclick=function(){saveRecv(true);};
+
+function renderPay(){
+  var list=db.payments.slice().reverse();
+  if(payFilt!=="all") list=list.filter(function(p){return p.status===payFilt;});
+  var tb=$("payList"); tb.textContent="";
+  list.forEach(function(p){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(p.no)+"</td><td class='num'>"+esc(p.date)+"</td><td>"+esc(p.party||"")+"</td><td class='num'>"+fmt(p.amount)+"</td><td>"+stBadge(p.status)+"</td>"+
+      "<td><button type='button' data-st-p='"+p.id+"|done' class='btn btn-g' style='padding:4px 8px;margin:0;width:auto;font-size:.68rem'>پرداخت</button> "+
+      "<button type='button' data-st-p='"+p.id+"|flow' class='btn btn-b' style='padding:4px 8px;margin:0;width:auto;font-size:.68rem'>جریان</button> "+
+      "<button type='button' data-del-p='"+p.id+"' class='btn btn-r' style='padding:4px 8px;margin:0;width:auto;font-size:.68rem'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+function savePay(post){
+  var bank=($("pBank").value||"").trim(); var amt=Number($("pAmt").value)||0;
+  if(!bank||amt<=0){toast("بانک و مبلغ الزامی",true);return;}
+  var row={id:uid(),no:db.nextP||1,date:$("pDate").value||today(),status:$("pStatus").value,bankCode:bank,
+    party:($("pParty").value||"").slice(0,120),method:$("pMethod").value,amount:amt,ref:($("pRef").value||"").slice(0,60),
+    due:$("pDue").value||"",desc:($("pDesc").value||"").slice(0,300),posted:false};
+  if(post){
+    var dr=db.settings.defPayDr||"2101";
+    var je=postJournal("پرداخت "+row.no+" — "+(row.party||row.desc),[{code:dr,desc:row.party||"طرف پرداخت",dr:amt,cr:0},{code:bank,desc:"پرداخت",dr:0,cr:amt}],row.date,"payment");
+    if(!je){toast("خطا در سند — کد طرف را در تنظیمات و حسابداری بررسی کنید",true);return;}
+    row.posted=true; row.jeNo=je.no; if(row.status==="draft") row.status="done";
+  }
+  db.payments.push(row); db.nextP=(db.nextP||1)+1; save(db);
+  $("pAmt").value="";$("pParty").value="";$("pRef").value="";$("pDesc").value="";$("pNo").value=String(db.nextP);
+  renderPay(); renderDash(); toast(post?"پرداخت + سند "+(row.jeNo||"")+" ثبت شد":"برگه پرداخت ثبت شد");
+}
+$("btnPay").onclick=function(){savePay(false);};
+$("btnPayPost").onclick=function(){savePay(true);};
+
+$("recBank").onchange=function(){ var c=$("recBank").value; $("recBook").value=c?balanceOf(c).toFixed(2):""; calcDiff(); };
+$("recStmt").oninput=calcDiff;
+function calcDiff(){ var b=Number($("recBook").value)||0, s=Number($("recStmt").value)||0; $("recDiff").textContent=fmt(b-s); }
+$("btnRec").onclick=function(){
+  var code=$("recBank").value; if(!code){toast("بانک را انتخاب کنید",true);return;}
+  var book=Number($("recBook").value)||0, stmt=Number($("recStmt").value)||0;
+  var note=($("recNote").value||"").slice(0,1500), date=$("recDate").value||today();
+  var row={id:uid(),date:date,bankCode:code,book:book,stmt:stmt,diff:book-stmt,note:note};
+  db.reconciles.unshift(row);
+  var acc=ensureAccShell();
+  acc.bankRecs.unshift({id:row.id,account_code:code,book_balance:book,bank_balance:stmt,note:note,rec_date:date,source:"cash-bank"});
+  saveAcc(acc); save(db); renderRecList(); renderDash(); toast("مغایرت ذخیره و با حسابداری همسان شد");
+};
+function renderRecList(){
+  var tb=$("recList"); tb.textContent="";
+  db.reconciles.forEach(function(r){
+    var bank=db.banks.find(function(b){return b.code===r.bankCode;});
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(r.date)+"</td><td>"+esc(bank?bank.name:r.bankCode)+"</td><td class='num'>"+fmt(r.book)+"</td><td class='num'>"+fmt(r.stmt)+"</td><td class='num'>"+fmt(r.diff)+"</td><td>"+esc(r.note||"")+"</td>";
+    tb.appendChild(tr);
+  });
+}
+
+function runRep(){
+  var from=$("repFrom").value, to=$("repTo").value;
+  function inR(d){ if(from&&d<from)return false; if(to&&d>to)return false; return true; }
+  var h="", title="";
+  if(repMode==="flowRecv"||repMode==="allRecv"){
+    title=repMode==="flowRecv"?"اسناد در جریان دریافت":"همه دریافت‌ها";
+    var list=db.receipts.filter(function(r){return inR(r.date)&&(repMode==="allRecv"||r.status==="flow");});
+    h="<table><thead><tr><th>شماره</th><th>تاریخ</th><th>بانک</th><th>طرف</th><th>مبلغ</th><th>وضعیت</th></tr></thead><tbody>";
+    list.forEach(function(r){h+="<tr><td class='num'>"+esc(r.no)+"</td><td class='num'>"+esc(r.date)+"</td><td class='num'>"+esc(r.bankCode)+"</td><td>"+esc(r.party)+"</td><td class='num'>"+fmt(r.amount)+"</td><td>"+stBadge(r.status)+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="flowPay"||repMode==="allPay"){
+    title=repMode==="flowPay"?"اسناد در جریان پرداخت":"همه پرداخت‌ها";
+    var list=db.payments.filter(function(p){return inR(p.date)&&(repMode==="allPay"||p.status==="flow");});
+    h="<table><thead><tr><th>شماره</th><th>تاریخ</th><th>بانک</th><th>طرف</th><th>مبلغ</th><th>وضعیت</th></tr></thead><tbody>";
+    list.forEach(function(p){h+="<tr><td class='num'>"+esc(p.no)+"</td><td class='num'>"+esc(p.date)+"</td><td class='num'>"+esc(p.bankCode)+"</td><td>"+esc(p.party)+"</td><td class='num'>"+fmt(p.amount)+"</td><td>"+stBadge(p.status)+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="bal"){
+    title="مانده بانک و صندوق";
+    h="<table><thead><tr><th>کد</th><th>نام</th><th>شعبه</th><th>نوع</th><th>مانده</th></tr></thead><tbody>";
+    db.banks.forEach(function(b){h+="<tr><td class='num'>"+esc(b.code)+"</td><td>"+esc(b.name)+"</td><td>"+esc(b.branch||"")+"</td><td>"+(b.type==="cash"?"صندوق":"بانک")+"</td><td class='num'>"+fmt(balanceOf(b.code))+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="daily"){
+    title="گردش روزانه";
+    var map={};
+    db.receipts.filter(function(r){return r.status==="done"&&inR(r.date);}).forEach(function(r){if(!map[r.date])map[r.date]={in:0,out:0};map[r.date].in+=Number(r.amount)||0;});
+    db.payments.filter(function(p){return p.status==="done"&&inR(p.date);}).forEach(function(p){if(!map[p.date])map[p.date]={in:0,out:0};map[p.date].out+=Number(p.amount)||0;});
+    h="<table><thead><tr><th>تاریخ</th><th>واریز</th><th>برداشت</th><th>خالص</th></tr></thead><tbody>";
+    Object.keys(map).sort().reverse().forEach(function(d){var x=map[d];h+="<tr><td class='num'>"+esc(d)+"</td><td class='num'>"+fmt(x.in)+"</td><td class='num'>"+fmt(x.out)+"</td><td class='num'>"+fmt(x.in-x.out)+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="check"){
+    title="چک‌های باز";
+    h="<table><thead><tr><th>نوع</th><th>شماره</th><th>طرف</th><th>مبلغ</th><th>سررسید</th><th>پیگیری</th></tr></thead><tbody>";
+    db.receipts.filter(function(r){return r.method==="check"&&(r.status==="flow"||r.status==="draft");}).forEach(function(r){
+      h+="<tr><td>دریافتنی</td><td class='num'>"+esc(r.no)+"</td><td>"+esc(r.party)+"</td><td class='num'>"+fmt(r.amount)+"</td><td class='num'>"+esc(r.due||"—")+"</td><td>"+esc(r.ref||"")+"</td></tr>";
+    });
+    db.payments.filter(function(p){return p.method==="check"&&(p.status==="flow"||p.status==="draft");}).forEach(function(p){
+      h+="<tr><td>پرداختنی</td><td class='num'>"+esc(p.no)+"</td><td>"+esc(p.party)+"</td><td class='num'>"+fmt(p.amount)+"</td><td class='num'>"+esc(p.due||"—")+"</td><td>"+esc(p.ref||"")+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  }
+  $("repTitle").textContent=title;
+  $("repOut").innerHTML=h||"<p class='note'>موردی نیست.</p>";
+  toast("گزارش آماده");
+}
+$("btnRep").onclick=runRep;
+$("btnPrint").onclick=function(){window.print();};
+$("btnSyncAcc").onclick=function(){ var n=0; db.banks.forEach(function(b){syncBankToAcc(b);n++;}); renderDash(); toast(n+" حساب همسان شد"); };
+$("btnOpenAcc").onclick=function(){window.open("accounting.html","_blank","noopener,noreferrer");};
+$("btnSaveDef").onclick=function(){ db.settings.defRecvCr=($("defRecvCr").value||"1102").trim(); db.settings.defPayDr=($("defPayDr").value||"2101").trim(); save(db); toast("ذخیره شد"); };
+$("btnBackup").onclick=function(){ var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"})); a.download="cash-bank-backup.json"; a.click(); };
+$("restoreFile").onchange=function(e){
+  var f=e.target.files&&e.target.files[0]; if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.banks))throw new Error("x");db=d;["receipts","payments","reconciles"].forEach(function(k){if(!Array.isArray(db[k]))db[k]=[];});if(!db.settings)db.settings={defRecvCr:"1102",defPayDr:"2101"};save(db);toast("بازیابی شد");renderDash();}catch(err){toast("نامعتبر",true);}};
+  r.readAsText(f);
+};
+$("btnWipe").onclick=function(){if(!confirm("حذف همه؟"))return;if(!confirm("نهایی؟"))return;db=def();save(db);toast("حذف شد");renderDash();};
+
+$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
+document.body.addEventListener("click",function(e){
+  var g=e.target.closest("[data-go]"); if(g){go(g.getAttribute("data-go"));return;}
+  var eb=e.target.closest("[data-edit-b]");
+  if(eb){var b=db.banks.find(function(x){return String(x.id)===eb.getAttribute("data-edit-b");});if(!b)return;
+    $("bId").value=b.id;$("bType").value=b.type;$("bCode").value=b.code;$("bName").value=b.name;$("bBranch").value=b.branch||"";
+    $("bAccNo").value=b.accNo||"";$("bIban").value=b.iban||"";$("bStatus").value=b.status||"active";go("banks");return;}
+  var dbn=e.target.closest("[data-del-b]");
+  if(dbn){if(!confirm("حذف؟"))return;db.banks=db.banks.filter(function(x){return String(x.id)!==dbn.getAttribute("data-del-b");});save(db);renderBanks();renderDash();return;}
+  var dr=e.target.closest("[data-del-r]");
+  if(dr){db.receipts=db.receipts.filter(function(x){return String(x.id)!==dr.getAttribute("data-del-r");});save(db);renderRecv();renderDash();return;}
+  var dp=e.target.closest("[data-del-p]");
+  if(dp){db.payments=db.payments.filter(function(x){return String(x.id)!==dp.getAttribute("data-del-p");});save(db);renderPay();renderDash();return;}
+  var sr=e.target.closest("[data-st-r]");
+  if(sr){var p=sr.getAttribute("data-st-r").split("|");var r=db.receipts.find(function(x){return String(x.id)===p[0];});if(r){r.status=p[1];save(db);renderRecv();renderDash();}return;}
+  var sp=e.target.closest("[data-st-p]");
+  if(sp){var p=sp.getAttribute("data-st-p").split("|");var r=db.payments.find(function(x){return String(x.id)===p[0];});if(r){r.status=p[1];save(db);renderPay();renderDash();}return;}
+});
+$("recvFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;recvFilt=b.getAttribute("data-f");document.querySelectorAll("#recvFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderRecv();});
+$("payFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;payFilt=b.getAttribute("data-f");document.querySelectorAll("#payFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderPay();});
+$("repTabs").addEventListener("click",function(e){var b=e.target.closest("[data-r]");if(!b)return;repMode=b.getAttribute("data-r");document.querySelectorAll("#repTabs button").forEach(function(x){x.classList.toggle("on",x===b);});});
+
+renderDash();
+})();
+</script>
+</body>
+</html>
