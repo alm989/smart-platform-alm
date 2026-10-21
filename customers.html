@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1d4ed8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="مشتریان هوشمند">
+<meta name="description" content="مشتریان هوشمند — پروفایل، پیگیری، تعاملات، فروش، دریافتنی، گزارش">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>مشتریان هوشمند</title>
+<style>
+:root{
+  --bg:#eff6ff;--card:#fff;--line:#bfdbfe;--txt:#1e3a8a;--muted:#1d4ed8;
+  --b:#3b82f6;--b2:#1d4ed8;--g:#059669;--r:#dc2626;--o:#d97706;--p:#7c3aed;
+  --shadow:0 4px 22px rgba(29,78,216,.1);--safe:env(safe-area-inset-bottom,0px);--radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 400px at 100% 0%,#dbeafe 0%,transparent 55%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55}
+.box{max-width:980px;margin:0 auto}
+.header{text-align:center;margin-bottom:12px}
+.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;display:grid;place-items:center;font-size:26px;margin:0 auto 8px;box-shadow:0 8px 24px rgba(59,130,246,.35)}
+h1{font-size:clamp(1.1rem,3vw,1.3rem);color:#1e40af;font-weight:700}
+.sub{font-size:.8rem;color:var(--muted)}
+.nav{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(239,246,255,.94);backdrop-filter:blur(12px)}
+.nav button{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.5rem,1.2vw,.68rem);color:var(--muted);cursor:pointer;font-family:inherit;transition:.12s}
+.nav button.on{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(59,130,246,.3)}
+.panel{display:none!important}.panel.on{display:block!important;animation:fi .15s ease}
+@keyframes fi{from{opacity:.4}to{opacity:1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card h2{font-size:.92rem;margin-bottom:12px;color:#1e40af}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
+.btn:disabled{opacity:.45}.btn-b{background:linear-gradient(135deg,var(--b),var(--b2))}.btn-g{background:linear-gradient(135deg,var(--g),#047857)}
+.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#b45309)}
+.btn-p{background:linear-gradient(135deg,var(--p),#6d28d9)}.btn-gr{background:#e2e8f0;color:#334155}
+.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;font-size:16px;font-family:inherit;color:var(--txt)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+textarea{min-height:70px;resize:vertical}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th,td{border:1px solid var(--line);padding:8px 6px;text-align:right}
+th{background:#dbeafe;color:#1e40af;font-weight:700}
+tr:nth-child(even){background:#eff6ff}
+.num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
+.scroll{overflow:auto;max-height:420px;border-radius:10px}
+.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
+.stat .n{font-size:1.05rem;font-weight:700;color:var(--b)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
+.toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center}
+.toast.show{opacity:1}.toast.err{background:var(--r)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
+.ok{background:#d1fae5;color:#065f46}.bad{background:#fee2e2;color:#991b1b}.warn{background:#fef3c7;color:#92400e}.info{background:#e0e7ff;color:#3730a3}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.filters button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:.72rem;cursor:pointer;font-family:inherit;color:var(--muted)}
+.filters button.on{background:var(--b);color:#fff;border-color:var(--b)}
+.cust-card{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px;background:#fff;cursor:pointer;transition:.12s}
+.cust-card:hover{border-color:var(--b);box-shadow:var(--shadow)}
+.cust-card .t{font-weight:700;color:#1e40af}
+.cust-card .m{font-size:.78rem;color:var(--muted);margin-top:4px}
+.footer{text-align:center;font-size:.7rem;color:#60a5fa;margin-top:14px}
+@media(max-width:720px){.nav{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
+@media print{.nav,.btn,nav{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="box">
+  <header class="header">
+    <div class="logo">👤</div>
+    <h1>مشتریان هوشمند</h1>
+    <p class="sub">پروفایل · پیگیری · تعامل · فروش · دریافتنی · منشی</p>
+  </header>
+  <nav class="nav" id="nav" role="tablist">
+    <button type="button" class="on" data-tab="dash">داشبورد</button>
+    <button type="button" data-tab="list">فهرست</button>
+    <button type="button" data-tab="form">ثبت / ویرایش</button>
+    <button type="button" data-tab="act">تعاملات</button>
+    <button type="button" data-tab="fu">پیگیری</button>
+    <button type="button" data-tab="rep">گزارش</button>
+  </nav>
+
+  <main id="dash" class="panel on">
+    <div class="stats">
+      <div class="stat"><div class="n" id="stAll">۰</div><div class="l">کل مشتریان</div></div>
+      <div class="stat"><div class="n" id="stActive">۰</div><div class="l">فعال</div></div>
+      <div class="stat"><div class="n" id="stFu">۰</div><div class="l">پیگیری باز</div></div>
+      <div class="stat"><div class="n num" id="stAr">۰</div><div class="l">مانده دریافتنی</div></div>
+    </div>
+    <section class="card">
+      <h2>اتصال ماژول‌ها</h2>
+      <p class="note" id="linkStatus">—</p>
+      <div class="grid2">
+        <button type="button" class="btn btn-b" id="btnOpenSales">فروش</button>
+        <button type="button" class="btn btn-gr" id="btnOpenAcc">حسابداری</button>
+      </div>
+      <button type="button" class="btn btn-p" id="btnSyncSales">همگام‌سازی با فروش</button>
+    </section>
+    <section class="card">
+      <h2>پیگیری‌های نزدیک</h2>
+      <div class="scroll" id="dashFu"><p class="note">موردی نیست.</p></div>
+    </section>
+  </main>
+
+  <main id="list" class="panel">
+    <section class="card">
+      <h2>فهرست مشتریان</h2>
+      <input id="search" placeholder="جستجوی نام، کد، موبایل، شهر…" maxlength="100" autocomplete="off">
+      <div class="filters" id="listFilt">
+        <button type="button" class="on" data-f="all">همه</button>
+        <button type="button" data-f="active">فعال</button>
+        <button type="button" data-f="lead">سرنخ</button>
+        <button type="button" data-f="inactive">غیرفعال</button>
+        <button type="button" data-f="vip">VIP</button>
+      </div>
+      <div id="custCards"></div>
+    </section>
+  </main>
+
+  <main id="form" class="panel">
+    <section class="card">
+      <h2>ثبت / ویرایش مشتری</h2>
+      <input type="hidden" id="cId">
+      <div class="grid2">
+        <div><label>کد *</label><input id="cCode" maxlength="20" autocomplete="off"></div>
+        <div><label>نام / شرکت *</label><input id="cName" maxlength="150" autocomplete="off"></div>
+      </div>
+      <div class="grid3">
+        <div><label>نوع</label>
+          <select id="cKind">
+            <option value="person">حقیقی</option>
+            <option value="company">حقوقی</option>
+          </select>
+        </div>
+        <div><label>وضعیت</label>
+          <select id="cStatus">
+            <option value="active">فعال</option>
+            <option value="lead">سرنخ</option>
+            <option value="inactive">غیرفعال</option>
+            <option value="vip">VIP</option>
+          </select>
+        </div>
+        <div><label>گروه</label>
+          <select id="cGroup">
+            <option value="general">عمومی</option>
+            <option value="retail">خرده‌فروشی</option>
+            <option value="wholesale">عمده</option>
+            <option value="partner">همکار</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div><label>موبایل</label><input id="cMobile" maxlength="20" class="num" autocomplete="off"></div>
+        <div><label>تلفن</label><input id="cPhone" maxlength="20" class="num"></div>
+      </div>
+      <div class="grid2">
+        <div><label>ایمیل</label><input id="cEmail" maxlength="100" type="email" autocomplete="off"></div>
+        <div><label>شهر</label><input id="cCity" maxlength="60"></div>
+      </div>
+      <div class="grid2">
+        <div><label>کد ملی / شناسه</label><input id="cNational" maxlength="20" class="num"></div>
+        <div><label>کد حساب دریافتنی</label><input id="cAcc" maxlength="20" value="1102"></div>
+      </div>
+      <label>آدرس</label><input id="cAddr" maxlength="250">
+      <label>توضیحات</label><textarea id="cNote" maxlength="500"></textarea>
+      <div class="grid2">
+        <button type="button" class="btn btn-g" id="btnSave">ذخیره</button>
+        <button type="button" class="btn btn-gr" id="btnClr">فرم جدید</button>
+      </div>
+      <button type="button" class="btn btn-r" id="btnDel" style="display:none">حذف مشتری</button>
+    </section>
+  </main>
+
+  <main id="act" class="panel">
+    <section class="card">
+      <h2>ثبت تعامل</h2>
+      <div class="grid2">
+        <div><label>مشتری *</label><select id="aCust"></select></div>
+        <div><label>نوع</label>
+          <select id="aType">
+            <option value="call">تماس</option>
+            <option value="meet">جلسه</option>
+            <option value="email">ایمیل</option>
+            <option value="visit">بازدید</option>
+            <option value="msg">پیام</option>
+            <option value="other">سایر</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div><label>تاریخ</label><input id="aDate" type="date"></div>
+        <div><label>نتیجه</label>
+          <select id="aResult">
+            <option value="done">انجام شد</option>
+            <option value="pending">نیاز به پیگیری</option>
+            <option value="success">موفق</option>
+            <option value="fail">ناموفق</option>
+          </select>
+        </div>
+      </div>
+      <label>شرح *</label><textarea id="aNote" maxlength="500"></textarea>
+      <button type="button" class="btn btn-b" id="btnAct">ثبت تعامل</button>
+    </section>
+    <section class="card">
+      <h2>تاریخچه تعاملات</h2>
+      <div class="filters" id="actFilt">
+        <button type="button" class="on" data-f="all">همه</button>
+        <button type="button" data-f="call">تماس</button>
+        <button type="button" data-f="meet">جلسه</button>
+        <button type="button" data-f="pending">نیاز به پیگیری</button>
+      </div>
+      <div class="scroll"><table><thead><tr><th>تاریخ</th><th>مشتری</th><th>نوع</th><th>نتیجه</th><th>شرح</th><th></th></tr></thead><tbody id="actList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="fu" class="panel">
+    <section class="card">
+      <h2>پیگیری / یادآوری</h2>
+      <div class="grid2">
+        <div><label>مشتری *</label><select id="fCust"></select></div>
+        <div><label>تاریخ موعد *</label><input id="fDate" type="date"></div>
+      </div>
+      <div class="grid2">
+        <div><label>اولویت</label>
+          <select id="fPri">
+            <option value="normal">عادی</option>
+            <option value="high">مهم</option>
+            <option value="urgent">فوری</option>
+          </select>
+        </div>
+        <div><label>وضعیت</label>
+          <select id="fStatus">
+            <option value="open">باز</option>
+            <option value="done">انجام شد</option>
+          </select>
+        </div>
+      </div>
+      <label>موضوع *</label><input id="fTitle" maxlength="200">
+      <label>جزئیات</label><textarea id="fNote" maxlength="400"></textarea>
+      <div class="grid2">
+        <button type="button" class="btn btn-o" id="btnFu">ثبت پیگیری</button>
+        <button type="button" class="btn btn-p" id="btnFuSec">ثبت + یادآوری منشی</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>لیست پیگیری‌ها</h2>
+      <div class="filters" id="fuFilt">
+        <button type="button" class="on" data-f="open">باز</button>
+        <button type="button" data-f="done">انجام‌شده</button>
+        <button type="button" data-f="all">همه</button>
+      </div>
+      <div class="scroll"><table><thead><tr><th>موعد</th><th>مشتری</th><th>موضوع</th><th>اولویت</th><th>وضعیت</th><th></th></tr></thead><tbody id="fuList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="rep" class="panel">
+    <section class="card">
+      <h2>گزارش‌ها</h2>
+      <div class="filters" id="repTabs">
+        <button type="button" class="on" data-r="list">فهرست کامل</button>
+        <button type="button" data-r="status">بر اساس وضعیت</button>
+        <button type="button" data-r="group">بر اساس گروه</button>
+        <button type="button" data-r="fu">پیگیری‌ها</button>
+        <button type="button" data-r="act">تعاملات</button>
+        <button type="button" data-r="sales">فروش مرتبط</button>
+      </div>
+      <button type="button" class="btn btn-b" id="btnRep">اجرا</button>
+      <button type="button" class="btn btn-gr" id="btnPrint">چاپ</button>
+      <button type="button" class="btn btn-g" id="btnBackup">پشتیبان JSON</button>
+      <label>بازیابی</label>
+      <input type="file" id="restoreFile" accept=".json,application/json">
+      <button type="button" class="btn btn-r" id="btnWipe">حذف همه</button>
+    </section>
+    <section class="card">
+      <h2 id="repTitle">نتیجه</h2>
+      <div class="scroll" id="repOut"><p class="note">گزارش را اجرا کنید.</p></div>
+    </section>
+  </main>
+  <p class="footer">مشتریان هوشمند · CRM · متصل به فروش و منشی</p>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+var KEY="smart_crm_v1", SALES_KEY="smart_sales_v1", ACC_KEY="smart_acc_v2", SEC_KEY="items";
+var busy=false, toastTimer=null, listFilt="all", actFilt="all", fuFilt="open", repMode="list";
+var TYPE={call:"تماس",meet:"جلسه",email:"ایمیل",visit:"بازدید",msg:"پیام",other:"سایر"};
+var STATUS={active:"فعال",lead:"سرنخ",inactive:"غیرفعال",vip:"VIP"};
+var GROUP={general:"عمومی",retail:"خرده",wholesale:"عمده",partner:"همکار"};
+var PRI={normal:"عادی",high:"مهم",urgent:"فوری"};
+
+function $(id){return document.getElementById(id);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2200);}
+function fmt(n){n=Number(n);if(!isFinite(n))n=0;return n.toLocaleString("fa-IR",{maximumFractionDigits:0});}
+function today(){return new Date().toISOString().slice(0,10);}
+function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+
+function def(){return {customers:[],activities:[],followups:[],version:1};}
+function load(){
+  try{
+    var d=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(!d) return def();
+    ["customers","activities","followups"].forEach(function(k){if(!Array.isArray(d[k]))d[k]=[];});
+    return d;
+  }catch(e){return def();}
+}
+function save(x){try{localStorage.setItem(KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
+var db=load();
+
+function loadSales(){try{return JSON.parse(localStorage.getItem(SALES_KEY)||"null");}catch(e){return null;}}
+function loadAcc(){try{return JSON.parse(localStorage.getItem(ACC_KEY)||"null");}catch(e){return null;}}
+function custById(id){return db.customers.find(function(c){return String(c.id)===String(id);});}
+function custName(id){var c=custById(id);return c?c.name:"—";}
+function lock(fn){return function(){if(busy)return;busy=true;try{fn();}catch(e){toast("خطا",true);}finally{busy=false;};};}
+
+function arOf(c){
+  var sales=loadSales();
+  if(!sales||!Array.isArray(sales.invoices)) return 0;
+  var total=0, paid=0;
+  sales.invoices.forEach(function(inv){
+    if(inv.status==="draft"||inv.status==="cancel") return;
+    var match=false;
+    if(c.salesId && String(inv.custId)===String(c.salesId)) match=true;
+    if(c.code && sales.customers){
+      var sc=sales.customers.find(function(x){return x.code===c.code;});
+      if(sc&&String(inv.custId)===String(sc.id)) match=true;
+    }
+    if(match){ total+=Number(inv.total)||0; paid+=Number(inv.paid)||0; }
+  });
+  return Math.max(0,total-paid);
+}
+
+function pushSec(title, note, date){
+  try{
+    var items=JSON.parse(localStorage.getItem(SEC_KEY)||"[]");
+    if(!Array.isArray(items)) items=[];
+    items.unshift({id:uid(),type:"reminder",title:title,note:note||"",date:date||today(),status:"pending",priority:"high",source:"crm",created:Date.now()});
+    localStorage.setItem(SEC_KEY,JSON.stringify(items));
+    return true;
+  }catch(e){return false;}
+}
+
+function fillCustSelects(){
+  var o='<option value="">— مشتری —</option>';
+  db.customers.forEach(function(c){o+='<option value="'+c.id+'">'+esc(c.code+" — "+c.name)+'</option>';});
+  $("aCust").innerHTML=o; $("fCust").innerHTML=o;
+}
+
+function go(tab,btn){
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
+  document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
+  var el=$(tab); if(el) el.classList.add("on");
+  if(btn) btn.classList.add("on");
+  else {var n=document.querySelector('#nav button[data-tab="'+tab+'"]'); if(n) n.classList.add("on");}
+  if(tab==="dash") renderDash();
+  if(tab==="list") renderList();
+  if(tab==="act"){ fillCustSelects(); if(!$("aDate").value)$("aDate").value=today(); renderActs(); }
+  if(tab==="fu"){ fillCustSelects(); if(!$("fDate").value)$("fDate").value=today(); renderFu(); }
+}
+
+function renderDash(){
+  $("stAll").textContent=String(db.customers.length);
+  $("stActive").textContent=String(db.customers.filter(function(c){return c.status==="active"||c.status==="vip";}).length);
+  $("stFu").textContent=String(db.followups.filter(function(f){return f.status==="open";}).length);
+  var ar=0;
+  db.customers.forEach(function(c){ar+=arOf(c);});
+  $("stAr").textContent=fmt(ar);
+
+  var sales=loadSales(), acc=loadAcc(), sec=false;
+  try{sec=!!localStorage.getItem(SEC_KEY);}catch(e){}
+  $("linkStatus").innerHTML=
+    (sales?'<span class="badge ok">فروش متصل</span>':'<span class="badge warn">فروش نیست</span>')+" · "+
+    (acc&&Array.isArray(acc.accounts)?'<span class="badge ok">حسابداری متصل</span>':'<span class="badge warn">حسابداری نیست</span>')+" · "+
+    (sec?'<span class="badge ok">منشی متصل</span>':'<span class="badge warn">منشی نیست</span>');
+
+  var fus=db.followups.filter(function(f){return f.status==="open";}).sort(function(a,b){return a.date<b.date?-1:1;}).slice(0,8);
+  var box=$("dashFu");
+  if(!fus.length){ box.innerHTML='<p class="note">پیگیری بازی نیست.</p>'; return; }
+  var h='<table><thead><tr><th>موعد</th><th>مشتری</th><th>موضوع</th><th>اولویت</th></tr></thead><tbody>';
+  fus.forEach(function(f){
+    h+="<tr><td class='num'>"+esc(f.date)+"</td><td>"+esc(custName(f.custId))+"</td><td>"+esc(f.title)+"</td><td>"+esc(PRI[f.priority]||f.priority)+"</td></tr>";
+  });
+  h+="</tbody></table>";
+  box.innerHTML=h;
+}
+
+function renderList(){
+  var q=($("search").value||"").trim().toLowerCase();
+  var box=$("custCards"); box.textContent="";
+  var list=db.customers.filter(function(c){
+    if(listFilt!=="all"&&c.status!==listFilt) return false;
+    if(!q) return true;
+    return (c.code+" "+c.name+" "+(c.mobile||"")+" "+(c.city||"")+" "+(c.email||"")).toLowerCase().indexOf(q)>=0;
+  });
+  if(!list.length){ box.innerHTML='<p class="note">مشتری‌ای یافت نشد.</p>'; return; }
+  list.forEach(function(c){
+    var div=document.createElement("div");
+    div.className="cust-card";
+    div.innerHTML='<div class="t">'+esc(c.name)+' <span class="badge info">'+esc(STATUS[c.status]||c.status)+'</span></div>'+
+      '<div class="m">'+esc(c.code)+(c.mobile?" · "+esc(c.mobile):"")+(c.city?" · "+esc(c.city):"")+'</div>'+
+      '<div class="m">گروه: '+esc(GROUP[c.group]||c.group)+' · مانده: '+fmt(arOf(c))+'</div>';
+    div.onclick=function(){ loadCust(c.id); go("form"); };
+    box.appendChild(div);
+  });
+}
+$("search").oninput=renderList;
+
+function clearForm(){
+  $("cId").value="";$("cCode").value="";$("cName").value="";$("cKind").value="person";$("cStatus").value="active";
+  $("cGroup").value="general";$("cMobile").value="";$("cPhone").value="";$("cEmail").value="";$("cCity").value="";
+  $("cNational").value="";$("cAcc").value="1102";$("cAddr").value="";$("cNote").value="";
+  $("btnDel").style.display="none";
+}
+function loadCust(id){
+  var c=custById(id); if(!c) return;
+  $("cId").value=c.id; $("cCode").value=c.code; $("cName").value=c.name;
+  $("cKind").value=c.kind||"person"; $("cStatus").value=c.status||"active"; $("cGroup").value=c.group||"general";
+  $("cMobile").value=c.mobile||""; $("cPhone").value=c.phone||""; $("cEmail").value=c.email||"";
+  $("cCity").value=c.city||""; $("cNational").value=c.national||""; $("cAcc").value=c.accCode||"1102";
+  $("cAddr").value=c.addr||""; $("cNote").value=c.note||"";
+  $("btnDel").style.display="block";
+}
+$("btnClr").onclick=clearForm;
+$("btnSave").onclick=lock(function(){
+  var code=($("cCode").value||"").trim(), name=($("cName").value||"").trim();
+  if(!code||!name){toast("کد و نام الزامی است",true);return;}
+  var row={
+    id:$("cId").value?Number($("cId").value):uid(),
+    code:code.slice(0,20), name:name.slice(0,150), kind:$("cKind").value, status:$("cStatus").value, group:$("cGroup").value,
+    mobile:($("cMobile").value||"").slice(0,20), phone:($("cPhone").value||"").slice(0,20),
+    email:($("cEmail").value||"").slice(0,100), city:($("cCity").value||"").slice(0,60),
+    national:($("cNational").value||"").slice(0,20), accCode:($("cAcc").value||"1102").slice(0,20),
+    addr:($("cAddr").value||"").slice(0,250), note:($("cNote").value||"").slice(0,500),
+    updated:Date.now()
+  };
+  var i=db.customers.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0){
+    row.salesId=db.customers[i].salesId;
+    db.customers[i]=row;
+  } else {
+    if(db.customers.some(function(x){return x.code===row.code;})){toast("کد تکراری است",true);return;}
+    row.created=Date.now();
+    db.customers.push(row);
+  }
+  if(!save(db)) return;
+  toast("ذخیره شد");
+  loadCust(row.id);
+  renderDash();
+});
+$("btnDel").onclick=lock(function(){
+  var id=$("cId").value; if(!id) return;
+  if(!confirm("حذف این مشتری؟")) return;
+  if(!confirm("نهایی؟")) return;
+  db.customers=db.customers.filter(function(x){return String(x.id)!==String(id);});
+  save(db); clearForm(); renderDash(); toast("حذف شد");
+});
+
+function renderActs(){
+  var list=db.activities.slice().reverse();
+  if(actFilt==="pending") list=list.filter(function(a){return a.result==="pending";});
+  else if(actFilt!=="all") list=list.filter(function(a){return a.type===actFilt;});
+  var tb=$("actList"); tb.textContent="";
+  list.forEach(function(a){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(a.date)+"</td><td>"+esc(custName(a.custId))+"</td><td>"+esc(TYPE[a.type]||a.type)+"</td><td>"+esc(a.result)+"</td><td>"+esc(a.note)+"</td>"+
+      "<td><button type='button' class='btn btn-r btn-sm' data-del-a='"+a.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("btnAct").onclick=lock(function(){
+  var cid=$("aCust").value; var note=($("aNote").value||"").trim();
+  if(!cid){toast("مشتری؟",true);return;}
+  if(!note){toast("شرح الزامی است",true);return;}
+  db.activities.push({id:uid(),custId:Number(cid),type:$("aType").value,date:$("aDate").value||today(),result:$("aResult").value,note:note.slice(0,500)});
+  if(!save(db)) return;
+  $("aNote").value="";
+  renderActs(); toast("تعامل ثبت شد");
+});
+
+function renderFu(){
+  var list=db.followups.slice().reverse();
+  if(fuFilt!=="all") list=list.filter(function(f){return f.status===fuFilt;});
+  var tb=$("fuList"); tb.textContent="";
+  list.forEach(function(f){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(f.date)+"</td><td>"+esc(custName(f.custId))+"</td><td>"+esc(f.title)+"</td><td>"+esc(PRI[f.priority]||"")+"</td>"+
+      "<td><span class='badge "+(f.status==="open"?"warn":"ok")+"'>"+(f.status==="open"?"باز":"انجام")+"</span></td>"+
+      "<td><button type='button' class='btn btn-g btn-sm' data-done-f='"+f.id+"'>انجام</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-f='"+f.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+function saveFu(toSec){
+  var cid=$("fCust").value; var title=($("fTitle").value||"").trim(); var date=$("fDate").value;
+  if(!cid||!title||!date){toast("مشتری، موضوع و تاریخ الزامی",true);return;}
+  var row={id:uid(),custId:Number(cid),date:date,title:title.slice(0,200),note:($("fNote").value||"").slice(0,400),priority:$("fPri").value,status:$("fStatus").value||"open"};
+  db.followups.push(row);
+  if(!save(db)) return;
+  if(toSec){
+    var ok=pushSec("پیگیری مشتری: "+custName(cid)+" — "+title, row.note, date);
+    toast(ok?"پیگیری + منشی":"پیگیری ثبت شد — منشی در دسترس نیست", !ok);
+  } else toast("پیگیری ثبت شد");
+  $("fTitle").value="";$("fNote").value="";
+  renderFu(); renderDash();
+}
+$("btnFu").onclick=lock(function(){saveFu(false);});
+$("btnFuSec").onclick=lock(function(){saveFu(true);});
+
+function runRep(){
+  var h="", title="";
+  if(repMode==="list"){
+    title="فهرست مشتریان";
+    h="<table><thead><tr><th>کد</th><th>نام</th><th>وضعیت</th><th>گروه</th><th>موبایل</th><th>شهر</th></tr></thead><tbody>";
+    db.customers.forEach(function(c){
+      h+="<tr><td class='num'>"+esc(c.code)+"</td><td>"+esc(c.name)+"</td><td>"+esc(STATUS[c.status]||"")+"</td><td>"+esc(GROUP[c.group]||"")+"</td><td class='num'>"+esc(c.mobile||"")+"</td><td>"+esc(c.city||"")+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else if(repMode==="status"){
+    title="بر اساس وضعیت";
+    var map={};
+    db.customers.forEach(function(c){map[c.status]=(map[c.status]||0)+1;});
+    h="<table><thead><tr><th>وضعیت</th><th>تعداد</th></tr></thead><tbody>";
+    Object.keys(map).forEach(function(k){h+="<tr><td>"+esc(STATUS[k]||k)+"</td><td class='num'>"+map[k]+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="group"){
+    title="بر اساس گروه";
+    var map2={};
+    db.customers.forEach(function(c){map2[c.group]=(map2[c.group]||0)+1;});
+    h="<table><thead><tr><th>گروه</th><th>تعداد</th></tr></thead><tbody>";
+    Object.keys(map2).forEach(function(k){h+="<tr><td>"+esc(GROUP[k]||k)+"</td><td class='num'>"+map2[k]+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="fu"){
+    title="پیگیری‌ها";
+    h="<table><thead><tr><th>موعد</th><th>مشتری</th><th>موضوع</th><th>وضعیت</th></tr></thead><tbody>";
+    db.followups.forEach(function(f){
+      h+="<tr><td class='num'>"+esc(f.date)+"</td><td>"+esc(custName(f.custId))+"</td><td>"+esc(f.title)+"</td><td>"+esc(f.status)+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else if(repMode==="act"){
+    title="تعاملات";
+    h="<table><thead><tr><th>تاریخ</th><th>مشتری</th><th>نوع</th><th>شرح</th></tr></thead><tbody>";
+    db.activities.slice().reverse().forEach(function(a){
+      h+="<tr><td class='num'>"+esc(a.date)+"</td><td>"+esc(custName(a.custId))+"</td><td>"+esc(TYPE[a.type]||"")+"</td><td>"+esc(a.note)+"</td></tr>";
+    });
+    h+="</tbody></table>";
+  } else {
+    title="فروش مرتبط (از ماژول فروش)";
+    var sales=loadSales();
+    h="<table><thead><tr><th>مشتری CRM</th><th>مانده تخمینی</th></tr></thead><tbody>";
+    db.customers.forEach(function(c){
+      h+="<tr><td>"+esc(c.name)+"</td><td class='num'>"+fmt(arOf(c))+"</td></tr>";
+    });
+    h+="</tbody></table>";
+    if(!sales) h='<p class="note">ماژول فروش در این مرورگر یافت نشد.</p>'+h;
+  }
+  $("repTitle").textContent=title;
+  $("repOut").innerHTML=h||"<p class='note'>موردی نیست.</p>";
+  toast("گزارش آماده");
+}
+$("btnRep").onclick=lock(runRep);
+$("btnPrint").onclick=function(){window.print();};
+
+$("btnSyncSales").onclick=lock(function(){
+  var sales=loadSales();
+  if(!sales||!Array.isArray(sales.customers)){toast("فروش یافت نشد",true);return;}
+  var n=0;
+  sales.customers.forEach(function(sc){
+    var exist=db.customers.find(function(c){return c.code===sc.code||c.salesId===sc.id;});
+    if(exist){
+      exist.salesId=sc.id;
+      if(!exist.mobile&&sc.mobile) exist.mobile=sc.mobile;
+      n++;
+    } else {
+      db.customers.push({
+        id:uid(), code:sc.code||("S"+sc.id), name:sc.name, kind:"person", status:"active", group:"general",
+        mobile:sc.mobile||"", phone:"", email:"", city:"", national:"", accCode:sc.accCode||"1102",
+        addr:sc.addr||"", note:"از فروش", salesId:sc.id, created:Date.now(), updated:Date.now()
+      });
+      n++;
+    }
+  });
+  save(db); renderDash(); renderList(); toast(n+" مشتری همگام شد");
+});
+
+$("btnOpenSales").onclick=function(){window.open("sales.html","_blank","noopener,noreferrer");};
+$("btnOpenAcc").onclick=function(){window.open("accounting.html","_blank","noopener,noreferrer");};
+$("btnBackup").onclick=function(){
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
+  a.download="crm-backup-"+today()+".json"; a.click();
+};
+$("restoreFile").onchange=function(e){
+  var f=e.target.files&&e.target.files[0]; if(!f)return;
+  if(f.size>15*1024*1024){toast("فایل بزرگ",true);return;}
+  var r=new FileReader();
+  r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.customers))throw new Error("x");db=d;["activities","followups"].forEach(function(k){if(!Array.isArray(db[k]))db[k]=[];});save(db);toast("بازیابی شد");renderDash();}catch(err){toast("نامعتبر",true);}};
+  r.readAsText(f);
+};
+$("btnWipe").onclick=lock(function(){if(!confirm("حذف همه؟"))return;if(!confirm("نهایی؟"))return;db=def();save(db);clearForm();toast("حذف شد");renderDash();});
+
+$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
+document.body.addEventListener("click",function(e){
+  var da=e.target.closest("[data-del-a]");
+  if(da){db.activities=db.activities.filter(function(x){return String(x.id)!==da.getAttribute("data-del-a");});save(db);renderActs();return;}
+  var df=e.target.closest("[data-del-f]");
+  if(df){db.followups=db.followups.filter(function(x){return String(x.id)!==df.getAttribute("data-del-f");});save(db);renderFu();renderDash();return;}
+  var done=e.target.closest("[data-done-f]");
+  if(done){var f=db.followups.find(function(x){return String(x.id)===done.getAttribute("data-done-f");});if(f){f.status="done";save(db);renderFu();renderDash();}return;}
+});
+$("listFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;listFilt=b.getAttribute("data-f");document.querySelectorAll("#listFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderList();});
+$("actFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;actFilt=b.getAttribute("data-f");document.querySelectorAll("#actFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderActs();});
+$("fuFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;fuFilt=b.getAttribute("data-f");document.querySelectorAll("#fuFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderFu();});
+$("repTabs").addEventListener("click",function(e){var b=e.target.closest("[data-r]");if(!b)return;repMode=b.getAttribute("data-r");document.querySelectorAll("#repTabs button").forEach(function(x){x.classList.toggle("on",x===b);});});
+
+renderDash();
+})();
+</script>
+</body>
+</html>
