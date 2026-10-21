@@ -6,62 +6,123 @@
 <meta name="theme-color" content="#c2410c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="تنخواه هوشمند">
-<meta name="description" content="تنخواه هوشمند امن — شارژ، هزینه، تسویه، اتصال بانک و حسابداری">
+<meta name="description" content="تنخواه هوشمند — شارژ، هزینه، تسویه، اتصال بانک و حسابداری">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="X-Frame-Options" content="DENY">
 <meta name="referrer" content="no-referrer">
 <title>تنخواه هوشمند</title>
 <style>
-:root{--bg:#fff7ed;--card:#fff;--line:#fed7aa;--txt:#7c2d12;--muted:#c2410c;--b:#ea580c;--b2:#c2410c;--g:#059669;--r:#dc2626;--o:#d97706;--p:#7c3aed;--c:#0d9488;--shadow:0 4px 22px rgba(194,65,12,.1);--safe:env(safe-area-inset-bottom,0px);--radius:14px}
+:root{
+  --bg:#fff7ed;--card:#ffffff;--line:#fed7aa;--txt:#7c2d12;--muted:#c2410c;
+  --b:#ea580c;--b2:#c2410c;--g:#059669;--r:#dc2626;--o:#d97706;--p:#7c3aed;--c:#0d9488;
+  --shadow:0 4px 22px rgba(194,65,12,.1);--safe:env(safe-area-inset-bottom,0px);--radius:14px;
+}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
-body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 400px at 0% 0%,#ffedd5 0%,transparent 55%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55}
+body{
+  font-family:Tahoma,"Segoe UI",system-ui,sans-serif;
+  background:radial-gradient(900px 400px at 0% 0%,#ffedd5 0%,transparent 55%),var(--bg);
+  color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55;
+}
 .box{max-width:980px;margin:0 auto}
 .header{text-align:center;margin-bottom:12px}
-.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;display:grid;place-items:center;font-size:26px;margin:0 auto 8px;box-shadow:0 8px 24px rgba(234,88,12,.35)}
+.logo{
+  width:56px;height:56px;border-radius:16px;
+  background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;
+  display:grid;place-items:center;font-size:26px;margin:0 auto 8px;
+  box-shadow:0 8px 24px rgba(234,88,12,.35);
+}
 h1{font-size:clamp(1.1rem,3vw,1.3rem);color:#9a3412;font-weight:700}
 .sub{font-size:.8rem;color:var(--muted);opacity:.9}
-.nav{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(255,247,237,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.nav button{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.48rem,1.2vw,.66rem);color:var(--muted);cursor:pointer;font-family:inherit;transition:transform .12s,background .15s}
+.nav{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px;
+  position:sticky;top:0;z-index:40;padding:8px 0;
+  background:rgba(255,247,237,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.nav button{
+  background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 2px;
+  font-size:clamp(.48rem,1.2vw,.66rem);color:var(--muted);cursor:pointer;font-family:inherit;
+  transition:transform .12s,background .15s,color .15s;
+}
 .nav button:active{transform:scale(.97)}
-.nav button.on{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(234,88,12,.3)}
+.nav button.on{
+  background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;border-color:transparent;
+  box-shadow:0 4px 12px rgba(234,88,12,.3);
+}
 .panel{display:none!important}.panel.on{display:block!important;animation:fi .16s ease}
 @keyframes fi{from{opacity:.45;transform:translateY(3px)}to{opacity:1;transform:none}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;margin-bottom:12px;box-shadow:var(--shadow);
+}
 .card h2{font-size:.92rem;margin-bottom:12px;color:#9a3412}
-.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center;transition:transform .12s,opacity .12s}
-.btn:active{transform:scale(.98);opacity:.92}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
-.btn-b{background:linear-gradient(135deg,var(--b),var(--b2))}.btn-g{background:linear-gradient(135deg,var(--g),#047857)}
-.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#b45309)}
-.btn-c{background:linear-gradient(135deg,var(--c),#0f766e)}.btn-p{background:linear-gradient(135deg,var(--p),#6d28d9)}
-.btn-gr{background:#e2e8f0;color:#334155}.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
+.btn{
+  display:block;width:100%;padding:12px;border:none;border-radius:11px;
+  font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;
+  font-family:inherit;text-align:center;transition:transform .12s,opacity .12s;
+}
+.btn:active{transform:scale(.98);opacity:.92}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn-b{background:linear-gradient(135deg,var(--b),var(--b2))}
+.btn-g{background:linear-gradient(135deg,var(--g),#047857)}
+.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}
+.btn-o{background:linear-gradient(135deg,var(--o),#b45309)}
+.btn-c{background:linear-gradient(135deg,var(--c),#0f766e)}
+.btn-p{background:linear-gradient(135deg,var(--p),#6d28d9)}
+.btn-gr{background:#e2e8f0;color:#334155}
+.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
-input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fffbeb;font-size:16px;font-family:inherit;color:var(--txt);transition:border-color .15s,box-shadow .15s}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(234,88,12,.15)}
-textarea{min-height:60px;resize:vertical}
+input,select,textarea{
+  width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;
+  background:#fffbeb;font-size:16px;font-family:inherit;color:var(--txt);
+  transition:border-color .15s,box-shadow .15s;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(234,88,12,.15);
+}
+textarea{min-height:64px;resize:vertical}
 table{width:100%;border-collapse:collapse;font-size:.8rem}
 th,td{border:1px solid var(--line);padding:8px 6px;text-align:right}
 th{background:#ffedd5;color:#9a3412;font-weight:700;position:sticky;top:0}
-tr:nth-child(even){background:#fff7ed}tr:hover{background:#ffedd5}
+tr:nth-child(even){background:#fff7ed}
+tr:hover{background:#ffedd5}
 .num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
 .scroll{overflow:auto;max-height:420px;border-radius:10px}
 .note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
-.stat .n{font-size:1.05rem;font-weight:700;color:var(--b)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
-.toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%) translateY(6px);background:var(--g);color:#fff;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.18)}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.toast.err{background:var(--r)}
+.stat{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:12px 6px;text-align:center;box-shadow:var(--shadow);
+}
+.stat .n{font-size:1.05rem;font-weight:700;color:var(--b)}
+.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
+.toast{
+  position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%) translateY(6px);
+  background:var(--g);color:#fff;padding:11px 16px;border-radius:12px;font-size:.84rem;
+  opacity:0;pointer-events:none;z-index:100;transition:opacity .2s,transform .2s;
+  max-width:90%;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.18);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--r)}
 .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
-.ok{background:#d1fae5;color:#065f46}.bad{background:#fee2e2;color:#991b1b}.warn{background:#fef3c7;color:#92400e}.info{background:#e0e7ff;color:#3730a3}
+.ok{background:#d1fae5;color:#065f46}.bad{background:#fee2e2;color:#991b1b}
+.warn{background:#fef3c7;color:#92400e}.info{background:#e0e7ff;color:#3730a3}
 .filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.filters button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:.72rem;cursor:pointer;font-family:inherit;color:var(--muted);transition:.12s}
+.filters button{
+  padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;
+  font-size:.72rem;cursor:pointer;font-family:inherit;color:var(--muted);transition:.12s;
+}
 .filters button.on{background:var(--b);color:#fff;border-color:var(--b)}
 .footer{text-align:center;font-size:.7rem;color:#fdba74;margin-top:14px}
-@media(max-width:720px){.nav{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
-@media print{.nav,.btn,nav{display:none!important}body{background:#fff;padding:0}}
+@media(max-width:720px){
+  .nav{grid-template-columns:repeat(4,1fr)}
+  .stats{grid-template-columns:1fr 1fr}
+  .grid3{grid-template-columns:1fr}
+}
+@media print{.nav,.btn,nav{display:none!important}body{background:#fff;padding:0}.card{box-shadow:none}}
 </style>
 </head>
 <body>
@@ -69,9 +130,10 @@ tr:nth-child(even){background:#fff7ed}tr:hover{background:#ffedd5}
   <header class="header">
     <div class="logo" aria-hidden="true">💵</div>
     <h1>تنخواه هوشمند</h1>
-    <p class="sub">شارژ · هزینه · تسویه · بانک · حسابداری · امن و محلی</p>
+    <p class="sub">تعریف · شارژ · هزینه · تسویه · بانک · حسابداری · امن</p>
   </header>
-  <nav class="nav" id="nav" role="tablist" aria-label="منو">
+
+  <nav class="nav" id="nav" role="tablist" aria-label="منوی اصلی">
     <button type="button" class="on" data-tab="dash" role="tab" aria-selected="true">داشبورد</button>
     <button type="button" data-tab="funds" role="tab">تنخواه‌ها</button>
     <button type="button" data-tab="charge" role="tab">شارژ</button>
@@ -119,7 +181,7 @@ tr:nth-child(even){background:#fff7ed}tr:hover{background:#ffedd5}
       <input type="hidden" id="fId">
       <div class="grid2">
         <div><label for="fCode">کد تنخواه *</label><input id="fCode" maxlength="20" placeholder="110201" autocomplete="off"></div>
-        <div><label for="fName">نام *</label><input id="fName" maxlength="100" autocomplete="off"></div>
+        <div><label for="fName">نام *</label><input id="fName" maxlength="100" placeholder="تنخواه اداری" autocomplete="off"></div>
       </div>
       <div class="grid2">
         <div><label for="fCustodian">متصدی</label><input id="fCustodian" maxlength="80" autocomplete="off"></div>
@@ -138,7 +200,7 @@ tr:nth-child(even){background:#fff7ed}tr:hover{background:#ffedd5}
     </section>
     <section class="card">
       <h2>فهرست تنخواه‌ها</h2>
-      <input id="fundSearch" placeholder="جستجو کد، نام، متصدی…" maxlength="80" autocomplete="off">
+      <input id="fundSearch" placeholder="جستجوی کد، نام، متصدی…" maxlength="80" autocomplete="off">
       <div class="scroll" style="margin-top:8px"><table><thead><tr><th>کد</th><th>نام</th><th>متصدی</th><th>سقف</th><th>مانده</th><th></th></tr></thead><tbody id="fundList"></tbody></table></div>
     </section>
   </main>
@@ -153,14 +215,14 @@ tr:nth-child(even){background:#fff7ed}tr:hover{background:#ffedd5}
       </div>
       <div class="grid2">
         <div><label for="cAmt">مبلغ *</label><input id="cAmt" type="number" min="0" step="0.01" class="num"></div>
-        <div><label for="cBank">بانک منبع</label><input id="cBank" maxlength="20" autocomplete="off"></div>
+        <div><label for="cBank">بانک منبع</label><input id="cBank" maxlength="20" placeholder="از تعریف تنخواه" autocomplete="off"></div>
       </div>
       <label for="cDesc">شرح</label><input id="cDesc" maxlength="300" autocomplete="off">
       <div class="grid2">
         <button type="button" class="btn btn-g" id="btnCharge">ثبت شارژ</button>
         <button type="button" class="btn btn-c" id="btnChargePost">ثبت + سند حسابداری</button>
       </div>
-      <p class="note">سند: بدهکار تنخواه / بستانکار بانک · سقف تنخواه کنترل می‌شود</p>
+      <p class="note">سند: بدهکار تنخواه / بستانکار بانک</p>
     </section>
     <section class="card">
       <h2>سوابق شارژ</h2>
@@ -180,20 +242,26 @@ tr:nth-child(even){background:#fff7ed}tr:hover{background:#ffedd5}
         <div><label for="eAmt">مبلغ *</label><input id="eAmt" type="number" min="0" step="0.01" class="num"></div>
         <div><label for="eCat">طبقه هزینه</label>
           <select id="eCat">
-            <option value="office">اداری</option><option value="transport">ایاب و ذهاب</option>
-            <option value="supply">ملزومات</option><option value="host">پذیرایی</option>
-            <option value="repair">تعمیرات جزئی</option><option value="other">سایر</option>
+            <option value="office">اداری</option>
+            <option value="transport">ایاب و ذهاب</option>
+            <option value="supply">ملزومات</option>
+            <option value="host">پذیرایی</option>
+            <option value="repair">تعمیرات جزئی</option>
+            <option value="other">سایر</option>
           </select>
         </div>
       </div>
       <div class="grid2">
-        <div><label for="eAcc">کد حساب هزینه</label><input id="eAcc" maxlength="20" autocomplete="off"></div>
+        <div><label for="eAcc">کد حساب هزینه</label><input id="eAcc" maxlength="20" placeholder="5102" autocomplete="off"></div>
         <div><label for="eRef">شماره فاکتور / رسید</label><input id="eRef" maxlength="60" autocomplete="off"></div>
       </div>
       <label for="eDesc">شرح *</label><input id="eDesc" maxlength="300" autocomplete="off">
       <div class="grid2">
         <div><label for="eStatus">وضعیت</label>
-          <select id="eStatus"><option value="pending">در انتظار تسویه</option><option value="settled">تسویه‌شده</option></select>
+          <select id="eStatus">
+            <option value="pending">در انتظار تسویه</option>
+            <option value="settled">تسویه‌شده</option>
+          </select>
         </div>
         <div><label for="eBal">مانده تنخواه</label><input id="eBal" class="num" readonly></div>
       </div>
@@ -201,13 +269,13 @@ tr:nth-child(even){background:#fff7ed}tr:hover{background:#ffedd5}
         <button type="button" class="btn btn-o" id="btnExp">ثبت هزینه</button>
         <button type="button" class="btn btn-c" id="btnExpPost">ثبت + سند حسابداری</button>
       </div>
-      <p class="note">کنترل مانده قبل از ثبت · سند: بدهکار هزینه / بستانکار تنخواه</p>
+      <p class="note">سند: بدهکار هزینه / بستانکار تنخواه · کنترل مانده الزامی است</p>
     </section>
     <section class="card">
       <h2>هزینه‌ها</h2>
       <div class="filters" id="expFilt">
         <button type="button" class="on" data-f="all">همه</button>
-        <button type="button" data-f="pending">در انتظار</button>
+        <button type="button" data-f="pending">در انتظار تسویه</button>
         <button type="button" data-f="settled">تسویه‌شده</button>
       </div>
       <div class="scroll"><table><thead><tr><th>شماره</th><th>تاریخ</th><th>تنخواه</th><th>شرح</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead><tbody id="expList"></tbody></table></div>
@@ -221,10 +289,10 @@ tr:nth-child(even){background:#fff7ed}tr:hover{background:#ffedd5}
         <div><label for="sFund">تنخواه</label><select id="sFund"></select></div>
         <div><label for="sDate">تاریخ تسویه</label><input id="sDate" type="date"></div>
       </div>
-      <p class="note">مانده: <b class="num" id="sBal">۰</b> · در انتظار: <b class="num" id="sPend">۰</b> · سقف: <b class="num" id="sLimit">۰</b></p>
+      <p class="note">مانده فعلی: <b class="num" id="sBal">۰</b> · هزینه در انتظار: <b class="num" id="sPend">۰</b></p>
       <label for="sNote">توضیح</label><textarea id="sNote" maxlength="500"></textarea>
       <button type="button" class="btn btn-b" id="btnSettle">تسویه هزینه‌های در انتظار</button>
-      <button type="button" class="btn btn-g" id="btnSettleCharge">پیشنهاد شارژ تا سقف</button>
+      <button type="button" class="btn btn-g" id="btnSettleCharge">شارژ مجدد تا سقف (پیشنهاد)</button>
     </section>
     <section class="card">
       <h2>سوابق تسویه</h2>
@@ -236,19 +304,19 @@ tr:nth-child(even){background:#fff7ed}tr:hover{background:#ffedd5}
     <section class="card">
       <h2>گزارش‌ها</h2>
       <div class="filters" id="repTabs">
-        <button type="button" class="on" data-r="bal">مانده</button>
+        <button type="button" class="on" data-r="bal">مانده تنخواه‌ها</button>
         <button type="button" data-r="exp">هزینه‌ها</button>
-        <button type="button" data-r="pending">در انتظار</button>
+        <button type="button" data-r="pending">در انتظار تسویه</button>
         <button type="button" data-r="charge">شارژها</button>
-        <button type="button" data-r="cat">طبقه</button>
-        <button type="button" data-r="flow">گردش</button>
+        <button type="button" data-r="cat">بر اساس طبقه</button>
+        <button type="button" data-r="flow">گردش تنخواه</button>
       </div>
       <div class="grid2">
         <div><label for="repFrom">از</label><input type="date" id="repFrom"></div>
         <div><label for="repTo">تا</label><input type="date" id="repTo"></div>
       </div>
-      <label for="repFund">تنخواه</label><select id="repFund"><option value="">همه</option></select>
-      <button type="button" class="btn btn-b" id="btnRep">اجرا</button>
+      <label for="repFund">تنخواه (اختیاری)</label><select id="repFund"><option value="">همه</option></select>
+      <button type="button" class="btn btn-b" id="btnRep">اجرای گزارش</button>
       <button type="button" class="btn btn-gr" id="btnPrint">چاپ</button>
     </section>
     <section class="card">
@@ -260,451 +328,933 @@ tr:nth-child(even){background:#fff7ed}tr:hover{background:#ffedd5}
   <main id="set" class="panel" role="tabpanel">
     <section class="card">
       <h2>امنیت و پایداری</h2>
-      <p class="note">• داده فقط روی این دستگاه<br>• CSP · nosniff · بدون شبکه و eval<br>• اعتبارسنجی ورودی · قفل دوباره‌کلیک · rollback ذخیره<br>• پشتیبان‌گیری منظم توصیه می‌شود</p>
+      <p class="note">
+        • داده فقط روی این دستگاه (localStorage)<br>
+        • CSP · nosniff · بدون فریم خارجی<br>
+        • بدون eval · بدون ارسال شبکه<br>
+        • اعتبارسنجی ورودی و قفل دوباره‌کلیک<br>
+        • کنترل مانده قبل از هزینه · rollback در خطای ذخیره
+      </p>
       <button type="button" class="btn btn-g" id="btnBackup">دانلود پشتیبان JSON</button>
-      <label for="restoreFile">بازیابی</label>
+      <label for="restoreFile">بازیابی از فایل</label>
       <input type="file" id="restoreFile" accept=".json,application/json">
       <button type="button" class="btn btn-r" id="btnWipe">حذف همه داده‌ها</button>
     </section>
+    <section class="card">
+      <h2>راهنما</h2>
+      <p class="note">۱) تنخواه را با کد حسابداری تعریف کنید.<br>۲) شارژ از بانک با سند خودکار.<br>۳) هزینه با کنترل مانده ثبت شود.<br>۴) هزینه‌های در انتظار را تسویه کنید.<br>۵) با نقد و بانک و حسابداری در یک مرورگر کار کنید.</p>
+    </section>
   </main>
+
   <p class="footer">تنخواه هوشمند v2 · امن · پایدار · متصل به بانک و حسابداری</p>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>
-(function(){
-"use strict";
+(function () {
+  "use strict";
 
-var KEY="smart_petty_v2", KEY_LEGACY="smart_petty_v1", ACC_KEY="smart_acc_v2", CASH_KEY="smart_cash_v2";
-var MAX_FILE=15*1024*1024, EPS=0.01;
-var expFilt="all", repMode="bal", busy=false, toastTimer=null;
-var CAT={office:"اداری",transport:"ایاب و ذهاب",supply:"ملزومات",host:"پذیرایی",repair:"تعمیرات",other:"سایر"};
+  var KEY = "smart_petty_v2";
+  var KEY_LEGACY = "smart_petty_v1";
+  var ACC_KEY = "smart_acc_v2";
+  var CASH_KEY = "smart_cash_v2";
+  var CASH_LEGACY = "smart_cash_v1";
+  var EPS = 0.01;
+  var MAX_BACKUP = 15 * 1024 * 1024;
+  var expFilt = "all";
+  var repMode = "bal";
+  var busy = false;
+  var toastTimer = null;
 
-function $(id){return document.getElementById(id);}
-function toast(m,err){var t=$("toast");t.textContent=String(m||"");t.classList.toggle("err",!!err);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2200);}
-function fmt(n){n=Number(n);if(!isFinite(n))n=0;return n.toLocaleString("fa-IR",{maximumFractionDigits:2});}
-function today(){return new Date().toISOString().slice(0,10);}
-function uid(){return Date.now()*1000+Math.floor(Math.random()*1000);}
-function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
-function isCode(s){return /^[0-9A-Za-z.\-]{1,20}$/.test(s);}
-function isDate(s){return !s||/^\d{4}-\d{2}-\d{2}$/.test(s);}
-function money(n){n=Number(n);if(!isFinite(n)||n<0)return null;return Math.round(n*100)/100;}
-function lock(fn){return function(){if(busy)return;busy=true;try{fn();}catch(e){toast("خطای غیرمنتظره",true);}finally{busy=false;};};}
-
-function defData(){return {funds:[],charges:[],expenses:[],settlements:[],nextC:1,nextE:1,version:2};}
-function normalize(d){
-  if(!d||typeof d!=="object") return defData();
-  ["funds","charges","expenses","settlements"].forEach(function(k){if(!Array.isArray(d[k]))d[k]=[];});
-  d.nextC=Math.max(1,parseInt(d.nextC,10)||1);
-  d.nextE=Math.max(1,parseInt(d.nextE,10)||1);
-  d.version=2;
-  return d;
-}
-function load(){
-  try{
-    var raw=localStorage.getItem(KEY)||localStorage.getItem(KEY_LEGACY);
-    if(!raw) return defData();
-    return normalize(JSON.parse(raw));
-  }catch(e){return defData();}
-}
-function save(data){
-  try{localStorage.setItem(KEY,JSON.stringify(data));return true;}
-  catch(e){toast("ذخیره ناموفق — فضای مرورگر؟",true);return false;}
-}
-var db=load();
-
-function loadAcc(){try{return JSON.parse(localStorage.getItem(ACC_KEY)||"null");}catch(e){return null;}}
-function saveAcc(a){try{localStorage.setItem(ACC_KEY,JSON.stringify(a));return true;}catch(e){toast("خطا ذخیره حسابداری",true);return false;}}
-function ensureAcc(){
-  var a=loadAcc();
-  if(!a||typeof a!=="object") a={accounts:[],journals:[],ap:[],ar:[],bankRecs:[],nextJe:1,version:2};
-  if(!Array.isArray(a.accounts)) a.accounts=[];
-  if(!Array.isArray(a.journals)) a.journals=[];
-  a.nextJe=Math.max(1,parseInt(a.nextJe,10)||1);
-  return a;
-}
-function syncFundAcc(f){
-  var a=ensureAcc();
-  var code=f.accCode||f.code;
-  if(!isCode(code)) return false;
-  var i=a.accounts.findIndex(function(x){return x.code===code;});
-  var row={code:code,name:("تنخواه — "+f.name).slice(0,120),level:4,nat:"debit",type:"asset"};
-  if(i>=0){a.accounts[i].name=row.name;a.accounts[i].type="asset";}
-  else a.accounts.push(row);
-  return saveAcc(a);
-}
-function postJe(desc,lines,date,type){
-  var a=ensureAcc(), dr=0, cr=0, clean=[];
-  for(var i=0;i<lines.length;i++){
-    var l=lines[i], d=money(l.dr)||0, c=money(l.cr)||0;
-    if(!isCode(l.code)) return null;
-    if(d===0&&c===0) continue;
-    dr+=d; cr+=c;
-    clean.push({code:l.code,desc:String(l.desc||"").slice(0,200),dr:d,cr:c});
-  }
-  if(clean.length<2||Math.abs(dr-cr)>EPS||dr<=0) return null;
-  var je={id:Date.now(),no:a.nextJe,date:isDate(date)?date:today(),type:String(type||"petty").slice(0,32),desc:String(desc||"").slice(0,300),lines:clean,total:dr};
-  a.journals.push(je); a.nextJe+=1;
-  if(!saveAcc(a)) return null;
-  return je;
-}
-
-function fundName(id){var f=db.funds.find(function(x){return String(x.id)===String(id);});return f?f.name:"—";}
-function fundById(id){return db.funds.find(function(x){return String(x.id)===String(id);});}
-function balanceFund(id){
-  var bal=0;
-  db.charges.forEach(function(c){if(String(c.fundId)===String(id)&&c.status!=="cancel") bal+=Number(c.amount)||0;});
-  db.expenses.forEach(function(e){if(String(e.fundId)===String(id)&&e.status!=="cancel") bal-=Number(e.amount)||0;});
-  return Math.round(bal*100)/100;
-}
-function pendingSum(id){
-  return db.expenses.filter(function(e){return String(e.fundId)===String(id)&&e.status==="pending";})
-    .reduce(function(s,e){return s+(Number(e.amount)||0);},0);
-}
-function activeFunds(){return db.funds.filter(function(f){return f.status==="active";});}
-function fillFundSelects(){
-  var o='<option value="">— انتخاب —</option>';
-  activeFunds().forEach(function(f){
-    o+='<option value="'+esc(String(f.id))+'">'+esc(f.code+" — "+f.name)+" (مانده: "+fmt(balanceFund(f.id))+")</option>";
-  });
-  $("cFund").innerHTML=o; $("eFund").innerHTML=o; $("sFund").innerHTML=o;
-  var ro='<option value="">همه</option>';
-  db.funds.forEach(function(f){ro+='<option value="'+esc(String(f.id))+'">'+esc(f.name)+'</option>';});
-  $("repFund").innerHTML=ro;
-}
-
-function go(tab,btn){
-  try{
-    document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
-    document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");b.setAttribute("aria-selected","false");});
-    var el=$(tab); if(el) el.classList.add("on");
-    if(btn){btn.classList.add("on");btn.setAttribute("aria-selected","true");}
-    else{var n=document.querySelector('#nav button[data-tab="'+tab+'"]');if(n){n.classList.add("on");n.setAttribute("aria-selected","true");}}
-    if(tab==="dash") renderDash();
-    if(tab==="funds") renderFunds();
-    if(tab==="charge"){fillFundSelects();$("cNo").value=String(db.nextC);if(!$("cDate").value)$("cDate").value=today();renderCharges();}
-    if(tab==="exp"){fillFundSelects();$("eNo").value=String(db.nextE);if(!$("eDate").value)$("eDate").value=today();renderExp();}
-    if(tab==="settle"){fillFundSelects();if(!$("sDate").value)$("sDate").value=today();renderSettles();}
-    if(tab==="rep") fillFundSelects();
-  }catch(e){toast("خطا در نمایش",true);}
-}
-
-function renderDash(){
-  $("stFunds").textContent=String(activeFunds().length);
-  var total=0, pendN=0, expM=0, ym=today().slice(0,7);
-  db.funds.forEach(function(f){
-    total+=balanceFund(f.id);
-    pendN+=db.expenses.filter(function(e){return String(e.fundId)===String(f.id)&&e.status==="pending";}).length;
-  });
-  db.expenses.forEach(function(e){if(e.status!=="cancel"&&String(e.date).slice(0,7)===ym) expM+=Number(e.amount)||0;});
-  $("stBal").textContent=fmt(total); $("stPend").textContent=String(pendN); $("stExp").textContent=fmt(expM);
-
-  var acc=loadAcc(), cash=null;
-  try{cash=JSON.parse(localStorage.getItem(CASH_KEY)||localStorage.getItem("smart_cash_v1")||"null");}catch(e){}
-  $("linkStatus").innerHTML=
-    (acc&&Array.isArray(acc.accounts)?'<span class="badge ok">حسابداری متصل</span>':'<span class="badge warn">حسابداری نیست</span>')+
-    " · "+
-    (cash&&Array.isArray(cash.banks)?'<span class="badge ok">نقد و بانک متصل</span>':'<span class="badge warn">نقد و بانک نیست</span>');
-
-  var mov=[];
-  db.charges.forEach(function(c){mov.push({t:"شارژ",fund:fundName(c.fundId),date:c.date,amt:c.amount,st:c.posted?"سند":"—",ts:c.id});});
-  db.expenses.forEach(function(e){mov.push({t:"هزینه",fund:fundName(e.fundId),date:e.date,amt:e.amount,st:e.status==="pending"?"انتظار":"تسویه",ts:e.id});});
-  mov.sort(function(a,b){return (b.ts||0)-(a.ts||0);});
-  var tb=$("lastMov"); tb.textContent="";
-  mov.slice(0,20).forEach(function(m){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td>"+esc(m.t)+"</td><td>"+esc(m.fund)+"</td><td class='num'>"+esc(m.date)+"</td><td class='num'>"+fmt(m.amt)+"</td><td>"+esc(m.st)+"</td>";
-    tb.appendChild(tr);
-  });
-}
-
-function renderFunds(){
-  var q=($("fundSearch").value||"").trim().toLowerCase();
-  var list=db.funds.slice();
-  if(q) list=list.filter(function(f){return (f.code+" "+f.name+" "+(f.custodian||"")).toLowerCase().indexOf(q)>=0;});
-  var tb=$("fundList"); tb.textContent="";
-  list.forEach(function(f){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td class='num'>"+esc(f.code)+"</td><td>"+esc(f.name)+"</td><td>"+esc(f.custodian||"—")+"</td><td class='num'>"+fmt(f.limit)+"</td><td class='num'>"+fmt(balanceFund(f.id))+"</td>"+
-      "<td><button type='button' class='btn btn-b btn-sm' data-edit-f='"+esc(String(f.id))+"'>ویرایش</button> "+
-      "<button type='button' class='btn btn-r btn-sm' data-del-f='"+esc(String(f.id))+"'>حذف</button></td>";
-    tb.appendChild(tr);
-  });
-}
-function clearFund(){
-  ["fId","fCode","fName","fCustodian","fLimit","fAccCode","fBankCode","fExpCode"].forEach(function(i){$(i).value="";});
-  $("fStatus").value="active";
-}
-$("btnFundClr").onclick=clearFund;
-$("fundSearch").oninput=renderFunds;
-$("btnFund").onclick=lock(function(){
-  var code=($("fCode").value||"").trim(), name=($("fName").value||"").trim();
-  if(!code||!name){toast("کد و نام الزامی است",true);return;}
-  if(!isCode(code)){toast("کد نامعتبر",true);return;}
-  var accCode=($("fAccCode").value||code).trim();
-  var bankCode=($("fBankCode").value||"").trim();
-  var expCode=($("fExpCode").value||"5102").trim();
-  if(accCode&&!isCode(accCode)){toast("کد حساب نامعتبر",true);return;}
-  if(bankCode&&!isCode(bankCode)){toast("کد بانک نامعتبر",true);return;}
-  if(expCode&&!isCode(expCode)){toast("کد هزینه نامعتبر",true);return;}
-  var row={
-    id:$("fId").value?Number($("fId").value):uid(),
-    code:code, name:name.slice(0,100), custodian:($("fCustodian").value||"").slice(0,80),
-    limit:money($("fLimit").value)||0, accCode:accCode.slice(0,20), bankCode:bankCode.slice(0,20),
-    expCode:expCode.slice(0,20), status:$("fStatus").value==="closed"?"closed":"active"
+  var CAT = {
+    office: "اداری",
+    transport: "ایاب و ذهاب",
+    supply: "ملزومات",
+    host: "پذیرایی",
+    repair: "تعمیرات",
+    other: "سایر"
   };
-  var i=db.funds.findIndex(function(x){return String(x.id)===String(row.id);});
-  if(i>=0) db.funds[i]=row;
-  else{
-    if(db.funds.some(function(x){return x.code===row.code;})){toast("کد تکراری است",true);return;}
-    db.funds.push(row);
+
+  function $(id) { return document.getElementById(id); }
+
+  function toast(msg, isErr) {
+    var el = $("toast");
+    el.textContent = String(msg || "");
+    el.classList.toggle("err", !!isErr);
+    el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2200);
   }
-  if(!syncFundAcc(row)) return;
-  if(!save(db)) return;
-  clearFund(); renderFunds(); renderDash(); toast("ذخیره و همسان شد");
-});
 
-$("cFund").onchange=function(){
-  var f=fundById($("cFund").value);
-  if(f&&f.bankCode) $("cBank").value=f.bankCode;
-};
-function renderCharges(){
-  var tb=$("chargeList"); tb.textContent="";
-  db.charges.slice().reverse().forEach(function(c){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td class='num'>"+esc(c.no)+"</td><td class='num'>"+esc(c.date)+"</td><td>"+esc(fundName(c.fundId))+"</td><td class='num'>"+fmt(c.amount)+"</td><td class='num'>"+esc(c.jeNo||"—")+"</td>"+
-      "<td><button type='button' class='btn btn-r btn-sm' data-del-c='"+esc(String(c.id))+"'>حذف</button></td>";
-    tb.appendChild(tr);
-  });
-}
-function saveCharge(post){
-  var fid=$("cFund").value; var amt=money($("cAmt").value); var date=$("cDate").value||today();
-  if(!fid){toast("تنخواه را انتخاب کنید",true);return;}
-  if(amt==null||amt<=0){toast("مبلغ معتبر وارد کنید",true);return;}
-  if(!isDate(date)){toast("تاریخ نامعتبر",true);return;}
-  var f=fundById(fid); if(!f||f.status!=="active"){toast("تنخواه فعال یافت نشد",true);return;}
-  var bal=balanceFund(fid);
-  if(f.limit>0 && bal+amt>f.limit+EPS){toast("از سقف تنخواه فراتر می‌رود (سقف: "+fmt(f.limit)+" · مانده: "+fmt(bal)+")",true);return;}
-  var bank=($("cBank").value||f.bankCode||"").trim();
-  var row={id:uid(),no:db.nextC,date:date,fundId:Number(fid),amount:amt,bankCode:bank,desc:($("cDesc").value||"").slice(0,300),posted:false,status:"ok"};
-  if(post){
-    var accCode=f.accCode||f.code;
-    if(!isCode(accCode)||!isCode(bank)){toast("کد تنخواه یا بانک را در تعریف مشخص کنید",true);return;}
-    var je=postJe("شارژ تنخواه "+f.name,[{code:accCode,desc:"شارژ تنخواه",dr:amt,cr:0},{code:bank,desc:"برداشت بانک",dr:0,cr:amt}],date,"petty-charge");
-    if(!je){toast("صدور سند ناموفق",true);return;}
-    row.posted=true; row.jeNo=je.no;
+  function fmt(n) {
+    n = Number(n);
+    if (!isFinite(n)) n = 0;
+    return n.toLocaleString("fa-IR", { maximumFractionDigits: 2 });
   }
-  db.charges.push(row); db.nextC+=1;
-  if(!save(db)){db.charges.pop();db.nextC-=1;return;}
-  $("cAmt").value="";$("cDesc").value="";$("cNo").value=String(db.nextC);
-  renderCharges(); renderDash(); toast(post?"شارژ + سند "+row.jeNo:"شارژ ثبت شد");
-}
-$("btnCharge").onclick=lock(function(){saveCharge(false);});
-$("btnChargePost").onclick=lock(function(){saveCharge(true);});
 
-$("eFund").onchange=function(){
-  var id=$("eFund").value;
-  $("eBal").value=id?balanceFund(id).toFixed(2):"";
-  var f=fundById(id); if(f&&f.expCode) $("eAcc").value=f.expCode;
-};
-function renderExp(){
-  var list=db.expenses.slice().reverse();
-  if(expFilt!=="all") list=list.filter(function(e){return e.status===expFilt;});
-  var tb=$("expList"); tb.textContent="";
-  list.forEach(function(e){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td class='num'>"+esc(e.no)+"</td><td class='num'>"+esc(e.date)+"</td><td>"+esc(fundName(e.fundId))+"</td><td>"+esc(e.desc)+"</td><td class='num'>"+fmt(e.amount)+"</td>"+
-      "<td><span class='badge "+(e.status==="pending"?"warn":"ok")+"'>"+(e.status==="pending"?"انتظار":"تسویه")+"</span></td>"+
-      "<td><button type='button' class='btn btn-r btn-sm' data-del-e='"+esc(String(e.id))+"'>حذف</button></td>";
-    tb.appendChild(tr);
-  });
-}
-function saveExp(post){
-  var fid=$("eFund").value; var amt=money($("eAmt").value);
-  var desc=($("eDesc").value||"").trim(); var date=$("eDate").value||today();
-  if(!fid){toast("تنخواه را انتخاب کنید",true);return;}
-  if(amt==null||amt<=0){toast("مبلغ معتبر وارد کنید",true);return;}
-  if(!desc){toast("شرح الزامی است",true);return;}
-  if(!isDate(date)){toast("تاریخ نامعتبر",true);return;}
-  var f=fundById(fid); if(!f||f.status!=="active"){toast("تنخواه فعال یافت نشد",true);return;}
-  var bal=balanceFund(fid);
-  if(amt>bal+EPS){toast("مانده کافی نیست (مانده: "+fmt(bal)+")",true);return;}
-  var expAcc=($("eAcc").value||f.expCode||"5102").trim();
-  if(!isCode(expAcc)){toast("کد هزینه نامعتبر",true);return;}
-  var row={
-    id:uid(),no:db.nextE,date:date,fundId:Number(fid),amount:amt,cat:$("eCat").value,
-    accCode:expAcc,ref:($("eRef").value||"").slice(0,60),desc:desc.slice(0,300),
-    status:$("eStatus").value==="settled"?"settled":"pending",posted:false
-  };
-  if(post){
-    var pet=f.accCode||f.code;
-    if(!isCode(pet)){toast("کد حساب تنخواه نامعتبر",true);return;}
-    var je=postJe("هزینه تنخواه "+f.name+" — "+desc,[{code:expAcc,desc:desc,dr:amt,cr:0},{code:pet,desc:"از تنخواه",dr:0,cr:amt}],date,"petty-exp");
-    if(!je){toast("صدور سند ناموفق",true);return;}
-    row.posted=true; row.jeNo=je.no;
+  function today() {
+    return new Date().toISOString().slice(0, 10);
   }
-  db.expenses.push(row); db.nextE+=1;
-  if(!save(db)){db.expenses.pop();db.nextE-=1;return;}
-  $("eAmt").value="";$("eDesc").value="";$("eRef").value="";$("eNo").value=String(db.nextE);
-  $("eBal").value=balanceFund(fid).toFixed(2);
-  renderExp(); renderDash(); toast(post?"هزینه + سند "+row.jeNo:"هزینه ثبت شد");
-}
-$("btnExp").onclick=lock(function(){saveExp(false);});
-$("btnExpPost").onclick=lock(function(){saveExp(true);});
 
-$("sFund").onchange=function(){
-  var id=$("sFund").value; var f=fundById(id);
-  $("sBal").textContent=id?fmt(balanceFund(id)):"۰";
-  $("sPend").textContent=id?fmt(pendingSum(id)):"۰";
-  $("sLimit").textContent=f?fmt(f.limit||0):"۰";
-};
-function renderSettles(){
-  var tb=$("settleList"); tb.textContent="";
-  db.settlements.slice().reverse().forEach(function(s){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td class='num'>"+esc(s.date)+"</td><td>"+esc(fundName(s.fundId))+"</td><td class='num'>"+esc(s.count)+"</td><td class='num'>"+fmt(s.total)+"</td><td>"+esc(s.note||"")+"</td>";
-    tb.appendChild(tr);
-  });
-}
-$("btnSettle").onclick=lock(function(){
-  var fid=$("sFund").value; if(!fid){toast("تنخواه را انتخاب کنید",true);return;}
-  var list=db.expenses.filter(function(e){return String(e.fundId)===String(fid)&&e.status==="pending";});
-  if(!list.length){toast("هزینه در انتظاری نیست",true);return;}
-  var total=list.reduce(function(s,e){return s+(Number(e.amount)||0);},0);
-  list.forEach(function(e){e.status="settled";});
-  db.settlements.push({id:uid(),date:$("sDate").value||today(),fundId:Number(fid),count:list.length,total:total,note:($("sNote").value||"").slice(0,500)});
-  if(!save(db)) return;
-  $("sNote").value=""; $("sFund").onchange();
-  renderSettles(); renderExp(); renderDash();
-  toast(list.length+" هزینه تسویه شد");
-});
-$("btnSettleCharge").onclick=function(){
-  var fid=$("sFund").value; var f=fundById(fid);
-  if(!f){toast("تنخواه را انتخاب کنید",true);return;}
-  var bal=balanceFund(fid);
-  var need=Math.max(0,(Number(f.limit)||0)-bal);
-  if(need<=0){toast("مانده در سقف است یا سقف تعریف نشده",true);return;}
-  go("charge");
-  fillFundSelects();
-  $("cFund").value=String(f.id);
-  $("cFund").onchange();
-  $("cAmt").value=need.toFixed(2);
-  toast("مبلغ پیشنهادی: "+fmt(need));
-};
+  function uid() {
+    return Date.now() * 1000 + Math.floor(Math.random() * 1000);
+  }
 
-function runRep(){
-  var from=$("repFrom").value, to=$("repTo").value, fid=$("repFund").value;
-  if(from&&!isDate(from)){toast("از تاریخ نامعتبر",true);return;}
-  if(to&&!isDate(to)){toast("تا تاریخ نامعتبر",true);return;}
-  function inR(d){if(from&&d<from)return false;if(to&&d>to)return false;return true;}
-  var h="", title="";
-  if(repMode==="bal"){
-    title="مانده تنخواه‌ها";
-    h="<table><thead><tr><th>کد</th><th>نام</th><th>متصدی</th><th>سقف</th><th>مانده</th><th>در انتظار</th></tr></thead><tbody>";
-    db.funds.forEach(function(f){
-      if(fid&&String(f.id)!==String(fid)) return;
-      h+="<tr><td class='num'>"+esc(f.code)+"</td><td>"+esc(f.name)+"</td><td>"+esc(f.custodian||"")+"</td><td class='num'>"+fmt(f.limit)+"</td><td class='num'>"+fmt(balanceFund(f.id))+"</td><td class='num'>"+fmt(pendingSum(f.id))+"</td></tr>";
+  function esc(s) {
+    var d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
+
+  function isCode(s) {
+    return /^[0-9A-Za-z.\-]{1,20}$/.test(s);
+  }
+
+  function isDate(s) {
+    return !s || /^\d{4}-\d{2}-\d{2}$/.test(s);
+  }
+
+  function money(n) {
+    n = Number(n);
+    if (!isFinite(n) || n < 0) return null;
+    return Math.round(n * 100) / 100;
+  }
+
+  function defData() {
+    return {
+      funds: [],
+      charges: [],
+      expenses: [],
+      settlements: [],
+      nextC: 1,
+      nextE: 1,
+      version: 2
+    };
+  }
+
+  function normalize(d) {
+    if (!d || typeof d !== "object") return defData();
+    ["funds", "charges", "expenses", "settlements"].forEach(function (k) {
+      if (!Array.isArray(d[k])) d[k] = [];
     });
-    h+="</tbody></table>";
-  } else if(repMode==="exp"||repMode==="pending"){
-    title=repMode==="pending"?"در انتظار تسویه":"هزینه‌ها";
-    h="<table><thead><tr><th>شماره</th><th>تاریخ</th><th>تنخواه</th><th>طبقه</th><th>شرح</th><th>مبلغ</th></tr></thead><tbody>";
-    db.expenses.filter(function(e){
-      if(!inR(e.date)||e.status==="cancel") return false;
-      if(fid&&String(e.fundId)!==String(fid)) return false;
-      if(repMode==="pending"&&e.status!=="pending") return false;
+    d.nextC = Math.max(1, parseInt(d.nextC, 10) || 1);
+    d.nextE = Math.max(1, parseInt(d.nextE, 10) || 1);
+    d.version = 2;
+    return d;
+  }
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY) || localStorage.getItem(KEY_LEGACY);
+      if (!raw) return defData();
+      return normalize(JSON.parse(raw));
+    } catch (e) {
+      return defData();
+    }
+  }
+
+  function save(data) {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(data));
       return true;
-    }).forEach(function(e){
-      h+="<tr><td class='num'>"+esc(e.no)+"</td><td class='num'>"+esc(e.date)+"</td><td>"+esc(fundName(e.fundId))+"</td><td>"+esc(CAT[e.cat]||e.cat)+"</td><td>"+esc(e.desc)+"</td><td class='num'>"+fmt(e.amount)+"</td></tr>";
-    });
-    h+="</tbody></table>";
-  } else if(repMode==="charge"){
-    title="شارژها";
-    h="<table><thead><tr><th>شماره</th><th>تاریخ</th><th>تنخواه</th><th>مبلغ</th><th>بانک</th><th>سند</th></tr></thead><tbody>";
-    db.charges.filter(function(c){return inR(c.date)&&(!fid||String(c.fundId)===String(fid));}).forEach(function(c){
-      h+="<tr><td class='num'>"+esc(c.no)+"</td><td class='num'>"+esc(c.date)+"</td><td>"+esc(fundName(c.fundId))+"</td><td class='num'>"+fmt(c.amount)+"</td><td class='num'>"+esc(c.bankCode||"")+"</td><td class='num'>"+esc(c.jeNo||"—")+"</td></tr>";
-    });
-    h+="</tbody></table>";
-  } else if(repMode==="cat"){
-    title="بر اساس طبقه";
-    var map={};
-    db.expenses.filter(function(e){return e.status!=="cancel"&&inR(e.date)&&(!fid||String(e.fundId)===String(fid));})
-      .forEach(function(e){map[e.cat]=(map[e.cat]||0)+(Number(e.amount)||0);});
-    h="<table><thead><tr><th>طبقه</th><th>مبلغ</th></tr></thead><tbody>";
-    Object.keys(map).forEach(function(k){h+="<tr><td>"+esc(CAT[k]||k)+"</td><td class='num'>"+fmt(map[k])+"</td></tr>";});
-    h+="</tbody></table>";
-  } else if(repMode==="flow"){
-    title="گردش تنخواه";
-    var rows=[];
-    db.charges.filter(function(c){return inR(c.date)&&(!fid||String(c.fundId)===String(fid));})
-      .forEach(function(c){rows.push({date:c.date,t:"شارژ",desc:c.desc||"",inn:c.amount,out:0,id:c.id});});
-    db.expenses.filter(function(e){return e.status!=="cancel"&&inR(e.date)&&(!fid||String(e.fundId)===String(fid));})
-      .forEach(function(e){rows.push({date:e.date,t:"هزینه",desc:e.desc||"",inn:0,out:e.amount,id:e.id});});
-    rows.sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:b.id-a.id;});
-    h="<table><thead><tr><th>تاریخ</th><th>نوع</th><th>شرح</th><th>واریز</th><th>برداشت</th></tr></thead><tbody>";
-    rows.forEach(function(r){
-      h+="<tr><td class='num'>"+esc(r.date)+"</td><td>"+esc(r.t)+"</td><td>"+esc(r.desc)+"</td><td class='num'>"+(r.inn?fmt(r.inn):"")+"</td><td class='num'>"+(r.out?fmt(r.out):"")+"</td></tr>";
-    });
-    h+="</tbody></table>";
+    } catch (e) {
+      toast("ذخیره ناموفق — فضای مرورگر پر است؟", true);
+      return false;
+    }
   }
-  $("repTitle").textContent=title;
-  $("repOut").innerHTML=h||"<p class='note'>موردی نیست.</p>";
-  toast("گزارش آماده");
-}
-$("btnRep").onclick=lock(runRep);
-$("btnPrint").onclick=function(){window.print();};
-$("btnOpenCash").onclick=function(){window.open("cash-bank.html","_blank","noopener,noreferrer");};
-$("btnOpenAcc").onclick=function(){window.open("accounting.html","_blank","noopener,noreferrer");};
 
-$("btnBackup").onclick=function(){
-  try{
-    var a=document.createElement("a");
-    a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
-    a.download="petty-cash-backup-"+today()+".json"; a.click();
-    setTimeout(function(){URL.revokeObjectURL(a.href);},1500);
-    toast("دانلود شد");
-  }catch(e){toast("خطا در پشتیبان",true);}
-};
-$("restoreFile").onchange=function(e){
-  var f=e.target.files&&e.target.files[0]; if(!f)return;
-  if(f.size>MAX_FILE){toast("فایل خیلی بزرگ است",true);e.target.value="";return;}
-  var r=new FileReader();
-  r.onload=function(){
-    try{
-      var d=normalize(JSON.parse(r.result));
-      if(!Array.isArray(d.funds)) throw new Error("bad");
-      db=d; if(!save(db)) return; toast("بازیابی شد"); renderDash();
-    }catch(err){toast("فایل نامعتبر",true);}
-    e.target.value="";
+  var db = load();
+
+  function loadAcc() {
+    try {
+      return JSON.parse(localStorage.getItem(ACC_KEY) || "null");
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveAcc(acc) {
+    try {
+      localStorage.setItem(ACC_KEY, JSON.stringify(acc));
+      return true;
+    } catch (e) {
+      toast("خطا در ذخیره حسابداری", true);
+      return false;
+    }
+  }
+
+  function ensureAcc() {
+    var acc = loadAcc();
+    if (!acc || typeof acc !== "object") {
+      acc = { accounts: [], journals: [], ap: [], ar: [], bankRecs: [], nextJe: 1, version: 2 };
+    }
+    if (!Array.isArray(acc.accounts)) acc.accounts = [];
+    if (!Array.isArray(acc.journals)) acc.journals = [];
+    acc.nextJe = Math.max(1, parseInt(acc.nextJe, 10) || 1);
+    return acc;
+  }
+
+  function syncFundAcc(f) {
+    var acc = ensureAcc();
+    var code = f.accCode || f.code;
+    if (!isCode(code)) return false;
+    var i = acc.accounts.findIndex(function (x) { return x.code === code; });
+    var row = {
+      code: code,
+      name: ("تنخواه — " + f.name).slice(0, 120),
+      level: 4,
+      nat: "debit",
+      type: "asset"
+    };
+    if (i >= 0) {
+      acc.accounts[i].name = row.name;
+      acc.accounts[i].type = "asset";
+    } else {
+      acc.accounts.push(row);
+    }
+    return saveAcc(acc);
+  }
+
+  function postJe(desc, lines, date, type) {
+    var acc = ensureAcc();
+    var dr = 0, cr = 0, clean = [];
+    for (var i = 0; i < lines.length; i++) {
+      var l = lines[i];
+      var d = money(l.dr) || 0;
+      var c = money(l.cr) || 0;
+      if (!isCode(l.code)) return null;
+      if (d < 0 || c < 0) return null;
+      if (d === 0 && c === 0) continue;
+      dr += d;
+      cr += c;
+      clean.push({
+        code: l.code,
+        desc: String(l.desc || "").slice(0, 200),
+        dr: d,
+        cr: c
+      });
+    }
+    if (clean.length < 2 || Math.abs(dr - cr) > EPS || dr <= 0) return null;
+    var je = {
+      id: Date.now(),
+      no: acc.nextJe,
+      date: isDate(date) ? date : today(),
+      type: String(type || "petty").slice(0, 32),
+      desc: String(desc || "").slice(0, 300),
+      lines: clean,
+      total: dr
+    };
+    acc.journals.push(je);
+    acc.nextJe = acc.nextJe + 1;
+    if (!saveAcc(acc)) return null;
+    return je;
+  }
+
+  function fundName(id) {
+    var f = db.funds.find(function (x) { return String(x.id) === String(id); });
+    return f ? f.name : "—";
+  }
+
+  function fundById(id) {
+    return db.funds.find(function (x) { return String(x.id) === String(id); });
+  }
+
+  function balanceFund(id) {
+    var bal = 0;
+    db.charges.forEach(function (c) {
+      if (String(c.fundId) === String(id) && c.status !== "cancel") {
+        bal += Number(c.amount) || 0;
+      }
+    });
+    db.expenses.forEach(function (e) {
+      if (String(e.fundId) === String(id) && e.status !== "cancel") {
+        bal -= Number(e.amount) || 0;
+      }
+    });
+    return Math.round(bal * 100) / 100;
+  }
+
+  function pendingSum(id) {
+    return db.expenses
+      .filter(function (e) { return String(e.fundId) === String(id) && e.status === "pending"; })
+      .reduce(function (s, e) { return s + (Number(e.amount) || 0); }, 0);
+  }
+
+  function activeFunds() {
+    return db.funds.filter(function (f) { return f.status === "active"; });
+  }
+
+  function fillFundSelects() {
+    var o = '<option value="">— انتخاب —</option>';
+    activeFunds().forEach(function (f) {
+      o += '<option value="' + esc(String(f.id)) + '">' +
+        esc(f.code + " — " + f.name) + " (مانده: " + fmt(balanceFund(f.id)) + ")</option>";
+    });
+    $("cFund").innerHTML = o;
+    $("eFund").innerHTML = o;
+    $("sFund").innerHTML = o;
+    var ro = '<option value="">همه</option>';
+    db.funds.forEach(function (f) {
+      ro += '<option value="' + esc(String(f.id)) + '">' + esc(f.name) + "</option>";
+    });
+    $("repFund").innerHTML = ro;
+  }
+
+  function lock(fn) {
+    return function () {
+      if (busy) return;
+      busy = true;
+      try {
+        fn();
+      } catch (e) {
+        toast("خطای غیرمنتظره", true);
+      } finally {
+        busy = false;
+      }
+    };
+  }
+
+  function go(tab, btn) {
+    try {
+      document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("on"); });
+      document.querySelectorAll("#nav button").forEach(function (b) {
+        b.classList.remove("on");
+        b.setAttribute("aria-selected", "false");
+      });
+      var el = $(tab);
+      if (el) el.classList.add("on");
+      if (btn) {
+        btn.classList.add("on");
+        btn.setAttribute("aria-selected", "true");
+      } else {
+        var n = document.querySelector('#nav button[data-tab="' + tab + '"]');
+        if (n) {
+          n.classList.add("on");
+          n.setAttribute("aria-selected", "true");
+        }
+      }
+      if (tab === "dash") renderDash();
+      if (tab === "funds") renderFunds();
+      if (tab === "charge") {
+        fillFundSelects();
+        $("cNo").value = String(db.nextC);
+        if (!$("cDate").value) $("cDate").value = today();
+        renderCharges();
+      }
+      if (tab === "exp") {
+        fillFundSelects();
+        $("eNo").value = String(db.nextE);
+        if (!$("eDate").value) $("eDate").value = today();
+        renderExp();
+      }
+      if (tab === "settle") {
+        fillFundSelects();
+        if (!$("sDate").value) $("sDate").value = today();
+        renderSettles();
+      }
+      if (tab === "rep") fillFundSelects();
+    } catch (e) {
+      toast("خطا در نمایش صفحه", true);
+    }
+  }
+
+  function renderDash() {
+    $("stFunds").textContent = String(activeFunds().length);
+    var total = 0, pend = 0, expM = 0;
+    var ym = today().slice(0, 7);
+    db.funds.forEach(function (f) {
+      total += balanceFund(f.id);
+      pend += db.expenses.filter(function (e) {
+        return String(e.fundId) === String(f.id) && e.status === "pending";
+      }).length;
+    });
+    db.expenses.forEach(function (e) {
+      if (e.status !== "cancel" && String(e.date).slice(0, 7) === ym) {
+        expM += Number(e.amount) || 0;
+      }
+    });
+    $("stBal").textContent = fmt(total);
+    $("stPend").textContent = String(pend);
+    $("stExp").textContent = fmt(expM);
+
+    var acc = loadAcc();
+    var cash = null;
+    try {
+      cash = JSON.parse(localStorage.getItem(CASH_KEY) || localStorage.getItem(CASH_LEGACY) || "null");
+    } catch (e) {}
+    var parts = [];
+    parts.push(acc && Array.isArray(acc.accounts)
+      ? '<span class="badge ok">حسابداری متصل</span>'
+      : '<span class="badge warn">حسابداری نیست</span>');
+    parts.push(cash && Array.isArray(cash.banks)
+      ? '<span class="badge ok">نقد و بانک متصل</span>'
+      : '<span class="badge warn">نقد و بانک نیست</span>');
+    $("linkStatus").innerHTML = parts.join(" · ");
+
+    var mov = [];
+    db.charges.forEach(function (c) {
+      mov.push({ t: "شارژ", fund: fundName(c.fundId), date: c.date, amt: c.amount, st: c.posted ? "سند" : "—", ts: c.id });
+    });
+    db.expenses.forEach(function (e) {
+      mov.push({
+        t: "هزینه",
+        fund: fundName(e.fundId),
+        date: e.date,
+        amt: e.amount,
+        st: e.status === "pending" ? "انتظار" : "تسویه",
+        ts: e.id
+      });
+    });
+    mov.sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+    var tb = $("lastMov");
+    tb.textContent = "";
+    mov.slice(0, 20).forEach(function (m) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + esc(m.t) + "</td><td>" + esc(m.fund) + "</td><td class='num'>" +
+        esc(m.date) + "</td><td class='num'>" + fmt(m.amt) + "</td><td>" + esc(m.st) + "</td>";
+      tb.appendChild(tr);
+    });
+  }
+
+  function renderFunds() {
+    var q = ($("fundSearch").value || "").trim().toLowerCase();
+    var list = db.funds.slice();
+    if (q) {
+      list = list.filter(function (f) {
+        return (f.code + " " + f.name + " " + (f.custodian || "")).toLowerCase().indexOf(q) >= 0;
+      });
+    }
+    var tb = $("fundList");
+    tb.textContent = "";
+    list.forEach(function (f) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td class='num'>" + esc(f.code) + "</td><td>" + esc(f.name) + "</td><td>" +
+        esc(f.custodian || "—") + "</td><td class='num'>" + fmt(f.limit) + "</td><td class='num'>" +
+        fmt(balanceFund(f.id)) + "</td><td>" +
+        "<button type='button' class='btn btn-b btn-sm' data-edit-f='" + esc(String(f.id)) + "'>ویرایش</button> " +
+        "<button type='button' class='btn btn-r btn-sm' data-del-f='" + esc(String(f.id)) + "'>حذف</button></td>";
+      tb.appendChild(tr);
+    });
+  }
+
+  function clearFund() {
+    $("fId").value = "";
+    $("fCode").value = "";
+    $("fName").value = "";
+    $("fCustodian").value = "";
+    $("fLimit").value = "";
+    $("fAccCode").value = "";
+    $("fBankCode").value = "";
+    $("fExpCode").value = "";
+    $("fStatus").value = "active";
+  }
+
+  $("btnFundClr").onclick = clearFund;
+  $("fundSearch").oninput = renderFunds;
+
+  $("btnFund").onclick = lock(function () {
+    var code = ($("fCode").value || "").trim();
+    var name = ($("fName").value || "").trim();
+    if (!code || !name) { toast("کد و نام الزامی است", true); return; }
+    if (!isCode(code)) { toast("کد نامعتبر است", true); return; }
+    var accCode = ($("fAccCode").value || code).trim().slice(0, 20);
+    var bankCode = ($("fBankCode").value || "").trim().slice(0, 20);
+    var expCode = ($("fExpCode").value || "5102").trim().slice(0, 20);
+    if (accCode && !isCode(accCode)) { toast("کد حساب نامعتبر", true); return; }
+    if (bankCode && !isCode(bankCode)) { toast("کد بانک نامعتبر", true); return; }
+    if (expCode && !isCode(expCode)) { toast("کد هزینه نامعتبر", true); return; }
+    var row = {
+      id: $("fId").value ? Number($("fId").value) : uid(),
+      code: code,
+      name: name.slice(0, 100),
+      custodian: ($("fCustodian").value || "").slice(0, 80),
+      limit: money($("fLimit").value) || 0,
+      accCode: accCode || code,
+      bankCode: bankCode,
+      expCode: expCode || "5102",
+      status: $("fStatus").value === "closed" ? "closed" : "active"
+    };
+    var i = db.funds.findIndex(function (x) { return String(x.id) === String(row.id); });
+    if (i >= 0) {
+      db.funds[i] = row;
+    } else {
+      if (db.funds.some(function (x) { return x.code === row.code; })) {
+        toast("کد تکراری است", true);
+        return;
+      }
+      db.funds.push(row);
+    }
+    if (!syncFundAcc(row)) return;
+    if (!save(db)) return;
+    clearFund();
+    renderFunds();
+    renderDash();
+    toast("ذخیره و همسان شد");
+  });
+
+  $("cFund").onchange = function () {
+    var f = fundById($("cFund").value);
+    if (f && f.bankCode) $("cBank").value = f.bankCode;
   };
-  r.onerror=function(){toast("خواندن ناموفق",true);};
-  r.readAsText(f);
-};
-$("btnWipe").onclick=lock(function(){
-  if(!confirm("همه داده‌های تنخواه حذف شود؟")) return;
-  if(!confirm("تأیید نهایی حذف؟")) return;
-  db=defData(); if(!save(db)) return; toast("حذف شد"); renderDash();
-});
 
-$("nav").addEventListener("click",function(e){var b=e.target.closest("button[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
-document.body.addEventListener("click",function(e){
-  var g=e.target.closest("[data-go]"); if(g){go(g.getAttribute("data-go"));return;}
-  var ef=e.target.closest("[data-edit-f]");
-  if(ef){var f=fundById(ef.getAttribute("data-edit-f"));if(!f)return;
-    $("fId").value=f.id;$("fCode").value=f.code;$("fName").value=f.name;$("fCustodian").value=f.custodian||"";
-    $("fLimit").value=f.limit||"";$("fAccCode").value=f.accCode||"";$("fBankCode").value=f.bankCode||"";
-    $("fExpCode").value=f.expCode||"";$("fStatus").value=f.status||"active";go("funds");return;}
-  var df=e.target.closest("[data-del-f]");
-  if(df){if(!confirm("حذف این تنخواه؟"))return;db.funds=db.funds.filter(function(x){return String(x.id)!==df.getAttribute("data-del-f");});save(db);renderFunds();renderDash();return;}
-  var dc=e.target.closest("[data-del-c]");
-  if(dc){if(!confirm("حذف این شارژ؟"))return;db.charges=db.charges.filter(function(x){return String(x.id)!==dc.getAttribute("data-del-c");});save(db);renderCharges();renderDash();return;}
-  var de=e.target.closest("[data-del-e]");
-  if(de){if(!confirm("حذف این هزینه؟"))return;db.expenses=db.expenses.filter(function(x){return String(x.id)!==de.getAttribute("data-del-e");});save(db);renderExp();renderDash();return;}
-});
-$("expFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;expFilt=b.getAttribute("data-f");document.querySelectorAll("#expFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderExp();});
-$("repTabs").addEventListener("click",function(e){var b=e.target.closest("[data-r]");if(!b)return;repMode=b.getAttribute("data-r");document.querySelectorAll("#repTabs button").forEach(function(x){x.classList.toggle("on",x===b);});});
-window.addEventListener("error",function(){});
+  function renderCharges() {
+    var tb = $("chargeList");
+    tb.textContent = "";
+    db.charges.slice().reverse().forEach(function (c) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td class='num'>" + esc(c.no) + "</td><td class='num'>" + esc(c.date) +
+        "</td><td>" + esc(fundName(c.fundId)) + "</td><td class='num'>" + fmt(c.amount) +
+        "</td><td class='num'>" + esc(c.jeNo || "—") + "</td><td>" +
+        "<button type='button' class='btn btn-r btn-sm' data-del-c='" + esc(String(c.id)) + "'>حذف</button></td>";
+      tb.appendChild(tr);
+    });
+  }
 
-renderDash();
+  function saveCharge(post) {
+    var fid = $("cFund").value;
+    var amt = money($("cAmt").value);
+    var date = $("cDate").value || today();
+    if (!fid) { toast("تنخواه را انتخاب کنید", true); return; }
+    if (amt == null || amt <= 0) { toast("مبلغ معتبر وارد کنید", true); return; }
+    if (!isDate(date)) { toast("تاریخ نامعتبر", true); return; }
+    var f = fundById(fid);
+    if (!f || f.status !== "active") { toast("تنخواه فعال یافت نشد", true); return; }
+    var bank = ($("cBank").value || f.bankCode || "").trim();
+    var row = {
+      id: uid(),
+      no: db.nextC,
+      date: date,
+      fundId: Number(fid),
+      amount: amt,
+      bankCode: bank,
+      desc: ($("cDesc").value || "").slice(0, 300),
+      posted: false,
+      status: "ok"
+    };
+    if (post) {
+      var accCode = f.accCode || f.code;
+      if (!isCode(accCode) || !isCode(bank)) {
+        toast("کد تنخواه یا بانک نامعتبر — در تعریف تنخواه مشخص کنید", true);
+        return;
+      }
+      var je = postJe(
+        "شارژ تنخواه " + f.name,
+        [
+          { code: accCode, desc: "شارژ تنخواه", dr: amt, cr: 0 },
+          { code: bank, desc: "برداشت بانک", dr: 0, cr: amt }
+        ],
+        row.date,
+        "petty-charge"
+      );
+      if (!je) { toast("صدور سند ناموفق — تراز یا کد حساب", true); return; }
+      row.posted = true;
+      row.jeNo = je.no;
+    }
+    db.charges.push(row);
+    db.nextC = db.nextC + 1;
+    if (!save(db)) {
+      db.charges.pop();
+      db.nextC = db.nextC - 1;
+      return;
+    }
+    $("cAmt").value = "";
+    $("cDesc").value = "";
+    $("cNo").value = String(db.nextC);
+    renderCharges();
+    renderDash();
+    toast(post ? ("شارژ + سند " + row.jeNo) : "شارژ ثبت شد");
+  }
+
+  $("btnCharge").onclick = lock(function () { saveCharge(false); });
+  $("btnChargePost").onclick = lock(function () { saveCharge(true); });
+
+  $("eFund").onchange = function () {
+    var id = $("eFund").value;
+    $("eBal").value = id ? balanceFund(id).toFixed(2) : "";
+    var f = fundById(id);
+    if (f && f.expCode) $("eAcc").value = f.expCode;
+  };
+
+  function renderExp() {
+    var list = db.expenses.slice().reverse();
+    if (expFilt !== "all") list = list.filter(function (e) { return e.status === expFilt; });
+    var tb = $("expList");
+    tb.textContent = "";
+    list.forEach(function (e) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td class='num'>" + esc(e.no) + "</td><td class='num'>" + esc(e.date) +
+        "</td><td>" + esc(fundName(e.fundId)) + "</td><td>" + esc(e.desc) + "</td><td class='num'>" +
+        fmt(e.amount) + "</td><td><span class='badge " + (e.status === "pending" ? "warn" : "ok") + "'>" +
+        (e.status === "pending" ? "انتظار" : "تسویه") + "</span></td><td>" +
+        "<button type='button' class='btn btn-r btn-sm' data-del-e='" + esc(String(e.id)) + "'>حذف</button></td>";
+      tb.appendChild(tr);
+    });
+  }
+
+  function saveExp(post) {
+    var fid = $("eFund").value;
+    var amt = money($("eAmt").value);
+    var desc = ($("eDesc").value || "").trim();
+    var date = $("eDate").value || today();
+    if (!fid) { toast("تنخواه را انتخاب کنید", true); return; }
+    if (amt == null || amt <= 0) { toast("مبلغ معتبر وارد کنید", true); return; }
+    if (!desc) { toast("شرح الزامی است", true); return; }
+    if (!isDate(date)) { toast("تاریخ نامعتبر", true); return; }
+    var f = fundById(fid);
+    if (!f || f.status !== "active") { toast("تنخواه فعال یافت نشد", true); return; }
+    var bal = balanceFund(fid);
+    if (amt > bal + EPS) {
+      toast("مانده تنخواه کافی نیست (مانده: " + fmt(bal) + ")", true);
+      return;
+    }
+    var expAcc = ($("eAcc").value || f.expCode || "5102").trim();
+    if (!isCode(expAcc)) { toast("کد حساب هزینه نامعتبر", true); return; }
+    var row = {
+      id: uid(),
+      no: db.nextE,
+      date: date,
+      fundId: Number(fid),
+      amount: amt,
+      cat: $("eCat").value,
+      accCode: expAcc,
+      ref: ($("eRef").value || "").slice(0, 60),
+      desc: desc.slice(0, 300),
+      status: $("eStatus").value === "settled" ? "settled" : "pending",
+      posted: false
+    };
+    if (post) {
+      var pet = f.accCode || f.code;
+      if (!isCode(pet)) { toast("کد حساب تنخواه نامعتبر", true); return; }
+      var je = postJe(
+        "هزینه تنخواه " + f.name + " — " + desc,
+        [
+          { code: expAcc, desc: desc, dr: amt, cr: 0 },
+          { code: pet, desc: "از تنخواه", dr: 0, cr: amt }
+        ],
+        row.date,
+        "petty-exp"
+      );
+      if (!je) { toast("صدور سند ناموفق — تراز یا کد حساب", true); return; }
+      row.posted = true;
+      row.jeNo = je.no;
+    }
+    db.expenses.push(row);
+    db.nextE = db.nextE + 1;
+    if (!save(db)) {
+      db.expenses.pop();
+      db.nextE = db.nextE - 1;
+      return;
+    }
+    $("eAmt").value = "";
+    $("eDesc").value = "";
+    $("eRef").value = "";
+    $("eNo").value = String(db.nextE);
+    $("eBal").value = balanceFund(fid).toFixed(2);
+    renderExp();
+    renderDash();
+    toast(post ? ("هزینه + سند " + row.jeNo) : "هزینه ثبت شد");
+  }
+
+  $("btnExp").onclick = lock(function () { saveExp(false); });
+  $("btnExpPost").onclick = lock(function () { saveExp(true); });
+
+  $("sFund").onchange = function () {
+    var id = $("sFund").value;
+    $("sBal").textContent = id ? fmt(balanceFund(id)) : "۰";
+    $("sPend").textContent = id ? fmt(pendingSum(id)) : "۰";
+  };
+
+  function renderSettles() {
+    var tb = $("settleList");
+    tb.textContent = "";
+    db.settlements.slice().reverse().forEach(function (s) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td class='num'>" + esc(s.date) + "</td><td>" + esc(fundName(s.fundId)) +
+        "</td><td class='num'>" + esc(s.count) + "</td><td class='num'>" + fmt(s.total) +
+        "</td><td>" + esc(s.note || "") + "</td>";
+      tb.appendChild(tr);
+    });
+  }
+
+  $("btnSettle").onclick = lock(function () {
+    var fid = $("sFund").value;
+    if (!fid) { toast("تنخواه را انتخاب کنید", true); return; }
+    var date = $("sDate").value || today();
+    if (!isDate(date)) { toast("تاریخ نامعتبر", true); return; }
+    var list = db.expenses.filter(function (e) {
+      return String(e.fundId) === String(fid) && e.status === "pending";
+    });
+    if (!list.length) { toast("هزینه در انتظاری نیست", true); return; }
+    var total = list.reduce(function (s, e) { return s + (Number(e.amount) || 0); }, 0);
+    list.forEach(function (e) { e.status = "settled"; });
+    db.settlements.push({
+      id: uid(),
+      date: date,
+      fundId: Number(fid),
+      count: list.length,
+      total: Math.round(total * 100) / 100,
+      note: ($("sNote").value || "").slice(0, 500)
+    });
+    if (!save(db)) return;
+    $("sNote").value = "";
+    $("sFund").onchange();
+    renderSettles();
+    renderExp();
+    renderDash();
+    toast(list.length + " هزینه تسویه شد");
+  });
+
+  $("btnSettleCharge").onclick = function () {
+    var fid = $("sFund").value;
+    var f = fundById(fid);
+    if (!f) { toast("تنخواه را انتخاب کنید", true); return; }
+    var bal = balanceFund(fid);
+    var need = Math.max(0, (Number(f.limit) || 0) - bal);
+    if (need <= 0) {
+      toast("مانده در سقف است یا سقف تعریف نشده", true);
+      return;
+    }
+    go("charge");
+    $("cFund").value = String(f.id);
+    $("cFund").onchange();
+    $("cAmt").value = need.toFixed(2);
+    toast("مبلغ پیشنهادی شارژ: " + fmt(need));
+  };
+
+  function runRep() {
+    var from = $("repFrom").value;
+    var to = $("repTo").value;
+    var fid = $("repFund").value;
+    if (from && !isDate(from)) { toast("از تاریخ نامعتبر", true); return; }
+    if (to && !isDate(to)) { toast("تا تاریخ نامعتبر", true); return; }
+    function inR(d) {
+      if (from && d < from) return false;
+      if (to && d > to) return false;
+      return true;
+    }
+    var h = "", title = "";
+    if (repMode === "bal") {
+      title = "مانده تنخواه‌ها";
+      h = "<table><thead><tr><th>کد</th><th>نام</th><th>متصدی</th><th>سقف</th><th>مانده</th><th>در انتظار</th></tr></thead><tbody>";
+      db.funds.forEach(function (f) {
+        if (fid && String(f.id) !== String(fid)) return;
+        h += "<tr><td class='num'>" + esc(f.code) + "</td><td>" + esc(f.name) + "</td><td>" +
+          esc(f.custodian || "") + "</td><td class='num'>" + fmt(f.limit) + "</td><td class='num'>" +
+          fmt(balanceFund(f.id)) + "</td><td class='num'>" + fmt(pendingSum(f.id)) + "</td></tr>";
+      });
+      h += "</tbody></table>";
+    } else if (repMode === "exp" || repMode === "pending") {
+      title = repMode === "pending" ? "هزینه در انتظار تسویه" : "هزینه‌ها";
+      h = "<table><thead><tr><th>شماره</th><th>تاریخ</th><th>تنخواه</th><th>طبقه</th><th>شرح</th><th>مبلغ</th></tr></thead><tbody>";
+      db.expenses.filter(function (e) {
+        if (!inR(e.date)) return false;
+        if (fid && String(e.fundId) !== String(fid)) return false;
+        if (repMode === "pending" && e.status !== "pending") return false;
+        return e.status !== "cancel";
+      }).forEach(function (e) {
+        h += "<tr><td class='num'>" + esc(e.no) + "</td><td class='num'>" + esc(e.date) +
+          "</td><td>" + esc(fundName(e.fundId)) + "</td><td>" + esc(CAT[e.cat] || e.cat) +
+          "</td><td>" + esc(e.desc) + "</td><td class='num'>" + fmt(e.amount) + "</td></tr>";
+      });
+      h += "</tbody></table>";
+    } else if (repMode === "charge") {
+      title = "شارژها";
+      h = "<table><thead><tr><th>شماره</th><th>تاریخ</th><th>تنخواه</th><th>مبلغ</th><th>بانک</th><th>سند</th></tr></thead><tbody>";
+      db.charges.filter(function (c) {
+        return inR(c.date) && (!fid || String(c.fundId) === String(fid));
+      }).forEach(function (c) {
+        h += "<tr><td class='num'>" + esc(c.no) + "</td><td class='num'>" + esc(c.date) +
+          "</td><td>" + esc(fundName(c.fundId)) + "</td><td class='num'>" + fmt(c.amount) +
+          "</td><td class='num'>" + esc(c.bankCode || "") + "</td><td class='num'>" +
+          esc(c.jeNo || "—") + "</td></tr>";
+      });
+      h += "</tbody></table>";
+    } else if (repMode === "cat") {
+      title = "هزینه بر اساس طبقه";
+      var map = {};
+      db.expenses.filter(function (e) {
+        return e.status !== "cancel" && inR(e.date) && (!fid || String(e.fundId) === String(fid));
+      }).forEach(function (e) {
+        map[e.cat] = (map[e.cat] || 0) + (Number(e.amount) || 0);
+      });
+      h = "<table><thead><tr><th>طبقه</th><th>مبلغ</th></tr></thead><tbody>";
+      Object.keys(map).forEach(function (k) {
+        h += "<tr><td>" + esc(CAT[k] || k) + "</td><td class='num'>" + fmt(map[k]) + "</td></tr>";
+      });
+      h += "</tbody></table>";
+    } else if (repMode === "flow") {
+      title = "گردش تنخواه";
+      h = "<table><thead><tr><th>تاریخ</th><th>نوع</th><th>شرح</th><th>واریز</th><th>برداشت</th></tr></thead><tbody>";
+      var rows = [];
+      db.charges.filter(function (c) {
+        return inR(c.date) && (!fid || String(c.fundId) === String(fid));
+      }).forEach(function (c) {
+        rows.push({ date: c.date, t: "شارژ", desc: c.desc || "", inn: c.amount, out: 0, id: c.id });
+      });
+      db.expenses.filter(function (e) {
+        return e.status !== "cancel" && inR(e.date) && (!fid || String(e.fundId) === String(fid));
+      }).forEach(function (e) {
+        rows.push({ date: e.date, t: "هزینه", desc: e.desc || "", inn: 0, out: e.amount, id: e.id });
+      });
+      rows.sort(function (a, b) {
+        if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+        return (b.id || 0) - (a.id || 0);
+      });
+      rows.forEach(function (r) {
+        h += "<tr><td class='num'>" + esc(r.date) + "</td><td>" + esc(r.t) + "</td><td>" +
+          esc(r.desc) + "</td><td class='num'>" + (r.inn ? fmt(r.inn) : "") +
+          "</td><td class='num'>" + (r.out ? fmt(r.out) : "") + "</td></tr>";
+      });
+      h += "</tbody></table>";
+    }
+    $("repTitle").textContent = title;
+    $("repOut").innerHTML = h || "<p class='note'>موردی نیست.</p>";
+    toast("گزارش آماده");
+  }
+
+  $("btnRep").onclick = lock(runRep);
+  $("btnPrint").onclick = function () { window.print(); };
+
+  $("btnOpenCash").onclick = function () {
+    window.open("cash-bank.html", "_blank", "noopener,noreferrer");
+  };
+  $("btnOpenAcc").onclick = function () {
+    window.open("accounting.html", "_blank", "noopener,noreferrer");
+  };
+
+  $("btnBackup").onclick = function () {
+    try {
+      var blob = new Blob([JSON.stringify(db, null, 2)], { type: "application/json" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "petty-cash-backup-" + today() + ".json";
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1500);
+      toast("دانلود شد");
+    } catch (e) {
+      toast("خطا در پشتیبان", true);
+    }
+  };
+
+  $("restoreFile").onchange = function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    if (f.size > MAX_BACKUP) {
+      toast("فایل خیلی بزرگ است", true);
+      e.target.value = "";
+      return;
+    }
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var d = normalize(JSON.parse(r.result));
+        if (!Array.isArray(d.funds)) throw new Error("bad");
+        db = d;
+        if (!save(db)) return;
+        toast("بازیابی شد");
+        renderDash();
+      } catch (err) {
+        toast("فایل نامعتبر است", true);
+      }
+      e.target.value = "";
+    };
+    r.onerror = function () { toast("خواندن فایل ناموفق", true); };
+    r.readAsText(f);
+  };
+
+  $("btnWipe").onclick = lock(function () {
+    if (!confirm("همه داده‌های تنخواه حذف شود؟")) return;
+    if (!confirm("تأیید نهایی حذف؟")) return;
+    db = defData();
+    if (!save(db)) return;
+    toast("حذف شد");
+    renderDash();
+  });
+
+  $("nav").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-tab]");
+    if (b) go(b.getAttribute("data-tab"), b);
+  });
+
+  document.body.addEventListener("click", function (e) {
+    var g = e.target.closest("[data-go]");
+    if (g) { go(g.getAttribute("data-go")); return; }
+
+    var ef = e.target.closest("[data-edit-f]");
+    if (ef) {
+      var f = fundById(ef.getAttribute("data-edit-f"));
+      if (!f) return;
+      $("fId").value = f.id;
+      $("fCode").value = f.code || "";
+      $("fName").value = f.name || "";
+      $("fCustodian").value = f.custodian || "";
+      $("fLimit").value = f.limit || "";
+      $("fAccCode").value = f.accCode || "";
+      $("fBankCode").value = f.bankCode || "";
+      $("fExpCode").value = f.expCode || "";
+      $("fStatus").value = f.status || "active";
+      go("funds");
+      return;
+    }
+
+    var df = e.target.closest("[data-del-f]");
+    if (df) {
+      if (!confirm("حذف این تنخواه؟")) return;
+      db.funds = db.funds.filter(function (x) {
+        return String(x.id) !== df.getAttribute("data-del-f");
+      });
+      save(db);
+      renderFunds();
+      renderDash();
+      return;
+    }
+
+    var dc = e.target.closest("[data-del-c]");
+    if (dc) {
+      if (!confirm("حذف این شارژ؟")) return;
+      db.charges = db.charges.filter(function (x) {
+        return String(x.id) !== dc.getAttribute("data-del-c");
+      });
+      save(db);
+      renderCharges();
+      renderDash();
+      return;
+    }
+
+    var de = e.target.closest("[data-del-e]");
+    if (de) {
+      if (!confirm("حذف این هزینه؟")) return;
+      db.expenses = db.expenses.filter(function (x) {
+        return String(x.id) !== de.getAttribute("data-del-e");
+      });
+      save(db);
+      renderExp();
+      renderDash();
+    }
+  });
+
+  $("expFilt").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-f]");
+    if (!b) return;
+    expFilt = b.getAttribute("data-f");
+    document.querySelectorAll("#expFilt button").forEach(function (x) {
+      x.classList.toggle("on", x === b);
+    });
+    renderExp();
+  });
+
+  $("repTabs").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-r]");
+    if (!b) return;
+    repMode = b.getAttribute("data-r");
+    document.querySelectorAll("#repTabs button").forEach(function (x) {
+      x.classList.toggle("on", x === b);
+    });
+  });
+
+  window.addEventListener("error", function () { /* keep UI stable */ });
+
+  renderDash();
 })();
 </script>
 </body>
