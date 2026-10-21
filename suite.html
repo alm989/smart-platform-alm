@@ -9,34 +9,35 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Tahoma,system-ui,sans-serif;background:radial-gradient(1000px 500px at 80% -20%,#1e3a5f 0%,transparent 50%),#0f172a;color:#e2e8f0;min-height:100dvh;padding:24px 16px}
 .wrap{max-width:1100px;margin:0 auto}
-h1{text-align:center;font-size:1.4rem;margin-bottom:6px}
-.sub{text-align:center;color:#94a3b8;font-size:.85rem;margin-bottom:24px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
-.card{background:rgba(30,41,59,.95);border:1px solid #334155;border-radius:18px;padding:16px;text-decoration:none;color:inherit;display:flex;flex-direction:column;min-height:140px;transition:.15s}
-.card:hover{transform:translateY(-4px);border-color:#2dd4bf}
-.icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:20px;margin-bottom:8px}
-.card h2{font-size:.9rem;margin-bottom:6px}
-.card p{font-size:.75rem;color:#94a3b8;flex:1}
-.tag{display:inline-block;margin-top:8px;font-size:.62rem;padding:3px 8px;border-radius:999px;background:#115e59;color:#99f6e4}
-.foot{text-align:center;margin-top:28px;font-size:.72rem;color:#64748b}
+h1{text-align:center;font-size:1.35rem;margin-bottom:6px}
+.sub{text-align:center;color:#94a3b8;font-size:.85rem;margin-bottom:22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.card{background:rgba(30,41,59,.95);border:1px solid #334155;border-radius:16px;padding:16px;text-decoration:none;color:inherit;display:flex;flex-direction:column;min-height:135px;transition:.15s}
+.card:hover{transform:translateY(-3px);border-color:#60a5fa}
+.icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;margin-bottom:8px}
+.card h2{font-size:.88rem;margin-bottom:5px}
+.card p{font-size:.72rem;color:#94a3b8;flex:1}
+.tag{display:inline-block;margin-top:8px;font-size:.6rem;padding:3px 8px;border-radius:999px;background:#1e3a8a;color:#93c5fd}
+.foot{text-align:center;margin-top:24px;font-size:.7rem;color:#64748b}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>سامانه هوشمند یکپارچه</h1>
-  <p class="sub">منشی · حسابداری · بانک · صندوق · فروش · خرید و انبار · تنخواه · HR</p>
+  <p class="sub">همه ماژول‌ها در یک صفحه</p>
   <div class="grid">
     <a class="card" href="index.html"><div class="icon" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)">🤖</div><h2>منشی</h2><p>جلسه و یادآوری</p><span class="tag">اداری</span></a>
     <a class="card" href="assistant.html"><div class="icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)">🧠</div><h2>دستیار</h2><p>دانش</p><span class="tag">هوش</span></a>
+    <a class="card" href="customers.html"><div class="icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">👤</div><h2>مشتریان</h2><p>CRM و پیگیری</p><span class="tag">CRM</span></a>
     <a class="card" href="accounting.html"><div class="icon" style="background:linear-gradient(135deg,#10b981,#047857)">📒</div><h2>حسابداری</h2><p>سند و گزارش</p><span class="tag">مالی</span></a>
-    <a class="card" href="cash-bank.html"><div class="icon" style="background:linear-gradient(135deg,#14b8a6,#0f766e)">🏦</div><h2>نقد و بانک</h2><p>دریافت و مغایرت</p><span class="tag">بانک</span></a>
+    <a class="card" href="cash-bank.html"><div class="icon" style="background:linear-gradient(135deg,#14b8a6,#0f766e)">🏦</div><h2>نقد و بانک</h2><p>دریافت</p><span class="tag">بانک</span></a>
     <a class="card" href="fund.html"><div class="icon" style="background:linear-gradient(135deg,#f59e0b,#b45309)">🗃️</div><h2>صندوق</h2><p>نقد و اوراق</p><span class="tag">صندوق</span></a>
     <a class="card" href="sales.html"><div class="icon" style="background:linear-gradient(135deg,#0ea5e9,#0369a1)">🛒</div><h2>فروش</h2><p>فاکتور</p><span class="tag">فروش</span></a>
-    <a class="card" href="warehouse.html"><div class="icon" style="background:linear-gradient(135deg,#14b8a6,#0d9488)">📦</div><h2>خرید و انبار</h2><p>رسید، حواله، موجودی</p><span class="tag">انبار</span></a>
-    <a class="card" href="petty-cash.html"><div class="icon" style="background:linear-gradient(135deg,#f97316,#c2410c)">💵</div><h2>تنخواه</h2><p>شارژ و هزینه</p><span class="tag">تنخواه</span></a>
+    <a class="card" href="warehouse.html"><div class="icon" style="background:linear-gradient(135deg,#14b8a6,#0d9488)">📦</div><h2>خرید و انبار</h2><p>موجودی</p><span class="tag">انبار</span></a>
+    <a class="card" href="petty-cash.html"><div class="icon" style="background:linear-gradient(135deg,#f97316,#c2410c)">💵</div><h2>تنخواه</h2><p>هزینه</p><span class="tag">تنخواه</span></a>
     <a class="card" href="hr-payroll.html"><div class="icon" style="background:linear-gradient(135deg,#a78bfa,#6d28d9)">👥</div><h2>منابع انسانی</h2><p>حقوق</p><span class="tag">HR</span></a>
   </div>
-  <p class="foot">همه فایل‌ها کنار suite.html</p>
+  <p class="foot">فایل customers.html کنار suite</p>
 </div>
 </body>
 </html>
