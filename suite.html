@@ -12,61 +12,31 @@ body{font-family:Tahoma,system-ui,sans-serif;background:radial-gradient(1000px 5
 h1{text-align:center;font-size:1.4rem;margin-bottom:6px}
 .sub{text-align:center;color:#94a3b8;font-size:.85rem;margin-bottom:20px}
 .status{text-align:center;font-size:.8rem;color:#94a3b8;margin-bottom:20px;padding:10px;border:1px solid #334155;border-radius:12px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-.card{background:rgba(30,41,59,.95);border:1px solid #334155;border-radius:18px;padding:20px;text-decoration:none;color:inherit;display:flex;flex-direction:column;min-height:150px;transition:.15s}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.card{background:rgba(30,41,59,.95);border:1px solid #334155;border-radius:18px;padding:18px;text-decoration:none;color:inherit;display:flex;flex-direction:column;min-height:150px;transition:.15s}
 .card:hover{transform:translateY(-4px);border-color:#38bdf8}
-.icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:24px;margin-bottom:12px}
-.card h2{font-size:1rem;margin-bottom:8px}
-.card p{font-size:.8rem;color:#94a3b8;flex:1}
-.tag{display:inline-block;margin-top:10px;font-size:.68rem;padding:4px 10px;border-radius:999px}
-.ok{background:#064e3b;color:#6ee7b7}.miss{background:#7f1d1d;color:#fecaca}
+.icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:24px;margin-bottom:10px}
+.card h2{font-size:.95rem;margin-bottom:6px}
+.card p{font-size:.78rem;color:#94a3b8;flex:1}
+.tag{display:inline-block;margin-top:10px;font-size:.65rem;padding:3px 8px;border-radius:999px;background:#78350f;color:#fde68a}
 .foot{text-align:center;margin-top:28px;font-size:.72rem;color:#64748b}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>سامانه هوشمند یکپارچه</h1>
-  <p class="sub">همه ماژول‌ها · بدون محدودیت نمایش</p>
-  <div class="status" id="status">در حال بررسی…</div>
-  <div class="grid" id="grid"></div>
-  <p class="foot">فایل hr-payroll.html باید کنار suite باشد تا تیک قرمز برطرف شود</p>
+  <p class="sub">منشی · حسابداری · بانک · صندوق · تنخواه · منابع انسانی</p>
+  <div class="status" id="status">۷ ماژول در فهرست</div>
+  <div class="grid">
+    <a class="card" href="index.html"><div class="icon" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)">🤖</div><h2>منشی</h2><p>جلسه و یادآوری</p><span class="tag">اداری</span></a>
+    <a class="card" href="assistant.html"><div class="icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)">🧠</div><h2>دستیار</h2><p>دانش و پرامپت</p><span class="tag">هوش</span></a>
+    <a class="card" href="accounting.html"><div class="icon" style="background:linear-gradient(135deg,#10b981,#047857)">📒</div><h2>حسابداری</h2><p>سند و گزارش</p><span class="tag">مالی</span></a>
+    <a class="card" href="cash-bank.html"><div class="icon" style="background:linear-gradient(135deg,#14b8a6,#0f766e)">🏦</div><h2>نقد و بانک</h2><p>دریافت و مغایرت</p><span class="tag">بانک</span></a>
+    <a class="card" href="fund.html"><div class="icon" style="background:linear-gradient(135deg,#f59e0b,#b45309)">🗃️</div><h2>صندوق</h2><p>نقد، چک، طلا، اوراق</p><span class="tag">صندوق</span></a>
+    <a class="card" href="petty-cash.html"><div class="icon" style="background:linear-gradient(135deg,#f97316,#c2410c)">💵</div><h2>تنخواه</h2><p>شارژ و هزینه</p><span class="tag">تنخواه</span></a>
+    <a class="card" href="hr-payroll.html"><div class="icon" style="background:linear-gradient(135deg,#a78bfa,#6d28d9)">👥</div><h2>منابع انسانی</h2><p>حقوق و حضور</p><span class="tag">HR</span></a>
+  </div>
+  <p class="foot">همه فایل‌ها کنار suite.html · یک مرورگر</p>
 </div>
-<script>
-(function(){
-"use strict";
-var MODULES=[
-  {href:"index.html",icon:"🤖",bg:"linear-gradient(135deg,#0ea5e9,#0284c7)",title:"منشی هوشمند",desc:"جلسه، یادداشت، یادآوری",tag:"اداری",keys:["items"]},
-  {href:"assistant.html",icon:"🧠",bg:"linear-gradient(135deg,#8b5cf6,#6d28d9)",title:"دستیار هوشمند",desc:"دانش و پرامپت",tag:"هوش",keys:[]},
-  {href:"accounting.html",icon:"📒",bg:"linear-gradient(135deg,#10b981,#047857)",title:"حسابداری",desc:"سند و گزارش مالی",tag:"مالی",keys:["smart_acc_v2"]},
-  {href:"cash-bank.html",icon:"🏦",bg:"linear-gradient(135deg,#14b8a6,#0f766e)",title:"نقد و بانک",desc:"دریافت، پرداخت، مغایرت",tag:"خزانه",keys:["smart_cash_v2","smart_cash_v1"]},
-  {href:"petty-cash.html",icon:"💵",bg:"linear-gradient(135deg,#f97316,#c2410c)",title:"تنخواه",desc:"شارژ، هزینه، تسویه",tag:"تنخواه",keys:["smart_petty_v2","smart_petty_v1"]},
-  {href:"hr-payroll.html",icon:"👥",bg:"linear-gradient(135deg,#a78bfa,#6d28d9)",title:"منابع انسانی و حقوق",desc:"پرسنل، حضور، حقوق، بیمه",tag:"HR",keys:["smart_hr_v2","smart_hr_v1"]}
-];
-function fileOk(href, cb){
-  fetch(href,{method:"HEAD",cache:"no-store"}).then(function(r){cb(r.ok);}).catch(function(){cb(false);});
-}
-function hasData(keys){
-  try{for(var i=0;i<keys.length;i++){if(localStorage.getItem(keys[i]))return true;}}catch(e){}
-  return false;
-}
-var grid=document.getElementById("grid"), left=MODULES.length, miss=0, dataN=0;
-MODULES.forEach(function(m){
-  var a=document.createElement("a");
-  a.className="card"; a.href=m.href;
-  a.innerHTML='<div class="icon" style="background:'+m.bg+'">'+m.icon+'</div><h2>'+m.title+'</h2><p>'+m.desc+'</p><span class="tag miss" data-tag>بررسی فایل…</span>';
-  grid.appendChild(a);
-  var tag=a.querySelector("[data-tag]");
-  fileOk(m.href, function(ok){
-    left--;
-    if(!ok){ miss++; tag.className="tag miss"; tag.textContent=m.tag+" · فایل نیست ✗"; }
-    else if(hasData(m.keys)){ dataN++; tag.className="tag ok"; tag.textContent=m.tag+" · آماده ✓"; }
-    else { tag.className="tag ok"; tag.textContent=m.tag+" · فایل OK"; }
-    if(left===0){
-      document.getElementById("status").textContent=MODULES.length+" ماژول · "+(MODULES.length-miss)+" فایل موجود · "+miss+" مفقود · "+dataN+" با داده";
-    }
-  });
-});
-})();
-</script>
 </body>
 </html>
