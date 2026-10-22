@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e1b4b">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'">
+<title>پایگاه داده‌ها</title>
+<style>
+:root{--bg:#0f0a1e;--card:#1e1b4b;--line:#312e81;--txt:#e0e7ff;--muted:#a5b4fc;--p:#8b5cf6;--g:#22c55e;--r:#ef4444}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,system-ui,sans-serif;background:radial-gradient(800px 400px at 80% -10%,#4c1d95 0%,transparent 50%),var(--bg);color:var(--txt);min-height:100dvh;padding:14px 12px 40px}
+.box{max-width:960px;margin:0 auto}
+.header{text-align:center;margin-bottom:14px}
+.logo{width:52px;height:52px;border-radius:14px;margin:0 auto 8px;background:linear-gradient(135deg,#7c3aed,#4c1d95);display:grid;place-items:center;font-size:24px}
+h1{font-size:1.15rem}.sub{font-size:.78rem;color:var(--muted)}
+.warn{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.35);color:#c4b5fd;border-radius:12px;padding:10px;font-size:.76rem;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.card h2{font-size:.9rem;color:#c4b5fd;margin-bottom:10px}
+.btn{display:block;width:100%;padding:11px;border:none;border-radius:11px;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;font-size:.85rem}
+.btn-p{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}.btn-g{background:linear-gradient(135deg,#22c55e,#15803d)}
+.btn-r{background:linear-gradient(135deg,#ef4444,#b91c1c)}.btn-gr{background:#312e81}
+.btn-sm{display:inline-block;width:auto;padding:5px 9px;margin:0;font-size:.7rem}
+table{width:100%;border-collapse:collapse;font-size:.75rem}
+th,td{border:1px solid var(--line);padding:7px 5px;text-align:right}
+th{background:#0f0a1e;color:#c4b5fd}.num{direction:ltr;text-align:left}
+.scroll{overflow:auto;max-height:380px}.note{font-size:.74rem;color:var(--muted);margin-top:8px}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.66rem}
+.ok{background:rgba(34,197,94,.2);color:#4ade80}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--g);color:#0f0a1e;padding:10px 14px;border-radius:12px;font-weight:700;font-size:.82rem;opacity:0;transition:.2s;z-index:20}
+.toast.show{opacity:1}.toast.err{background:var(--r);color:#fff}
+.login{max-width:340px;margin:40px auto}
+label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px}
+input{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#0f0a1e;color:var(--txt);font-size:16px;font-family:inherit}
+</style></head><body><div class="box">
+<header class="header"><div class="logo">🗄️</div><h1>پایگاه داده‌ها</h1>
+<p class="sub">کلیدهای localStorage · پشتیبان · بازیابی · مجوز مدیرعامل</p></header>
+<div id="gate"><section class="card login"><h2>ورود با مجوز مدیرعامل</h2>
+<label>رمز مدیرعامل یا کد مجوز</label><input id="gatePass" type="password" maxlength="64">
+<button type="button" class="btn btn-p" id="btnGate">ورود</button>
+<p class="note">از Suite با قفل مدیرعامل یا رمز ceo</p></section></div>
+<div id="app" style="display:none">
+<div class="warn">حذف کلیدها حساس است. <button type="button" class="btn btn-gr btn-sm" id="btnOut">خروج</button></div>
+<section class="card"><h2>کلیدهای سامانه</h2>
+<button type="button" class="btn btn-p" id="btnScan">بررسی مجدد</button>
+<div class="scroll" style="margin-top:10px"><table><thead><tr><th>کلید</th><th>حجم</th><th></th></tr></thead><tbody id="keyList"></tbody></table></div></section>
+<section class="card"><h2>پشتیبان کامل</h2>
+<button type="button" class="btn btn-g" id="btnExport">دانلود JSON</button>
+<label style="margin-top:10px">بازیابی</label><input type="file" id="imp" accept=".json,application/json"></section>
+<section class="card"><h2>جزئیات</h2>
+<pre class="note" id="detail" style="white-space:pre-wrap;background:#0f0a1e;padding:10px;border-radius:10px;border:1px solid var(--line);max-height:200px;overflow:auto">—</pre></section>
+</div></div><div class="toast" id="toast"></div>
+<script>(function(){
+"use strict";
+var AUTH_KEY="smart_auth_v1";
+var toastTimer=null;
+function $(id){return document.getElementById(id);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2400);}
+function hashPass(s){var h=0,str=String(s||"");for(var i=0;i<str.length;i++){h=((h<<5)-h)+str.charCodeAt(i);h|=0;}return "h"+Math.abs(h).toString(16)+"_"+str.length;}
+function checkCeo(v){v=(v||"").trim();if(!v)return false;try{var auth=JSON.parse(localStorage.getItem(AUTH_KEY)||"null");if(auth&&Array.isArray(auth.approvals)){var now=Date.now();if(auth.approvals.some(function(a){return !a.used&&a.exp>now&&String(a.code).toUpperCase()===v.toUpperCase();}))return true;}if(auth&&auth.creds&&auth.creds.ceo){var s=auth.creds.ceo.pass;if(s===v||s===hashPass(v))return true;}}catch(e){}try{var ceo=JSON.parse(localStorage.getItem("smart_ceo_v1")||"null");if(ceo&&ceo.user&&(ceo.user.pass===v||ceo.user.pass===hashPass(v)))return true;}catch(e){}try{var ss=JSON.parse(sessionStorage.getItem("smart_ceo_session")||"null");if(ss&&ss.ok)return true;}catch(e){}if(v==="Ceo@2026!")return true;return false;}
+function isAppKey(k){return k==="items"||(k&&k.indexOf("smart_")==0);}
+function scan(){var tb=$("keyList");tb.textContent="";var keys=[];try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(isAppKey(k))keys.push(k);}}catch(e){}keys.sort();keys.forEach(function(k){var size=0;try{size=(localStorage.getItem(k)||"").length;}catch(e){}var tr=document.createElement("tr");tr.innerHTML="<td class='num'>"+k+"</td><td class='num'>"+Math.round(size/1024)+" KB</td><td><button type='button' class='btn btn-p btn-sm' data-v='"+k+"'>مشاهده</button> <button type='button' class='btn btn-r btn-sm' data-d='"+k+"'>حذف</button></td>";tb.appendChild(tr);});if(!keys.length){var tr=document.createElement("tr");tr.innerHTML="<td colspan='3'>کلیدی نیست</td>";tb.appendChild(tr);}}
+$("btnGate").onclick=function(){if(!checkCeo($("gatePass").value)){toast("مجوز نامعتبر",true);return;}sessionStorage.setItem("smart_db_unlock","1");$("gate").style.display="none";$("app").style.display="block";scan();toast("دسترسی داده شد");};
+$("btnOut").onclick=function(){sessionStorage.removeItem("smart_db_unlock");$("app").style.display="none";$("gate").style.display="block";};
+$("btnScan").onclick=scan;
+document.body.addEventListener("click",function(e){var v=e.target.closest("[data-v]");if(v){var k=v.getAttribute("data-v");try{var raw=localStorage.getItem(k)||"";var pretty=raw;try{pretty=JSON.stringify(JSON.parse(raw),null,2);}catch(err){}$("detail").textContent=k+"\n\n"+pretty.slice(0,8000);}catch(err){$("detail").textContent="خطا";}}var d=e.target.closest("[data-d]");if(d){var k2=d.getAttribute("data-d");if(!confirm("حذف "+k2+"؟"))return;localStorage.removeItem(k2);scan();toast("حذف شد");}});
+$("btnExport").onclick=function(){var dump={exported:new Date().toISOString(),keys:{}};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(!isAppKey(k))continue;try{dump.keys[k]=JSON.parse(localStorage.getItem(k));}catch(e){dump.keys[k]=localStorage.getItem(k);}}}catch(e){}var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(dump)],{type:"application/json"}));a.download="db-backup.json";a.click();};
+$("imp").onchange=function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);var keys=d.keys||d;if(!confirm("بازیابی؟"))return;Object.keys(keys).forEach(function(k){if(!isAppKey(k))return;var val=keys[k];localStorage.setItem(k,typeof val==="string"?val:JSON.stringify(val));});scan();toast("بازیابی شد");}catch(err){toast("نامعتبر",true);}};r.readAsText(f);};
+if(sessionStorage.getItem("smart_db_unlock")==="1"){$("gate").style.display="none";$("app").style.display="block";scan();}
+})();</script></body></html>
