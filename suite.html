@@ -4,31 +4,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="سامانه هوشمند">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'">
-<title>سامانه هوشمند یکپارچه</title>
+<title>سامانه هوشمند یکپارچه — Suite</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Tahoma,system-ui,sans-serif;background:radial-gradient(1000px 500px at 70% -20%,#1e3a5f 0%,transparent 45%),#0f172a;color:#e2e8f0;min-height:100dvh;padding:24px 16px}
-.wrap{max-width:1120px;margin:0 auto}
-.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:10px}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(1100px 520px at 70% -20%,#1e3a5f 0%,transparent 45%),#0f172a;color:#e2e8f0;min-height:100dvh;padding:20px 14px 40px}
+.wrap{max-width:1180px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:8px}
 .brand{display:flex;align-items:center;gap:12px}
 .brand-logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,#0ea5e9,#0369a1);display:grid;place-items:center;flex-shrink:0}
 .brand-logo img{width:100%;height:100%;object-fit:contain;background:#0f172a}
 .brand-logo .em{font-size:22px}
 h1{font-size:1.2rem}
-.sub{color:#94a3b8;font-size:.82rem;margin-bottom:16px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:11px}
-.card{background:rgba(30,41,59,.95);border:1px solid #334155;border-radius:16px;padding:14px;text-decoration:none;color:inherit;display:flex;flex-direction:column;min-height:118px;transition:.15s}
-.card:hover{transform:translateY(-3px);border-color:#38bdf8}
-.card.off{opacity:.35;pointer-events:none;filter:grayscale(.8)}
+.sub{color:#94a3b8;font-size:.82rem;margin-bottom:8px}
+#status{font-size:.75rem;color:#94a3b8;margin-bottom:14px}
+.sec{font-size:.78rem;color:#7dd3fc;margin:16px 0 8px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.card{background:rgba(30,41,59,.95);border:1px solid #334155;border-radius:16px;padding:14px;text-decoration:none;color:inherit;display:flex;flex-direction:column;min-height:120px;transition:.15s}
+.card:hover{transform:translateY(-3px);border-color:#38bdf8;box-shadow:0 8px 24px rgba(14,165,233,.15)}
+.card.off{opacity:.35;pointer-events:none;filter:grayscale(.85)}
 .icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:17px;margin-bottom:7px}
-.card h2{font-size:.82rem;margin-bottom:4px}
-.card p{font-size:.68rem;color:#94a3b8;flex:1}
-.tag{display:inline-block;margin-top:6px;font-size:.56rem;padding:2px 7px;border-radius:999px;background:#0c4a6e;color:#7dd3fc}
+.card h2{font-size:.8rem;margin-bottom:4px;line-height:1.35}
+.card p{font-size:.66rem;color:#94a3b8;flex:1;line-height:1.4}
+.tag{display:inline-block;margin-top:6px;font-size:.55rem;padding:2px 7px;border-radius:999px;background:#0c4a6e;color:#7dd3fc}
 .btn{padding:8px 14px;border-radius:10px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;font-size:.78rem;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block}
 .btn-p{background:linear-gradient(135deg,#0ea5e9,#0369a1);border:none;color:#fff;font-weight:700}
-.foot{text-align:center;margin-top:22px;font-size:.68rem;color:#64748b}
-#status{font-size:.75rem;color:#94a3b8;margin-bottom:12px}
+.foot{text-align:center;margin-top:24px;font-size:.68rem;color:#64748b}
+@media(max-width:480px){.grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -36,40 +40,59 @@ h1{font-size:1.2rem}
   <div class="top">
     <div class="brand">
       <div class="brand-logo" id="brandLogo"><span class="em">🧩</span></div>
-      <h1 id="orgTitle">سامانه هوشمند یکپارچه</h1>
+      <div>
+        <h1 id="orgTitle">سامانه هوشمند یکپارچه</h1>
+        <p class="sub" style="margin:0">همه ماژول‌ها · بدون محدودیت نمایش</p>
+      </div>
     </div>
     <a class="btn btn-p" href="control-center.html">🎛️ مرکز کنترل</a>
   </div>
-  <p class="sub">لوگو از مرکز کنترل · اعمال سراسری</p>
   <p id="status">بارگذاری…</p>
-  <div class="grid" id="grid"></div>
-  <p class="foot">smart_brand_v1</p>
+  <div id="sections"></div>
+  <p class="foot">Suite کامل · رجیستری اختیاری از مرکز کنترل · smart_suite_registry_v1</p>
 </div>
 <script>
 (function(){
 "use strict";
 var REG="smart_suite_registry_v1", BRAND="smart_brand_v1";
+
+/* فهرست کامل همه ماژول‌ها */
 var CATALOG=[
-  {id:"secretary",file:"index.html",title:"منشی",desc:"یادآوری",icon:"🤖",color:"#0284c7",tag:"اداری"},
-  {id:"assistant",file:"assistant.html",title:"دستیار",desc:"دانش",icon:"🧠",color:"#6d28d9",tag:"هوش"},
-  {id:"pr",file:"pr-media.html",title:"روابط عمومی",desc:"رسانه",icon:"📢",color:"#db2777",tag:"PR"},
-  {id:"lawyer",file:"lawyer.html",title:"وکیل",desc:"پرونده",icon:"⚖️",color:"#1e40af",tag:"حقوقی"},
-  {id:"documents",file:"documents.html",title:"اسناد",desc:"نامه",icon:"📄",color:"#475569",tag:"دبیرخانه"},
-  {id:"customers",file:"customers.html",title:"مشتریان",desc:"CRM",icon:"👤",color:"#1d4ed8",tag:"CRM"},
-  {id:"accounting",file:"accounting.html",title:"حسابداری",desc:"مالی",icon:"📒",color:"#047857",tag:"مالی"},
-  {id:"bank",file:"cash-bank.html",title:"نقد و بانک",desc:"خزانه",icon:"🏦",color:"#0f766e",tag:"بانک"},
-  {id:"fund",file:"fund.html",title:"صندوق",desc:"نقد",icon:"🗃️",color:"#b45309",tag:"صندوق"},
-  {id:"sales",file:"sales.html",title:"فروش",desc:"فاکتور",icon:"🛒",color:"#0369a1",tag:"فروش"},
-  {id:"warehouse",file:"warehouse.html",title:"خرید و انبار",desc:"موجودی",icon:"📦",color:"#0d9488",tag:"انبار"},
-  {id:"assets",file:"fixed-assets.html",title:"دارایی ثابت",desc:"استهلاک",icon:"🏢",color:"#7c3aed",tag:"دارایی"},
-  {id:"petty",file:"petty-cash.html",title:"تنخواه",desc:"هزینه",icon:"💵",color:"#c2410c",tag:"تنخواه"},
-  {id:"hr",file:"hr-payroll.html",title:"منابع انسانی",desc:"حقوق",icon:"👥",color:"#6d28d9",tag:"HR"}
+  /* مدیریت و راهبری */
+  {id:"manager",file:"manager.html",title:"مدیر هوشمند",desc:"هماهنگی و گزارش مدیرعامل",icon:"👔",color:"#4f46e5",tag:"راهبری",group:"مدیریت"},
+  {id:"control",file:"control-center.html",title:"مرکز کنترل",desc:"کاربر، دسترسی، لوگو",icon:"🎛️",color:"#0369a1",tag:"سامانه",group:"مدیریت"},
+  {id:"security",file:"system-security.html",title:"امنیت و پایداری",desc:"ممیزی، خطا، ضددستکاری",icon:"🛡️",color:"#b91c1c",tag:"امنیت",group:"مدیریت"},
+  {id:"db",file:"secure-db.html",title:"پایگاه داده امن",desc:"IndexedDB + AES",icon:"🗄️",color:"#0e7490",tag:"داده",group:"مدیریت"},
+
+  /* اداری و هوشمند */
+  {id:"secretary",file:"index.html",title:"منشی هوشمند",desc:"جلسه، یادآوری، یادداشت",icon:"🤖",color:"#0284c7",tag:"اداری",group:"اداری"},
+  {id:"assistant",file:"assistant.html",title:"دستیار هوشمند",desc:"دانش، تحلیل، پیشنهاد",icon:"🧠",color:"#6d28d9",tag:"هوش",group:"اداری"},
+  {id:"documents",file:"documents.html",title:"مدیریت اسناد",desc:"نامه و بایگانی",icon:"📄",color:"#475569",tag:"دبیرخانه",group:"اداری"},
+  {id:"pr",file:"pr-media.html",title:"روابط عمومی",desc:"رسانه و محتوا",icon:"📢",color:"#db2777",tag:"PR",group:"اداری"},
+  {id:"lawyer",file:"lawyer.html",title:"وکیل هوشمند",desc:"پرونده و دادخواست",icon:"⚖️",color:"#1e40af",tag:"حقوقی",group:"اداری"},
+
+  /* مالی */
+  {id:"accounting",file:"accounting.html",title:"حسابداری",desc:"سند، دفتر، تراز",icon:"📒",color:"#047857",tag:"مالی",group:"مالی"},
+  {id:"bank",file:"cash-bank.html",title:"نقد و بانک",desc:"دریافت، پرداخت، مغایرت",icon:"🏦",color:"#0f766e",tag:"بانک",group:"مالی"},
+  {id:"fund",file:"fund.html",title:"صندوق هوشمند",desc:"نقد، چک، اوراق",icon:"🗃️",color:"#b45309",tag:"صندوق",group:"مالی"},
+  {id:"petty",file:"petty-cash.html",title:"تنخواه",desc:"هزینه و تسویه",icon:"💵",color:"#c2410c",tag:"تنخواه",group:"مالی"},
+  {id:"assets",file:"fixed-assets.html",title:"دارایی ثابت",desc:"استهلاک و ثبت",icon:"🏢",color:"#7c3aed",tag:"دارایی",group:"مالی"},
+
+  /* عملیات و فروش */
+  {id:"sales",file:"sales.html",title:"فروش هوشمند",desc:"فاکتور و پیش‌فاکتور",icon:"🛒",color:"#0369a1",tag:"فروش",group:"عملیات"},
+  {id:"warehouse",file:"warehouse.html",title:"خرید و انبار",desc:"موجودی و ورود کالا",icon:"📦",color:"#0d9488",tag:"انبار",group:"عملیات"},
+  {id:"customers",file:"customers.html",title:"مشتریان",desc:"CRM و پیگیری",icon:"👤",color:"#1d4ed8",tag:"CRM",group:"عملیات"},
+  {id:"hr",file:"hr-payroll.html",title:"منابع انسانی",desc:"حقوق و حضور",icon:"👥",color:"#6d28d9",tag:"HR",group:"عملیات"}
 ];
+
+var GROUP_ORDER=["مدیریت","اداری","مالی","عملیات"];
+
 function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
 function loadBrand(){try{return JSON.parse(localStorage.getItem(BRAND)||"null");}catch(e){return null;}}
 function loadReg(){try{return JSON.parse(localStorage.getItem(REG)||"null");}catch(e){return null;}}
+
 function applyBrand(){
-  var b=loadBrand(),reg=loadReg();
+  var b=loadBrand(), reg=loadReg();
   var logo=(b&&b.logo)||(reg&&reg.logo)||null;
   var name=(b&&b.name)||(reg&&reg.org)||"";
   var el=document.getElementById("brandLogo");
@@ -77,28 +100,59 @@ function applyBrand(){
   else el.innerHTML='<span class="em">🧩</span>';
   if(name) document.getElementById("orgTitle").textContent=name;
 }
+
 function render(){
   applyBrand();
-  var reg=loadReg(),enabled={};
-  if(reg&&Array.isArray(reg.modules)){
-    reg.modules.forEach(function(m){enabled[m.id]=m.enabled!==false;});
-    document.getElementById("status").textContent="رجیستری OK"+(reg.updated?" · "+new Date(reg.updated).toLocaleString("fa-IR"):"");
-  } else {
-    CATALOG.forEach(function(m){enabled[m.id]=true;});
-    document.getElementById("status").textContent="از مرکز کنترل همسان‌سازی کنید.";
+  var reg=loadReg(), enabled={};
+  var useReg=false;
+  if(reg&&Array.isArray(reg.modules)&&reg.modules.length){
+    useReg=true;
+    reg.modules.forEach(function(m){ enabled[m.id]=m.enabled!==false; });
   }
-  var grid=document.getElementById("grid");grid.textContent="";
+  /* ماژول‌هایی که در رجیستری نیستند هم نمایش داده می‌شوند (پیش‌فرض فعال) */
   CATALOG.forEach(function(m){
-    var on=enabled[m.id]!==false;
-    var a=document.createElement("a");
-    a.className="card"+(on?"":" off");
-    a.href=on?m.file:"#";
-    a.innerHTML='<div class="icon" style="background:'+m.color+'">'+m.icon+'</div><h2>'+esc(m.title)+'</h2><p>'+esc(m.desc)+'</p><span class="tag">'+esc(m.tag)+'</span>';
-    grid.appendChild(a);
+    if(enabled[m.id]===undefined) enabled[m.id]=true;
+  });
+
+  document.getElementById("status").textContent=
+    (useReg
+      ? "رجیستری مرکز کنترل فعال · "+(reg.updated?new Date(reg.updated).toLocaleString("fa-IR"):"")
+      : "همه ماژول‌ها نمایش داده می‌شوند · برای فیلتر از مرکز کنترل همسان‌سازی کنید")
+    +" · تعداد: "+CATALOG.length;
+
+  var root=document.getElementById("sections");
+  root.textContent="";
+
+  GROUP_ORDER.forEach(function(g){
+    var items=CATALOG.filter(function(m){return m.group===g;});
+    if(!items.length) return;
+    var h=document.createElement("div");
+    h.className="sec";
+    h.textContent=g;
+    root.appendChild(h);
+    var grid=document.createElement("div");
+    grid.className="grid";
+    items.forEach(function(m){
+      var on=enabled[m.id]!==false;
+      var a=document.createElement("a");
+      a.className="card"+(on?"":" off");
+      a.href=on?m.file:"#";
+      if(on){ a.target="_blank"; a.rel="noopener"; }
+      a.innerHTML=
+        '<div class="icon" style="background:'+m.color+'">'+m.icon+'</div>'+
+        '<h2>'+esc(m.title)+'</h2>'+
+        '<p>'+esc(m.desc)+'</p>'+
+        '<span class="tag">'+esc(m.tag)+'</span>';
+      grid.appendChild(a);
+    });
+    root.appendChild(grid);
   });
 }
+
 render();
-window.addEventListener("storage",function(e){if(e.key===REG||e.key===BRAND)render();});
+window.addEventListener("storage", function(e){
+  if(e.key===REG||e.key===BRAND) render();
+});
 })();
 </script>
 </body>
