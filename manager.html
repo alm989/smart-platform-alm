@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1e1b4b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="مدیر هوشمند">
+<meta name="description" content="مدیر هوشمند — هماهنگی واحدها، نظارت، تقسیم کار، گزارش به مدیرعامل">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>مدیر هوشمند</title>
+<style>
+:root{
+  --bg:#0b1020;--card:#151b2e;--line:#2a334d;--txt:#e8ecf7;--muted:#9aa3bd;
+  --b:#818cf8;--b2:#4f46e5;--g:#22c55e;--r:#ef4444;--o:#f59e0b;--c:#22d3ee;--p:#e879f9;
+  --shadow:0 10px 36px rgba(0,0,0,.4);--safe:env(safe-area-inset-bottom,0px);--radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(1000px 480px at 70% -15%,#312e81 0%,transparent 50%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55}
+.box{max-width:1040px;margin:0 auto}
+.header{text-align:center;margin-bottom:12px}
+.logo{width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;display:grid;place-items:center;font-size:28px;margin:0 auto 8px;box-shadow:0 10px 30px rgba(79,70,229,.4)}
+h1{font-size:clamp(1.1rem,3vw,1.3rem);font-weight:700}
+.sub{font-size:.8rem;color:var(--muted)}
+.banner{background:linear-gradient(135deg,rgba(79,70,229,.2),rgba(34,211,238,.1));border:1px solid rgba(129,140,248,.35);border-radius:14px;padding:12px 14px;margin-bottom:12px;font-size:.8rem}
+.nav{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(11,16,32,.94);backdrop-filter:blur(12px)}
+.nav button{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.42rem,1.05vw,.6rem);color:var(--muted);cursor:pointer;font-family:inherit}
+.nav button.on{background:linear-gradient(135deg,var(--b2),#3730a3);color:#fff;border-color:transparent}
+.panel{display:none!important}.panel.on{display:block!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card h2{font-size:.92rem;margin-bottom:12px;color:#a5b4fc}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
+.btn-b{background:linear-gradient(135deg,var(--b2),#3730a3)}.btn-g{background:linear-gradient(135deg,var(--g),#16a34a)}
+.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#d97706)}
+.btn-c{background:linear-gradient(135deg,var(--c),#0891b2)}.btn-p{background:linear-gradient(135deg,var(--p),#c026d3)}.btn-gr{background:#334155;color:#e2e8f0}
+.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#0b1020;font-size:16px;font-family:inherit;color:var(--txt)}
+textarea{min-height:80px;resize:vertical}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th,td{border:1px solid var(--line);padding:8px 5px;text-align:right}
+th{background:#0b1020;color:#a5b4fc;font-weight:700}
+.num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
+.scroll{overflow:auto;max-height:420px;border-radius:10px}
+.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.55}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center}
+.stat .n{font-size:1.05rem;font-weight:700;color:var(--b)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
+.toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#052e16;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center;font-weight:600}
+.toast.show{opacity:1}.toast.err{background:var(--r);color:#fff}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
+.ok{background:rgba(34,197,94,.2);color:#4ade80}.bad{background:rgba(239,68,68,.2);color:#f87171}.warn{background:rgba(245,158,11,.2);color:#fbbf24}.info{background:rgba(129,140,248,.2);color:#a5b4fc}
+.unit{border:1px solid var(--line);border-radius:12px;padding:12px;background:#0b1020;margin-bottom:8px}
+.unit h3{font-size:.85rem;margin-bottom:4px}
+.ceo-box{background:linear-gradient(160deg,#1e1b4b,#0f172a);border:1px solid #6366f1;border-radius:16px;padding:16px;margin-bottom:12px}
+.ceo-box h2{color:#c7d2fe}
+.footer{text-align:center;font-size:.7rem;color:#64748b;margin-top:14px}
+@media(max-width:800px){.nav{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
+@media print{.nav,.btn{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<div class="box">
+  <header class="header">
+    <div class="logo">👔</div>
+    <h1>مدیر هوشمند</h1>
+    <p class="sub">هماهنگی · نظارت · تقسیم کار · پایش · گزارش به مدیرعامل</p>
+  </header>
+  <div class="banner">
+    همه واحدها تحت نظارت مدیر هوشمند هستند. <b>منشی</b> کارهای اداری، <b>دستیار</b> تحلیل و پیشنهاد، و سایر ماژول‌ها داده عملیاتی را تأمین می‌کنند. خروجی نهایی برای <b>مدیرعامل</b> آماده می‌شود.
+  </div>
+
+  <nav class="nav" id="nav">
+    <button type="button" class="on" data-tab="dash">داشبورد</button>
+    <button type="button" data-tab="units">واحدها</button>
+    <button type="button" data-tab="tasks">تقسیم کار</button>
+    <button type="button" data-tab="monitor">پایش</button>
+    <button type="button" data-tab="assist">منشی/دستیار</button>
+    <button type="button" data-tab="ceo">مدیرعامل</button>
+    <button type="button" data-tab="set">تنظیمات</button>
+  </nav>
+
+  <main id="dash" class="panel on">
+    <div class="stats">
+      <div class="stat"><div class="n" id="stUnits">۰</div><div class="l">واحد فعال</div></div>
+      <div class="stat"><div class="n" id="stTasks">۰</div><div class="l">کار باز</div></div>
+      <div class="stat"><div class="n" id="stDone">۰</div><div class="l">تکمیل</div></div>
+      <div class="stat"><div class="n" id="stAlert">۰</div><div class="l">هشدار</div></div>
+    </div>
+    <section class="card">
+      <h2>خلاصه اجرایی</h2>
+      <p class="note" id="execSum">برای بروزرسانی، پایش را اجرا کنید.</p>
+      <div class="grid2">
+        <button type="button" class="btn btn-b" id="btnScan">بروزرسانی وضعیت همه واحدها</button>
+        <button type="button" class="btn btn-c" id="btnCeoBrief">آماده‌سازی خلاصه مدیرعامل</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>اولویت‌های امروز</h2>
+      <div id="todayList" class="note">—</div>
+    </section>
+  </main>
+
+  <main id="units" class="panel">
+    <section class="card">
+      <h2>واحدها و ماژول‌ها (نظارت مستقیم)</h2>
+      <button type="button" class="btn btn-b" id="btnScan2">اسکن واحدها</button>
+      <div id="unitList" style="margin-top:12px"></div>
+    </section>
+  </main>
+
+  <main id="tasks" class="panel">
+    <section class="card">
+      <h2>تقسیم کار بین واحدها</h2>
+      <input type="hidden" id="tId">
+      <label>عنوان کار *</label>
+      <input id="tTitle" maxlength="120">
+      <div class="grid2">
+        <div>
+          <label>واحد مسئول *</label>
+          <select id="tUnit"></select>
+        </div>
+        <div>
+          <label>اولویت</label>
+          <select id="tPri">
+            <option value="normal">عادی</option>
+            <option value="high">بالا</option>
+            <option value="urgent">فوری</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div>
+          <label>وضعیت</label>
+          <select id="tStatus">
+            <option value="open">باز</option>
+            <option value="progress">در حال انجام</option>
+            <option value="done">تکمیل</option>
+            <option value="blocked">مسدود</option>
+          </select>
+        </div>
+        <div>
+          <label>مهلت (تاریخ)</label>
+          <input id="tDue" type="date">
+        </div>
+      </div>
+      <label>شرح / دستور کار</label>
+      <textarea id="tDesc" maxlength="2000"></textarea>
+      <div class="grid2">
+        <button type="button" class="btn btn-g" id="btnTask">ثبت / بروزرسانی کار</button>
+        <button type="button" class="btn btn-gr" id="btnTaskClr">جدید</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>فهرست کارها</h2>
+      <div class="scroll"><table><thead><tr><th>عنوان</th><th>واحد</th><th>اولویت</th><th>وضعیت</th><th>مهلت</th><th></th></tr></thead><tbody id="taskList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="monitor" class="panel">
+    <section class="card">
+      <h2>پایش سیستم کارها و داده واحدها</h2>
+      <button type="button" class="btn btn-b" id="btnMon">اجرای پایش</button>
+      <div id="monOut" style="margin-top:12px"></div>
+    </section>
+  </main>
+
+  <main id="assist" class="panel">
+    <section class="card">
+      <h2>منشی هوشمند — کارهای اداری</h2>
+      <p class="note">خواندن یادآوری/جلسه از ماژول منشی و ایجاد دستور اداری برای پیگیری.</p>
+      <button type="button" class="btn btn-p" id="btnSecRead">خواندن وضعیت منشی</button>
+      <button type="button" class="btn btn-o" id="btnSecToTask">تبدیل موارد باز منشی به کار مدیریتی</button>
+      <div id="secOut" class="note">—</div>
+      <a class="btn btn-gr" href="index.html" target="_blank" rel="noopener">باز کردن منشی</a>
+    </section>
+    <section class="card">
+      <h2>دستیار هوشمند — تحلیل و پیشنهاد</h2>
+      <p class="note">تحلیل داده‌های واحدها، خلاصه‌سازی و پیشنهاد مثبت برای مدیر.</p>
+      <button type="button" class="btn btn-c" id="btnAssist">تولید تحلیل و پیشنهاد</button>
+      <div id="assistOut" class="note" style="white-space:pre-wrap">—</div>
+      <a class="btn btn-gr" href="assistant.html" target="_blank" rel="noopener">باز کردن دستیار</a>
+    </section>
+  </main>
+
+  <main id="ceo" class="panel">
+    <div class="ceo-box">
+      <h2>گزارش ویژه مدیرعامل</h2>
+      <p class="note" id="ceoMeta">—</p>
+      <div id="ceoBody" style="margin-top:10px;font-size:.88rem;line-height:1.7">هنوز گزارش ساخته نشده.</div>
+      <div class="grid2" style="margin-top:12px">
+        <button type="button" class="btn btn-g" id="btnCeoGen">تولید / بروزرسانی گزارش</button>
+        <button type="button" class="btn btn-gr" id="btnCeoPrint">چاپ</button>
+      </div>
+      <button type="button" class="btn btn-b" id="btnCeoSave">ذخیره در آرشیو گزارش‌ها</button>
+    </div>
+    <section class="card">
+      <h2>آرشیو گزارش‌های مدیرعامل</h2>
+      <div class="scroll"><table><thead><tr><th>زمان</th><th>امتیاز سلامت</th><th>کار باز</th><th></th></tr></thead><tbody id="ceoArch"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="set" class="panel">
+    <section class="card">
+      <h2>تنظیمات مدیر هوشمند</h2>
+      <label>نام سازمان</label>
+      <input id="orgName" maxlength="100">
+      <label>نام مدیرعامل (برای عنوان گزارش)</label>
+      <input id="ceoName" maxlength="80" placeholder="مدیرعامل محترم">
+      <button type="button" class="btn btn-b" id="btnSaveSet">ذخیره</button>
+    </section>
+    <section class="card">
+      <h2>پشتیبان</h2>
+      <button type="button" class="btn btn-g" id="btnBak">دانلود JSON</button>
+      <input type="file" id="bakFile" accept=".json">
+      <button type="button" class="btn btn-r" id="btnWipe">بازنشانی داده‌های مدیر</button>
+    </section>
+  </main>
+  <p class="footer">مدیر هوشمند · ناظر همه واحدها · خروجی برای مدیرعامل</p>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(function(){
+"use strict";
+var KEY="smart_manager_v1", busy=false, toastTimer=null, lastScan=null;
+
+var UNITS=[
+  {id:"secretary",title:"منشی هوشمند",file:"index.html",key:"items",role:"اداری"},
+  {id:"assistant",title:"دستیار هوشمند",file:"assistant.html",key:null,role:"تحلیل"},
+  {id:"accounting",title:"حسابداری",file:"accounting.html",key:"smart_acc_v2",role:"مالی"},
+  {id:"bank",title:"نقد و بانک",file:"cash-bank.html",key:"smart_cash_v2",role:"مالی"},
+  {id:"fund",title:"صندوق",file:"fund.html",key:"smart_fund_v1",role:"مالی"},
+  {id:"sales",title:"فروش",file:"sales.html",key:"smart_sales_v1",role:"عملیات"},
+  {id:"warehouse",title:"خرید و انبار",file:"warehouse.html",key:"smart_wh_v1",role:"عملیات"},
+  {id:"customers",title:"مشتریان",file:"customers.html",key:"smart_crm_v1",role:"CRM"},
+  {id:"hr",title:"منابع انسانی",file:"hr-payroll.html",key:"smart_hr_v2",role:"منابع"},
+  {id:"docs",title:"اسناد",file:"documents.html",key:"smart_docs_v1",role:"اداری"},
+  {id:"assets",title:"دارایی ثابت",file:"fixed-assets.html",key:"smart_assets_v1",role:"مالی"},
+  {id:"pr",title:"روابط عمومی",file:"pr-media.html",key:"smart_pr_v1",role:"ارتباطات"},
+  {id:"lawyer",title:"وکیل",file:"lawyer.html",key:"smart_lawyer_v1",role:"حقوقی"},
+  {id:"security",title:"امنیت و پایداری",file:"system-security.html",key:"smart_security_v1",role:"امنیت"},
+  {id:"control",title:"مرکز کنترل",file:"control-center.html",key:"smart_control_v1",role:"سامانه"},
+  {id:"db",title:"پایگاه داده امن",file:"secure-db.html",key:null,role:"سامانه"}
+];
+
+function $(id){return document.getElementById(id);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2400);}
+function now(){return new Date().toISOString();}
+function today(){return now().slice(0,10);}
+function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+function lock(fn){return function(){if(busy)return;busy=true;try{fn();}catch(e){toast("خطا",true);}finally{busy=false;};};}
+
+function def(){
+  return {
+    org:"سازمان",
+    ceoName:"مدیرعامل محترم",
+    tasks:[],
+    reports:[],
+    notes:[],
+    version:1
+  };
+}
+function load(){
+  try{
+    var d=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(!d) return def();
+    if(!Array.isArray(d.tasks)) d.tasks=[];
+    if(!Array.isArray(d.reports)) d.reports=[];
+    if(!d.org) d.org="سازمان";
+    if(!d.ceoName) d.ceoName="مدیرعامل محترم";
+    return d;
+  }catch(e){return def();}
+}
+function save(x){try{localStorage.setItem(KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
+var db=load();
+
+function unitById(id){return UNITS.find(function(u){return u.id===id;});}
+function hasData(u){
+  if(!u.key) return null;
+  try{ return localStorage.getItem(u.key)!=null; }catch(e){ return false; }
+}
+function dataSize(u){
+  if(!u.key) return 0;
+  try{ var v=localStorage.getItem(u.key); return v?v.length:0; }catch(e){ return 0; }
+}
+function parseKey(k){
+  try{ return JSON.parse(localStorage.getItem(k)||"null"); }catch(e){ return null; }
+}
+
+function scanUnits(){
+  return UNITS.map(function(u){
+    var active=hasData(u);
+    var size=dataSize(u);
+    var alert=false, detail="";
+    if(u.key && active===false) detail="بدون داده";
+    else if(u.key && active) detail=Math.round(size/1024)+" KB";
+    else detail="ماژول رابط";
+    if(u.id==="secretary"){
+      var items=parseKey("items");
+      if(Array.isArray(items)){
+        var open=items.filter(function(x){return x && x.status!=="done" && x.status!=="archive";}).length;
+        detail+=" · موارد: "+items.length+" (باز≈"+open+")";
+        if(open>20) alert=true;
+      }
+    }
+    if(u.id==="security"){
+      var sec=parseKey("smart_security_v1");
+      if(sec && sec.lastScore!=null && sec.lastScore<50){ alert=true; detail+=" · امتیاز امنیت پایین"; }
+    }
+    return {unit:u, active:!!active || !u.key, size:size, alert:alert, detail:detail};
+  });
+}
+
+function fillUnitSelect(){
+  var s=$("tUnit"); s.textContent="";
+  UNITS.forEach(function(u){
+    var o=document.createElement("option");
+    o.value=u.id; o.textContent=u.title;
+    s.appendChild(o);
+  });
+}
+
+function renderDash(){
+  var scan=lastScan||scanUnits();
+  lastScan=scan;
+  $("stUnits").textContent=String(scan.filter(function(x){return x.active;}).length);
+  var open=db.tasks.filter(function(t){return t.status==="open"||t.status==="progress"||t.status==="blocked";}).length;
+  var done=db.tasks.filter(function(t){return t.status==="done";}).length;
+  var alerts=scan.filter(function(x){return x.alert;}).length + db.tasks.filter(function(t){return t.priority==="urgent"&&t.status!=="done";}).length;
+  $("stTasks").textContent=String(open);
+  $("stDone").textContent=String(done);
+  $("stAlert").textContent=String(alerts);
+
+  var lines=[];
+  lines.push("سازمان: "+(db.org||"—"));
+  lines.push("واحدهای دارای داده/فعال: "+scan.filter(function(x){return x.active;}).length+" از "+UNITS.length);
+  lines.push("کارهای باز مدیریتی: "+open+" · تکمیل‌شده: "+done);
+  if(alerts) lines.push("هشدار فعال: "+alerts);
+  $("execSum").textContent=lines.join(" | ");
+
+  var todayTasks=db.tasks.filter(function(t){return t.status!=="done";})
+    .sort(function(a,b){
+      var p={urgent:0,high:1,normal:2};
+      return (p[a.priority]||9)-(p[b.priority]||9);
+    }).slice(0,8);
+  if(!todayTasks.length) $("todayList").textContent="کار باز ثبت نشده — از تب تقسیم کار ایجاد کنید.";
+  else {
+    $("todayList").innerHTML="<ul style='padding-right:18px'>"+todayTasks.map(function(t){
+      var u=unitById(t.unit);
+      return "<li><b>"+esc(t.title)+"</b> — "+esc(u?u.title:t.unit)+" · "+esc(t.priority)+" · "+esc(t.status)+"</li>";
+    }).join("")+"</ul>";
+  }
+}
+
+function renderUnits(){
+  var scan=scanUnits(); lastScan=scan;
+  var box=$("unitList"); box.textContent="";
+  scan.forEach(function(x){
+    var div=document.createElement("div");
+    div.className="unit";
+    div.innerHTML="<h3>"+esc(x.unit.title)+" <span class='badge info'>"+esc(x.unit.role)+"</span> "+
+      (x.alert?"<span class='badge bad'>هشدار</span>":x.active?"<span class='badge ok'>تحت نظارت</span>":"<span class='badge warn'>بدون داده</span>")+
+      "</h3><p class='note'>"+esc(x.detail)+"</p>"+
+      "<a class='btn btn-gr btn-sm' href='"+esc(x.unit.file)+"' target='_blank' rel='noopener'>باز کردن واحد</a>";
+    box.appendChild(div);
+  });
+}
+
+function renderTasks(){
+  var tb=$("taskList"); tb.textContent="";
+  db.tasks.slice().sort(function(a,b){return (b.updated||b.created||0)-(a.updated||a.created||0);}).forEach(function(t){
+    var u=unitById(t.unit);
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+esc(t.title)+"</td><td>"+esc(u?u.title:t.unit)+"</td><td>"+esc(t.priority)+"</td><td>"+esc(t.status)+"</td><td class='num'>"+esc(t.due||"—")+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-edit-t='"+t.id+"'>ویرایش</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-t='"+t.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+function clearTask(){
+  $("tId").value="";$("tTitle").value="";$("tDesc").value="";$("tPri").value="normal";$("tStatus").value="open";$("tDue").value="";
+}
+$("btnTaskClr").onclick=clearTask;
+$("btnTask").onclick=lock(function(){
+  var title=($("tTitle").value||"").trim();
+  if(!title){toast("عنوان؟",true);return;}
+  var id=$("tId").value?Number($("tId").value):null;
+  var row;
+  if(id){
+    row=db.tasks.find(function(t){return t.id===id;});
+    if(!row){toast("یافت نشد",true);return;}
+  } else {
+    row={id:uid(),created:Date.now()};
+    db.tasks.push(row);
+  }
+  row.title=title.slice(0,120);
+  row.unit=$("tUnit").value;
+  row.priority=$("tPri").value;
+  row.status=$("tStatus").value;
+  row.due=$("tDue").value||"";
+  row.desc=($("tDesc").value||"").slice(0,2000);
+  row.updated=Date.now();
+  if(!save(db)) return;
+  clearTask(); renderTasks(); renderDash(); toast("کار ثبت شد");
+});
+
+function renderMon(){
+  var scan=scanUnits(); lastScan=scan;
+  var box=$("monOut"); box.textContent="";
+  var urgent=db.tasks.filter(function(t){return t.priority==="urgent"&&t.status!=="done";});
+  var overdue=db.tasks.filter(function(t){return t.due && t.due<today() && t.status!=="done";});
+  var html="";
+  html+="<div class='unit'><h3>کارهای فوری</h3><p class='note'>"+(urgent.length?urgent.map(function(t){return esc(t.title);}).join(" · "):"موردی نیست")+"</p></div>";
+  html+="<div class='unit'><h3>گذشته از مهلت</h3><p class='note'>"+(overdue.length?overdue.map(function(t){return esc(t.title);}).join(" · "):"موردی نیست")+"</p></div>";
+  html+="<div class='unit'><h3>وضعیت داده واحدها</h3>";
+  scan.forEach(function(x){
+    html+="<p class='note'>"+esc(x.unit.title)+": "+esc(x.detail)+(x.alert?" ⚠":"")+"</p>";
+  });
+  html+="</div>";
+  box.innerHTML=html;
+  renderDash();
+}
+
+/* Secretary bridge */
+$("btnSecRead").onclick=lock(function(){
+  var items=parseKey("items");
+  if(!Array.isArray(items)){ $("secOut").textContent="داده منشی یافت نشد (کلید items)."; return; }
+  var open=items.filter(function(x){return x && x.status!=="done" && x.status!=="archive" && x.status!=="completed";});
+  $("secOut").innerHTML="کل موارد: "+items.length+" · باز/فعال: "+open.length+
+    "<ul style='padding-right:18px;margin-top:6px'>"+open.slice(0,12).map(function(x){
+      return "<li>"+esc(x.title||x.text||x.type||"مورد")+"</li>";
+    }).join("")+"</ul>";
+  toast("منشی خوانده شد");
+});
+$("btnSecToTask").onclick=lock(function(){
+  var items=parseKey("items");
+  if(!Array.isArray(items)){toast("داده منشی نیست",true);return;}
+  var open=items.filter(function(x){return x && x.status!=="done" && x.status!=="archive" && x.status!=="completed";}).slice(0,10);
+  var n=0;
+  open.forEach(function(x){
+    var title=String(x.title||x.text||"کار اداری منشی").slice(0,120);
+    if(db.tasks.some(function(t){return t.title===title && t.unit==="secretary";})) return;
+    db.tasks.push({id:uid(),title:title,unit:"secretary",priority:"normal",status:"open",due:"",desc:"از منشی هوشمند",created:Date.now(),updated:Date.now(),from:"secretary"});
+    n++;
+  });
+  save(db); renderTasks(); renderDash();
+  $("secOut").textContent=n+" کار از منشی به فهرست مدیریت اضافه شد.";
+  toast("منشی → کارها");
+});
+
+/* Assistant analysis */
+$("btnAssist").onclick=lock(function(){
+  var scan=scanUnits(); lastScan=scan;
+  var open=db.tasks.filter(function(t){return t.status!=="done";}).length;
+  var done=db.tasks.filter(function(t){return t.status==="done";}).length;
+  var withData=scan.filter(function(x){return x.active;}).length;
+  var alerts=scan.filter(function(x){return x.alert;});
+  var lines=[];
+  lines.push("📊 تحلیل دستیار برای مدیر هوشمند");
+  lines.push("———————————————");
+  lines.push("• پوشش واحدها: "+withData+" از "+UNITS.length+" دارای فعالیت/داده.");
+  lines.push("• کارهای مدیریتی: باز="+open+" · تکمیل="+done+" · نرخ تکمیل≈ "+(done+open?Math.round(100*done/(done+open)):0)+"%");
+  if(alerts.length){
+    lines.push("• نقاط توجه: "+alerts.map(function(a){return a.unit.title;}).join("، "));
+  } else lines.push("• هشدار واحدی حادی ثبت نشد.");
+  lines.push("");
+  lines.push("✅ پیشنهادهای مثبت:");
+  if(open>10) lines.push("۱) اولویت‌بندی کارهای باز و بستن موارد کم‌ارزش برای تمرکز تیم.");
+  else lines.push("۱) حجم کار باز متعادل است — روند فعلی را حفظ کنید.");
+  lines.push("۲) هر هفته یک گزارش مدیرعامل از تب مربوطه بایگانی شود.");
+  lines.push("۳) اتصال منشی برای یادآوری مهلت‌ها و دستیار برای خلاصه ماهانه فعال بماند.");
+  if(withData<UNITS.length/2) lines.push("۴) واحدهای بدون داده را به‌تدریج فعال کنید تا نظارت کامل شود.");
+  else lines.push("۴) پوشش داده‌ای خوب است — روی کیفیت داده و پایش امنیت تمرکز کنید.");
+  lines.push("۵) قبل از جلسه هیئت‌مدیره، خروجی «گزارش مدیرعامل» چاپ یا PDF شود.");
+  $("assistOut").textContent=lines.join("\n");
+  toast("تحلیل آماده");
+});
+
+function buildCeoReport(){
+  var scan=scanUnits(); lastScan=scan;
+  var open=db.tasks.filter(function(t){return t.status!=="done";});
+  var done=db.tasks.filter(function(t){return t.status==="done";});
+  var urgent=open.filter(function(t){return t.priority==="urgent";});
+  var health=100 - urgent.length*8 - scan.filter(function(x){return x.alert;}).length*10;
+  if(health<0) health=0;
+  var html="";
+  html+="<p><b>سازمان:</b> "+esc(db.org)+"<br><b>مخاطب:</b> "+esc(db.ceoName)+"<br><b>زمان:</b> "+esc(new Date().toLocaleString("fa-IR"))+"</p>";
+  html+="<p><b>شاخص سلامت عملیاتی:</b> <span class='badge "+(health>=70?"ok":health>=40?"warn":"bad")+"'>"+health+"/100</span></p>";
+  html+="<p><b>خلاصه:</b> از "+UNITS.length+" واحد تحت نظارت، "+scan.filter(function(x){return x.active;}).length+" فعال/دارای داده هستند. "+open.length+" کار مدیریتی باز و "+done.length+" کار تکمیل شده است.</p>";
+  if(urgent.length){
+    html+="<p><b>فوری‌ها:</b></p><ul style='padding-right:18px'>";
+    urgent.forEach(function(t){ html+="<li>"+esc(t.title)+" ("+esc((unitById(t.unit)||{}).title||"")+")</li>"; });
+    html+="</ul>";
+  } else html+="<p><b>فوری‌ها:</b> مورد بازی نیست.</p>";
+  html+="<p><b>وضعیت واحدها:</b></p><ul style='padding-right:18px'>";
+  scan.forEach(function(x){
+    html+="<li>"+esc(x.unit.title)+" — "+esc(x.detail)+"</li>";
+  });
+  html+="</ul>";
+  html+="<p><b>توصیه مدیر هوشمند:</b> تمرکز بر بستن کارهای فوری، پایش واحدهای دارای هشدار، و استفاده از منشی برای پیگیری اداری و دستیار برای تحلیل دوره‌ای.</p>";
+  return {html:html, health:health, open:open.length};
+}
+
+$("btnCeoGen").onclick=lock(function(){
+  var r=buildCeoReport();
+  $("ceoBody").innerHTML=r.html;
+  $("ceoMeta").textContent="گزارش آماده · سلامت "+r.health+" · کار باز "+r.open;
+  toast("گزارش مدیرعامل آماده");
+});
+$("btnCeoBrief").onclick=lock(function(){
+  go("ceo");
+  $("btnCeoGen").click();
+});
+$("btnCeoPrint").onclick=function(){window.print();};
+$("btnCeoSave").onclick=lock(function(){
+  var r=buildCeoReport();
+  $("ceoBody").innerHTML=r.html;
+  db.reports.unshift({id:uid(), t:now(), health:r.health, open:r.open, html:r.html});
+  if(db.reports.length>30) db.reports=db.reports.slice(0,30);
+  save(db); renderCeoArch(); toast("در آرشیو ذخیره شد");
+});
+function renderCeoArch(){
+  var tb=$("ceoArch"); tb.textContent="";
+  db.reports.forEach(function(r){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(r.t)+"</td><td class='num'>"+r.health+"</td><td class='num'>"+r.open+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-view-r='"+r.id+"'>نمایش</button></td>";
+    tb.appendChild(tr);
+  });
+}
+
+$("btnScan").onclick=lock(function(){ lastScan=scanUnits(); renderDash(); toast("بروز شد"); });
+$("btnScan2").onclick=lock(function(){ renderUnits(); renderDash(); toast("اسکن شد"); });
+$("btnMon").onclick=lock(function(){ renderMon(); toast("پایش انجام شد"); });
+
+$("btnSaveSet").onclick=lock(function(){
+  db.org=($("orgName").value||"").slice(0,100);
+  db.ceoName=($("ceoName").value||"").slice(0,80);
+  save(db); toast("ذخیره شد");
+});
+$("btnBak").onclick=function(){
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
+  a.download="manager-"+today()+".json"; a.click();
+};
+$("bakFile").onchange=function(e){
+  var f=e.target.files&&e.target.files[0]; if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.tasks))throw new Error("x");db=d;save(db);renderAll();toast("بازیابی شد");}catch(err){toast("نامعتبر",true);}};
+  r.readAsText(f);
+};
+$("btnWipe").onclick=lock(function(){
+  if(!confirm("بازنشانی داده‌های مدیر؟"))return;
+  db=def(); save(db); renderAll(); toast("بازنشانی");
+});
+
+function go(tab,btn){
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
+  document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
+  var el=$(tab); if(el) el.classList.add("on");
+  if(btn) btn.classList.add("on");
+  else {var n=document.querySelector('#nav button[data-tab="'+tab+'"]'); if(n) n.classList.add("on");}
+  if(tab==="dash") renderDash();
+  if(tab==="units") renderUnits();
+  if(tab==="tasks"){ fillUnitSelect(); renderTasks(); }
+  if(tab==="monitor") renderMon();
+  if(tab==="ceo") renderCeoArch();
+  if(tab==="set"){ $("orgName").value=db.org||""; $("ceoName").value=db.ceoName||""; }
+}
+function renderAll(){ renderDash(); fillUnitSelect(); renderTasks(); renderCeoArch(); }
+
+$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
+document.body.addEventListener("click",function(e){
+  var et=e.target.closest("[data-edit-t]");
+  if(et){
+    var t=db.tasks.find(function(x){return String(x.id)===et.getAttribute("data-edit-t");}); if(!t)return;
+    $("tId").value=t.id; $("tTitle").value=t.title; $("tUnit").value=t.unit; $("tPri").value=t.priority; $("tStatus").value=t.status; $("tDue").value=t.due||""; $("tDesc").value=t.desc||"";
+    go("tasks"); return;
+  }
+  var dt=e.target.closest("[data-del-t]");
+  if(dt){ if(!confirm("حذف؟"))return; db.tasks=db.tasks.filter(function(x){return String(x.id)!==dt.getAttribute("data-del-t");}); save(db); renderTasks(); renderDash(); return; }
+  var vr=e.target.closest("[data-view-r]");
+  if(vr){ var r=db.reports.find(function(x){return String(x.id)===vr.getAttribute("data-view-r");}); if(!r)return; $("ceoBody").innerHTML=r.html; $("ceoMeta").textContent="آرشیو · "+r.t; go("ceo"); }
+});
+
+fillUnitSelect();
+renderDash();
+})();
+</script>
+</body>
+</html>
