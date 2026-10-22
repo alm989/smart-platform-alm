@@ -1,0 +1,18 @@
+<!-- قطعه لوگو سراسری — قبل از </body> هر ماژول -->
+<script>
+(function(){
+try{
+  var b=JSON.parse(localStorage.getItem("smart_brand_v1")||"null");
+  if(!b||!b.logo) return;
+  function apply(){
+    document.querySelectorAll(".logo,.logo-wrap,.brand-logo,[data-brand-logo]").forEach(function(el){
+      el.innerHTML='<img src="'+b.logo+'" alt="logo" style="width:100%;height:100%;object-fit:contain">';
+    });
+    var n=document.querySelector("[data-brand-name]");
+    if(n&&b.name) n.textContent=b.name;
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",apply);
+  else apply();
+}catch(e){}
+})();
+</script>
