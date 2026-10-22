@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1e3a5f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="وکیل هوشمند">
+<meta name="description" content="وکیل هوشمند — مشاور راهنما، دادخواست، مراحل قضایی. جایگزین وکیل رسمی نیست.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>وکیل هوشمند</title>
+<style>
+:root{
+  --bg:#f1f5f9;--card:#fff;--line:#cbd5e1;--txt:#0f172a;--muted:#475569;
+  --b:#1e40af;--b2:#1e3a8a;--g:#059669;--r:#dc2626;--o:#d97706;--p:#7c3aed;--c:#0e7490;
+  --shadow:0 4px 22px rgba(30,58,138,.1);--safe:env(safe-area-inset-bottom,0px);--radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 400px at 0% 0%,#dbeafe 0%,transparent 50%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.6}
+.box{max-width:980px;margin:0 auto}
+.header{text-align:center;margin-bottom:10px}
+.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;display:grid;place-items:center;font-size:26px;margin:0 auto 8px;box-shadow:0 8px 24px rgba(30,64,175,.35)}
+h1{font-size:clamp(1.1rem,3vw,1.28rem);color:#1e3a8a;font-weight:700}
+.sub{font-size:.78rem;color:var(--muted)}
+.warn-bar{background:#fef3c7;border:1px solid #f59e0b;color:#92400e;border-radius:12px;padding:10px 12px;font-size:.78rem;margin-bottom:12px;line-height:1.55}
+.nav{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(241,245,249,.95);backdrop-filter:blur(12px)}
+.nav button{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.44rem,1.1vw,.62rem);color:var(--muted);cursor:pointer;font-family:inherit}
+.nav button.on{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;border-color:transparent}
+.panel{display:none!important}.panel.on{display:block!important;animation:fi .15s ease}
+@keyframes fi{from{opacity:.4}to{opacity:1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card h2{font-size:.92rem;margin-bottom:12px;color:#1e3a8a}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
+.btn:disabled{opacity:.45}.btn-b{background:linear-gradient(135deg,var(--b),var(--b2))}.btn-g{background:linear-gradient(135deg,var(--g),#047857)}
+.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#b45309)}
+.btn-c{background:linear-gradient(135deg,var(--c),#155e75)}.btn-p{background:linear-gradient(135deg,var(--p),#6d28d9)}
+.btn-gr{background:#e2e8f0;color:#334155}.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;font-size:16px;font-family:inherit;color:var(--txt)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(30,64,175,.12)}
+textarea{min-height:90px;resize:vertical}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th,td{border:1px solid var(--line);padding:8px 5px;text-align:right}
+th{background:#dbeafe;color:#1e3a8a;font-weight:700}
+tr:nth-child(even){background:#f8fafc}
+.num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
+.scroll{overflow:auto;max-height:420px;border-radius:10px}
+.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.55}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
+.stat .n{font-size:1.05rem;font-weight:700;color:var(--b)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
+.toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center}
+.toast.show{opacity:1}.toast.err{background:var(--r)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
+.ok{background:#d1fae5;color:#065f46}.warn{background:#fef3c7;color:#92400e}.info{background:#e0e7ff;color:#3730a3}.bad{background:#fee2e2;color:#991b1b}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.filters button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:.72rem;cursor:pointer;font-family:inherit;color:var(--muted)}
+.filters button.on{background:var(--b);color:#fff;border-color:var(--b)}
+.stage{display:flex;align-items:flex-start;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:#fff}
+.stage.done{border-color:#86efac;background:#f0fdf4}
+.stage .ck{width:22px;height:22px;margin-top:2px}
+.guide{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px;font-size:.8rem;margin-top:8px;white-space:pre-wrap}
+.petition{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;font-size:.85rem;line-height:1.85;white-space:pre-wrap;min-height:200px}
+.footer{text-align:center;font-size:.7rem;color:#64748b;margin-top:14px}
+@media(max-width:720px){.nav{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
+@media print{.nav,.btn,nav,.warn-bar{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="box">
+  <header class="header">
+    <div class="logo">⚖️</div>
+    <h1>وکیل هوشمند</h1>
+    <p class="sub">راهنما · پرونده · دادخواست · مراحل · مهلت · مشاوره مسیر</p>
+  </header>
+  <div class="warn-bar">
+    <b>هشدار مهم:</b> این ابزار صرفاً راهنمای آموزشی و مدیریت پرونده است و <b>جایگزین وکیل دادگستری یا مشاور حقوقی رسمی نیست</b>.
+    قوانین و رویه دادگاه‌ها تغییر می‌کند؛ قبل از هر اقدام قضایی با وکیل مجاز مشورت کنید. مسئولیت استفاده با کاربر است.
+  </div>
+  <nav class="nav" id="nav" role="tablist">
+    <button type="button" class="on" data-tab="dash">داشبورد</button>
+    <button type="button" data-tab="case">پرونده</button>
+    <button type="button" data-tab="pet">دادخواست</button>
+    <button type="button" data-tab="stage">مراحل</button>
+    <button type="button" data-tab="guide">راهنما</button>
+    <button type="button" data-tab="dead">مهلت</button>
+    <button type="button" data-tab="rep">گزارش</button>
+  </nav>
+
+  <main id="dash" class="panel on">
+    <div class="stats">
+      <div class="stat"><div class="n" id="stCase">۰</div><div class="l">پرونده</div></div>
+      <div class="stat"><div class="n" id="stOpen">۰</div><div class="l">باز</div></div>
+      <div class="stat"><div class="n" id="stDead">۰</div><div class="l">مهلت نزدیک</div></div>
+      <div class="stat"><div class="n" id="stPet">۰</div><div class="l">پیش‌نویس</div></div>
+    </div>
+    <section class="card">
+      <h2>اتصال منشی و اسناد</h2>
+      <p class="note" id="linkStatus">—</p>
+      <div class="grid2">
+        <button type="button" class="btn btn-c" id="btnOpenSec">منشی</button>
+        <button type="button" class="btn btn-gr" id="btnOpenDoc">اسناد</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>پرونده‌های فعال</h2>
+      <div class="scroll"><table><thead><tr><th>عنوان</th><th>نوع</th><th>مرحله</th><th>وضعیت</th></tr></thead><tbody id="dashCases"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="case" class="panel">
+    <section class="card">
+      <h2>ثبت / ویرایش پرونده</h2>
+      <input type="hidden" id="cId">
+      <div class="grid2">
+        <div><label>عنوان پرونده *</label><input id="cTitle" maxlength="200" autocomplete="off"></div>
+        <div><label>شماره پرونده / کلاسه</label><input id="cNo" maxlength="60" class="num"></div>
+      </div>
+      <div class="grid3">
+        <div><label>نوع دعوا *</label>
+          <select id="cType">
+            <option value="civil">حقوقی (مدنی)</option>
+            <option value="commercial">تجاری</option>
+            <option value="family">خانواده</option>
+            <option value="labor">کار و تأمین اجتماعی</option>
+            <option value="criminal">کیفری (اطلاعاتی)</option>
+            <option value="admin">دیوان عدالت</option>
+            <option value="other">سایر</option>
+          </select>
+        </div>
+        <div><label>نقش شما</label>
+          <select id="cRole">
+            <option value="plaintiff">خواهان / شاکی</option>
+            <option value="defendant">خوانده / متهم</option>
+            <option value="third">ثالث</option>
+          </select>
+        </div>
+        <div><label>وضعیت</label>
+          <select id="cStatus">
+            <option value="open">باز</option>
+            <option value="hearing">در حال رسیدگی</option>
+            <option value="appeal">تجدیدنظر</option>
+            <option value="exec">اجرا</option>
+            <option value="closed">مختومه</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div><label>خواهان / موکل</label><input id="cPlaintiff" maxlength="150"></div>
+        <div><label>خوانده / طرف</label><input id="cDefendant" maxlength="150"></div>
+      </div>
+      <div class="grid2">
+        <div><label>دادگاه / مرجع</label><input id="cCourt" maxlength="150"></div>
+        <div><label>تاریخ شروع</label><input id="cDate" type="date"></div>
+      </div>
+      <label>خواسته / موضوع</label><textarea id="cClaim" maxlength="1000"></textarea>
+      <label>یادداشت</label><textarea id="cNote" maxlength="1000"></textarea>
+      <div class="grid2">
+        <button type="button" class="btn btn-g" id="btnCase">ذخیره پرونده</button>
+        <button type="button" class="btn btn-gr" id="btnCaseClr">جدید</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>فهرست پرونده‌ها</h2>
+      <input id="caseSearch" placeholder="جستجو…" maxlength="80">
+      <div class="filters" id="caseFilt">
+        <button type="button" class="on" data-f="all">همه</button>
+        <button type="button" data-f="open">باز</button>
+        <button type="button" data-f="hearing">رسیدگی</button>
+        <button type="button" data-f="closed">مختومه</button>
+      </div>
+      <div class="scroll"><table><thead><tr><th>عنوان</th><th>نوع</th><th>طرف</th><th>وضعیت</th><th></th></tr></thead><tbody id="caseList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="pet" class="panel">
+    <section class="card">
+      <h2>تهیه پیش‌نویس دادخواست / لایحه</h2>
+      <div class="grid2">
+        <div><label>پرونده مرتبط</label><select id="pCase"></select></div>
+        <div><label>قالب</label>
+          <select id="pTpl">
+            <option value="civil_claim">دادخواست حقوقی (مطالبه)</option>
+            <option value="contract">دادخواست الزام به ایفای تعهد</option>
+            <option value="family">دادخواست خانواده (نمونه)</option>
+            <option value="labor">شکایت کار (نمونه)</option>
+            <option value="objection">لایحه اعتراض / دفاعیه</option>
+            <option value="appeal">دادخواست تجدیدنظر (نمونه)</option>
+            <option value="blank">خالی</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div><label>خواهان</label><input id="pPlaintiff" maxlength="150"></div>
+        <div><label>خوانده</label><input id="pDefendant" maxlength="150"></div>
+      </div>
+      <label>خواسته</label><input id="pClaim" maxlength="300">
+      <label>دلایل و منضمات (خلاصه)</label><textarea id="pReasons" maxlength="2000"></textarea>
+      <div class="grid2">
+        <button type="button" class="btn btn-b" id="btnGen">تولید پیش‌نویس</button>
+        <button type="button" class="btn btn-g" id="btnSavePet">ذخیره پیش‌نویس</button>
+      </div>
+      <button type="button" class="btn btn-gr" id="btnCopyPet">کپی متن</button>
+      <p class="note">پیش‌نویس باید توسط وکیل/کارشناس حقوقی بازبینی و تکمیل شود.</p>
+    </section>
+    <section class="card">
+      <h2>پیش‌نویس تولیدشده</h2>
+      <div class="petition" id="petOut" contenteditable="true">قالب را انتخاب و تولید کنید…</div>
+    </section>
+    <section class="card">
+      <h2>پیش‌نویس‌های ذخیره‌شده</h2>
+      <div class="scroll"><table><thead><tr><th>تاریخ</th><th>عنوان</th><th>قالب</th><th></th></tr></thead><tbody id="petList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="stage" class="panel">
+    <section class="card">
+      <h2>مراحل قضایی پرونده</h2>
+      <label>انتخاب پرونده</label>
+      <select id="sCase"></select>
+      <p class="note">مراحل عمومی آیین دادرسی مدنی (راهنما — بسته به نوع دعوا متفاوت است).</p>
+      <div id="stageBox"></div>
+      <button type="button" class="btn btn-b" id="btnSaveStages">ذخیره پیشرفت مراحل</button>
+    </section>
+    <section class="card">
+      <h2>ثبت رویداد جلسه / اقدام</h2>
+      <div class="grid2">
+        <div><label>پرونده</label><select id="eCase"></select></div>
+        <div><label>تاریخ</label><input id="eDate" type="date"></div>
+      </div>
+      <div class="grid2">
+        <div><label>نوع</label>
+          <select id="eType">
+            <option value="hearing">جلسه رسیدگی</option>
+            <option value="submit">تقدیم لایحه / مدرک</option>
+            <option value="decision">صدور رأی</option>
+            <option value="appeal">تجدیدنظر</option>
+            <option value="exec">اقدام اجرایی</option>
+            <option value="other">سایر</option>
+          </select>
+        </div>
+        <div><label>نتیجه</label><input id="eResult" maxlength="150"></div>
+      </div>
+      <label>شرح</label><textarea id="eNote" maxlength="800"></textarea>
+      <button type="button" class="btn btn-g" id="btnEvent">ثبت رویداد</button>
+    </section>
+    <section class="card">
+      <h2>رویدادها</h2>
+      <div class="scroll"><table><thead><tr><th>تاریخ</th><th>پرونده</th><th>نوع</th><th>شرح</th><th></th></tr></thead><tbody id="eventList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="guide" class="panel">
+    <section class="card">
+      <h2>راهنمای مسیر (مشاوره آموزشی)</h2>
+      <label>موضوع راهنما</label>
+      <select id="gTopic">
+        <option value="start">شروع دعوای حقوقی</option>
+        <option value="petition">محتوای دادخواست</option>
+        <option value="stages">مراحل دادرسی مدنی</option>
+        <option value="deadlines">مهلت‌های مهم</option>
+        <option value="evidence">دلیل و مدرک</option>
+        <option value="appeal">تجدیدنظر و فرجام</option>
+        <option value="exec">اجرای احکام</option>
+        <option value="family">نکات خانواده</option>
+        <option value="labor">نکات کار</option>
+        <option value="lawyer">چه وقت وکیل بگیرم؟</option>
+      </select>
+      <button type="button" class="btn btn-b" id="btnGuide">نمایش راهنما</button>
+      <div class="guide" id="guideOut">موضوع را انتخاب کنید.</div>
+    </section>
+    <section class="card">
+      <h2>چک‌لیست آماده‌سازی</h2>
+      <div id="checkBox"></div>
+    </section>
+  </main>
+
+  <main id="dead" class="panel">
+    <section class="card">
+      <h2>مهلت و یادآوری</h2>
+      <div class="grid2">
+        <div><label>پرونده</label><select id="dCase"></select></div>
+        <div><label>تاریخ موعد *</label><input id="dDate" type="date"></div>
+      </div>
+      <div class="grid2">
+        <div><label>نوع مهلت</label>
+          <select id="dType">
+            <option value="hearing">جلسه دادگاه</option>
+            <option value="answer">پاسخ / دفاع</option>
+            <option value="appeal">مهلت تجدیدنظر</option>
+            <option value="submit">تقدیم مدرک</option>
+            <option value="exec">اقدام اجرایی</option>
+            <option value="other">سایر</option>
+          </select>
+        </div>
+        <div><label>اولویت</label>
+          <select id="dPri">
+            <option value="normal">عادی</option>
+            <option value="high">مهم</option>
+            <option value="urgent">فوری</option>
+          </select>
+        </div>
+      </div>
+      <label>عنوان *</label><input id="dTitle" maxlength="200">
+      <div class="grid2">
+        <button type="button" class="btn btn-o" id="btnDead">ثبت مهلت</button>
+        <button type="button" class="btn btn-p" id="btnDeadSec">ثبت + یادآوری منشی</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>مهلت‌ها</h2>
+      <div class="filters" id="deadFilt">
+        <button type="button" class="on" data-f="open">باز</button>
+        <button type="button" data-f="done">انجام</button>
+        <button type="button" data-f="all">همه</button>
+      </div>
+      <div class="scroll"><table><thead><tr><th>موعد</th><th>پرونده</th><th>عنوان</th><th>نوع</th><th></th></tr></thead><tbody id="deadList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="rep" class="panel">
+    <section class="card">
+      <h2>گزارش و پشتیبان</h2>
+      <div class="filters" id="repTabs">
+        <button type="button" class="on" data-r="cases">پرونده‌ها</button>
+        <button type="button" data-r="events">رویدادها</button>
+        <button type="button" data-r="dead">مهلت‌ها</button>
+        <button type="button" data-r="pets">پیش‌نویس‌ها</button>
+      </div>
+      <button type="button" class="btn btn-b" id="btnRep">اجرا</button>
+      <button type="button" class="btn btn-gr" id="btnPrint">چاپ</button>
+      <button type="button" class="btn btn-g" id="btnBackup">پشتیبان JSON</button>
+      <label>بازیابی</label>
+      <input type="file" id="restoreFile" accept=".json,application/json">
+      <button type="button" class="btn btn-r" id="btnWipe">حذف همه</button>
+    </section>
+    <section class="card">
+      <h2 id="repTitle">نتیجه</h2>
+      <div class="scroll" id="repOut"><p class="note">گزارش را اجرا کنید.</p></div>
+    </section>
+  </main>
+  <p class="footer">وکیل هوشمند · راهنما و مدیریت پرونده · جایگزین وکیل رسمی نیست</p>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+var KEY="smart_lawyer_v1", SEC_KEY="items";
+var busy=false, toastTimer=null, caseFilt="all", deadFilt="open", repMode="cases";
+var TYPE={civil:"حقوقی",commercial:"تجاری",family:"خانواده",labor:"کار",criminal:"کیفری",admin:"دیوان",other:"سایر"};
+var STATUS={open:"باز",hearing:"رسیدگی",appeal:"تجدیدنظر",exec:"اجرا",closed:"مختومه"};
+var STAGES=[
+  {id:"consult",t:"مشورت اولیه و جمع‌آوری مدارک"},
+  {id:"draft",t:"تهیه دادخواست / شکایت"},
+  {id:"register",t:"ثبت در دفتر خدمات الکترونیک قضایی / دادگاه"},
+  {id:"fee",t:"پرداخت هزینه دادرسی"},
+  {id:"assign",t:"ارجاع به شعبه"},
+  {id:"notify",t:"ابلاغ به طرف مقابل"},
+  {id:"answer",t:"مهلت دفاع / تبادل لوایح"},
+  {id:"hearing",t:"تشکیل جلسه(های) رسیدگی"},
+  {id:"evidence",t:"تحقیق / کارشناسی / شهادت"},
+  {id:"verdict",t:"صدور رأی بدوی"},
+  {id:"appeal_w",t:"مهلت اعتراض / تجدیدنظر"},
+  {id:"appeal",t:"رسیدگی تجدیدنظر (در صورت اعتراض)"},
+  {id:"final",t:"قطعیت رأی"},
+  {id:"exec",t:"اجرای حکم"}
+];
+
+function $(id){return document.getElementById(id);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2400);}
+function today(){return new Date().toISOString().slice(0,10);}
+function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+
+function def(){return {cases:[],petitions:[],events:[],deadlines:[],stageMap:{},version:1};}
+function load(){
+  try{
+    var d=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(!d) return def();
+    ["cases","petitions","events","deadlines"].forEach(function(k){if(!Array.isArray(d[k]))d[k]=[];});
+    if(!d.stageMap||typeof d.stageMap!=="object") d.stageMap={};
+    return d;
+  }catch(e){return def();}
+}
+function save(x){try{localStorage.setItem(KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
+var db=load();
+
+function caseById(id){return db.cases.find(function(c){return String(c.id)===String(id);});}
+function caseTitle(id){var c=caseById(id);return c?c.title:"—";}
+function lock(fn){return function(){if(busy)return;busy=true;try{fn();}catch(e){toast("خطا",true);}finally{busy=false;};};}
+function pushSec(title,note,date){
+  try{
+    var items=JSON.parse(localStorage.getItem(SEC_KEY)||"[]");
+    if(!Array.isArray(items)) items=[];
+    items.unshift({id:uid(),type:"reminder",title:title,note:note||"",date:date||today(),status:"pending",priority:"high",source:"lawyer",created:Date.now()});
+    localStorage.setItem(SEC_KEY,JSON.stringify(items));
+    return true;
+  }catch(e){return false;}
+}
+
+function fillCases(sel){
+  var o='<option value="">— پرونده —</option>';
+  db.cases.forEach(function(c){o+='<option value="'+c.id+'">'+esc(c.title)+'</option>';});
+  $(sel).innerHTML=o;
+}
+function fillAllCaseSelects(){
+  ["pCase","sCase","eCase","dCase"].forEach(fillCases);
+}
+
+function go(tab,btn){
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
+  document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
+  var el=$(tab); if(el) el.classList.add("on");
+  if(btn) btn.classList.add("on");
+  else {var n=document.querySelector('#nav button[data-tab="'+tab+'"]'); if(n) n.classList.add("on");}
+  if(tab==="dash") renderDash();
+  if(tab==="case") renderCases();
+  if(tab==="pet"){ fillAllCaseSelects(); renderPets(); }
+  if(tab==="stage"){ fillAllCaseSelects(); if(!$("eDate").value)$("eDate").value=today(); renderStages(); renderEvents(); }
+  if(tab==="guide") renderChecks();
+  if(tab==="dead"){ fillAllCaseSelects(); if(!$("dDate").value)$("dDate").value=today(); renderDeads(); }
+}
+
+function nearDead(){
+  var t=today(), n=0;
+  db.deadlines.forEach(function(d){
+    if(d.status!=="open") return;
+    var diff=(new Date(d.date)-new Date(t))/(86400000);
+    if(diff>=0&&diff<=7) n++;
+  });
+  return n;
+}
+
+function renderDash(){
+  $("stCase").textContent=String(db.cases.length);
+  $("stOpen").textContent=String(db.cases.filter(function(c){return c.status!=="closed";}).length);
+  $("stDead").textContent=String(nearDead());
+  $("stPet").textContent=String(db.petitions.length);
+  var sec=false; try{sec=!!localStorage.getItem(SEC_KEY);}catch(e){}
+  $("linkStatus").innerHTML=(sec?'<span class="badge ok">منشی متصل</span>':'<span class="badge warn">منشی نیست</span>')+
+    ' · داده فقط در همین مرورگر ذخیره می‌شود.';
+  var tb=$("dashCases"); tb.textContent="";
+  db.cases.filter(function(c){return c.status!=="closed";}).slice(0,12).forEach(function(c){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+esc(c.title)+"</td><td>"+esc(TYPE[c.type]||c.type)+"</td><td>"+esc(c.stageLabel||"—")+"</td><td>"+esc(STATUS[c.status]||c.status)+"</td>";
+    tb.appendChild(tr);
+  });
+}
+
+/* Cases */
+function clearCase(){
+  $("cId").value="";$("cTitle").value="";$("cNo").value="";$("cType").value="civil";$("cRole").value="plaintiff";
+  $("cStatus").value="open";$("cPlaintiff").value="";$("cDefendant").value="";$("cCourt").value="";
+  $("cClaim").value="";$("cNote").value=""; if(!$("cDate").value)$("cDate").value=today();
+}
+$("btnCaseClr").onclick=clearCase;
+function renderCases(){
+  var q=($("caseSearch").value||"").trim().toLowerCase();
+  var list=db.cases.slice().reverse().filter(function(c){
+    if(caseFilt!=="all"){
+      if(caseFilt==="open"&&c.status==="closed") return false;
+      if(caseFilt==="hearing"&&c.status!=="hearing") return false;
+      if(caseFilt==="closed"&&c.status!=="closed") return false;
+    }
+    if(!q) return true;
+    return (c.title+" "+(c.no||"")+" "+(c.plaintiff||"")+" "+(c.defendant||"")).toLowerCase().indexOf(q)>=0;
+  });
+  var tb=$("caseList"); tb.textContent="";
+  list.forEach(function(c){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+esc(c.title)+"</td><td>"+esc(TYPE[c.type]||"")+"</td><td>"+esc(c.defendant||c.plaintiff||"—")+"</td><td>"+esc(STATUS[c.status]||"")+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-edit-c='"+c.id+"'>ویرایش</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-c='"+c.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("caseSearch").oninput=renderCases;
+$("btnCase").onclick=lock(function(){
+  var title=($("cTitle").value||"").trim();
+  if(!title){toast("عنوان الزامی",true);return;}
+  var row={
+    id:$("cId").value?Number($("cId").value):uid(),
+    title:title.slice(0,200), no:($("cNo").value||"").slice(0,60), type:$("cType").value, role:$("cRole").value,
+    status:$("cStatus").value, plaintiff:($("cPlaintiff").value||"").slice(0,150), defendant:($("cDefendant").value||"").slice(0,150),
+    court:($("cCourt").value||"").slice(0,150), date:$("cDate").value||today(),
+    claim:($("cClaim").value||"").slice(0,1000), note:($("cNote").value||"").slice(0,1000),
+    stageLabel:$("cStatus").value==="open"?"شروع":STATUS[$("cStatus").value]
+  };
+  var i=db.cases.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0){ row.stageLabel=db.cases[i].stageLabel||row.stageLabel; db.cases[i]=row; }
+  else db.cases.push(row);
+  if(!save(db)) return;
+  clearCase(); renderCases(); renderDash(); toast("پرونده ذخیره شد");
+});
+
+/* Petition templates */
+function genPetition(){
+  var tpl=$("pTpl").value;
+  var pl=($("pPlaintiff").value||"[نام خواهان]").trim();
+  var defn=($("pDefendant").value||"[نام خوانده]").trim();
+  var claim=($("pClaim").value||"[خواسته]").trim();
+  var reasons=($("pReasons").value||"[دلایل و منضمات]").trim();
+  var c=caseById($("pCase").value);
+  if(c){
+    if(!$("pPlaintiff").value&&c.plaintiff) pl=c.plaintiff;
+    if(!$("pDefendant").value&&c.defendant) defn=c.defendant;
+    if(!$("pClaim").value&&c.claim) claim=c.claim;
+  }
+  var head="بسمه تعالی\n\n";
+  var foot="\n\nبا احترام\nنام و امضای خواهان / وکیل\nتاریخ: "+today()+"\n\n— این متن پیش‌نویس آموزشی است و باید توسط وکیل مجاز تکمیل شود. —";
+  var body="";
+  if(tpl==="civil_claim"){
+    body=head+"ریاست محترم دادگاه عمومی حقوقی\n\nخواهان: "+pl+"\nخوانده: "+defn+"\n\nخواسته: "+claim+"\n\nدلایل و منضمات:\n"+reasons+"\n\nشرح دادخواست:\nاینجانب به استحضار می‌رساند به موجب مدارک پیوست، حقانیت اینجانب نسبت به خواسته فوق محرز است. لذا با استناد به مواد قانون مدنی و آیین دادرسی مدنی، صدور حکم به شرح خواسته و محکومیت خوانده به پرداخت خسارات دادرسی مورد استدعاست."+foot;
+  } else if(tpl==="contract"){
+    body=head+"ریاست محترم دادگاه\n\nخواهان: "+pl+"\nخوانده: "+defn+"\n\nخواسته: الزام خوانده به ایفای تعهد قراردادی / "+claim+"\n\nدلایل:\n"+reasons+"\n\nشرح:\nبه موجب قرارداد/توافق فی‌مابین، خوانده متعهد به انجام تعهدات بوده که تاکنون ایفا ننموده است. تقاضای الزام به ایفای عین تعهد و جبران خسارت مورد استدعاست."+foot;
+  } else if(tpl==="family"){
+    body=head+"ریاست محترم دادگاه خانواده\n\nخواهان: "+pl+"\nخوانده: "+defn+"\n\nخواسته: "+claim+"\n\nدلایل و مستندات:\n"+reasons+"\n\nشرح:\nبا عنایت به مقررات قانون حمایت خانواده و مدارک پیوست، رسیدگی و صدور حکم شایسته مورد تقاضاست.\n\nتوجه: دعاوی خانواده حساسیت ویژه دارند؛ حتماً با وکیل یا مشاور خانواده مشورت شود."+foot;
+  } else if(tpl==="labor"){
+    body=head+"ریاست محترم هیأت تشخیص / اداره کار\n\nشاکی: "+pl+"\nطرف شکایت: "+defn+"\n\nخواسته: "+claim+"\n\nشرح و دلایل:\n"+reasons+"\n\nتقاضا دارد وفق قانون کار و مقررات مربوطه رسیدگی و صدور رأی صورت پذیرد."+foot;
+  } else if(tpl==="objection"){
+    body=head+"ریاست محترم شعبه رسیدگی‌کننده\n\nلایحه دفاعیه / اعتراض\n\nاز طرف: "+pl+"\nدر پرونده مقابل: "+defn+"\nموضوع: "+claim+"\n\nمتن لایحه:\n"+reasons+"\n\nتقاضای نقض / رد ادعا / صدور حکم به نفع اینجانب مورد استدعاست."+foot;
+  } else if(tpl==="appeal"){
+    body=head+"ریاست محترم دادگاه تجدیدنظر\n\nتجدیدنظرخواه: "+pl+"\nتجدیدنظرخوانده: "+defn+"\n\nمورد اعتراض: رأی شعبه بدوی / "+claim+"\n\nجهات اعتراض:\n"+reasons+"\n\nبا استناد به مواد آیین دادرسی مدنی، نقض رأی و صدور حکم شایسته مورد تقاضاست.\nتوجه: مهلت تجدیدنظر معمولاً محدود است؛ فوراً با وکیل اقدام کنید."+foot;
+  } else {
+    body=head+"[عنوان مرجع]\n\nخواهان: "+pl+"\nخوانده: "+defn+"\nخواسته: "+claim+"\n\nمتن:\n"+reasons+foot;
+  }
+  $("petOut").textContent=body;
+  toast("پیش‌نویس تولید شد");
+}
+$("btnGen").onclick=lock(genPetition);
+$("btnCopyPet").onclick=function(){
+  var t=$("petOut").textContent||"";
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(function(){toast("کپی شد");}).catch(function(){toast("کپی دستی کنید",true);});
+  } else toast("متن را دستی کپی کنید",true);
+};
+$("btnSavePet").onclick=lock(function(){
+  var text=($("petOut").textContent||"").trim();
+  if(!text||text.indexOf("قالب را")===0){toast("ابتدا تولید کنید",true);return;}
+  db.petitions.push({id:uid(),date:today(),tpl:$("pTpl").value,caseId:$("pCase").value?Number($("pCase").value):null,title:($("pClaim").value||$("pTpl").value).slice(0,120),body:text.slice(0,15000)});
+  if(!save(db)) return;
+  renderPets(); renderDash(); toast("پیش‌نویس ذخیره شد");
+});
+function renderPets(){
+  var tb=$("petList"); tb.textContent="";
+  db.petitions.slice().reverse().forEach(function(p){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(p.date)+"</td><td>"+esc(p.title)+"</td><td>"+esc(p.tpl)+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-load-p='"+p.id+"'>بارگذاری</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-p='"+p.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("pCase").onchange=function(){
+  var c=caseById($("pCase").value); if(!c) return;
+  $("pPlaintiff").value=c.plaintiff||""; $("pDefendant").value=c.defendant||""; $("pClaim").value=(c.claim||"").slice(0,300);
+};
+
+/* Stages */
+function renderStages(){
+  var id=$("sCase").value;
+  var box=$("stageBox"); box.textContent="";
+  if(!id){ box.innerHTML='<p class="note">پرونده را انتخاب کنید.</p>'; return; }
+  var done=db.stageMap[id]||{};
+  STAGES.forEach(function(s){
+    var div=document.createElement("div");
+    div.className="stage"+(done[s.id]?" done":"");
+    div.innerHTML='<input type="checkbox" class="ck" data-st="'+s.id+'" '+(done[s.id]?"checked":"")+'>'+
+      '<div><b>'+esc(s.t)+'</b></div>';
+    box.appendChild(div);
+  });
+}
+$("sCase").onchange=renderStages;
+$("btnSaveStages").onclick=lock(function(){
+  var id=$("sCase").value; if(!id){toast("پرونده؟",true);return;}
+  var map={};
+  document.querySelectorAll("#stageBox [data-st]").forEach(function(ck){
+    if(ck.checked) map[ck.getAttribute("data-st")]=true;
+  });
+  db.stageMap[id]=map;
+  var last="";
+  STAGES.forEach(function(s){if(map[s.id]) last=s.t;});
+  var c=caseById(id);
+  if(c){ c.stageLabel=last||c.stageLabel; }
+  if(!save(db)) return;
+  renderStages(); renderDash(); toast("مراحل ذخیره شد");
+});
+
+function renderEvents(){
+  var tb=$("eventList"); tb.textContent="";
+  db.events.slice().reverse().forEach(function(e){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(e.date)+"</td><td>"+esc(caseTitle(e.caseId))+"</td><td>"+esc(e.type)+"</td><td>"+esc(e.note)+"</td>"+
+      "<td><button type='button' class='btn btn-r btn-sm' data-del-e='"+e.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("btnEvent").onclick=lock(function(){
+  var cid=$("eCase").value; if(!cid){toast("پرونده؟",true);return;}
+  db.events.push({id:uid(),caseId:Number(cid),date:$("eDate").value||today(),type:$("eType").value,result:($("eResult").value||"").slice(0,150),note:($("eNote").value||"").slice(0,800)});
+  if(!save(db)) return;
+  $("eNote").value="";$("eResult").value="";
+  renderEvents(); toast("رویداد ثبت شد");
+});
+
+/* Guide */
+var GUIDES={
+start:"۱) موضوع دعوا و خواسته را دقیق مشخص کنید.\n۲) مدارک هویتی، قرارداد، رسید، پیامک، شهود را جمع کنید.\n۳) صلاحیت دادگاه (محلی/ذاتی) را بررسی کنید.\n۴) در بسیاری از دعاوی ثبت از طریق دفاتر خدمات الکترونیک قضایی انجام می‌شود.\n۵) هزینه دادرسی بر اساس خواسته محاسبه می‌شود.\n۶) حتماً با وکیل یا مشاور حقوقی مجاز مشورت کنید.",
+petition:"دادخواست معمولاً شامل: مشخصات طرفین، خواسته، بهای خواسته (در موارد لازم)، دلایل و منضمات، شرح ماجرا، امضا است.\nخواسته باید صریح باشد (مثلاً مطالبه مبلغ، الزام به تنظیم سند، تحویل مبیع).\nپیوست‌ها را شماره‌گذاری کنید.\nمتن تولیدشده در این برنامه فقط پیش‌نویس است.",
+stages:"مسیر کلی دعاوی حقوقی: ثبت → ارجاع شعبه → ابلاغ → دفاع → جلسات → ادله → رأی بدوی → اعتراض احتمالی → قطعیت → اجرا.\nهر مرحله مهلت و تشریفات خود را دارد. تأخیر می‌تواند حق را ضایع کند.",
+deadlines:"مهلت‌ها بسیار حیاتی‌اند (مثلاً اعتراض به رأی، تجدیدنظر، واخواهی).\nمهلت دقیق را از متن رأی و قانون آیین دادرسی و وکیل خود بگیرید.\nدر این برنامه مهلت‌ها را ثبت و به منشی بسپارید تا یادآوری شود.",
+evidence:"ادله رایج: سند، اقرار، شهادت، اماره، کارشناسی، معاینه محلی.\nاصل اسناد را حفظ کنید؛ تصویر برابر اصل ممکن است لازم شود.\nبار اثبات معمولاً با مدعی است.",
+appeal:"پس از رأی بدوی، در مهلت قانونی می‌توان تجدیدنظرخواهی کرد.\nجهات اعتراض را مستند بنویسید.\nفرجام‌خواهی در موارد خاص نزد دیوان عالی است.\nبدون وکیل خطر از دست رفتن مهلت بالاست.",
+exec:"پس از قطعیت، درخواست اجرا به واحد اجرای احکام.\nتوقیف حساب، اموال، ممنوع‌الخروجی و ... طبق قانون نحوه اجرای محکومیت‌های مالی و آیین‌نامه‌ها.\nمذاکره و سازش در این مرحله هم ممکن است.",
+family:"دعاوی زوجین، حضانت، نفقه، مهریه، طلاق و ... در دادگاه خانواده.\nجنبه‌های عاطفی و حقوقی همزمان مطرح است.\nمشاوره خانواده + وکیل توصیه می‌شود.",
+labor:"اختلاف کارگر و کارفرما اغلب ابتدا در هیأت تشخیص / حل اختلاف اداره کار.\nقرارداد، فیش، بیمه، اخراج و مطالبات مزدی مدارک کلیدی‌اند.",
+lawyer:"در موارد پیچیده، کیفری سنگین، مالی بالا، یا وقتی طرف مقابل وکیل دارد، گرفتن وکیل دادگستری ضروری است.\nاین برنامه وکیل نیست و رأی صادر نمی‌کند."
+};
+$("btnGuide").onclick=function(){
+  $("guideOut").textContent=GUIDES[$("gTopic").value]||"—";
+};
+function renderChecks(){
+  var items=["مدارک هویتی طرفین","قرارداد / مستندات اصلی","رسید پرداخت / پیام‌ها","لیست شهود (در صورت نیاز)","محاسبه تقریبی هزینه دادرسی","مشورت با وکیل قبل از ثبت","پشتیبان‌گیری از پرونده در این برنامه"];
+  var box=$("checkBox"); box.innerHTML="";
+  items.forEach(function(t,i){
+    var id="chk"+i;
+    var lab=document.createElement("label");
+    lab.style.display="flex"; lab.style.gap="8px"; lab.style.marginBottom="6px"; lab.style.fontSize=".82rem";
+    lab.innerHTML='<input type="checkbox" id="'+id+'"> <span>'+esc(t)+'</span>';
+    box.appendChild(lab);
+  });
+}
+
+/* Deadlines */
+function renderDeads(){
+  var list=db.deadlines.slice().reverse();
+  if(deadFilt!=="all") list=list.filter(function(d){return d.status===deadFilt;});
+  var tb=$("deadList"); tb.textContent="";
+  list.forEach(function(d){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(d.date)+"</td><td>"+esc(caseTitle(d.caseId))+"</td><td>"+esc(d.title)+"</td><td>"+esc(d.type)+"</td>"+
+      "<td><button type='button' class='btn btn-g btn-sm' data-done-d='"+d.id+"'>انجام</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-d='"+d.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+function saveDead(toSec){
+  var title=($("dTitle").value||"").trim(), date=$("dDate").value;
+  if(!title||!date){toast("عنوان و تاریخ الزامی",true);return;}
+  var row={id:uid(),caseId:$("dCase").value?Number($("dCase").value):null,date:date,type:$("dType").value,priority:$("dPri").value,title:title.slice(0,200),status:"open"};
+  db.deadlines.push(row);
+  if(!save(db)) return;
+  if(toSec){
+    var ok=pushSec("مهلت حقوقی: "+title, caseTitle(row.caseId)+" — "+row.type, date);
+    toast(ok?"مهلت + منشی":"مهلت ثبت شد", !ok);
+  } else toast("مهلت ثبت شد");
+  $("dTitle").value="";
+  renderDeads(); renderDash();
+}
+$("btnDead").onclick=lock(function(){saveDead(false);});
+$("btnDeadSec").onclick=lock(function(){saveDead(true);});
+
+function runRep(){
+  var h="", title="";
+  if(repMode==="cases"){
+    title="پرونده‌ها";
+    h="<table><thead><tr><th>عنوان</th><th>نوع</th><th>وضعیت</th><th>دادگاه</th></tr></thead><tbody>";
+    db.cases.forEach(function(c){h+="<tr><td>"+esc(c.title)+"</td><td>"+esc(TYPE[c.type]||"")+"</td><td>"+esc(STATUS[c.status]||"")+"</td><td>"+esc(c.court||"")+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="events"){
+    title="رویدادها";
+    h="<table><thead><tr><th>تاریخ</th><th>پرونده</th><th>نوع</th><th>شرح</th></tr></thead><tbody>";
+    db.events.forEach(function(e){h+="<tr><td class='num'>"+esc(e.date)+"</td><td>"+esc(caseTitle(e.caseId))+"</td><td>"+esc(e.type)+"</td><td>"+esc(e.note)+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="dead"){
+    title="مهلت‌ها";
+    h="<table><thead><tr><th>موعد</th><th>عنوان</th><th>وضعیت</th></tr></thead><tbody>";
+    db.deadlines.forEach(function(d){h+="<tr><td class='num'>"+esc(d.date)+"</td><td>"+esc(d.title)+"</td><td>"+esc(d.status)+"</td></tr>";});
+    h+="</tbody></table>";
+  } else {
+    title="پیش‌نویس‌ها";
+    h="<table><thead><tr><th>تاریخ</th><th>عنوان</th><th>قالب</th></tr></thead><tbody>";
+    db.petitions.forEach(function(p){h+="<tr><td class='num'>"+esc(p.date)+"</td><td>"+esc(p.title)+"</td><td>"+esc(p.tpl)+"</td></tr>";});
+    h+="</tbody></table>";
+  }
+  $("repTitle").textContent=title;
+  $("repOut").innerHTML=h||"<p class='note'>موردی نیست.</p>";
+  toast("گزارش آماده");
+}
+$("btnRep").onclick=lock(runRep);
+$("btnPrint").onclick=function(){window.print();};
+$("btnOpenSec").onclick=function(){window.open("index.html","_blank","noopener,noreferrer");};
+$("btnOpenDoc").onclick=function(){window.open("documents.html","_blank","noopener,noreferrer");};
+$("btnBackup").onclick=function(){
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
+  a.download="lawyer-backup-"+today()+".json"; a.click();
+};
+$("restoreFile").onchange=function(e){
+  var f=e.target.files&&e.target.files[0]; if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.cases))throw new Error("x");db=d;["petitions","events","deadlines"].forEach(function(k){if(!Array.isArray(db[k]))db[k]=[];});if(!db.stageMap)db.stageMap={};save(db);toast("بازیابی شد");renderDash();}catch(err){toast("نامعتبر",true);}};
+  r.readAsText(f);
+};
+$("btnWipe").onclick=lock(function(){if(!confirm("حذف همه؟"))return;if(!confirm("نهایی؟"))return;db=def();save(db);toast("حذف شد");renderDash();});
+
+$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
+document.body.addEventListener("click",function(e){
+  var ec=e.target.closest("[data-edit-c]");
+  if(ec){var c=caseById(ec.getAttribute("data-edit-c"));if(!c)return;
+    $("cId").value=c.id;$("cTitle").value=c.title;$("cNo").value=c.no||"";$("cType").value=c.type;$("cRole").value=c.role||"plaintiff";
+    $("cStatus").value=c.status;$("cPlaintiff").value=c.plaintiff||"";$("cDefendant").value=c.defendant||"";
+    $("cCourt").value=c.court||"";$("cDate").value=c.date||"";$("cClaim").value=c.claim||"";$("cNote").value=c.note||"";go("case");return;}
+  var dc=e.target.closest("[data-del-c]");
+  if(dc){if(!confirm("حذف پرونده؟"))return;db.cases=db.cases.filter(function(x){return String(x.id)!==dc.getAttribute("data-del-c");});save(db);renderCases();renderDash();return;}
+  var lp=e.target.closest("[data-load-p]");
+  if(lp){var p=db.petitions.find(function(x){return String(x.id)===lp.getAttribute("data-load-p");});if(p){$("petOut").textContent=p.body;toast("بارگذاری شد");}return;}
+  var dp=e.target.closest("[data-del-p]");
+  if(dp){db.petitions=db.petitions.filter(function(x){return String(x.id)!==dp.getAttribute("data-del-p");});save(db);renderPets();return;}
+  var de=e.target.closest("[data-del-e]");
+  if(de){db.events=db.events.filter(function(x){return String(x.id)!==de.getAttribute("data-del-e");});save(db);renderEvents();return;}
+  var dd=e.target.closest("[data-del-d]");
+  if(dd){db.deadlines=db.deadlines.filter(function(x){return String(x.id)!==dd.getAttribute("data-del-d");});save(db);renderDeads();renderDash();return;}
+  var done=e.target.closest("[data-done-d]");
+  if(done){var d=db.deadlines.find(function(x){return String(x.id)===done.getAttribute("data-done-d");});if(d){d.status="done";save(db);renderDeads();renderDash();}return;}
+});
+$("caseFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;caseFilt=b.getAttribute("data-f");document.querySelectorAll("#caseFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderCases();});
+$("deadFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;deadFilt=b.getAttribute("data-f");document.querySelectorAll("#deadFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderDeads();});
+$("repTabs").addEventListener("click",function(e){var b=e.target.closest("[data-r]");if(!b)return;repMode=b.getAttribute("data-r");document.querySelectorAll("#repTabs button").forEach(function(x){x.classList.toggle("on",x===b);});});
+
+if(!$("cDate").value) $("cDate").value=today();
+renderDash();
+})();
+</script>
+</body>
+</html>
