@@ -5,618 +5,525 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="مرکز کنترل">
+<meta name="apple-mobile-web-app-title" content="مدیریت نرم‌افزار">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
-<title>مرکز کنترل سامانه هوشمند</title>
+<title>مدیریت نرم‌افزار</title>
 <style>
-:root{--bg:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--b:#38bdf8;--b2:#0ea5e9;--g:#22c55e;--r:#ef4444;--o:#f59e0b;--shadow:0 8px 32px rgba(0,0,0,.35);--safe:env(safe-area-inset-bottom,0px);--radius:14px}
+:root{--bg:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--b:#38bdf8;--b2:#0ea5e9;--g:#22c55e;--r:#ef4444;--o:#f59e0b;--gold:#d4a017;--shadow:0 8px 32px rgba(0,0,0,.35);--safe:env(safe-area-inset-bottom,0px);--radius:14px}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(1000px 500px at 80% -10%,#1e3a5f 0%,transparent 50%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55}
 .box{max-width:1000px;margin:0 auto}
 .header{text-align:center;margin-bottom:12px}
-.logo-wrap{width:64px;height:64px;border-radius:16px;margin:0 auto 8px;overflow:hidden;background:linear-gradient(135deg,var(--b),#0369a1);display:grid;place-items:center;box-shadow:0 8px 28px rgba(14,165,233,.4)}
-.logo-wrap img{width:100%;height:100%;object-fit:contain;background:#0f172a}
-.logo-wrap .emoji{font-size:28px;color:#fff}
+.logo-slot{width:64px;height:64px;border-radius:16px;margin:0 auto 8px;overflow:hidden;background:linear-gradient(135deg,var(--b),#0369a1);display:grid;place-items:center;box-shadow:0 8px 28px rgba(14,165,233,.4);border:2px solid rgba(56,189,248,.3)}
+.logo-slot img{width:100%;height:100%;object-fit:contain;background:#0f172a}
+.logo-slot .fb{font-size:26px;color:#fff}
 h1{font-size:clamp(1.1rem,3vw,1.3rem);font-weight:700}
 .sub{font-size:.8rem;color:var(--muted)}
 .warn-bar{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.4);color:#fbbf24;border-radius:12px;padding:10px 12px;font-size:.76rem;margin-bottom:12px}
-.nav{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(15,23,42,.92);backdrop-filter:blur(12px)}
-.nav button{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.4rem,1.05vw,.58rem);color:var(--muted);cursor:pointer;font-family:inherit}
+.nav{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(15,23,42,.92);backdrop-filter:blur(12px)}
+.nav button{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.48rem,1.1vw,.65rem);color:var(--muted);cursor:pointer;font-family:inherit}
 .nav button.on{background:linear-gradient(135deg,var(--b2),#0369a1);color:#fff;border-color:transparent}
-.panel{display:none!important}.panel.on{display:block!important}
+.panel{display:none!important}.panel.on{display:block!important;animation:fi .15s ease}
+@keyframes fi{from{opacity:.4}to{opacity:1}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
 .card h2{font-size:.92rem;margin-bottom:12px;color:#7dd3fc}
 .btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
-.btn-b{background:linear-gradient(135deg,var(--b2),#0369a1)}.btn-g{background:linear-gradient(135deg,var(--g),#16a34a)}
-.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#d97706)}.btn-gr{background:#334155;color:#e2e8f0}
-.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
+.btn:disabled{opacity:.45}.btn-b{background:linear-gradient(135deg,var(--b2),#0369a1)}.btn-g{background:linear-gradient(135deg,var(--g),#16a34a)}
+.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#d97706)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#a67c00);color:#0f172a}
+.btn-gr{background:#334155;color:#e2e8f0}.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
 label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
-input,select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#0f172a;font-size:16px;font-family:inherit;color:var(--txt)}
-input:focus,select:focus{outline:none;border-color:var(--b)}
-table{width:100%;border-collapse:collapse;font-size:.78rem}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#0f172a;font-size:16px;font-family:inherit;color:var(--txt)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(56,189,248,.15)}
+table{width:100%;border-collapse:collapse;font-size:.76rem}
 th,td{border:1px solid var(--line);padding:8px 5px;text-align:right}
-th{background:#0f172a;color:#7dd3fc}
-.num{direction:ltr;text-align:left}
-.scroll{overflow:auto;max-height:400px;border-radius:10px}
+th{background:#0f172a;color:#7dd3fc;font-weight:700}
+tr:nth-child(even){background:rgba(15,23,42,.5)}
+.num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
+.scroll{overflow:auto;max-height:420px;border-radius:10px}
 .note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center}
-.stat .n{font-size:1.05rem;font-weight:700;color:var(--b)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
 .toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#0f172a;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center;font-weight:600}
 .toast.show{opacity:1}.toast.err{background:var(--r);color:#fff}
 .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
-.ok{background:rgba(34,197,94,.2);color:#4ade80}.bad{background:rgba(239,68,68,.2);color:#f87171}.warn{background:rgba(245,158,11,.2);color:#fbbf24}
-.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
-.mod-card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#0f172a;font-size:.78rem}
-.mod-card.on{border-color:#22c55e}
+.ok{background:rgba(34,197,94,.2);color:#4ade80}.bad{background:rgba(239,68,68,.2);color:#f87171}
+.warn{background:rgba(245,158,11,.2);color:#fbbf24}.info{background:rgba(56,189,248,.15);color:#7dd3fc}
+.login-box{max-width:360px;margin:40px auto}
+.footer{text-align:center;font-size:.7rem;color:#64748b;margin-top:14px}
 .chk-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.78rem}
 .chk-list label{display:flex;align-items:center;gap:6px;margin:0;font-weight:400;color:var(--txt)}
-.login-box{max-width:360px;margin:40px auto}
-.logo-preview{width:96px;height:96px;border-radius:20px;border:2px dashed var(--line);margin:12px auto;display:grid;place-items:center;overflow:hidden;background:#0f172a}
-.logo-preview img{width:100%;height:100%;object-fit:contain}
-.footer{text-align:center;font-size:.7rem;color:#64748b;margin-top:14px}
-@media(max-width:720px){.nav{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:1fr 1fr}.chk-list{grid-template-columns:1fr}}
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.mod-card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#0f172a;font-size:.78rem}
+.logo-preview{width:120px;height:120px;border-radius:20px;border:2px dashed var(--line);margin:12px auto;display:grid;place-items:center;overflow:hidden;background:#0f172a}
+.logo-preview img{max-width:100%;max-height:100%;object-fit:contain}
+@media(max-width:720px){.nav{grid-template-columns:repeat(3,1fr)}.chk-list{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="box">
   <header class="header">
-    <div class="logo-wrap" id="headerLogo"><span class="emoji">🎛️</span></div>
-    <h1>مرکز کنترل سامانه</h1>
-    <p class="sub">لوگو سراسری · کاربر · ماژول · Suite</p>
+    <div class="logo-slot" id="headerLogo"><span class="fb">🎛️</span></div>
+    <h1>مدیریت نرم‌افزار</h1>
+    <p class="sub">کاربران · رمز ماژول‌ها · لوگو · دسترسی · همسان‌سازی Suite</p>
   </header>
-  <div class="warn-bar">لوگو در <b>smart_brand_v1</b> ذخیره می‌شود و روی Suite و همه ماژول‌ها اعمال می‌گردد. ورود: admin / admin123</div>
 
   <div id="loginView">
     <section class="card login-box">
-      <h2>ورود</h2>
-      <label>نام کاربری</label><input id="loginUser" maxlength="40" autocomplete="username">
-      <label>رمز</label><input id="loginPass" type="password" maxlength="64" autocomplete="current-password">
+      <h2>ورود به مدیریت نرم‌افزار</h2>
+      <label>نام کاربری</label>
+      <input id="loginUser" maxlength="40" autocomplete="username">
+      <label>رمز عبور</label>
+      <input id="loginPass" type="password" maxlength="64" autocomplete="current-password">
       <button type="button" class="btn btn-b" id="btnLogin">ورود</button>
-      <p class="note">admin / admin123</p>
+      <p class="note" id="loginHint" style="display:none"></p>
     </section>
   </div>
 
   <div id="appView" style="display:none">
-    <p class="note" style="text-align:center;margin-bottom:8px">کاربر: <b id="who">—</b> · <b id="whoRole">—</b>
-      <button type="button" class="btn btn-gr btn-sm" id="btnLogout" style="margin-right:8px">خروج</button></p>
+    <p class="note" style="text-align:center;margin-bottom:8px">مدیر: <b id="who">—</b>
+      <button type="button" class="btn btn-gr btn-sm" id="btnLogout" style="margin-right:8px">خروج</button>
+      <button type="button" class="btn btn-gr btn-sm" id="btnOpenSuite">Suite</button>
+      <button type="button" class="btn btn-gr btn-sm" id="btnOpenCeo">مدیرعامل</button>
+    </p>
+    <div class="warn-bar">تغییر رمز «مدیریت نرم‌افزار» و «مدیرعامل» فقط با مجوز مدیرعامل. پس از تغییر رمز، راهنمای پیش‌فرض ورود حذف می‌شود.</div>
     <nav class="nav" id="nav">
-      <button type="button" class="on" data-tab="dash">داشبورد</button>
-      <button type="button" data-tab="brand">لوگو</button>
-      <button type="button" data-tab="users">کاربران</button>
+      <button type="button" class="on" data-tab="creds">رمز ماژول‌ها</button>
+      <button type="button" data-tab="logo">لوگو</button>
       <button type="button" data-tab="mods">ماژول‌ها</button>
-      <button type="button" data-tab="diag">عیب‌یابی</button>
       <button type="button" data-tab="sync">همسان‌سازی</button>
-      <button type="button" data-tab="audit">رویداد</button>
+      <button type="button" data-tab="ceoap">مجوز مدیرعامل</button>
       <button type="button" data-tab="set">تنظیمات</button>
     </nav>
 
-    <main id="dash" class="panel on">
-      <div class="stats">
-        <div class="stat"><div class="n" id="stUsers">۰</div><div class="l">کاربر</div></div>
-        <div class="stat"><div class="n" id="stMods">۰</div><div class="l">ماژول</div></div>
-        <div class="stat"><div class="n" id="stKeys">۰</div><div class="l">داده</div></div>
-        <div class="stat"><div class="n" id="stLogo">—</div><div class="l">لوگو</div></div>
-      </div>
+    <main id="creds" class="panel on">
       <section class="card">
-        <p class="note" id="healthLine">—</p>
-        <div class="grid2">
-          <button type="button" class="btn btn-b" id="btnOpenSuite">باز کردن Suite</button>
-          <button type="button" class="btn btn-g" id="btnRefresh">بروزرسانی</button>
-        </div>
+        <h2>نام کاربری و رمز پیش‌فرض / فعلی همه ماژول‌ها</h2>
+        <p class="note">این اطلاعات مرجع سامانه است. ماژول‌ها می‌توانند از کلید <b>smart_auth_v1</b> بخوانند.</p>
+        <div class="scroll"><table>
+          <thead><tr><th>ماژول</th><th>نام کاربری</th><th>وضعیت رمز</th><th></th></tr></thead>
+          <tbody id="credList"></tbody>
+        </table></div>
       </section>
-      <section class="card"><h2>ماژول‌ها</h2><div class="mod-grid" id="modMap"></div></section>
+      <section class="card">
+        <h2>ویرایش ورود یک ماژول</h2>
+        <label>ماژول</label>
+        <select id="cMod"></select>
+        <label>نام کاربری جدید</label>
+        <input id="cUser" maxlength="40" autocomplete="off">
+        <label>رمز جدید</label>
+        <input id="cPass" type="password" maxlength="64" autocomplete="new-password">
+        <label>تکرار رمز</label>
+        <input id="cPass2" type="password" maxlength="64" autocomplete="new-password">
+        <div id="ceoGateBox" style="display:none">
+          <p class="note" style="color:#fbbf24">این نقش حساس است. یا کد مجوز مدیرعامل را وارد کنید، یا از پنل مدیرعامل درخواست را تأیید کنید.</p>
+          <label>کد مجوز مدیرعامل (یک‌بارمصرف)</label>
+          <input id="ceoCode" maxlength="20" placeholder="مثلاً CEO-XXXX">
+        </div>
+        <button type="button" class="btn btn-g" id="btnSaveCred">ذخیره نام کاربری و رمز</button>
+      </section>
     </main>
 
-    <main id="brand" class="panel">
+    <main id="logo" class="panel">
       <section class="card">
-        <h2>ایجاد لوگو (اعمال روی همه ماژول‌ها)</h2>
-        <p class="note">تصویر فشرده و در localStorage ذخیره می‌شود. Suite و ماژول‌هایی که brand می‌خوانند لوگو را نشان می‌دهند.</p>
+        <h2>لوگوی سازمانی (سراسری)</h2>
         <div class="logo-preview" id="logoPreview"><span style="color:#64748b;font-size:.8rem">بدون لوگو</span></div>
-        <label>انتخاب تصویر (PNG / JPG / WebP — حداکثر ۲ مگابایت)</label>
-        <input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp,image/gif">
-        <button type="button" class="btn btn-g" id="btnLogoSave">✓ ایجاد / به‌روزرسانی لوگو برای همه ماژول‌ها</button>
-        <button type="button" class="btn btn-r" id="btnLogoDel">✕ حذف لوگو از همه ماژول‌ها</button>
-        <p class="note" id="logoInfo">—</p>
-      </section>
-      <section class="card">
-        <h2>نام برند / سازمان</h2>
-        <label>نام نمایشی در Suite و ماژول‌ها</label>
-        <input id="brandName" maxlength="100" placeholder="نام سازمان">
-        <button type="button" class="btn btn-b" id="btnBrandName">ذخیره نام برند</button>
-      </section>
-    </main>
-
-    <main id="users" class="panel">
-      <section class="card">
-        <h2>کاربر</h2>
-        <input type="hidden" id="uId">
+        <label>تصویر</label>
+        <input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp">
+        <label>عنوان</label>
+        <input id="logoTitle" maxlength="60">
         <div class="grid2">
-          <div><label>نام کاربری</label><input id="uName" maxlength="40"></div>
-          <div><label>نمایش‌نام</label><input id="uDisplay" maxlength="80"></div>
+          <button type="button" class="btn btn-g" id="btnLogoSave">ذخیره لوگو</button>
+          <button type="button" class="btn btn-r" id="btnLogoDel">حذف لوگو</button>
         </div>
-        <div class="grid2">
-          <div><label>رمز</label><input id="uPass" type="password" maxlength="64"></div>
-          <div><label>نقش</label>
-            <select id="uRole">
-              <option value="owner">مالک</option>
-              <option value="admin">مدیر</option>
-              <option value="operator">اپراتور</option>
-              <option value="viewer">مشاهده</option>
-            </select>
-          </div>
-        </div>
-        <select id="uActive"><option value="1">فعال</option><option value="0">غیرفعال</option></select>
-        <label>دسترسی ماژول‌ها</label>
-        <div class="chk-list" id="uMods"></div>
-        <div class="grid2">
-          <button type="button" class="btn btn-g" id="btnUser">ذخیره</button>
-          <button type="button" class="btn btn-gr" id="btnUserClr">جدید</button>
-        </div>
-      </section>
-      <section class="card">
-        <h2>فهرست</h2>
-        <div class="scroll"><table><thead><tr><th>کاربر</th><th>نقش</th><th>وضعیت</th><th></th></tr></thead><tbody id="userList"></tbody></table></div>
+        <p class="note" id="logoMeta">—</p>
       </section>
     </main>
 
     <main id="mods" class="panel">
       <section class="card">
-        <h2>فعال در Suite</h2>
+        <h2>فعال / غیرفعال در Suite</h2>
         <div class="mod-grid" id="modToggle"></div>
         <button type="button" class="btn btn-b" id="btnSaveMods">ذخیره</button>
-      </section>
-      <section class="card">
-        <h2>کلید داده</h2>
-        <div class="scroll"><table><thead><tr><th>کلید</th><th>حجم</th><th></th></tr></thead><tbody id="keyList"></tbody></table></div>
-      </section>
-    </main>
-
-    <main id="diag" class="panel">
-      <section class="card">
-        <button type="button" class="btn btn-b" id="btnDiag">تشخیص</button>
-        <div class="scroll" style="margin-top:10px"><table><thead><tr><th>مورد</th><th>نتیجه</th></tr></thead><tbody id="diagList"></tbody></table></div>
-      </section>
-      <section class="card">
-        <div class="scroll"><table><thead><tr><th>سخت‌افزار</th><th>مقدار</th></tr></thead><tbody id="hwList"></tbody></table></div>
-        <div class="grid2">
-          <button type="button" class="btn btn-o" id="btnClearSW">لغو SW</button>
-          <button type="button" class="btn btn-gr" id="btnExportAll">پشتیبان کل</button>
-        </div>
       </section>
     </main>
 
     <main id="sync" class="panel">
       <section class="card">
-        <h2>همسان‌سازی Suite + لوگو</h2>
-        <button type="button" class="btn btn-g" id="btnSyncSuite">همسان‌سازی کامل</button>
-        <button type="button" class="btn btn-b" id="btnRebuildReg">بازسازی رجیستری</button>
+        <h2>همسان‌سازی با Suite</h2>
+        <button type="button" class="btn btn-g" id="btnSyncSuite">همسان‌سازی رجیستری</button>
         <pre class="note" id="syncOut" style="white-space:pre-wrap;margin-top:10px;background:#0f172a;padding:12px;border-radius:10px;border:1px solid var(--line)">—</pre>
       </section>
     </main>
 
-    <main id="audit" class="panel">
+    <main id="ceoap" class="panel">
       <section class="card">
-        <div class="scroll"><table><thead><tr><th>زمان</th><th>کاربر</th><th>عمل</th><th>جزئیات</th></tr></thead><tbody id="auditList"></tbody></table></div>
-        <button type="button" class="btn btn-r" id="btnClearAudit">پاک رویداد</button>
+        <h2>درخواست / وضعیت مجوز مدیرعامل</h2>
+        <p class="note">برای تغییر رمز مدیریت نرم‌افزار یا مدیرعامل، یک درخواست ثبت کنید. مدیرعامل در پنل خود تأیید می‌کند و کد یک‌بارمصرف صادر می‌شود.</p>
+        <label>نوع درخواست</label>
+        <select id="reqType">
+          <option value="control">تغییر رمز مدیریت نرم‌افزار</option>
+          <option value="ceo">تغییر رمز مدیرعامل</option>
+        </select>
+        <label>توضیح</label>
+        <textarea id="reqNote" maxlength="300" style="min-height:70px"></textarea>
+        <button type="button" class="btn btn-gold" id="btnReqCeo">ثبت درخواست برای مدیرعامل</button>
+      </section>
+      <section class="card">
+        <h2>کدهای مجوز فعال</h2>
+        <div class="scroll"><table>
+          <thead><tr><th>کد</th><th>برای</th><th>انقضا</th><th>وضعیت</th></tr></thead>
+          <tbody id="codeList"></tbody>
+        </table></div>
+        <p class="note">مدیرعامل می‌تواند از پنل خود با کلید <b>smart_auth_v1</b> فیلد approvals را تأیید کند. دکمه زیر برای شبیه‌سازی تأیید (فقط اگر در همین مرورگر به عنوان ceo وارد شده‌اید از طریق بررسی نشست ceo):</p>
+        <button type="button" class="btn btn-o" id="btnIssueCode">صدور کد (نیاز به نشست مدیرعامل)</button>
       </section>
     </main>
 
     <main id="set" class="panel">
       <section class="card">
-        <label>نام سازمان</label><input id="orgName" maxlength="100">
-        <label>قفل خودکار (دقیقه)</label><input id="lockMin" type="number" min="0" max="120" value="0">
+        <h2>تنظیمات</h2>
+        <label>نام سازمان</label>
+        <input id="orgName" maxlength="100">
         <button type="button" class="btn btn-b" id="btnSaveSet">ذخیره</button>
       </section>
       <section class="card">
-        <input id="newPass" type="password" maxlength="64" placeholder="رمز جدید">
-        <button type="button" class="btn btn-o" id="btnChangePass">تغییر رمز</button>
-      </section>
-      <section class="card">
-        <button type="button" class="btn btn-g" id="btnBackup">پشتیبان مرکز</button>
-        <input type="file" id="restoreFile" accept=".json">
-        <button type="button" class="btn btn-r" id="btnWipe">بازنشانی</button>
+        <h2>پشتیبان</h2>
+        <button type="button" class="btn btn-g" id="btnBackup">دانلود JSON</button>
+        <label>بازیابی</label>
+        <input type="file" id="restoreFile" accept=".json,application/json">
       </section>
     </main>
   </div>
-  <p class="footer">مرکز کنترل · ایجاد و حذف لوگو سراسری</p>
+  <p class="footer">مدیریت نرم‌افزار · یک نقطه ورود · smart_auth_v1</p>
 </div>
 <div class="toast" id="toast" role="status"></div>
 <script>
 (function(){
 "use strict";
-var KEY="smart_control_v1", BRAND_KEY="smart_brand_v1", SUITE_KEY="smart_suite_registry_v1", SESSION_KEY="smart_control_session";
-var busy=false, toastTimer=null, session=null, lockTimer=null, pendingLogo=null;
-var MODULES=[
-  {id:"secretary",file:"index.html",title:"منشی",key:"items"},
-  {id:"assistant",file:"assistant.html",title:"دستیار",key:null},
-  {id:"pr",file:"pr-media.html",title:"روابط عمومی",key:"smart_pr_v1"},
-  {id:"lawyer",file:"lawyer.html",title:"وکیل",key:"smart_lawyer_v1"},
-  {id:"documents",file:"documents.html",title:"اسناد",key:"smart_docs_v1"},
-  {id:"customers",file:"customers.html",title:"مشتریان",key:"smart_crm_v1"},
-  {id:"accounting",file:"accounting.html",title:"حسابداری",key:"smart_acc_v2"},
-  {id:"bank",file:"cash-bank.html",title:"نقد و بانک",key:"smart_cash_v2"},
-  {id:"fund",file:"fund.html",title:"صندوق",key:"smart_fund_v1"},
-  {id:"sales",file:"sales.html",title:"فروش",key:"smart_sales_v1"},
-  {id:"warehouse",file:"warehouse.html",title:"خرید و انبار",key:"smart_wh_v1"},
-  {id:"assets",file:"fixed-assets.html",title:"دارایی ثابت",key:"smart_assets_v1"},
-  {id:"petty",file:"petty-cash.html",title:"تنخواه",key:"smart_petty_v2"},
-  {id:"hr",file:"hr-payroll.html",title:"منابع انسانی",key:"smart_hr_v2"},
-  {id:"control",file:"control-center.html",title:"مرکز کنترل",key:"smart_control_v1"}
+var AUTH_KEY="smart_auth_v1", CTRL_KEY="smart_control_v1", SUITE_KEY="smart_suite_registry_v1", LOGO_KEY="smart_suite_logo_v1", SESSION="smart_control_session", CEO_SESS="smart_ceo_session";
+var busy=false, toastTimer=null, session=null, pendingLogo=null;
+var MODS=[
+{id:"ceo",title:"مدیرعامل",file:"ceo.html",sensitive:true},
+{id:"control",title:"مدیریت نرم‌افزار",file:"control-center.html",sensitive:true},
+{id:"secretary",title:"منشی",file:"index.html"},
+{id:"assistant",title:"دستیار / مدیر هوشمند",file:"assistant.html"},
+{id:"accounting",title:"حسابداری",file:"accounting.html"},
+{id:"bank",title:"نقد و بانک",file:"cash-bank.html"},
+{id:"fund",title:"صندوق",file:"fund.html"},
+{id:"petty",title:"تنخواه",file:"petty-cash.html"},
+{id:"hr",title:"منابع انسانی",file:"hr-payroll.html"},
+{id:"sales",title:"فروش",file:"sales.html"},
+{id:"warehouse",title:"انبار",file:"warehouse.html"},
+{id:"customers",title:"مشتریان",file:"customers.html"},
+{id:"documents",title:"اسناد",file:"documents.html"},
+{id:"assets",title:"دارایی ثابت",file:"fixed-assets.html"},
+{id:"lawyer",title:"وکیل",file:"lawyer.html"},
+{id:"pr",title:"روابط عمومی",file:"pr-media.html"},
+{id:"patches",title:"موتور تغییرات",file:"change-engine.html"}
 ];
-var ROLE={owner:"مالک",admin:"مدیر",operator:"اپراتور",viewer:"مشاهده"};
-
+var DEFAULT_PASS={ceo:"Ceo@2026!",control:"admin123",secretary:"Sec@2026",assistant:"Ast@2026",accounting:"Acc@2026",bank:"Bnk@2026",fund:"Fnd@2026",petty:"Pty@2026",hr:"Hr@2026",sales:"Sls@2026",warehouse:"Wh@2026",customers:"Crm@2026",documents:"Doc@2026",assets:"AstF@2026",lawyer:"Law@2026",pr:"Pr@2026",patches:"Pch@2026"};
+var DEFAULT_USER={ceo:"ceo",control:"admin",secretary:"secretary",assistant:"assistant",accounting:"accounting",bank:"bank",fund:"fund",petty:"petty",hr:"hr",sales:"sales",warehouse:"warehouse",customers:"customers",documents:"documents",assets:"assets",lawyer:"lawyer",pr:"pr",patches:"patches"};
 function $(id){return document.getElementById(id);}
-function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2400);}
-function today(){return new Date().toISOString().slice(0,10);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2500);}
 function now(){return new Date().toISOString();}
 function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
 function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+function lock(fn){return function(){if(busy)return;busy=true;try{fn.apply(this,arguments);}catch(e){console.error(e);toast("خطا",true);}finally{busy=false;};};}
 function hashPass(s){var h=0,str=String(s||"");for(var i=0;i<str.length;i++){h=((h<<5)-h)+str.charCodeAt(i);h|=0;}return "h"+Math.abs(h).toString(16)+"_"+str.length;}
-async function hashPassStrong(s){
-  try{if(window.crypto&&crypto.subtle){var buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("sc:"+s));return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");}}catch(e){}
-  return hashPass(s);
+async function hashStrong(s){try{if(window.crypto&&crypto.subtle){var buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("auth-v1:"+s));return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");}}catch(e){}return hashPass(s);}
+function defAuth(){
+  var creds={};
+  MODS.forEach(function(m){
+    creds[m.id]={username:DEFAULT_USER[m.id]||m.id,pass:hashPass(DEFAULT_PASS[m.id]||"ChangeMe1"),passPlainDefault:true,updated:null};
+  });
+  return {version:1,creds:creds,showLoginHints:true,moduleEnabled:{},orgName:"سامانه هوشمند یکپارچه",approvals:[],requests:[],audit:[]};
 }
-
-function loadBrand(){try{return JSON.parse(localStorage.getItem(BRAND_KEY)||"null")||{logo:null,name:"",updated:0};}catch(e){return{logo:null,name:"",updated:0};}}
-function saveBrand(b){try{localStorage.setItem(BRAND_KEY,JSON.stringify(b));return true;}catch(e){toast("خطا — حجم لوگو زیاد است",true);return false;}}
-
-function applyHeaderLogo(){
-  var b=loadBrand(), wrap=$("headerLogo");
-  if(b.logo) wrap.innerHTML='<img src="'+b.logo+'" alt="logo">';
-  else wrap.innerHTML='<span class="emoji">🎛️</span>';
-}
-
-function renderBrandPanel(){
-  var b=loadBrand(), prev=$("logoPreview");
-  if(b.logo){
-    prev.innerHTML='<img src="'+b.logo+'" alt="logo">';
-    $("logoInfo").textContent="لوگو فعال است و روی همه ماژول‌ها اعمال می‌شود · حدود "+Math.round((b.logo.length||0)/1024)+" KB · "+(b.updated?new Date(b.updated).toLocaleString("fa-IR"):"");
-  } else {
-    prev.innerHTML='<span style="color:#64748b;font-size:.8rem">بدون لوگو</span>';
-    $("logoInfo").textContent="هنوز لوگویی نیست — تصویر انتخاب و «ایجاد لوگو» را بزنید.";
-  }
-  $("brandName").value=b.name||(db.settings&&db.settings.orgName)||"";
-}
-
-function def(){
-  return{users:[{id:1,username:"admin",display:"مدیر",role:"owner",active:true,pass:hashPass("admin123"),modules:MODULES.map(function(m){return m.id;}),created:Date.now()}],
-    moduleEnabled:{},settings:{orgName:"سامانه هوشمند یکپارچه",lockMin:0},audit:[],version:1};
-}
-function load(){
+function loadAuth(){
   try{
-    var d=JSON.parse(localStorage.getItem(KEY)||"null");
-    if(!d){d=def();localStorage.setItem(KEY,JSON.stringify(d));return d;}
-    if(!Array.isArray(d.users))d.users=[];
+    var d=JSON.parse(localStorage.getItem(AUTH_KEY)||"null");
+    if(!d){d=defAuth();localStorage.setItem(AUTH_KEY,JSON.stringify(d));return d;}
+    if(!d.creds)d.creds={};
+    MODS.forEach(function(m){
+      if(!d.creds[m.id])d.creds[m.id]={username:DEFAULT_USER[m.id]||m.id,pass:hashPass(DEFAULT_PASS[m.id]||"ChangeMe1"),passPlainDefault:true,updated:null};
+    });
+    if(d.showLoginHints===undefined)d.showLoginHints=true;
     if(!d.moduleEnabled)d.moduleEnabled={};
-    if(!d.settings)d.settings={orgName:"سامانه هوشمند",lockMin:0};
+    if(!Array.isArray(d.approvals))d.approvals=[];
+    if(!Array.isArray(d.requests))d.requests=[];
     if(!Array.isArray(d.audit))d.audit=[];
-    MODULES.forEach(function(m){if(d.moduleEnabled[m.id]===undefined)d.moduleEnabled[m.id]=true;});
     return d;
-  }catch(e){return def();}
+  }catch(e){return defAuth();}
 }
-function save(x){try{localStorage.setItem(KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
-var db=load();
-
-function audit(a,d){db.audit.unshift({t:now(),user:session?session.username:"system",action:a,detail:String(d||"").slice(0,200)});if(db.audit.length>300)db.audit=db.audit.slice(0,300);save(db);}
-function lock(fn){return function(){if(busy)return;busy=true;try{fn();}catch(e){toast("خطا",true);}finally{busy=false;};};}
-function canAdmin(){return session&&(session.role==="owner"||session.role==="admin");}
-function isOwner(){return session&&session.role==="owner";}
-
-function writeSuiteRegistry(){
-  var brand=loadBrand();
-  var reg={
-    updated:Date.now(),
-    org:brand.name||db.settings.orgName||"",
-    logo:brand.logo||null,
-    modules:MODULES.filter(function(m){return m.id!=="control";}).map(function(m){
-      return{id:m.id,file:m.file,title:m.title,enabled:db.moduleEnabled[m.id]!==false,dataKey:m.key};
-    }),
-    sessionUser:session?session.username:null
-  };
-  try{localStorage.setItem(SUITE_KEY,JSON.stringify(reg));return true;}catch(e){return false;}
+function saveAuth(x){try{localStorage.setItem(AUTH_KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
+var auth=loadAuth();
+function audit(a,d){auth.audit.unshift({t:now(),action:a,detail:String(d||"").slice(0,200)});if(auth.audit.length>200)auth.audit=auth.audit.slice(0,200);saveAuth(auth);}
+function matchPass(stored,plain){
+  var h1=hashPass(plain);
+  if(stored===h1||stored===plain)return true;
+  return false;
 }
-
-function loadSession(){
+async function matchPassAsync(stored,plain){
+  if(matchPass(stored,plain))return true;
+  var h2=await hashStrong(plain);
+  return stored===h2;
+}
+function applyLogo(){
   try{
-    var s=JSON.parse(sessionStorage.getItem(SESSION_KEY)||"null");
-    if(!s||!s.username)return null;
-    var u=db.users.find(function(x){return x.username===s.username&&x.active;});
-    if(!u)return null;
-    return{id:u.id,username:u.username,role:u.role,display:u.display,modules:u.modules||[]};
-  }catch(e){return null;}
+    var d=JSON.parse(localStorage.getItem(LOGO_KEY)||"null");
+    var el=$("headerLogo");
+    if(d&&d.dataUrl)el.innerHTML="<img src=\""+d.dataUrl+"\" alt=\"logo\">";
+    else el.innerHTML="<span class=\"fb\">🎛️</span>";
+    var prev=$("logoPreview");
+    if(prev){
+      if(d&&d.dataUrl){prev.innerHTML="<img src=\""+d.dataUrl+"\" alt=\"p\">";$("logoMeta").textContent=(d.title||"")+" · "+(d.updated||"");if(d.title)$("logoTitle").value=d.title;}
+      else{prev.innerHTML="<span style=\"color:#64748b\">بدون لوگو</span>";$("logoMeta").textContent="—";}
+    }
+  }catch(e){}
+}
+function updateLoginHint(){
+  var h=$("loginHint");
+  if(!h)return;
+  if(auth.showLoginHints){
+    h.style.display="block";
+    h.innerHTML="پیش‌فرض اولیه: کاربر <b>admin</b> — پس از اولین تغییر رمز، این راهنما حذف می‌شود.";
+  } else {
+    h.style.display="none";
+    h.textContent="";
+  }
 }
 function showApp(){
-  $("loginView").style.display="none";$("appView").style.display="block";
-  $("who").textContent=session.display||session.username;
-  $("whoRole").textContent=ROLE[session.role]||session.role;
-  applyHeaderLogo();renderDash();resetLockTimer();
+  $("loginView").style.display="none";
+  $("appView").style.display="block";
+  $("who").textContent=(auth.creds.control&&auth.creds.control.username)||"admin";
+  applyLogo();
+  renderCreds();
+  fillModSelect();
 }
-function showLogin(){session=null;sessionStorage.removeItem(SESSION_KEY);$("appView").style.display="none";$("loginView").style.display="block";applyHeaderLogo();}
-function resetLockTimer(){
-  clearTimeout(lockTimer);
-  var m=parseInt(db.settings.lockMin,10)||0;
-  if(m>0&&session) lockTimer=setTimeout(function(){audit("auto-lock","");showLogin();toast("قفل خودکار",true);},m*60*1000);
+function showLogin(){
+  session=null;
+  sessionStorage.removeItem(SESSION);
+  $("appView").style.display="none";
+  $("loginView").style.display="block";
+  updateLoginHint();
+  applyLogo();
 }
-["click","keydown","mousemove","touchstart"].forEach(function(ev){
-  document.addEventListener(ev,function(){if(session)resetLockTimer();},{passive:true});
-});
-
 $("btnLogin").onclick=lock(async function(){
-  var name=($("loginUser").value||"").trim().toLowerCase(), pass=$("loginPass").value||"";
+  var name=($("loginUser").value||"").trim().toLowerCase();
+  var pass=$("loginPass").value||"";
   if(!name||!pass){toast("کاربر و رمز؟",true);return;}
-  var u=db.users.find(function(x){return x.username===name;});
-  if(!u||!u.active){toast("نامعتبر",true);return;}
-  var h1=hashPass(pass), h2=await hashPassStrong(pass);
-  if(u.pass!==h1&&u.pass!==h2&&u.pass!==pass){toast("رمز اشتباه",true);return;}
-  if(u.pass===pass){u.pass=h2;save(db);}
-  session={id:u.id,username:u.username,role:u.role,display:u.display,modules:u.modules||[]};
-  sessionStorage.setItem(SESSION_KEY,JSON.stringify({username:u.username,ts:Date.now()}));
-  audit("login","ok");$("loginPass").value="";writeSuiteRegistry();showApp();toast("خوش آمدید");
+  var c=auth.creds.control;
+  if(!c||name!==String(c.username).toLowerCase()){toast("نامعتبر",true);audit("login-fail",name);return;}
+  var ok=await matchPassAsync(c.pass,pass);
+  if(!ok){toast("رمز اشتباه",true);audit("login-fail","pass");return;}
+  if(c.pass===pass){c.pass=await hashStrong(pass);saveAuth(auth);}
+  session={ok:true,ts:Date.now(),user:c.username};
+  sessionStorage.setItem(SESSION,JSON.stringify(session));
+  audit("login","ok");
+  $("loginPass").value="";
+  showApp();
+  toast("ورود موفق");
 });
-$("btnLogout").onclick=function(){audit("logout","");showLogin();};
-
-/* ===== LOGO CREATE / DELETE (global) ===== */
-$("logoFile").onchange=function(e){
-  var f=e.target.files&&e.target.files[0]; if(!f) return;
-  if(f.size>2*1024*1024){toast("حداکثر ۲ مگابایت",true);return;}
-  if(!/^image\/(png|jpeg|webp|gif)$/.test(f.type)){toast("فقط تصویر",true);return;}
-  var reader=new FileReader();
-  reader.onload=function(){
-    var img=new Image();
-    img.onload=function(){
-      var max=128, w=img.width, h=img.height;
-      if(w>max||h>max){var r=Math.min(max/w,max/h);w=Math.round(w*r);h=Math.round(h*r);}
-      var c=document.createElement("canvas"); c.width=w; c.height=h;
-      c.getContext("2d").drawImage(img,0,0,w,h);
-      var data=c.toDataURL("image/png");
-      if(data.length>180000) data=c.toDataURL("image/jpeg",0.82);
-      if(data.length>220000){toast("پس از فشرده‌سازی هنوز بزرگ است",true);pendingLogo=null;return;}
-      pendingLogo=data;
-      $("logoPreview").innerHTML='<img src="'+data+'" alt="preview">';
-      $("logoInfo").textContent="پیش‌نمایش آماده · "+Math.round(data.length/1024)+" KB — دکمه ایجاد را بزنید";
-      toast("پیش‌نمایش آماده");
-    };
-    img.onerror=function(){toast("خواندن تصویر ناموفق",true);};
-    img.src=reader.result;
-  };
-  reader.readAsDataURL(f);
-};
-
-$("btnLogoSave").onclick=lock(function(){
-  if(!canAdmin()){toast("فقط مدیر/مالک",true);return;}
-  if(!pendingLogo){toast("ابتدا یک تصویر انتخاب کنید",true);return;}
-  var b=loadBrand();
-  b.logo=pendingLogo;
-  b.updated=Date.now();
-  if(!b.name) b.name=db.settings.orgName||"";
-  if(!saveBrand(b)) return;
-  pendingLogo=null;
-  writeSuiteRegistry();
-  applyHeaderLogo();
-  renderBrandPanel();
-  renderDash();
-  audit("logo-set","global");
-  toast("لوگو برای همه ماژول‌ها ذخیره شد");
-});
-
-$("btnLogoDel").onclick=lock(function(){
-  if(!canAdmin()){toast("فقط مدیر/مالک",true);return;}
-  if(!confirm("لوگو از کل سامانه (همه ماژول‌ها) حذف شود؟")) return;
-  var b=loadBrand();
-  b.logo=null;
-  b.updated=Date.now();
-  saveBrand(b);
-  pendingLogo=null;
-  $("logoFile").value="";
-  writeSuiteRegistry();
-  applyHeaderLogo();
-  renderBrandPanel();
-  renderDash();
-  audit("logo-del","global");
-  toast("لوگو از همه ماژول‌ها حذف شد");
-});
-
-$("btnBrandName").onclick=lock(function(){
-  if(!canAdmin()){toast("دسترسی ندارید",true);return;}
-  var b=loadBrand();
-  b.name=($("brandName").value||"").slice(0,100);
-  b.updated=Date.now();
-  saveBrand(b);
-  db.settings.orgName=b.name||db.settings.orgName;
-  save(db);
-  writeSuiteRegistry();
-  audit("brand-name",b.name);
-  toast("نام برند برای همه اعمال شد");
-});
-
+$("btnLogout").onclick=function(){audit("logout","");showLogin();toast("خروج");};
 function go(tab,btn){
-  if(!session) return;
+  if(!session)return;
   document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
   document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
-  var el=$(tab); if(el) el.classList.add("on");
-  if(btn) btn.classList.add("on");
-  else {var n=document.querySelector('#nav button[data-tab="'+tab+'"]'); if(n) n.classList.add("on");}
-  if(tab==="dash") renderDash();
-  if(tab==="brand"){ if(!canAdmin()){toast("دسترسی ندارید",true);go("dash");return;} renderBrandPanel(); }
-  if(tab==="users"){ if(!canAdmin()){toast("دسترسی ندارید",true);go("dash");return;} renderUserForm(); renderUsers(); }
-  if(tab==="mods"){ if(!canAdmin()){toast("دسترسی ندارید",true);go("dash");return;} renderModToggle(); renderKeys(); }
-  if(tab==="diag") runDiag();
-  if(tab==="sync") $("syncOut").textContent="همسان‌سازی را اجرا کنید.";
-  if(tab==="audit") renderAudit();
-  if(tab==="set"){ $("orgName").value=db.settings.orgName||""; $("lockMin").value=db.settings.lockMin||0; }
+  var el=$(tab);if(el)el.classList.add("on");
+  if(btn)btn.classList.add("on");
+  else{var n=document.querySelector("#nav button[data-tab=\""+tab+"\"]");if(n)n.classList.add("on");}
+  if(tab==="creds"){renderCreds();fillModSelect();}
+  if(tab==="logo")applyLogo();
+  if(tab==="mods")renderModToggle();
+  if(tab==="ceoap")renderCodes();
+  if(tab==="set")$("orgName").value=auth.orgName||"";
 }
-
-function renderDash(){
-  $("stUsers").textContent=String(db.users.filter(function(u){return u.active;}).length);
-  $("stMods").textContent=String(MODULES.filter(function(m){return m.id!=="control"&&db.moduleEnabled[m.id]!==false;}).length);
-  try{$("stKeys").textContent=String(localStorage.length);}catch(e){}
-  var brand=loadBrand();
-  $("stLogo").textContent=brand.logo?"فعال":"خیر";
-  $("healthLine").innerHTML=(navigator.onLine?'<span class="badge ok">شبکه</span>':'<span class="badge bad">آفلاین</span>')+
-    (brand.logo?' · <span class="badge ok">لوگو سراسری فعال</span>':' · <span class="badge warn">بدون لوگو</span>');
-  var map=$("modMap"); map.textContent="";
-  MODULES.filter(function(m){return m.id!=="control";}).forEach(function(m){
-    var on=db.moduleEnabled[m.id]!==false;
-    var div=document.createElement("div");
-    div.className="mod-card "+(on?"on":"");
-    div.innerHTML="<b>"+esc(m.title)+"</b><br><span class='badge "+(on?"ok":"warn")+"'>"+(on?"فعال":"خاموش")+"</span>";
-    map.appendChild(div);
-  });
-}
-
-function renderUserForm(){
-  var box=$("uMods"); box.innerHTML="";
-  MODULES.filter(function(m){return m.id!=="control";}).forEach(function(m){
-    var lab=document.createElement("label");
-    lab.innerHTML='<input type="checkbox" value="'+m.id+'" data-umod checked> '+esc(m.title);
-    box.appendChild(lab);
-  });
-}
-function clearUser(){$("uId").value="";$("uName").value="";$("uDisplay").value="";$("uPass").value="";$("uRole").value="operator";$("uActive").value="1";document.querySelectorAll("[data-umod]").forEach(function(c){c.checked=true;});}
-$("btnUserClr").onclick=clearUser;
-function renderUsers(){
-  var tb=$("userList"); tb.textContent="";
-  db.users.forEach(function(u){
+$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
+function renderCreds(){
+  var tb=$("credList");tb.textContent="";
+  MODS.forEach(function(m){
+    var c=auth.creds[m.id]||{};
+    var st=c.passPlainDefault?"پیش‌فرض":"تغییر یافته";
+    var badge=c.passPlainDefault?"warn":"ok";
     var tr=document.createElement("tr");
-    tr.innerHTML="<td>"+esc(u.username)+"</td><td>"+esc(ROLE[u.role]||"")+"</td><td>"+(u.active?"<span class='badge ok'>فعال</span>":"<span class='badge bad'>خاموش</span>")+"</td>"+
-      "<td><button type='button' class='btn btn-b btn-sm' data-edit-u='"+u.id+"'>ویرایش</button> "+
-      (u.username!=="admin"?"<button type='button' class='btn btn-r btn-sm' data-del-u='"+u.id+"'>حذف</button>":"")+"</td>";
+    tr.innerHTML="<td>"+esc(m.title)+(m.sensitive?" <span class=\"badge info\">حساس</span>":"")+"</td>"+
+      "<td class=\"num\">"+esc(c.username||"—")+"</td>"+
+      "<td><span class=\"badge "+badge+"\">"+st+"</span></td>"+
+      "<td><button type=\"button\" class=\"btn btn-b btn-sm\" data-pick=\""+m.id+"\">انتخاب</button></td>";
     tb.appendChild(tr);
   });
 }
-$("btnUser").onclick=lock(async function(){
-  if(!canAdmin()){toast("دسترسی ندارید",true);return;}
-  var name=($("uName").value||"").trim().toLowerCase();
-  if(!name||!/^[a-z0-9._-]{3,40}$/.test(name)){toast("نام کاربری نامعتبر",true);return;}
-  var pass=$("uPass").value||"", id=$("uId").value?Number($("uId").value):null, mods=[];
-  document.querySelectorAll("[data-umod]:checked").forEach(function(c){mods.push(c.value);});
-  if(session.role!=="owner"&&$("uRole").value==="owner"){toast("فقط مالک",true);return;}
-  if(db.users.some(function(x){return x.username===name&&(!id||x.id!==id);})){toast("تکراری",true);return;}
-  if(id){
-    var row=db.users.find(function(x){return x.id===id;}); if(!row)return;
-    row.display=($("uDisplay").value||"").slice(0,80); row.role=$("uRole").value; row.active=$("uActive").value==="1"; row.modules=mods;
-    if(pass) row.pass=await hashPassStrong(pass);
-  } else {
-    if(!pass||pass.length<6){toast("رمز حداقل ۶ کاراکتر",true);return;}
-    db.users.push({id:uid(),username:name,display:($("uDisplay").value||name).slice(0,80),role:$("uRole").value,active:$("uActive").value==="1",pass:await hashPassStrong(pass),modules:mods,created:Date.now()});
+function fillModSelect(){
+  var s=$("cMod");s.innerHTML="";
+  MODS.forEach(function(m){var o=document.createElement("option");o.value=m.id;o.textContent=m.title;s.appendChild(o);});
+  updateCeoGate();
+}
+$("cMod").onchange=updateCeoGate;
+function updateCeoGate(){
+  var id=$("cMod").value;
+  var m=MODS.find(function(x){return x.id===id;});
+  $("ceoGateBox").style.display=(m&&m.sensitive)?"block":"none";
+  var c=auth.creds[id];
+  if(c)$("cUser").value=c.username||"";
+  $("cPass").value="";$("cPass2").value="";$("ceoCode").value="";
+}
+function consumeCode(code,forId){
+  var nowTs=Date.now();
+  var a=auth.approvals.find(function(x){return x.code===code&&x.forId===forId&&!x.used&&x.exp>nowTs;});
+  if(!a)return false;
+  a.used=true;
+  saveAuth(auth);
+  return true;
+}
+$("btnSaveCred").onclick=lock(async function(){
+  var id=$("cMod").value;
+  var m=MODS.find(function(x){return x.id===id;});
+  if(!m)return;
+  var user=($("cUser").value||"").trim().toLowerCase();
+  var p1=$("cPass").value||"";
+  var p2=$("cPass2").value||"";
+  if(!user||user.length<3){toast("نام کاربری نامعتبر",true);return;}
+  if(!p1||p1.length<6){toast("رمز حداقل ۶ کاراکتر",true);return;}
+  if(p1!==p2){toast("تکرار رمز یکسان نیست",true);return;}
+  if(m.sensitive){
+    var code=($("ceoCode").value||"").trim().toUpperCase();
+    if(!code||!consumeCode(code,id)){toast("کد مجوز مدیرعامل نامعتبر یا منقضی",true);return;}
   }
-  save(db); audit("user-save",name); clearUser(); renderUsers(); renderDash(); toast("ذخیره شد");
+  auth.creds[id]={username:user,pass:await hashStrong(p1),passPlainDefault:false,updated:now()};
+  auth.showLoginHints=false;
+  saveAuth(auth);
+  audit("cred-change",id+":"+user);
+  // sync ceo module local if needed
+  if(id==="ceo"){
+    try{
+      var ceo=JSON.parse(localStorage.getItem("smart_ceo_v1")||"null");
+      if(ceo&&ceo.user){ceo.user.username=user;ceo.user.pass=auth.creds.ceo.pass;localStorage.setItem("smart_ceo_v1",JSON.stringify(ceo));}
+    }catch(e){}
+  }
+  renderCreds();
+  updateLoginHint();
+  toast("ذخیره شد — راهنمای ورود پیش‌فرض حذف شد");
 });
-
+document.body.addEventListener("click",function(e){
+  var p=e.target.closest("[data-pick]");
+  if(p){$("cMod").value=p.getAttribute("data-pick");updateCeoGate();go("creds");}
+});
+$("logoFile").onchange=function(e){
+  var f=e.target.files&&e.target.files[0];if(!f)return;
+  if(f.size>5*1024*1024){toast("حداکثر ۵MB",true);return;}
+  var r=new FileReader();
+  r.onload=function(){
+    var img=new Image();
+    img.onload=function(){
+      var max=512,w=img.width,h=img.height,sc=1;
+      if(w>max||h>max)sc=max/Math.max(w,h);
+      var c=document.createElement("canvas");c.width=Math.round(w*sc);c.height=Math.round(h*sc);
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      pendingLogo=c.toDataURL("image/jpeg",0.72);
+      $("logoPreview").innerHTML="<img src=\""+pendingLogo+"\">";
+      toast("پیش‌نمایش آماده");
+    };
+    img.src=r.result;
+  };
+  r.readAsDataURL(f);
+};
+$("btnLogoSave").onclick=lock(function(){
+  var data=pendingLogo;
+  if(!data){try{var cur=JSON.parse(localStorage.getItem(LOGO_KEY)||"null");if(cur)data=cur.dataUrl;}catch(e){}}
+  if(!data){toast("تصویر انتخاب کنید",true);return;}
+  try{localStorage.setItem(LOGO_KEY,JSON.stringify({dataUrl:data,title:($("logoTitle").value||"").slice(0,60),updated:now(),v:1}));}catch(e){toast("فضا پر است",true);return;}
+  pendingLogo=null;applyLogo();audit("logo-save","");toast("لوگو ذخیره شد");
+});
+$("btnLogoDel").onclick=lock(function(){
+  if(!confirm("حذف لوگو؟"))return;
+  localStorage.removeItem(LOGO_KEY);pendingLogo=null;$("logoTitle").value="";applyLogo();audit("logo-del","");toast("حذف شد");
+});
 function renderModToggle(){
-  var box=$("modToggle"); box.textContent="";
-  MODULES.filter(function(m){return m.id!=="control";}).forEach(function(m){
-    var on=db.moduleEnabled[m.id]!==false;
-    var div=document.createElement("div");
-    div.className="mod-card "+(on?"on":"");
-    div.innerHTML="<b>"+esc(m.title)+"</b><br><label style='margin:0;font-size:.75rem;color:#e2e8f0'><input type='checkbox' data-men='"+m.id+"' "+(on?"checked":"")+"> فعال</label>";
+  var box=$("modToggle");box.textContent="";
+  MODS.forEach(function(m){
+    if(m.id==="control")return;
+    var on=auth.moduleEnabled[m.id]!==false;
+    var div=document.createElement("div");div.className="mod-card";
+    div.innerHTML="<b>"+esc(m.title)+"</b><br><label style=\"margin:0;color:#e2e8f0;font-size:.75rem\"><input type=\"checkbox\" data-men=\""+m.id+"\" "+(on?"checked":"")+"> فعال در Suite</label>";
     box.appendChild(div);
   });
 }
 $("btnSaveMods").onclick=lock(function(){
-  if(!canAdmin()){toast("دسترسی ندارید",true);return;}
-  document.querySelectorAll("[data-men]").forEach(function(c){db.moduleEnabled[c.getAttribute("data-men")]=c.checked;});
-  save(db); writeSuiteRegistry(); audit("modules-update",""); renderModToggle(); renderDash(); toast("ذخیره شد");
+  document.querySelectorAll("[data-men]").forEach(function(c){auth.moduleEnabled[c.getAttribute("data-men")]=c.checked;});
+  saveAuth(auth);writeSuite();audit("mods","");toast("ذخیره شد");
 });
-function renderKeys(){
-  var tb=$("keyList"); tb.textContent="";
-  MODULES.forEach(function(m){
-    if(!m.key) return;
-    var raw=null, size=0; try{raw=localStorage.getItem(m.key); size=raw?raw.length:0;}catch(e){}
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td class='num'>"+esc(m.key)+"</td><td class='num'>"+(size?Math.round(size/1024)+" KB":"—")+"</td><td>"+(raw?'<span class="badge ok">داده</span>':'<span class="badge warn">خالی</span>')+"</td>";
-    tb.appendChild(tr);
-  });
-  var b=loadBrand(), bs=0; try{bs=(localStorage.getItem(BRAND_KEY)||"").length;}catch(e){}
-  var tr=document.createElement("tr");
-  tr.innerHTML="<td class='num'>"+BRAND_KEY+"</td><td class='num'>"+Math.round(bs/1024)+" KB</td><td>"+(b.logo?'<span class="badge ok">لوگو</span>':'<span class="badge warn">بدون لوگو</span>')+"</td>";
-  tb.appendChild(tr);
+function writeSuite(){
+  var logo=null;try{logo=JSON.parse(localStorage.getItem(LOGO_KEY)||"null");}catch(e){}
+  var reg={updated:Date.now(),org:auth.orgName||"",hasLogo:!!(logo&&logo.dataUrl),logoKey:LOGO_KEY,
+    modules:MODS.filter(function(m){return m.id!=="control";}).map(function(m){
+      return {id:m.id,file:m.file,title:m.title,enabled:auth.moduleEnabled[m.id]!==false};
+    })};
+  try{localStorage.setItem(SUITE_KEY,JSON.stringify(reg));return true;}catch(e){return false;}
 }
-
-function runDiag(){
-  var rows=[["آنلاین",navigator.onLine?"بله":"خیر"],["localStorage",(function(){try{localStorage.setItem("__t","1");localStorage.removeItem("__t");return"OK";}catch(e){return"خطا";}})()],["لوگو سراسری",loadBrand().logo?"فعال":"نیست"]];
-  var tb=$("diagList"); tb.textContent="";
-  rows.forEach(function(r){var tr=document.createElement("tr");tr.innerHTML="<td>"+esc(r[0])+"</td><td>"+esc(r[1])+"</td>";tb.appendChild(tr);});
-  var hw=$("hwList"); hw.textContent="";
-  [["هسته",navigator.hardwareConcurrency||"—"],["حافظه",navigator.deviceMemory||"—"],["صفحه",screen.width+"×"+screen.height]].forEach(function(r){
-    var tr=document.createElement("tr");tr.innerHTML="<td>"+esc(r[0])+"</td><td class='num'>"+esc(String(r[1]))+"</td>";hw.appendChild(tr);
-  });
-}
-$("btnDiag").onclick=lock(runDiag);
-$("btnClearSW").onclick=lock(function(){
-  if(!("serviceWorker" in navigator)){toast("پشتیبانی نیست",true);return;}
-  navigator.serviceWorker.getRegistrations().then(function(regs){return Promise.all(regs.map(function(r){return r.unregister();}));})
-    .then(function(){audit("sw-clear","");toast("SW لغو شد");});
-});
-$("btnExportAll").onclick=lock(function(){
-  var dump={exported:now(),control:db,brand:loadBrand(),modules:{}};
-  MODULES.forEach(function(m){if(!m.key)return;try{dump.modules[m.key]=JSON.parse(localStorage.getItem(m.key)||"null");}catch(e){dump.modules[m.key]=null;}});
-  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(dump)],{type:"application/json"}));a.download="full-backup-"+today()+".json";a.click();
-});
 $("btnSyncSuite").onclick=lock(function(){
-  if(!canAdmin()){toast("دسترسی ندارید",true);return;}
-  var ok=writeSuiteRegistry(), b=loadBrand();
-  $("syncOut").textContent=ok?("همسان‌سازی موفق\nلوگو: "+(b.logo?"دارد — روی همه ماژول‌ها":"ندارد")+"\nنام: "+(b.name||db.settings.orgName||"—")):"خطا در نوشتن";
-  audit("sync-suite",ok?"ok":"fail"); toast(ok?"همسان شد":"خطا",!ok);
+  var ok=writeSuite();
+  $("syncOut").textContent=ok?"رجیستری Suite نوشته شد · شامل مدیرعامل · مدیریت نرم‌افزار فقط یک کارت در Suite":"خطا";
+  toast(ok?"همسان شد":"خطا",!ok);
 });
-$("btnRebuildReg").onclick=lock(function(){
-  MODULES.forEach(function(m){if(db.moduleEnabled[m.id]===undefined)db.moduleEnabled[m.id]=true;});
-  save(db); writeSuiteRegistry(); $("syncOut").textContent="رجیستری بازسازی شد"; toast("OK");
+$("btnReqCeo").onclick=lock(function(){
+  var t=$("reqType").value;
+  auth.requests.unshift({id:uid(),t:now(),forId:t,note:($("reqNote").value||"").slice(0,300),status:"pending"});
+  if(auth.requests.length>50)auth.requests=auth.requests.slice(0,50);
+  saveAuth(auth);
+  audit("req-ceo",t);
+  $("reqNote").value="";
+  toast("درخواست ثبت شد — مدیرعامل تأیید کند");
 });
-function renderAudit(){
-  var tb=$("auditList"); tb.textContent="";
-  db.audit.slice(0,100).forEach(function(a){
+function hasCeoSession(){
+  try{var s=JSON.parse(sessionStorage.getItem(CEO_SESS)||"null");return !!(s&&s.ok);}catch(e){return false;}
+}
+$("btnIssueCode").onclick=lock(function(){
+  if(!hasCeoSession()){toast("ابتدا در پنل مدیرعامل وارد شوید (همین مرورگر)",true);return;}
+  var pending=auth.requests.find(function(r){return r.status==="pending";});
+  var forId=pending?pending.forId:"control";
+  var code="CEO-"+Math.random().toString(36).slice(2,6).toUpperCase()+Math.floor(Math.random()*90+10);
+  auth.approvals.unshift({code:code,forId:forId,exp:Date.now()+2*3600*1000,used:false,t:now()});
+  if(pending)pending.status="approved";
+  if(auth.approvals.length>40)auth.approvals=auth.approvals.slice(0,40);
+  saveAuth(auth);
+  audit("issue-code",code);
+  renderCodes();
+  toast("کد: "+code);
+});
+function renderCodes(){
+  var tb=$("codeList");tb.textContent="";
+  auth.approvals.slice(0,20).forEach(function(a){
+    var st=a.used?"استفاده شده":(a.exp<Date.now()?"منقضی":"فعال");
+    var b=a.used||a.exp<Date.now()?"warn":"ok";
     var tr=document.createElement("tr");
-    tr.innerHTML="<td class='num'>"+esc(a.t)+"</td><td>"+esc(a.user)+"</td><td>"+esc(a.action)+"</td><td>"+esc(a.detail)+"</td>";
+    tr.innerHTML="<td class=\"num\">"+esc(a.code)+"</td><td>"+esc(a.forId)+"</td><td class=\"num\">"+esc(new Date(a.exp).toLocaleString("fa-IR"))+"</td><td><span class=\"badge "+b+"\">"+st+"</span></td>";
     tb.appendChild(tr);
   });
 }
-$("btnClearAudit").onclick=lock(function(){if(!isOwner()){toast("فقط مالک",true);return;}if(!confirm("پاک؟"))return;db.audit=[];save(db);renderAudit();});
 $("btnSaveSet").onclick=lock(function(){
-  if(!canAdmin()){toast("دسترسی ندارید",true);return;}
-  db.settings.orgName=($("orgName").value||"").slice(0,100);
-  db.settings.lockMin=Math.max(0,Math.min(120,parseInt($("lockMin").value,10)||0));
-  var b=loadBrand(); if(!b.name) b.name=db.settings.orgName; saveBrand(b);
-  save(db); writeSuiteRegistry(); toast("ذخیره شد"); resetLockTimer();
-});
-$("btnChangePass").onclick=lock(async function(){
-  var p=$("newPass").value||""; if(p.length<6){toast("حداقل ۶ کاراکتر",true);return;}
-  var u=db.users.find(function(x){return x.id===session.id;}); if(!u)return;
-  u.pass=await hashPassStrong(p); save(db); $("newPass").value=""; toast("رمز عوض شد");
+  auth.orgName=($("orgName").value||"").slice(0,100);
+  saveAuth(auth);writeSuite();toast("ذخیره شد");
 });
 $("btnBackup").onclick=function(){
   var a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([JSON.stringify({control:db,brand:loadBrand()},null,2)],{type:"application/json"}));
-  a.download="control-backup-"+today()+".json"; a.click();
+  a.href=URL.createObjectURL(new Blob([JSON.stringify({auth:auth,exported:now()},null,2)],{type:"application/json"}));
+  a.download="auth-backup.json";a.click();
 };
 $("restoreFile").onchange=function(e){
-  if(!isOwner()){toast("فقط مالک",true);return;}
-  var f=e.target.files&&e.target.files[0]; if(!f)return;
+  var f=e.target.files&&e.target.files[0];if(!f)return;
   var r=new FileReader();
-  r.onload=function(){try{var d=JSON.parse(r.result);if(d.control)db=d.control;else if(d.users)db=d;if(d.brand)saveBrand(d.brand);save(db);writeSuiteRegistry();applyHeaderLogo();toast("بازیابی شد");renderDash();}catch(err){toast("نامعتبر",true);}};
+  r.onload=function(){try{var d=JSON.parse(r.result);if(d.auth)auth=d.auth;else if(d.creds)auth=d;else throw new Error("x");saveAuth(auth);toast("بازیابی شد");renderCreds();}catch(err){toast("نامعتبر",true);}};
   r.readAsText(f);
 };
-$("btnWipe").onclick=lock(function(){if(!isOwner()){toast("فقط مالک",true);return;}if(!confirm("بازنشانی مرکز؟"))return;db=def();save(db);showLogin();toast("بازنشانی");});
 $("btnOpenSuite").onclick=function(){window.open("suite.html","_blank","noopener,noreferrer");};
-$("btnRefresh").onclick=function(){renderDash();applyHeaderLogo();toast("بروز شد");};
-$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
-document.body.addEventListener("click",function(e){
-  var eu=e.target.closest("[data-edit-u]");
-  if(eu){var u=db.users.find(function(x){return String(x.id)===eu.getAttribute("data-edit-u");});if(!u)return;
-    $("uId").value=u.id;$("uName").value=u.username;$("uDisplay").value=u.display||"";$("uPass").value="";$("uRole").value=u.role;$("uActive").value=u.active?"1":"0";
-    document.querySelectorAll("[data-umod]").forEach(function(c){c.checked=(u.modules||[]).indexOf(c.value)>=0;});go("users");return;}
-  var du=e.target.closest("[data-del-u]");
-  if(du){if(!isOwner()){toast("فقط مالک",true);return;}if(!confirm("حذف؟"))return;db.users=db.users.filter(function(x){return String(x.id)!==du.getAttribute("data-del-u");});save(db);renderUsers();renderDash();}
-});
-
-session=loadSession();
-applyHeaderLogo();
-if(session) showApp(); else showLogin();
-writeSuiteRegistry();
+$("btnOpenCeo").onclick=function(){window.open("ceo.html","_blank","noopener,noreferrer");};
+// boot
+try{var s=JSON.parse(sessionStorage.getItem(SESSION)||"null");if(s&&s.ok)session=s;}catch(e){}
+applyLogo();
+updateLoginHint();
+if(session)showApp();else showLogin();
+writeSuite();
 })();
 </script>
 </body>
