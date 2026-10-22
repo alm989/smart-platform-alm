@@ -13,7 +13,7 @@
 :root{--bg:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--b:#38bdf8;--gold:#d4a017}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(1000px 520px at 70% -18%,#1e3a5f 0%,transparent 48%),var(--bg);color:var(--txt);min-height:100dvh;padding:20px 14px 40px;line-height:1.55}
-.wrap{max-width:1120px;margin:0 auto}
+.wrap{max-width:1140px;margin:0 auto}
 .brand{display:flex;align-items:center;gap:14px;margin-bottom:8px}
 .brand-logo{width:56px;height:56px;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,#0ea5e9,#0369a1);display:grid;place-items:center;flex-shrink:0;border:2px solid rgba(56,189,248,.35)}
 .brand-logo img{width:100%;height:100%;object-fit:contain;background:#0f172a}
@@ -28,6 +28,8 @@ h1{font-size:1.22rem;font-weight:800}
 .cat.sys h2{color:#5eead4}
 .cat.fin h2{color:#6ee7b7}
 .cat.ops h2{color:#c4b5fd}
+.cat.prod h2{color:#fdba74}
+.cat.gov h2{color:#f9a8d4}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .card{background:rgba(30,41,59,.95);border:1px solid var(--line);border-radius:16px;padding:13px;text-decoration:none;color:inherit;display:flex;flex-direction:column;min-height:112px;transition:.15s;cursor:pointer}
 .card:hover{transform:translateY(-3px);border-color:#38bdf8}
@@ -69,21 +71,19 @@ h1{font-size:1.22rem;font-weight:800}
   </div>
   <p id="status">بارگذاری…</p>
   <div id="catalog"></div>
-  <p class="foot">Suite · کنترل / موتور تغییرات / پایگاه داده نیازمند مجوز مدیرعامل</p>
+  <p class="foot">Suite یکپارچه · کنترل / موتور تغییرات / پایگاه داده = مجوز مدیرعامل</p>
 </div>
-
 <div class="modal-bg" id="ceoModal" role="dialog" aria-modal="true">
   <div class="modal">
     <h3>مجوز مدیرعامل</h3>
-    <p class="note" id="ceoModalNote">این بخش حساس است. رمز یا کد مجوز مدیرعامل لازم است.</p>
+    <p class="note" id="ceoModalNote">این بخش حساس است.</p>
     <label>رمز مدیرعامل یا کد یک‌بارمصرف</label>
-    <input id="ceoUnlock" type="password" maxlength="64" autocomplete="current-password" placeholder="رمز ceo یا CEO-XXXX">
+    <input id="ceoUnlock" type="password" maxlength="64" autocomplete="current-password">
     <button type="button" class="btn btn-gold" id="btnCeoUnlock">باز کردن</button>
     <button type="button" class="btn btn-gr" id="btnCeoCancel">انصراف</button>
   </div>
 </div>
 <div class="toast" id="toast"></div>
-
 <script>
 (function(){
 "use strict";
@@ -96,8 +96,19 @@ var CATEGORIES=[
     items:[
       {id:"ceo",file:"ceo.html",title:"مدیرعامل",desc:"گزارش، مجوز، تصمیم",icon:"👔",color:"#a67c00",tag:"مدیریت عالی",tagCls:"gold",cardCls:"ceo"},
       {id:"control",file:"control-center.html",title:"مدیریت نرم‌افزار",desc:"کاربر، رمز، لوگو، دسترسی",icon:"🎛️",color:"#0369a1",tag:"نیاز به مدیرعامل",tagCls:"lock",cardCls:"mgmt",needCeo:true},
-      {id:"patches",file:"change-engine.html",title:"موتور تغییرات",desc:"پچ و سفارشی‌سازی همه ماژول‌ها",icon:"⚙️",color:"#0f766e",tag:"نیاز به مدیرعامل",tagCls:"lock",cardCls:"sys",needCeo:true},
-      {id:"database",file:"database.html",title:"پایگاه داده‌ها",desc:"کلیدها، پشتیبان، بازیابی داده",icon:"🗄️",color:"#4c1d95",tag:"نیاز به مدیرعامل",tagCls:"lock",cardCls:"sys",needCeo:true}
+      {id:"patches",file:"change-engine.html",title:"موتور تغییرات",desc:"پچ و سفارشی‌سازی",icon:"⚙️",color:"#0f766e",tag:"نیاز به مدیرعامل",tagCls:"lock",cardCls:"sys",needCeo:true},
+      {id:"database",file:"database.html",title:"پایگاه داده‌ها",desc:"کلیدها، پشتیبان، بازیابی",icon:"🗄️",color:"#4c1d95",tag:"نیاز به مدیرعامل",tagCls:"lock",cardCls:"sys",needCeo:true},
+      {id:"multicompany",file:"multicompany.html",title:"چند شرکتی",desc:"شرکت‌ها، شعبه، ادغام گزارش",icon:"🏛️",color:"#1d4ed8",tag:"هلدینگ",cardCls:"mgmt"}
+    ]
+  },
+  {
+    id:"mgmt", title:"مدیریت و برنامه‌ریزی", cls:"ops",
+    items:[
+      {id:"management",file:"management.html",title:"مدیریت",desc:"اهداف، KPI، جلسات مدیریتی",icon:"📋",color:"#4338ca",tag:"مدیریت"},
+      {id:"budget",file:"budget.html",title:"بودجه و کنترل",desc:"بودجه‌ریزی و انحراف",icon:"📊",color:"#0f766e",tag:"بودجه"},
+      {id:"taxbudget",file:"tax-budget.html",title:"مالیات و کنترل بودجه",desc:"مالیات، عوارض، کنترل بودجه",icon:"🧾",color:"#b45309",tag:"مالیات"},
+      {id:"projects",file:"projects.html",title:"مدیریت پروژه",desc:"پروژه، فاز، پیشرفت",icon:"📁",color:"#7c3aed",tag:"پروژه"},
+      {id:"contracts",file:"contracts.html",title:"قراردادها",desc:"قرارداد، الحاقیه، تعهدات",icon:"📝",color:"#0369a1",tag:"قرارداد"}
     ]
   },
   {
@@ -127,161 +138,85 @@ var CATEGORIES=[
     ]
   },
   {
-    id:"ops", title:"عملیات و منابع", cls:"ops",
+    id:"production", title:"تولید و عملیات", cls:"prod",
     items:[
+      {id:"production",file:"production.html",title:"تولید و بهای تمام‌شده",desc:"BOM، سفارش ساخت، بهای تمام‌شده",icon:"🏭",color:"#c2410c",tag:"تولید"},
       {id:"sales",file:"sales.html",title:"فروش",desc:"فاکتور و پیش‌فاکتور",icon:"🛒",color:"#0369a1",tag:"فروش"},
       {id:"warehouse",file:"warehouse.html",title:"خرید و انبار",desc:"موجودی و حواله",icon:"📦",color:"#0d9488",tag:"انبار"},
+      {id:"fleet",file:"fleet.html",title:"ناوگان و حمل‌ونقل",desc:"خودرو، مسیر، هزینه حمل",icon:"🚚",color:"#0369a1",tag:"ناوگان"},
       {id:"hr",file:"hr-payroll.html",title:"منابع انسانی",desc:"حقوق و حضور",icon:"👥",color:"#6d28d9",tag:"HR"}
     ]
   }
 ];
 
 function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
-function toast(m,e){
-  var t=document.getElementById("toast");
-  t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");
-  clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2400);
-}
-function applyLogo(){
-  try{
-    var d=JSON.parse(localStorage.getItem(LOGO_KEY)||"null");
-    var el=document.getElementById("suiteLogo");
-    if(d&&d.dataUrl) el.innerHTML='<img src="'+d.dataUrl+'" alt="logo">';
-    else el.innerHTML='<span class="fb">🏢</span>';
-  }catch(e){}
-}
+function toast(m,e){var t=document.getElementById("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2400);}
+function applyLogo(){try{var d=JSON.parse(localStorage.getItem(LOGO_KEY)||"null");var el=document.getElementById("suiteLogo");if(d&&d.dataUrl)el.innerHTML='<img src="'+d.dataUrl+'" alt="logo">';else el.innerHTML='<span class="fb">🏢</span>';}catch(e){}}
 function loadReg(){try{return JSON.parse(localStorage.getItem(REG)||"null");}catch(e){return null;}}
 function loadAuth(){try{return JSON.parse(localStorage.getItem(AUTH_KEY)||"null");}catch(e){return null;}}
-
-function hashPass(s){
-  var h=0,str=String(s||"");
-  for(var i=0;i<str.length;i++){h=((h<<5)-h)+str.charCodeAt(i);h|=0;}
-  return "h"+Math.abs(h).toString(16)+"_"+str.length;
-}
+function hashPass(s){var h=0,str=String(s||"");for(var i=0;i<str.length;i++){h=((h<<5)-h)+str.charCodeAt(i);h|=0;}return "h"+Math.abs(h).toString(16)+"_"+str.length;}
 function checkCeoCredential(input){
-  var v=(input||"").trim();
-  if(!v) return false;
-  // one-time codes from auth.approvals
+  var v=(input||"").trim();if(!v)return false;
   var auth=loadAuth();
   if(auth&&Array.isArray(auth.approvals)){
     var now=Date.now();
-    var hit=auth.approvals.find(function(a){
-      return !a.used && a.exp>now && String(a.code).toUpperCase()===v.toUpperCase();
-    });
-    if(hit){
-      // don't consume here for unlock-only; optional mark
-      try{
-        hit._suiteUnlock=true;
-        localStorage.setItem(AUTH_KEY,JSON.stringify(auth));
-      }catch(e){}
-      return true;
-    }
+    if(auth.approvals.find(function(a){return !a.used&&a.exp>now&&String(a.code).toUpperCase()===v.toUpperCase();})) return true;
   }
-  // CEO password from smart_auth_v1 or smart_ceo_v1
-  var passOk=false;
-  if(auth&&auth.creds&&auth.creds.ceo){
-    var stored=auth.creds.ceo.pass;
-    if(stored===v || stored===hashPass(v)) passOk=true;
-  }
-  try{
-    var ceo=JSON.parse(localStorage.getItem("smart_ceo_v1")||"null");
-    if(ceo&&ceo.user&&ceo.user.pass){
-      if(ceo.user.pass===v || ceo.user.pass===hashPass(v)) passOk=true;
-    }
-  }catch(e){}
-  // default bootstrap if never changed
-  if(!passOk && (v==="Ceo@2026!" || hashPass(v)===hashPass("Ceo@2026!"))) passOk=true;
-  // active CEO session in same browser
-  try{
-    var s=JSON.parse(sessionStorage.getItem("smart_ceo_session")||"null");
-    if(s&&s.ok) passOk=true;
-  }catch(e){}
-  return passOk;
+  if(auth&&auth.creds&&auth.creds.ceo){var stored=auth.creds.ceo.pass;if(stored===v||stored===hashPass(v))return true;}
+  try{var ceo=JSON.parse(localStorage.getItem("smart_ceo_v1")||"null");if(ceo&&ceo.user&&ceo.user.pass&&(ceo.user.pass===v||ceo.user.pass===hashPass(v)))return true;}catch(e){}
+  if(v==="Ceo@2026!"||hashPass(v)===hashPass("Ceo@2026!"))return true;
+  try{var s=JSON.parse(sessionStorage.getItem("smart_ceo_session")||"null");if(s&&s.ok)return true;}catch(e){}
+  return false;
 }
-
 function openLocked(href,title){
   pendingHref=href;
   document.getElementById("ceoModalNote").textContent="باز کردن «"+title+"» نیاز به مجوز مدیرعامل دارد.";
   document.getElementById("ceoUnlock").value="";
   document.getElementById("ceoModal").classList.add("on");
-  setTimeout(function(){document.getElementById("ceoUnlock").focus();},100);
+  setTimeout(function(){document.getElementById("ceoUnlock").focus();},80);
 }
-function closeModal(){
-  pendingHref=null;
-  document.getElementById("ceoModal").classList.remove("on");
-}
+function closeModal(){pendingHref=null;document.getElementById("ceoModal").classList.remove("on");}
 document.getElementById("btnCeoCancel").onclick=closeModal;
-document.getElementById("ceoModal").addEventListener("click",function(e){
-  if(e.target===document.getElementById("ceoModal")) closeModal();
-});
+document.getElementById("ceoModal").addEventListener("click",function(e){if(e.target.id==="ceoModal")closeModal();});
 document.getElementById("btnCeoUnlock").onclick=function(){
-  var v=document.getElementById("ceoUnlock").value||"";
-  if(!checkCeoCredential(v)){
-    toast("مجوز نامعتبر",true);
-    return;
-  }
-  var href=pendingHref;
-  closeModal();
-  if(href) window.location.href=href;
+  if(!checkCeoCredential(document.getElementById("ceoUnlock").value||"")){toast("مجوز نامعتبر",true);return;}
+  var href=pendingHref;closeModal();if(href)window.location.href=href;
 };
-document.getElementById("ceoUnlock").addEventListener("keydown",function(e){
-  if(e.key==="Enter") document.getElementById("btnCeoUnlock").click();
-});
+document.getElementById("ceoUnlock").addEventListener("keydown",function(e){if(e.key==="Enter")document.getElementById("btnCeoUnlock").click();});
 
 function render(){
   applyLogo();
-  var reg=loadReg();
-  var enabled={};
+  var reg=loadReg(), enabled={};
   if(reg&&Array.isArray(reg.modules)){
     reg.modules.forEach(function(m){enabled[m.id]=m.enabled!==false;});
-    if(reg.org) document.getElementById("orgTitle").textContent=reg.org;
-    document.getElementById("status").textContent="رجیستری فعال · ماژول‌های حساس قفل‌شده با مدیرعامل";
-  } else {
-    document.getElementById("status").textContent="همه طبقات نمایش داده می‌شوند · کنترل / موتور تغییرات / پایگاه داده = مجوز مدیرعامل";
-  }
+    if(reg.org)document.getElementById("orgTitle").textContent=reg.org;
+    document.getElementById("status").textContent="رجیستری فعال · طبقات کامل";
+  } else document.getElementById("status").textContent="همه طبقات و ماژول‌های جدید در فهرست هستند";
 
-  var root=document.getElementById("catalog");
-  root.textContent="";
-
+  var root=document.getElementById("catalog"); root.textContent="";
   CATEGORIES.forEach(function(cat){
     var head=document.createElement("div");
     head.className="cat"+(cat.cls?" "+cat.cls:"");
     head.innerHTML="<h2>"+esc(cat.title)+"</h2><div class='line'></div>";
     root.appendChild(head);
-
-    var grid=document.createElement("div");
-    grid.className="grid";
+    var grid=document.createElement("div"); grid.className="grid";
     cat.items.forEach(function(m){
       var on=enabled[m.id]!==false;
-      // always show executive system tools
       if(m.id==="ceo"||m.id==="control"||m.id==="patches"||m.id==="database") on=true;
-      if(reg&&reg.modules&&enabled[m.id]===false && !(m.needCeo||m.id==="ceo")) on=false;
-
+      if(reg&&reg.modules&&enabled[m.id]===false&&!(m.needCeo||m.id==="ceo")) on=false;
       var a=document.createElement("a");
       a.className="card"+(on?"":" off")+(m.cardCls?" "+m.cardCls:"")+(m.needCeo?" locked":"");
       a.href=on?(m.needCeo?"#":m.file):"#";
       if(on&&!m.needCeo) a.rel="noopener";
-      a.innerHTML=
-        '<div class="icon" style="background:'+m.color+'">'+m.icon+'</div>'+
-        '<h3>'+esc(m.title)+'</h3>'+
-        '<p>'+esc(m.desc)+'</p>'+
-        '<span class="tag'+(m.tagCls?" "+m.tagCls:"")+'">'+esc(m.tag)+(m.needCeo?" 🔒":"")+'</span>';
-      if(on&&m.needCeo){
-        a.addEventListener("click",function(ev){
-          ev.preventDefault();
-          openLocked(m.file,m.title);
-        });
-      }
+      a.innerHTML='<div class="icon" style="background:'+m.color+'">'+m.icon+'</div><h3>'+esc(m.title)+'</h3><p>'+esc(m.desc)+'</p><span class="tag'+(m.tagCls?" "+m.tagCls:"")+'">'+esc(m.tag)+(m.needCeo?" 🔒":"")+'</span>';
+      if(on&&m.needCeo) a.addEventListener("click",function(ev){ev.preventDefault();openLocked(m.file,m.title);});
       grid.appendChild(a);
     });
     root.appendChild(grid);
   });
 }
-
 render();
-window.addEventListener("storage",function(e){
-  if(e.key===REG||e.key===LOGO_KEY||e.key===AUTH_KEY) render();
-});
+window.addEventListener("storage",function(e){if(e.key===REG||e.key===LOGO_KEY||e.key===AUTH_KEY)render();});
 })();
 </script>
 </body>
