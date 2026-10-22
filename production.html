@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#7c3aed">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<title>تولید و بهای تمام‌شده</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--acc:#7c3aed;--g:#22c55e;--r:#ef4444;--o:#f59e0b;--safe:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,system-ui,sans-serif;background:radial-gradient(800px 400px at 80% -10%,#7c3aed44,transparent 50%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(50px + var(--safe));line-height:1.5}
+.box{max-width:920px;margin:0 auto}
+.header{text-align:center;margin-bottom:10px}
+.logo{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--acc),#0f172a);display:grid;place-items:center;font-size:24px;margin:0 auto 6px}
+h1{font-size:1.15rem}
+.sub{font-size:.78rem;color:var(--muted)}
+.nav{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;position:sticky;top:0;z-index:20;background:rgba(15,23,42,.92);padding:6px 0}
+.nav button{flex:1;min-width:70px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 4px;font-size:.68rem;color:var(--muted);cursor:pointer;font-family:inherit}
+.nav button.on{background:var(--acc);color:#fff;border-color:transparent}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.card h2{font-size:.9rem;margin-bottom:10px;color:#7dd3fc}
+.btn{display:block;width:100%;padding:11px;border:none;border-radius:10px;font-size:.84rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit}
+.btn-a{background:var(--acc)}.btn-g{background:var(--g)}.btn-r{background:var(--r)}.btn-o{background:var(--o)}.btn-gr{background:#334155}
+.btn-sm{padding:4px 8px;margin:0;width:auto;font-size:.68rem;display:inline-block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid2 .btn{margin-top:0}
+label{display:block;font-size:.72rem;color:var(--muted);margin:6px 0 3px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;background:#0f172a;color:var(--txt);font-size:15px;font-family:inherit}
+textarea{min-height:70px}
+table{width:100%;border-collapse:collapse;font-size:.75rem}
+th,td{border:1px solid var(--line);padding:6px 4px;text-align:right}
+th{background:#0f172a;color:#7dd3fc}
+.num{direction:ltr;text-align:left}
+.scroll{overflow:auto;max-height:360px}
+.note{font-size:.72rem;color:var(--muted);margin-top:6px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 4px;text-align:center}
+.stat .n{font-weight:700;color:var(--acc)}.stat .l{font-size:.65rem;color:var(--muted)}
+.toast{position:fixed;bottom:calc(12px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#052e16;padding:10px 14px;border-radius:10px;font-size:.82rem;opacity:0;z-index:99;transition:.2s;font-weight:600}
+.toast.show{opacity:1}.toast.err{background:var(--r);color:#fff}
+.badge{display:inline-block;padding:2px 7px;border-radius:999px;font-size:.65rem}
+.ok{background:rgba(34,197,94,.2);color:#4ade80}.warn{background:rgba(245,158,11,.2);color:#fbbf24}
+.footer{text-align:center;font-size:.68rem;color:#64748b;margin-top:12px}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="box">
+<header class="header"><div class="logo">🏭</div><h1>تولید و بهای تمام‌شده</h1><p class="sub">یکپارچه با سامانه · localStorage</p></header>
+<nav class="nav" id="nav">
+<button type="button" class="on" data-tab="dash">داشبورد</button>
+<button type="button" data-tab="form">ثبت</button>
+<button type="button" data-tab="list">فهرست</button>
+<button type="button" data-tab="rep">گزارش</button>
+<button type="button" data-tab="set">تنظیمات</button>
+</nav>
+<main id="dash" class="panel on">
+<div class="stats">
+<div class="stat"><div class="n" id="st1">۰</div><div class="l" id="st1l">کل</div></div>
+<div class="stat"><div class="n" id="st2">۰</div><div class="l" id="st2l">فعال</div></div>
+<div class="stat"><div class="n" id="st3">۰</div><div class="l" id="st3l">سایر</div></div>
+</div>
+<section class="card"><h2>خلاصه</h2><p class="note" id="sum">—</p>
+<button type="button" class="btn btn-a" id="btnRef">بروزرسانی</button>
+<a class="btn btn-gr" href="suite.html">بازگشت به Suite</a>
+</section>
+</main>
+<main id="form" class="panel">
+<section class="card"><h2>فرم ثبت</h2>
+<input type="hidden" id="editId">
+
+<label>نام محصول / دستور تولید *</label><input id="fTitle" maxlength="120">
+<div class="grid2"><div><label>کد</label><input id="fCode" maxlength="40"></div>
+<div><label>تعداد تولید</label><input id="fQty" type="number" min="0" step="0.01"></div></div>
+<div class="grid2"><div><label>هزینه مواد</label><input id="fMat" type="number" min="0"></div>
+<div><label>هزینه دستمزد</label><input id="fLab" type="number" min="0"></div></div>
+<label>سربار</label><input id="fOh" type="number" min="0">
+<label>وضعیت</label><select id="fStatus"><option value="plan">برنامه</option><option value="run">در تولید</option><option value="done">تمام‌شده</option></select>
+<label>یادداشت</label><textarea id="fNote"></textarea>
+
+<div class="grid2">
+<button type="button" class="btn btn-g" id="btnSave">ذخیره</button>
+<button type="button" class="btn btn-gr" id="btnClr">پاک فرم</button>
+</div>
+</section>
+</main>
+<main id="list" class="panel">
+<section class="card"><h2>فهرست</h2>
+<div class="scroll"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+</section>
+</main>
+<main id="rep" class="panel">
+<section class="card"><h2>گزارش</h2>
+<button type="button" class="btn btn-a" id="btnRep">تولید گزارش</button>
+<pre class="note" id="repOut" style="white-space:pre-wrap;margin-top:8px">—</pre>
+</section>
+</main>
+<main id="set" class="panel">
+<section class="card"><h2>پشتیبان</h2>
+<button type="button" class="btn btn-g" id="btnBak">دانلود</button>
+<input type="file" id="bakFile" accept=".json">
+<button type="button" class="btn btn-r" id="btnWipe">بازنشانی</button>
+</section>
+</main>
+<p class="footer">تولید و بهای تمام‌شده</p>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+"use strict";
+var KEY="smart_prod_v1", busy=false, tT=null;
+function $(id){return document.getElementById(id);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(tT);tT=setTimeout(function(){t.classList.remove("show");},2200);}
+function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+function money(n){return Number(n||0).toLocaleString("fa-IR");}
+function today(){return new Date().toISOString().slice(0,10);}
+function def(){return {items:[]};}
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||"null");if(!d)return def();return Object.assign(def(),d);}catch(e){return def();}}
+function save(x){try{localStorage.setItem(KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
+var db=load();
+function lock(fn){return function(){if(busy)return;busy=true;try{fn();}catch(e){toast("خطا",true);}finally{busy=false;};};}
+
+function cost(x){return Number(x.mat||0)+Number(x.lab||0)+Number(x.oh||0);}
+function unitCost(x){var q=Number(x.qty||0);return q?cost(x)/q:0;}
+function renderDash(){
+  var items=db.items||[];
+  var run=items.filter(function(x){return x.status==="run";});
+  var tot=items.reduce(function(s,x){return s+cost(x);},0);
+  $("st1").textContent=money(items.length);$("st1l").textContent="دستور";
+  $("st2").textContent=money(run.length);$("st2l").textContent="در تولید";
+  $("st3").textContent=money(tot);$("st3l").textContent="بهای کل";
+  $("sum").textContent="میانگین بهای واحد (تقریبی): "+(items.length?money(items.reduce(function(s,x){return s+unitCost(x);},0)/items.length):0);
+}
+function clearF(){$("editId").value="";$("fTitle").value="";$("fCode").value="";$("fQty").value="";$("fMat").value="";$("fLab").value="";$("fOh").value="";$("fStatus").value="plan";$("fNote").value="";}
+$("btnClr").onclick=clearF;
+$("btnSave").onclick=lock(function(){
+  var title=($("fTitle").value||"").trim();if(!title){toast("عنوان؟",true);return;}
+  var id=$("editId").value?Number($("editId").value):null;var row;
+  if(id){row=(db.items||[]).find(function(x){return x.id===id;});if(!row)return;}
+  else{row={id:uid()};db.items=db.items||[];db.items.push(row);}
+  row.title=title;row.code=($("fCode").value||"").slice(0,40);row.qty=Number($("fQty").value)||0;
+  row.mat=Number($("fMat").value)||0;row.lab=Number($("fLab").value)||0;row.oh=Number($("fOh").value)||0;
+  row.status=$("fStatus").value;row.note=($("fNote").value||"").slice(0,500);
+  save(db);clearF();renderDash();toast("ذخیره");
+});
+function renderList(){
+  $("thead").innerHTML="<tr><th>محصول</th><th>تعداد</th><th>بهای کل</th><th>بهای واحد</th><th>وضعیت</th><th></th></tr>";
+  var tb=$("tbody");tb.textContent="";
+  (db.items||[]).forEach(function(x){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+esc(x.title)+"</td><td class='num'>"+money(x.qty)+"</td><td class='num'>"+money(cost(x))+"</td><td class='num'>"+money(Math.round(unitCost(x)))+"</td><td>"+esc(x.status)+"</td>"+
+      "<td><button type='button' class='btn btn-a btn-sm' data-e='"+x.id+"'>ویرایش</button> <button type='button' class='btn btn-r btn-sm' data-d='"+x.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+document.body.addEventListener("click",function(e){
+  var ed=e.target.closest("[data-e]");if(ed){var x=(db.items||[]).find(function(i){return String(i.id)===ed.getAttribute("data-e");});if(!x)return;
+    $("editId").value=x.id;$("fTitle").value=x.title;$("fCode").value=x.code||"";$("fQty").value=x.qty||0;$("fMat").value=x.mat||0;$("fLab").value=x.lab||0;$("fOh").value=x.oh||0;$("fStatus").value=x.status;$("fNote").value=x.note||"";go("form");}
+  var dd=e.target.closest("[data-d]");if(dd){if(!confirm("حذف؟"))return;db.items=(db.items||[]).filter(function(i){return String(i.id)!==dd.getAttribute("data-d");});save(db);renderList();renderDash();}
+});
+$("btnRep").onclick=function(){
+  var items=db.items||[];
+  $("repOut").textContent="بهای تمام‌شده تولید\n"+items.map(function(x){return x.title+": کل="+cost(x)+" واحد≈"+Math.round(unitCost(x));}).join("\n");
+};
+
+function go(tab,btn){
+document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
+document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
+var el=$(tab);if(el)el.classList.add("on");
+if(btn)btn.classList.add("on");else{var n=document.querySelector('#nav button[data-tab="'+tab+'"]');if(n)n.classList.add("on");}
+if(tab==="dash")renderDash();
+if(tab==="list")renderList();
+}
+$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
+$("btnRef").onclick=function(){renderDash();toast("بروز");};
+$("btnBak").onclick=function(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));a.download=KEY+"-bak.json";a.click();};
+$("bakFile").onchange=function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{db=Object.assign(def(),JSON.parse(r.result));save(db);renderDash();toast("بازیابی");}catch(err){toast("نامعتبر",true);}};r.readAsText(f);};
+$("btnWipe").onclick=lock(function(){if(!confirm("بازنشانی؟"))return;db=def();save(db);renderDash();toast("پاک شد");});
+renderDash();
+})();
+</script>
+</body>
+</html>
