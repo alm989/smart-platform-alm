@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#db2777">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="روابط عمومی">
+<meta name="description" content="روابط عمومی و رسانه — محتوا، شبکه اجتماعی، بیانیه، کمپین، بحران">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>روابط عمومی و رسانه‌ای هوشمند</title>
+<style>
+:root{
+  --bg:#fdf2f8;--card:#fff;--line:#fbcfe8;--txt:#831843;--muted:#be185d;
+  --b:#ec4899;--b2:#db2777;--g:#059669;--r:#dc2626;--o:#d97706;--p:#7c3aed;--c:#0891b2;
+  --shadow:0 4px 22px rgba(219,39,119,.1);--safe:env(safe-area-inset-bottom,0px);--radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 400px at 100% 0%,#fce7f3 0%,transparent 55%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55}
+.box{max-width:980px;margin:0 auto}
+.header{text-align:center;margin-bottom:12px}
+.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;display:grid;place-items:center;font-size:26px;margin:0 auto 8px;box-shadow:0 8px 24px rgba(236,72,153,.35)}
+h1{font-size:clamp(1.05rem,3vw,1.25rem);color:#9d174d;font-weight:700}
+.sub{font-size:.8rem;color:var(--muted)}
+.nav{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(253,242,248,.94);backdrop-filter:blur(12px)}
+.nav button{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 1px;font-size:clamp(.4rem,1.05vw,.6rem);color:var(--muted);cursor:pointer;font-family:inherit}
+.nav button.on{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;border-color:transparent}
+.panel{display:none!important}.panel.on{display:block!important;animation:fi .15s ease}
+@keyframes fi{from{opacity:.4}to{opacity:1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card h2{font-size:.92rem;margin-bottom:12px;color:#9d174d}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
+.btn:disabled{opacity:.45}.btn-b{background:linear-gradient(135deg,var(--b),var(--b2))}.btn-g{background:linear-gradient(135deg,var(--g),#047857)}
+.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#b45309)}
+.btn-c{background:linear-gradient(135deg,var(--c),#0e7490)}.btn-p{background:linear-gradient(135deg,var(--p),#6d28d9)}
+.btn-gr{background:#e2e8f0;color:#334155}.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fdf4ff;font-size:16px;font-family:inherit;color:var(--txt)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(236,72,153,.15)}
+textarea{min-height:80px;resize:vertical}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th,td{border:1px solid var(--line);padding:7px 5px;text-align:right}
+th{background:#fce7f3;color:#9d174d;font-weight:700}
+tr:nth-child(even){background:#fdf2f8}
+.num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
+.scroll{overflow:auto;max-height:400px;border-radius:10px}
+.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
+.stat .n{font-size:1.05rem;font-weight:700;color:var(--b)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
+.toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center}
+.toast.show{opacity:1}.toast.err{background:var(--r)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
+.ok{background:#d1fae5;color:#065f46}.warn{background:#fef3c7;color:#92400e}.info{background:#e0e7ff;color:#3730a3}.draft{background:#f3e8ff;color:#6b21a8}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.filters button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:.72rem;cursor:pointer;font-family:inherit;color:var(--muted)}
+.filters button.on{background:var(--b);color:#fff;border-color:var(--b)}
+.post-card{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px;background:#fff}
+.post-card .t{font-weight:700}.post-card .m{font-size:.78rem;color:var(--muted);margin-top:4px}
+.chk-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:.82rem}
+.footer{text-align:center;font-size:.7rem;color:#f472b6;margin-top:14px}
+@media(max-width:800px){.nav{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
+@media print{.nav,.btn,nav{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="box">
+  <header class="header">
+    <div class="logo">📢</div>
+    <h1>روابط عمومی و رسانه‌ای</h1>
+    <p class="sub">محتوا · شبکه اجتماعی · وب‌سایت · بیانیه · کمپین · بحران · رسانه</p>
+  </header>
+  <nav class="nav" id="nav" role="tablist">
+    <button type="button" class="on" data-tab="dash">داشبورد</button>
+    <button type="button" data-tab="cal">تقویم</button>
+    <button type="button" data-tab="post">محتوا</button>
+    <button type="button" data-tab="press">بیانیه</button>
+    <button type="button" data-tab="media">رسانه</button>
+    <button type="button" data-tab="camp">کمپین</button>
+    <button type="button" data-tab="web">وب‌سایت</button>
+    <button type="button" data-tab="rep">گزارش</button>
+  </nav>
+
+  <main id="dash" class="panel on">
+    <div class="stats">
+      <div class="stat"><div class="n" id="stPost">۰</div><div class="l">محتوای ماه</div></div>
+      <div class="stat"><div class="n" id="stDraft">۰</div><div class="l">پیش‌نویس</div></div>
+      <div class="stat"><div class="n" id="stCamp">۰</div><div class="l">کمپین فعال</div></div>
+      <div class="stat"><div class="n" id="stPress">۰</div><div class="l">بیانیه</div></div>
+    </div>
+    <section class="card">
+      <h2>اتصال منشی و اسناد</h2>
+      <p class="note" id="linkStatus">—</p>
+      <div class="grid2">
+        <button type="button" class="btn btn-c" id="btnOpenSec">منشی</button>
+        <button type="button" class="btn btn-gr" id="btnOpenDoc">اسناد</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>محتوای نزدیک انتشار</h2>
+      <div class="scroll" id="dashSoon"><p class="note">موردی نیست.</p></div>
+    </section>
+    <section class="card">
+      <h2>چک‌لیست بحران رسانه‌ای</h2>
+      <div id="crisisBox"></div>
+      <button type="button" class="btn btn-o" id="btnCrisisNote">ثبت یادداشت بحران + منشی</button>
+    </section>
+  </main>
+
+  <main id="cal" class="panel">
+    <section class="card">
+      <h2>تقویم محتوا</h2>
+      <div class="grid2">
+        <div><label>از</label><input type="date" id="calFrom"></div>
+        <div><label>تا</label><input type="date" id="calTo"></div>
+      </div>
+      <div class="filters" id="calFilt">
+        <button type="button" class="on" data-f="all">همه</button>
+        <button type="button" data-f="instagram">اینستاگرام</button>
+        <button type="button" data-f="telegram">تلگرام</button>
+        <button type="button" data-f="linkedin">لینکدین</button>
+        <button type="button" data-f="x">ایکس</button>
+        <button type="button" data-f="website">وب‌سایت</button>
+        <button type="button" data-f="other">سایر</button>
+      </div>
+      <button type="button" class="btn btn-b" id="btnCal">نمایش</button>
+      <div class="scroll" style="margin-top:10px"><table><thead><tr><th>تاریخ</th><th>کانال</th><th>عنوان</th><th>وضعیت</th><th></th></tr></thead><tbody id="calList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="post" class="panel">
+    <section class="card">
+      <h2>تولید / ثبت محتوا</h2>
+      <input type="hidden" id="postId">
+      <div class="grid2">
+        <div><label>عنوان *</label><input id="postTitle" maxlength="200" autocomplete="off"></div>
+        <div><label>تاریخ انتشار برنامه‌ای</label><input id="postDate" type="date"></div>
+      </div>
+      <div class="grid3">
+        <div><label>کانال *</label>
+          <select id="postCh">
+            <option value="instagram">اینستاگرام</option>
+            <option value="telegram">تلگرام</option>
+            <option value="linkedin">لینکدین</option>
+            <option value="x">ایکس (توییتر)</option>
+            <option value="website">وب‌سایت / بلاگ</option>
+            <option value="youtube">یوتیوب</option>
+            <option value="aparat">آپارات</option>
+            <option value="other">سایر</option>
+          </select>
+        </div>
+        <div><label>نوع</label>
+          <select id="postType">
+            <option value="post">پست</option>
+            <option value="story">استوری</option>
+            <option value="reel">ریلز / ویدئو</option>
+            <option value="article">مقاله</option>
+            <option value="ad">تبلیغ</option>
+          </select>
+        </div>
+        <div><label>وضعیت</label>
+          <select id="postStatus">
+            <option value="draft">پیش‌نویس</option>
+            <option value="review">بازبینی</option>
+            <option value="approved">تأیید شده</option>
+            <option value="scheduled">زمان‌بندی</option>
+            <option value="published">منتشر شده</option>
+            <option value="archived">بایگانی</option>
+          </select>
+        </div>
+      </div>
+      <label>متن / کپشن *</label><textarea id="postBody" maxlength="5000"></textarea>
+      <label>هشتگ / کلمات کلیدی</label><input id="postTags" maxlength="300" placeholder="#برند #محصول">
+      <label>لینک / پیوست (شرح)</label><input id="postLink" maxlength="300">
+      <div class="grid2">
+        <button type="button" class="btn btn-g" id="btnPost">ذخیره</button>
+        <button type="button" class="btn btn-gr" id="btnPostClr">جدید</button>
+      </div>
+      <button type="button" class="btn btn-p" id="btnPostSec">ذخیره + یادآوری منشی برای انتشار</button>
+    </section>
+    <section class="card">
+      <h2>فهرست محتوا</h2>
+      <input id="postSearch" placeholder="جستجو…" maxlength="80">
+      <div class="filters" id="postFilt">
+        <button type="button" class="on" data-f="all">همه</button>
+        <button type="button" data-f="draft">پیش‌نویس</button>
+        <button type="button" data-f="scheduled">زمان‌بندی</button>
+        <button type="button" data-f="published">منتشر</button>
+      </div>
+      <div id="postCards"></div>
+    </section>
+  </main>
+
+  <main id="press" class="panel">
+    <section class="card">
+      <h2>بیانیه / خبر رسمی</h2>
+      <input type="hidden" id="prId">
+      <div class="grid2">
+        <div><label>عنوان *</label><input id="prTitle" maxlength="250"></div>
+        <div><label>تاریخ</label><input id="prDate" type="date"></div>
+      </div>
+      <div class="grid2">
+        <div><label>نوع</label>
+          <select id="prType">
+            <option value="release">خبرنامه / Press Release</option>
+            <option value="statement">بیانیه رسمی</option>
+            <option value="response">پاسخ به رسانه</option>
+            <option value="event">رویداد / افتتاح</option>
+          </select>
+        </div>
+        <div><label>وضعیت</label>
+          <select id="prStatus">
+            <option value="draft">پیش‌نویس</option>
+            <option value="approved">تأیید</option>
+            <option value="sent">ارسال‌شده</option>
+            <option value="published">منتشر</option>
+          </select>
+        </div>
+      </div>
+      <label>متن بیانیه *</label><textarea id="prBody" maxlength="8000" style="min-height:140px"></textarea>
+      <label>مخاطب رسانه (اختیاری)</label><input id="prTo" maxlength="200">
+      <div class="grid2">
+        <button type="button" class="btn btn-g" id="btnPress">ذخیره</button>
+        <button type="button" class="btn btn-b" id="btnPressTpl">قالب خبر رسمی</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>فهرست بیانیه‌ها</h2>
+      <div class="scroll"><table><thead><tr><th>تاریخ</th><th>عنوان</th><th>نوع</th><th>وضعیت</th><th></th></tr></thead><tbody id="pressList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="media" class="panel">
+    <section class="card">
+      <h2>دفترچه رسانه / خبرنگار</h2>
+      <input type="hidden" id="mId">
+      <div class="grid2">
+        <div><label>نام *</label><input id="mName" maxlength="120"></div>
+        <div><label>رسانه / سازمان</label><input id="mOrg" maxlength="120"></div>
+      </div>
+      <div class="grid3">
+        <div><label>حوزه</label>
+          <select id="mBeat">
+            <option value="general">عمومی</option>
+            <option value="economy">اقتصاد</option>
+            <option value="tech">فناوری</option>
+            <option value="culture">فرهنگ</option>
+            <option value="sport">ورزش</option>
+            <option value="politics">سیاست</option>
+            <option value="other">سایر</option>
+          </select>
+        </div>
+        <div><label>موبایل</label><input id="mMobile" maxlength="20" class="num"></div>
+        <div><label>ایمیل</label><input id="mEmail" maxlength="100" type="email"></div>
+      </div>
+      <label>یادداشت</label><input id="mNote" maxlength="300">
+      <button type="button" class="btn btn-g" id="btnMedia">ذخیره</button>
+      <button type="button" class="btn btn-gr" id="btnMediaClr">جدید</button>
+    </section>
+    <section class="card">
+      <h2>فهرست</h2>
+      <input id="mediaSearch" placeholder="جستجو…" maxlength="80">
+      <div class="scroll" style="margin-top:8px"><table><thead><tr><th>نام</th><th>رسانه</th><th>حوزه</th><th>تماس</th><th></th></tr></thead><tbody id="mediaList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="camp" class="panel">
+    <section class="card">
+      <h2>کمپین روابط عمومی / بازاریابی محتوا</h2>
+      <input type="hidden" id="campId">
+      <div class="grid2">
+        <div><label>نام کمپین *</label><input id="campName" maxlength="150"></div>
+        <div><label>وضعیت</label>
+          <select id="campStatus">
+            <option value="plan">برنامه‌ریزی</option>
+            <option value="active">فعال</option>
+            <option value="done">پایان‌یافته</option>
+            <option value="pause">متوقف</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div><label>شروع</label><input id="campFrom" type="date"></div>
+        <div><label>پایان</label><input id="campTo" type="date"></div>
+      </div>
+      <label>هدف</label><textarea id="campGoal" maxlength="500"></textarea>
+      <label>کانال‌ها / تاکتیک</label><input id="campCh" maxlength="300" placeholder="اینستاگرام، خبر، رویداد…">
+      <label>KPI / شاخص</label><input id="campKpi" maxlength="300" placeholder="بازدید، تعامل، پوشش خبری…">
+      <button type="button" class="btn btn-g" id="btnCamp">ذخیره کمپین</button>
+    </section>
+    <section class="card">
+      <h2>کمپین‌ها</h2>
+      <div class="scroll"><table><thead><tr><th>نام</th><th>بازه</th><th>وضعیت</th><th></th></tr></thead><tbody id="campList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="web" class="panel">
+    <section class="card">
+      <h2>مدیریت صفحات / مطالب وب‌سایت</h2>
+      <p class="note">برای هماهنگی محتوا با سایت؛ انتشار واقعی روی سرور جداگانه انجام می‌شود.</p>
+      <input type="hidden" id="wId">
+      <div class="grid2">
+        <div><label>عنوان صفحه *</label><input id="wTitle" maxlength="200"></div>
+        <div><label>اسلاگ / مسیر</label><input id="wSlug" maxlength="120" placeholder="about-us" class="num"></div>
+      </div>
+      <div class="grid2">
+        <div><label>نوع</label>
+          <select id="wType">
+            <option value="page">صفحه ثابت</option>
+            <option value="blog">مقاله بلاگ</option>
+            <option value="landing">لندینگ</option>
+            <option value="news">خبر سایت</option>
+          </select>
+        </div>
+        <div><label>وضعیت</label>
+          <select id="wStatus">
+            <option value="draft">پیش‌نویس</option>
+            <option value="review">بازبینی</option>
+            <option value="live">آنلاین</option>
+            <option value="offline">آفلاین</option>
+          </select>
+        </div>
+      </div>
+      <label>SEO عنوان</label><input id="wSeoTitle" maxlength="70">
+      <label>SEO توضیحات</label><input id="wSeoDesc" maxlength="160">
+      <label>متن / خلاصه</label><textarea id="wBody" maxlength="5000"></textarea>
+      <button type="button" class="btn btn-g" id="btnWeb">ذخیره</button>
+      <button type="button" class="btn btn-gr" id="btnWebClr">جدید</button>
+    </section>
+    <section class="card">
+      <h2>فهرست صفحات</h2>
+      <div class="scroll"><table><thead><tr><th>عنوان</th><th>مسیر</th><th>نوع</th><th>وضعیت</th><th></th></tr></thead><tbody id="webList"></tbody></table></div>
+    </section>
+  </main>
+
+  <main id="rep" class="panel">
+    <section class="card">
+      <h2>گزارش و پشتیبان</h2>
+      <div class="filters" id="repTabs">
+        <button type="button" class="on" data-r="posts">محتوا</button>
+        <button type="button" data-r="press">بیانیه</button>
+        <button type="button" data-r="camp">کمپین</button>
+        <button type="button" data-r="media">رسانه</button>
+        <button type="button" data-r="web">وب</button>
+        <button type="button" data-r="ch">بر اساس کانال</button>
+      </div>
+      <button type="button" class="btn btn-b" id="btnRep">اجرا</button>
+      <button type="button" class="btn btn-gr" id="btnPrint">چاپ</button>
+      <button type="button" class="btn btn-g" id="btnBackup">پشتیبان</button>
+      <label>بازیابی</label>
+      <input type="file" id="restoreFile" accept=".json,application/json">
+      <button type="button" class="btn btn-r" id="btnWipe">حذف همه</button>
+    </section>
+    <section class="card">
+      <h2 id="repTitle">نتیجه</h2>
+      <div class="scroll" id="repOut"><p class="note">گزارش را اجرا کنید.</p></div>
+    </section>
+  </main>
+  <p class="footer">روابط عمومی هوشمند · تقویم محتوا · داده محلی · انتشار واقعی در پلتفرم‌ها دستی است</p>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+var KEY="smart_pr_v1", SEC_KEY="items";
+var busy=false, toastTimer=null, calFilt="all", postFilt="all", repMode="posts";
+var CH={instagram:"اینستاگرام",telegram:"تلگرام",linkedin:"لینکدین",x:"ایکس",website:"وب‌سایت",youtube:"یوتیوب",aparat:"آپارات",other:"سایر"};
+var ST={draft:"پیش‌نویس",review:"بازبینی",approved:"تأیید",scheduled:"زمان‌بندی",published:"منتشر",archived:"بایگانی",sent:"ارسال",plan:"برنامه",active:"فعال",done:"پایان",pause:"توقف",live:"آنلاین",offline:"آفلاین"};
+var CRISIS=["تشکیل تیم بحران و سخنگو","جمع‌آوری واقعیت‌ها — بدون گمانه‌زنی","پیام واحد و کوتاه برای رسانه","اطلاع‌رسانی داخلی قبل از عمومی","مانیتورینگ شبکه‌های اجتماعی","پاسخ به سؤالات پرتکرار (FAQ)","به‌روزرسانی بیانیه در صورت نیاز","جمع‌بندی و درس‌آموخته پس از بحران"];
+
+function $(id){return document.getElementById(id);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2200);}
+function today(){return new Date().toISOString().slice(0,10);}
+function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+
+function def(){return {posts:[],press:[],media:[],campaigns:[],pages:[],version:1};}
+function load(){
+  try{
+    var d=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(!d) return def();
+    ["posts","press","media","campaigns","pages"].forEach(function(k){if(!Array.isArray(d[k]))d[k]=[];});
+    return d;
+  }catch(e){return def();}
+}
+function save(x){try{localStorage.setItem(KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
+var db=load();
+
+function lock(fn){return function(){if(busy)return;busy=true;try{fn();}catch(e){toast("خطا",true);}finally{busy=false;};};}
+function pushSec(title,note,date){
+  try{
+    var items=JSON.parse(localStorage.getItem(SEC_KEY)||"[]");
+    if(!Array.isArray(items)) items=[];
+    items.unshift({id:uid(),type:"reminder",title:title,note:note||"",date:date||today(),status:"pending",priority:"high",source:"pr",created:Date.now()});
+    localStorage.setItem(SEC_KEY,JSON.stringify(items));
+    return true;
+  }catch(e){return false;}
+}
+
+function go(tab,btn){
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
+  document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
+  var el=$(tab); if(el) el.classList.add("on");
+  if(btn) btn.classList.add("on");
+  else {var n=document.querySelector('#nav button[data-tab="'+tab+'"]'); if(n) n.classList.add("on");}
+  if(tab==="dash") renderDash();
+  if(tab==="cal"){ if(!$("calFrom").value)$("calFrom").value=today().slice(0,8)+"01"; if(!$("calTo").value)$("calTo").value=today(); renderCal(); }
+  if(tab==="post"){ if(!$("postDate").value)$("postDate").value=today(); renderPosts(); }
+  if(tab==="press"){ if(!$("prDate").value)$("prDate").value=today(); renderPress(); }
+  if(tab==="media") renderMedia();
+  if(tab==="camp") renderCamps();
+  if(tab==="web") renderWeb();
+}
+
+function renderDash(){
+  var ym=today().slice(0,7);
+  $("stPost").textContent=String(db.posts.filter(function(p){return String(p.date||"").slice(0,7)===ym;}).length);
+  $("stDraft").textContent=String(db.posts.filter(function(p){return p.status==="draft"||p.status==="review";}).length);
+  $("stCamp").textContent=String(db.campaigns.filter(function(c){return c.status==="active"||c.status==="plan";}).length);
+  $("stPress").textContent=String(db.press.length);
+  var sec=false; try{sec=!!localStorage.getItem(SEC_KEY);}catch(e){}
+  $("linkStatus").innerHTML=(sec?'<span class="badge ok">منشی متصل</span>':'<span class="badge warn">منشی نیست</span>')+' · انتشار در شبکه‌ها دستی است.';
+
+  var soon=db.posts.filter(function(p){
+    return p.status==="scheduled"||p.status==="approved";
+  }).sort(function(a,b){return (a.date||"")<(b.date||"")?-1:1;}).slice(0,10);
+  var box=$("dashSoon");
+  if(!soon.length){ box.innerHTML='<p class="note">محتوای زمان‌بندی‌شده نیست.</p>'; }
+  else {
+    var h='<table><thead><tr><th>تاریخ</th><th>کانال</th><th>عنوان</th><th>وضعیت</th></tr></thead><tbody>';
+    soon.forEach(function(p){h+="<tr><td class='num'>"+esc(p.date)+"</td><td>"+esc(CH[p.channel]||p.channel)+"</td><td>"+esc(p.title)+"</td><td>"+esc(ST[p.status]||p.status)+"</td></tr>";});
+    h+="</tbody></table>";
+    box.innerHTML=h;
+  }
+  var cb=$("crisisBox"); cb.innerHTML="";
+  CRISIS.forEach(function(t,i){
+    var lab=document.createElement("label");
+    lab.className="chk-row";
+    lab.innerHTML='<input type="checkbox" id="cr'+i+'"> <span>'+esc(t)+'</span>';
+    cb.appendChild(lab);
+  });
+}
+
+$("btnCrisisNote").onclick=lock(function(){
+  var ok=pushSec("چک‌لیست بحران روابط عمومی","اقدامات بحران رسانه‌ای را پیگیری کنید",today());
+  toast(ok?"یادآوری منشی ثبت شد":"منشی در دسترس نیست",!ok);
+});
+
+function renderCal(){
+  var from=$("calFrom").value, to=$("calTo").value;
+  var list=db.posts.filter(function(p){
+    if(from&&p.date&&p.date<from) return false;
+    if(to&&p.date&&p.date>to) return false;
+    if(calFilt!=="all"&&p.channel!==calFilt) return false;
+    return true;
+  }).sort(function(a,b){return (a.date||"")<(b.date||"")?-1:1;});
+  var tb=$("calList"); tb.textContent="";
+  list.forEach(function(p){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(p.date)+"</td><td>"+esc(CH[p.channel]||p.channel)+"</td><td>"+esc(p.title)+"</td><td>"+esc(ST[p.status]||"")+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-edit-post='"+p.id+"'>ویرایش</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("btnCal").onclick=renderCal;
+
+function clearPost(){ $("postId").value="";$("postTitle").value="";$("postBody").value="";$("postTags").value="";$("postLink").value="";$("postStatus").value="draft";$("postCh").value="instagram";$("postType").value="post"; }
+$("btnPostClr").onclick=clearPost;
+function renderPosts(){
+  var q=($("postSearch").value||"").trim().toLowerCase();
+  var box=$("postCards"); box.textContent="";
+  var list=db.posts.slice().reverse().filter(function(p){
+    if(postFilt!=="all"&&p.status!==postFilt) return false;
+    if(!q) return true;
+    return (p.title+" "+(p.body||"")+" "+(p.tags||"")).toLowerCase().indexOf(q)>=0;
+  });
+  if(!list.length){ box.innerHTML='<p class="note">موردی نیست.</p>'; return; }
+  list.forEach(function(p){
+    var div=document.createElement("div");
+    div.className="post-card";
+    div.innerHTML='<div class="t">'+esc(p.title)+' <span class="badge '+(p.status==="published"?"ok":p.status==="draft"?"draft":"info")+'">'+esc(ST[p.status]||p.status)+'</span></div>'+
+      '<div class="m">'+esc(CH[p.channel]||"")+' · '+esc(p.date||"")+' · '+esc(p.type||"")+'</div>'+
+      '<div class="m">'+(esc((p.body||"").slice(0,120)))+(p.body&&p.body.length>120?"…":"")+'</div>'+
+      '<div style="margin-top:8px"><button type="button" class="btn btn-b btn-sm" data-edit-post="'+p.id+'">ویرایش</button> '+
+      '<button type="button" class="btn btn-r btn-sm" data-del-post="'+p.id+'">حذف</button></div>';
+    box.appendChild(div);
+  });
+}
+$("postSearch").oninput=renderPosts;
+function savePost(toSec){
+  var title=($("postTitle").value||"").trim(), body=($("postBody").value||"").trim();
+  if(!title||!body){toast("عنوان و متن الزامی",true);return;}
+  var row={
+    id:$("postId").value?Number($("postId").value):uid(),
+    title:title.slice(0,200), date:$("postDate").value||today(), channel:$("postCh").value, type:$("postType").value,
+    status:$("postStatus").value, body:body.slice(0,5000), tags:($("postTags").value||"").slice(0,300),
+    link:($("postLink").value||"").slice(0,300), updated:Date.now()
+  };
+  var i=db.posts.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0) db.posts[i]=row; else db.posts.push(row);
+  if(!save(db)) return;
+  if(toSec){
+    var ok=pushSec("انتشار محتوا: "+row.title, CH[row.channel]+" — "+row.status, row.date);
+    toast(ok?"ذخیره + منشی":"ذخیره شد", !ok);
+  } else toast("ذخیره شد");
+  clearPost(); renderPosts(); renderDash();
+}
+$("btnPost").onclick=lock(function(){savePost(false);});
+$("btnPostSec").onclick=lock(function(){savePost(true);});
+
+function renderPress(){
+  var tb=$("pressList"); tb.textContent="";
+  db.press.slice().reverse().forEach(function(p){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td class='num'>"+esc(p.date)+"</td><td>"+esc(p.title)+"</td><td>"+esc(p.type)+"</td><td>"+esc(ST[p.status]||p.status)+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-edit-pr='"+p.id+"'>ویرایش</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-pr='"+p.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("btnPressTpl").onclick=function(){
+  var t=($("prTitle").value||"عنوان خبر").trim();
+  $("prBody").value="بسمه تعالی\n\nخبر فوری / بیانیه\n\nعنوان: "+t+"\n\n[شهر] — [سازمان] اعلام کرد:\n\n[پاراگراف اول: چه کسی، چه چیزی، کجا، کی]\n\n[جزئیات و نقل‌قول سخنگو]\n\n[اطلاعات تماس روابط عمومی]\n\nپایان خبر\n";
+  toast("قالب بارگذاری شد");
+};
+$("btnPress").onclick=lock(function(){
+  var title=($("prTitle").value||"").trim(), body=($("prBody").value||"").trim();
+  if(!title||!body){toast("عنوان و متن؟",true);return;}
+  var row={id:$("prId").value?Number($("prId").value):uid(),title:title.slice(0,250),date:$("prDate").value||today(),type:$("prType").value,status:$("prStatus").value,body:body.slice(0,8000),to:($("prTo").value||"").slice(0,200)};
+  var i=db.press.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0) db.press[i]=row; else db.press.push(row);
+  if(!save(db)) return;
+  $("prId").value="";$("prTitle").value="";$("prBody").value="";$("prTo").value="";
+  renderPress(); renderDash(); toast("بیانیه ذخیره شد");
+});
+
+function clearMedia(){ $("mId").value="";$("mName").value="";$("mOrg").value="";$("mBeat").value="general";$("mMobile").value="";$("mEmail").value="";$("mNote").value=""; }
+$("btnMediaClr").onclick=clearMedia;
+function renderMedia(){
+  var q=($("mediaSearch").value||"").trim().toLowerCase();
+  var tb=$("mediaList"); tb.textContent="";
+  db.media.filter(function(m){return !q||(m.name+" "+(m.org||"")).toLowerCase().indexOf(q)>=0;}).forEach(function(m){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+esc(m.name)+"</td><td>"+esc(m.org||"")+"</td><td>"+esc(m.beat)+"</td><td class='num'>"+esc(m.mobile||m.email||"")+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-edit-m='"+m.id+"'>ویرایش</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-m='"+m.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("mediaSearch").oninput=renderMedia;
+$("btnMedia").onclick=lock(function(){
+  var name=($("mName").value||"").trim();
+  if(!name){toast("نام؟",true);return;}
+  var row={id:$("mId").value?Number($("mId").value):uid(),name:name.slice(0,120),org:($("mOrg").value||"").slice(0,120),beat:$("mBeat").value,mobile:($("mMobile").value||"").slice(0,20),email:($("mEmail").value||"").slice(0,100),note:($("mNote").value||"").slice(0,300)};
+  var i=db.media.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0) db.media[i]=row; else db.media.push(row);
+  if(!save(db)) return;
+  clearMedia(); renderMedia(); toast("ذخیره شد");
+});
+
+function renderCamps(){
+  var tb=$("campList"); tb.textContent="";
+  db.campaigns.slice().reverse().forEach(function(c){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+esc(c.name)+"</td><td class='num'>"+esc((c.from||"")+" → "+(c.to||""))+"</td><td>"+esc(ST[c.status]||c.status)+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-edit-camp='"+c.id+"'>ویرایش</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-camp='"+c.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("btnCamp").onclick=lock(function(){
+  var name=($("campName").value||"").trim();
+  if(!name){toast("نام کمپین؟",true);return;}
+  var row={id:$("campId").value?Number($("campId").value):uid(),name:name.slice(0,150),status:$("campStatus").value,from:$("campFrom").value,to:$("campTo").value,goal:($("campGoal").value||"").slice(0,500),channels:($("campCh").value||"").slice(0,300),kpi:($("campKpi").value||"").slice(0,300)};
+  var i=db.campaigns.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0) db.campaigns[i]=row; else db.campaigns.push(row);
+  if(!save(db)) return;
+  $("campId").value="";$("campName").value="";$("campGoal").value="";$("campCh").value="";$("campKpi").value="";
+  renderCamps(); renderDash(); toast("کمپین ذخیره شد");
+});
+
+function clearWeb(){ $("wId").value="";$("wTitle").value="";$("wSlug").value="";$("wType").value="page";$("wStatus").value="draft";$("wSeoTitle").value="";$("wSeoDesc").value="";$("wBody").value=""; }
+$("btnWebClr").onclick=clearWeb;
+function renderWeb(){
+  var tb=$("webList"); tb.textContent="";
+  db.pages.slice().reverse().forEach(function(p){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+esc(p.title)+"</td><td class='num'>"+esc(p.slug||"")+"</td><td>"+esc(p.type)+"</td><td>"+esc(ST[p.status]||p.status)+"</td>"+
+      "<td><button type='button' class='btn btn-b btn-sm' data-edit-w='"+p.id+"'>ویرایش</button> "+
+      "<button type='button' class='btn btn-r btn-sm' data-del-w='"+p.id+"'>حذف</button></td>";
+    tb.appendChild(tr);
+  });
+}
+$("btnWeb").onclick=lock(function(){
+  var title=($("wTitle").value||"").trim();
+  if(!title){toast("عنوان؟",true);return;}
+  var row={id:$("wId").value?Number($("wId").value):uid(),title:title.slice(0,200),slug:($("wSlug").value||"").slice(0,120),type:$("wType").value,status:$("wStatus").value,seoTitle:($("wSeoTitle").value||"").slice(0,70),seoDesc:($("wSeoDesc").value||"").slice(0,160),body:($("wBody").value||"").slice(0,5000)};
+  var i=db.pages.findIndex(function(x){return String(x.id)===String(row.id);});
+  if(i>=0) db.pages[i]=row; else db.pages.push(row);
+  if(!save(db)) return;
+  clearWeb(); renderWeb(); toast("صفحه ذخیره شد");
+});
+
+function runRep(){
+  var h="", title="";
+  if(repMode==="posts"){
+    title="محتوا";
+    h="<table><thead><tr><th>تاریخ</th><th>کانال</th><th>عنوان</th><th>وضعیت</th></tr></thead><tbody>";
+    db.posts.forEach(function(p){h+="<tr><td class='num'>"+esc(p.date)+"</td><td>"+esc(CH[p.channel]||"")+"</td><td>"+esc(p.title)+"</td><td>"+esc(ST[p.status]||"")+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="press"){
+    title="بیانیه‌ها";
+    h="<table><thead><tr><th>تاریخ</th><th>عنوان</th><th>وضعیت</th></tr></thead><tbody>";
+    db.press.forEach(function(p){h+="<tr><td class='num'>"+esc(p.date)+"</td><td>"+esc(p.title)+"</td><td>"+esc(p.status)+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="camp"){
+    title="کمپین‌ها";
+    h="<table><thead><tr><th>نام</th><th>وضعیت</th><th>هدف</th></tr></thead><tbody>";
+    db.campaigns.forEach(function(c){h+="<tr><td>"+esc(c.name)+"</td><td>"+esc(c.status)+"</td><td>"+esc((c.goal||"").slice(0,80))+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="media"){
+    title="رسانه‌ها";
+    h="<table><thead><tr><th>نام</th><th>سازمان</th><th>حوزه</th></tr></thead><tbody>";
+    db.media.forEach(function(m){h+="<tr><td>"+esc(m.name)+"</td><td>"+esc(m.org||"")+"</td><td>"+esc(m.beat)+"</td></tr>";});
+    h+="</tbody></table>";
+  } else if(repMode==="web"){
+    title="صفحات وب";
+    h="<table><thead><tr><th>عنوان</th><th>مسیر</th><th>وضعیت</th></tr></thead><tbody>";
+    db.pages.forEach(function(p){h+="<tr><td>"+esc(p.title)+"</td><td class='num'>"+esc(p.slug||"")+"</td><td>"+esc(p.status)+"</td></tr>";});
+    h+="</tbody></table>";
+  } else {
+    title="بر اساس کانال";
+    var map={};
+    db.posts.forEach(function(p){map[p.channel]=(map[p.channel]||0)+1;});
+    h="<table><thead><tr><th>کانال</th><th>تعداد</th></tr></thead><tbody>";
+    Object.keys(map).forEach(function(k){h+="<tr><td>"+esc(CH[k]||k)+"</td><td class='num'>"+map[k]+"</td></tr>";});
+    h+="</tbody></table>";
+  }
+  $("repTitle").textContent=title;
+  $("repOut").innerHTML=h||"<p class='note'>موردی نیست.</p>";
+  toast("گزارش آماده");
+}
+$("btnRep").onclick=lock(runRep);
+$("btnPrint").onclick=function(){window.print();};
+$("btnOpenSec").onclick=function(){window.open("index.html","_blank","noopener,noreferrer");};
+$("btnOpenDoc").onclick=function(){window.open("documents.html","_blank","noopener,noreferrer");};
+$("btnBackup").onclick=function(){
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
+  a.download="pr-backup-"+today()+".json"; a.click();
+};
+$("restoreFile").onchange=function(e){
+  var f=e.target.files&&e.target.files[0]; if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.posts))throw new Error("x");db=d;["press","media","campaigns","pages"].forEach(function(k){if(!Array.isArray(db[k]))db[k]=[];});save(db);toast("بازیابی شد");renderDash();}catch(err){toast("نامعتبر",true);}};
+  r.readAsText(f);
+};
+$("btnWipe").onclick=lock(function(){if(!confirm("حذف همه؟"))return;if(!confirm("نهایی؟"))return;db=def();save(db);toast("حذف شد");renderDash();});
+
+$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
+document.body.addEventListener("click",function(e){
+  var ep=e.target.closest("[data-edit-post]");
+  if(ep){var p=db.posts.find(function(x){return String(x.id)===ep.getAttribute("data-edit-post");});if(!p)return;
+    $("postId").value=p.id;$("postTitle").value=p.title;$("postDate").value=p.date||"";$("postCh").value=p.channel;$("postType").value=p.type||"post";
+    $("postStatus").value=p.status;$("postBody").value=p.body||"";$("postTags").value=p.tags||"";$("postLink").value=p.link||"";go("post");return;}
+  var dp=e.target.closest("[data-del-post]");
+  if(dp){if(!confirm("حذف؟"))return;db.posts=db.posts.filter(function(x){return String(x.id)!==dp.getAttribute("data-del-post");});save(db);renderPosts();renderDash();return;}
+  var epr=e.target.closest("[data-edit-pr]");
+  if(epr){var pr=db.press.find(function(x){return String(x.id)===epr.getAttribute("data-edit-pr");});if(!pr)return;
+    $("prId").value=pr.id;$("prTitle").value=pr.title;$("prDate").value=pr.date||"";$("prType").value=pr.type;$("prStatus").value=pr.status;$("prBody").value=pr.body||"";$("prTo").value=pr.to||"";go("press");return;}
+  var dpr=e.target.closest("[data-del-pr]");
+  if(dpr){db.press=db.press.filter(function(x){return String(x.id)!==dpr.getAttribute("data-del-pr");});save(db);renderPress();renderDash();return;}
+  var em=e.target.closest("[data-edit-m]");
+  if(em){var m=db.media.find(function(x){return String(x.id)===em.getAttribute("data-edit-m");});if(!m)return;
+    $("mId").value=m.id;$("mName").value=m.name;$("mOrg").value=m.org||"";$("mBeat").value=m.beat;$("mMobile").value=m.mobile||"";$("mEmail").value=m.email||"";$("mNote").value=m.note||"";go("media");return;}
+  var dm=e.target.closest("[data-del-m]");
+  if(dm){db.media=db.media.filter(function(x){return String(x.id)!==dm.getAttribute("data-del-m");});save(db);renderMedia();return;}
+  var ec=e.target.closest("[data-edit-camp]");
+  if(ec){var c=db.campaigns.find(function(x){return String(x.id)===ec.getAttribute("data-edit-camp");});if(!c)return;
+    $("campId").value=c.id;$("campName").value=c.name;$("campStatus").value=c.status;$("campFrom").value=c.from||"";$("campTo").value=c.to||"";$("campGoal").value=c.goal||"";$("campCh").value=c.channels||"";$("campKpi").value=c.kpi||"";go("camp");return;}
+  var dc=e.target.closest("[data-del-camp]");
+  if(dc){db.campaigns=db.campaigns.filter(function(x){return String(x.id)!==dc.getAttribute("data-del-camp");});save(db);renderCamps();renderDash();return;}
+  var ew=e.target.closest("[data-edit-w]");
+  if(ew){var w=db.pages.find(function(x){return String(x.id)===ew.getAttribute("data-edit-w");});if(!w)return;
+    $("wId").value=w.id;$("wTitle").value=w.title;$("wSlug").value=w.slug||"";$("wType").value=w.type;$("wStatus").value=w.status;$("wSeoTitle").value=w.seoTitle||"";$("wSeoDesc").value=w.seoDesc||"";$("wBody").value=w.body||"";go("web");return;}
+  var dw=e.target.closest("[data-del-w]");
+  if(dw){db.pages=db.pages.filter(function(x){return String(x.id)!==dw.getAttribute("data-del-w");});save(db);renderWeb();return;}
+});
+$("calFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;calFilt=b.getAttribute("data-f");document.querySelectorAll("#calFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderCal();});
+$("postFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;postFilt=b.getAttribute("data-f");document.querySelectorAll("#postFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderPosts();});
+$("repTabs").addEventListener("click",function(e){var b=e.target.closest("[data-r]");if(!b)return;repMode=b.getAttribute("data-r");document.querySelectorAll("#repTabs button").forEach(function(x){x.classList.toggle("on",x===b);});});
+
+renderDash();
+})();
+</script>
+</body>
+</html>
