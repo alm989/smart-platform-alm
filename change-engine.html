@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="موتور تغییرات">
+<meta name="description" content="موتور تغییرات سراسری ماژول‌ها">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>موتور تغییرات ماژول‌ها</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--b:#38bdf8;--b2:#0ea5e9;--g:#22c55e;--r:#ef4444;--o:#f59e0b;--p:#a78bfa;--c:#14b8a6;--shadow:0 10px 36px rgba(0,0,0,.4);--safe:env(safe-area-inset-bottom,0px);--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 420px at 90% -10%,#134e4a 0%,transparent 50%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(60px + var(--safe));line-height:1.55}
+.box{max-width:1080px;margin:0 auto}
+.header{text-align:center;margin-bottom:12px}
+.logo{width:56px;height:56px;border-radius:16px;margin:0 auto 8px;background:linear-gradient(135deg,var(--c),#0f766e);display:grid;place-items:center;font-size:26px;box-shadow:0 8px 28px rgba(20,184,166,.35);color:#fff}
+h1{font-size:clamp(1.1rem,3vw,1.3rem);font-weight:800}
+.sub{font-size:.8rem;color:var(--muted)}
+.warn-bar{background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.35);color:#5eead4;border-radius:12px;padding:10px 12px;font-size:.76rem;margin-bottom:12px}
+.nav{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(15,23,42,.94);backdrop-filter:blur(12px)}
+.nav button{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.48rem,1.1vw,.65rem);color:var(--muted);cursor:pointer;font-family:inherit}
+.nav button.on{background:linear-gradient(135deg,var(--c),#0f766e);color:#fff;border-color:transparent;font-weight:700}
+.panel{display:none!important}.panel.on{display:block!important;animation:fi .15s ease}
+@keyframes fi{from{opacity:.4}to{opacity:1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card h2{font-size:.92rem;margin-bottom:12px;color:#5eead4}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
+.btn:disabled{opacity:.45}.btn-b{background:linear-gradient(135deg,var(--b2),#0369a1)}.btn-g{background:linear-gradient(135deg,var(--g),#16a34a)}
+.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#d97706)}
+.btn-c{background:linear-gradient(135deg,var(--c),#0f766e)}.btn-gr{background:#334155;color:#e2e8f0}
+.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
+label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#0f172a;font-size:16px;font-family:inherit;color:var(--txt)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--c);box-shadow:0 0 0 3px rgba(20,184,166,.15)}
+textarea{min-height:100px;resize:vertical;font-family:ui-monospace,Consolas,monospace;font-size:.8rem}
+table{width:100%;border-collapse:collapse;font-size:.76rem}
+th,td{border:1px solid var(--line);padding:8px 5px;text-align:right;vertical-align:top}
+th{background:#0f172a;color:#5eead4;font-weight:700}
+tr:nth-child(even){background:rgba(15,23,42,.5)}
+.num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
+.scroll{overflow:auto;max-height:440px;border-radius:10px}
+.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center}
+.stat .n{font-size:1.05rem;font-weight:800;color:var(--c)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
+.toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#0f172a;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center;font-weight:700}
+.toast.show{opacity:1}.toast.err{background:var(--r);color:#fff}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.66rem;font-weight:600}
+.ok{background:rgba(34,197,94,.2);color:#4ade80}.bad{background:rgba(239,68,68,.2);color:#f87171}
+.warn{background:rgba(245,158,11,.2);color:#fbbf24}.info{background:rgba(56,189,248,.15);color:#7dd3fc}
+.teal{background:rgba(20,184,166,.18);color:#5eead4}
+.chk-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.78rem}
+.chk-list label{display:flex;align-items:center;gap:6px;margin:0;font-weight:400;color:var(--txt)}
+.mod-pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--line);font-size:.72rem;margin:2px;background:#0f172a}
+.mod-pill.on{border-color:var(--c);color:#5eead4}
+.snippet{direction:ltr;text-align:left;white-space:pre-wrap;background:#0f172a;padding:12px;border-radius:10px;border:1px solid var(--line);font-size:.7rem;max-height:220px;overflow:auto}
+.footer{text-align:center;font-size:.7rem;color:#64748b;margin-top:14px}
+@media(max-width:720px){.nav{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:1fr 1fr}.chk-list{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="box">
+  <header class="header">
+    <div class="logo">⚙️</div>
+    <h1>موتور تغییرات ماژول‌ها</h1>
+    <p class="sub">هر تغییر · هر ماژول · هر تعداد · یکجا اعمال و مدیریت</p>
+  </header>
+  <div class="warn-bar">تغییرات در رجیستری مشترک ذخیره می‌شوند. ماژول‌هایی که قطعه SmartPatch را دارند خودکار اعمال می‌کنند.</div>
+  <nav class="nav" id="nav">
+    <button type="button" class="on" data-tab="dash">داشبورد</button>
+    <button type="button" data-tab="new">تغییر جدید</button>
+    <button type="button" data-tab="list">فهرست</button>
+    <button type="button" data-tab="batch">دسته‌ای</button>
+    <button type="button" data-tab="inject">تزریق</button>
+    <button type="button" data-tab="io">پشتیبان</button>
+  </nav>
+  <main id="dash" class="panel on">
+    <div class="stats">
+      <div class="stat"><div class="n" id="stTotal">۰</div><div class="l">کل تغییرات</div></div>
+      <div class="stat"><div class="n" id="stOn">۰</div><div class="l">فعال</div></div>
+      <div class="stat"><div class="n" id="stMods">۰</div><div class="l">ماژول هدف</div></div>
+      <div class="stat"><div class="n" id="stPack">۰</div><div class="l">بسته</div></div>
+    </div>
+    <section class="card">
+      <h2>وضعیت سریع</h2>
+      <p class="note" id="dashNote">—</p>
+      <div class="grid2">
+        <button type="button" class="btn btn-c" id="btnApplyAll">اعمال همه فعال‌ها به Runtime</button>
+        <button type="button" class="btn btn-b" id="btnRebuild">بازسازی ایندکس</button>
+      </div>
+    </section>
+    <section class="card"><h2>ماژول‌های شناخته‌شده</h2><div id="modPills"></div></section>
+  </main>
+
+  <main id="new" class="panel">
+    <section class="card">
+      <h2>ایجاد تغییر جدید</h2>
+      <input type="hidden" id="editId">
+      <label>عنوان تغییر *</label>
+      <input id="chTitle" maxlength="120" placeholder="مثلاً: رنگ هدر حسابداری">
+      <label>نوع تغییر *</label>
+      <select id="chType">
+        <option value="css">CSS سفارشی (ظاهر)</option>
+        <option value="text">جایگزینی متن UI</option>
+        <option value="flag">فلگ قابلیت (روشن/خاموش)</option>
+        <option value="config">پیکربندی JSON</option>
+        <option value="data">تبدیل داده localStorage</option>
+        <option value="js">اسکریپت Runtime (پیشرفته)</option>
+        <option value="note">یادداشت / دستورکار دستی</option>
+      </select>
+      <label>ماژول‌های هدف (چندتایی)</label>
+      <div class="chk-list" id="chMods"></div>
+      <label><input type="checkbox" id="chAll"> همه ماژول‌ها</label>
+      <label>اولویت (عدد؛ بالاتر زودتر)</label>
+      <input id="chPri" type="number" value="100" min="0" max="9999">
+      <label>فعال باشد؟</label>
+      <select id="chActive"><option value="1">فعال</option><option value="0">غیرفعال</option></select>
+      <div id="fCss"><label>کد CSS</label><textarea id="chCss" placeholder=".header{background:#0f766e!important}"></textarea></div>
+      <div id="fText" style="display:none">
+        <label>متن قدیم</label><input id="chFind" maxlength="200">
+        <label>متن جدید</label><input id="chReplace" maxlength="200">
+      </div>
+      <div id="fFlag" style="display:none">
+        <label>نام فلگ</label><input id="chFlag" maxlength="60" placeholder="showVoiceBtn">
+        <label>مقدار</label><select id="chFlagVal"><option value="true">true</option><option value="false">false</option></select>
+      </div>
+      <div id="fConfig" style="display:none">
+        <label>JSON پیکربندی</label><textarea id="chConfig" placeholder='{"pageSize":50}'></textarea>
+      </div>
+      <div id="fData" style="display:none">
+        <label>کلید localStorage</label><input id="chDataKey" maxlength="80" placeholder="smart_acc_v2">
+        <label>عملیات</label>
+        <select id="chDataOp">
+          <option value="setPath">تنظیم مسیر JSON</option>
+          <option value="deletePath">حذف مسیر</option>
+          <option value="clear">پاک کردن کل کلید</option>
+          <option value="backup">فقط پشتیبان</option>
+        </select>
+        <label>مسیر (مثلاً settings.theme)</label><input id="chDataPath" maxlength="120">
+        <label>مقدار JSON</label><textarea id="chDataVal" placeholder='"dark"'></textarea>
+      </div>
+      <div id="fJs" style="display:none">
+        <label>کد JS</label><textarea id="chJs" placeholder="document.body.style.fontSize='15px';"></textarea>
+        <p class="note">فقط در محیط مورد اعتماد.</p>
+      </div>
+      <div id="fNote" style="display:none">
+        <label>متن یادداشت</label><textarea id="chNote"></textarea>
+      </div>
+      <div class="grid2">
+        <button type="button" class="btn btn-g" id="btnSaveCh">ذخیره تغییر</button>
+        <button type="button" class="btn btn-gr" id="btnClrCh">فرم خالی</button>
+      </div>
+    </section>
+  </main>
+  <main id="list" class="panel">
+    <section class="card">
+      <h2>فهرست تغییرات</h2>
+      <div class="grid2">
+        <input id="filterQ" placeholder="جستجو…">
+        <select id="filterType">
+          <option value="">همه انواع</option>
+          <option value="css">CSS</option><option value="text">متن</option><option value="flag">فلگ</option>
+          <option value="config">پیکربندی</option><option value="data">داده</option><option value="js">JS</option><option value="note">یادداشت</option>
+        </select>
+      </div>
+      <div class="scroll" style="margin-top:10px"><table>
+        <thead><tr><th>عنوان</th><th>نوع</th><th>ماژول</th><th>وضعیت</th><th></th></tr></thead>
+        <tbody id="chList"></tbody>
+      </table></div>
+    </section>
+  </main>
+  <main id="batch" class="panel">
+    <section class="card">
+      <h2>بسته تغییرات</h2>
+      <label>نام بسته *</label><input id="packName" maxlength="80">
+      <label>توضیح</label><textarea id="packDesc" style="min-height:60px;font-family:inherit"></textarea>
+      <label>شناسه تغییرات (با ویرگول)</label><input id="packIds" placeholder="id1,id2">
+      <div class="grid2">
+        <button type="button" class="btn btn-c" id="btnSavePack">ذخیره بسته</button>
+        <button type="button" class="btn btn-g" id="btnApplyPack">فعال‌سازی شناسه‌ها</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>بسته‌ها</h2>
+      <div class="scroll"><table><thead><tr><th>نام</th><th>تعداد</th><th></th></tr></thead><tbody id="packList"></tbody></table></div>
+    </section>
+    <section class="card">
+      <h2>اجرای تبدیل‌های داده فعال</h2>
+      <p class="note">با پشتیبان خودکار قبل از هر کلید.</p>
+      <button type="button" class="btn btn-o" id="btnRunData">اجرا</button>
+      <pre class="note snippet" id="dataLog">—</pre>
+    </section>
+  </main>
+  <main id="inject" class="panel">
+    <section class="card">
+      <h2>قطعه تزریق برای هر ماژول</h2>
+      <p class="note">قبل از بسته شدن body در هر ماژول قرار دهید.</p>
+      <pre class="snippet" id="injectSnippet"></pre>
+      <button type="button" class="btn btn-b" id="btnCopySnippet">کپی قطعه</button>
+    </section>
+    <section class="card">
+      <h2>پیش‌نمایش Runtime</h2>
+      <label>ماژول</label><select id="prevMod"></select>
+      <button type="button" class="btn btn-c" id="btnPreview">ساخت پیش‌نمایش</button>
+      <pre class="snippet" id="prevOut">—</pre>
+    </section>
+  </main>
+  <main id="io" class="panel">
+    <section class="card">
+      <h2>پشتیبان و بازیابی</h2>
+      <button type="button" class="btn btn-g" id="btnExport">دانلود JSON</button>
+      <label>بازیابی</label><input type="file" id="importFile" accept=".json,application/json">
+      <button type="button" class="btn btn-r" id="btnWipe">حذف همه تغییرات</button>
+    </section>
+    <section class="card">
+      <h2>تاریخچه</h2>
+      <div class="scroll"><table><thead><tr><th>زمان</th><th>عمل</th><th>جزئیات</th></tr></thead><tbody id="histList"></tbody></table></div>
+    </section>
+  </main>
+  <p class="footer">موتور تغییرات v1 · smart_patches_v1 · smart_patches_runtime_v1</p>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(function(){
+"use strict";
+var KEY="smart_patches_v1", RT_KEY="smart_patches_runtime_v1";
+var busy=false, toastTimer=null;
+var MODULES=[
+{id:"all",title:"همه"},
+{id:"secretary",title:"منشی",file:"index.html"},
+{id:"assistant",title:"دستیار",file:"assistant.html"},
+{id:"ceo",title:"مدیرعامل",file:"ceo.html"},
+{id:"control",title:"مرکز کنترل",file:"control-center.html"},
+{id:"suite",title:"Suite",file:"suite.html"},
+{id:"accounting",title:"حسابداری",file:"accounting.html"},
+{id:"bank",title:"نقد و بانک",file:"cash-bank.html"},
+{id:"fund",title:"صندوق",file:"fund.html"},
+{id:"petty",title:"تنخواه",file:"petty-cash.html"},
+{id:"hr",title:"منابع انسانی",file:"hr-payroll.html"},
+{id:"sales",title:"فروش",file:"sales.html"},
+{id:"warehouse",title:"انبار",file:"warehouse.html"},
+{id:"customers",title:"مشتریان",file:"customers.html"},
+{id:"documents",title:"اسناد",file:"documents.html"},
+{id:"assets",title:"دارایی ثابت",file:"fixed-assets.html"},
+{id:"lawyer",title:"وکیل",file:"lawyer.html"},
+{id:"pr",title:"روابط عمومی",file:"pr-media.html"},
+{id:"patches",title:"موتور تغییرات",file:"change-engine.html"}
+];
+var TYPE_LABEL={css:"CSS",text:"متن",flag:"فلگ",config:"پیکربندی",data:"داده",js:"JS",note:"یادداشت"};
+function $(id){return document.getElementById(id);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2500);}
+function now(){return new Date().toISOString();}
+function today(){return now().slice(0,10);}
+function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+function lock(fn){return function(){if(busy)return;busy=true;try{fn.apply(this,arguments);}catch(e){console.error(e);toast("خطا",true);}finally{busy=false;};};}
+function def(){return{version:1,changes:[],packages:[],history:[],updated:Date.now()};}
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||"null");if(!d){d=def();localStorage.setItem(KEY,JSON.stringify(d));return d;}if(!Array.isArray(d.changes))d.changes=[];if(!Array.isArray(d.packages))d.packages=[];if(!Array.isArray(d.history))d.history=[];return d;}catch(e){return def();}}
+function save(x){try{x.updated=Date.now();localStorage.setItem(KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
+var db=load();
+function hist(action,detail){db.history.unshift({t:now(),action:action,detail:String(detail||"").slice(0,200)});if(db.history.length>150)db.history=db.history.slice(0,150);save(db);}
+function buildRuntime(){var rt={version:1,built:now(),byModule:{}};var list=db.changes.filter(function(c){return c.active;}).slice().sort(function(a,b){return (b.priority||0)-(a.priority||0);});list.forEach(function(c){var targets=(c.modules&&c.modules.length)?c.modules.slice():["all"];if(targets.indexOf("all")>=0)targets=MODULES.filter(function(m){return m.id!=="all";}).map(function(m){return m.id;});targets.forEach(function(mid){if(!rt.byModule[mid])rt.byModule[mid]={css:"",flags:{},config:{},texts:[],scripts:[],notes:[]};var slot=rt.byModule[mid];if(c.type==="css"&&c.payload&&c.payload.css)slot.css+="\n/* "+c.title+" */\n"+c.payload.css;if(c.type==="flag"&&c.payload)slot.flags[c.payload.name]=!!c.payload.value;if(c.type==="config"&&c.payload&&c.payload.json){try{var o=typeof c.payload.json==="string"?JSON.parse(c.payload.json):c.payload.json;Object.assign(slot.config,o);}catch(e){}}if(c.type==="text"&&c.payload)slot.texts.push({find:c.payload.find,replace:c.payload.replace});if(c.type==="js"&&c.payload&&c.payload.code)slot.scripts.push({id:c.id,title:c.title,code:c.payload.code});if(c.type==="note"&&c.payload)slot.notes.push(c.payload.text||"");});});try{localStorage.setItem(RT_KEY,JSON.stringify(rt));}catch(e){toast("Runtime ذخیره نشد",true);return null;}return rt;}
+function go(tab,btn){document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});var el=$(tab);if(el)el.classList.add("on");if(btn)btn.classList.add("on");else{var n=document.querySelector("#nav button[data-tab=\""+tab+"\"]");if(n)n.classList.add("on");}if(tab==="dash")renderDash();if(tab==="new")renderModChecks();if(tab==="list")renderList();if(tab==="batch")renderPacks();if(tab==="inject"){renderInject();fillPrevMods();}if(tab==="io")renderHist();}
+$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
+function renderDash(){var on=db.changes.filter(function(c){return c.active;}).length;$("stTotal").textContent=String(db.changes.length);$("stOn").textContent=String(on);var mods={};db.changes.forEach(function(c){(c.modules||[]).forEach(function(m){mods[m]=1;});});$("stMods").textContent=String(Object.keys(mods).length);$("stPack").textContent=String(db.packages.length);$("dashNote").textContent="آخرین بروزرسانی: "+(db.updated?new Date(db.updated).toLocaleString("fa-IR"):"—");var pills=$("modPills");pills.textContent="";MODULES.filter(function(m){return m.id!=="all";}).forEach(function(m){var n=db.changes.filter(function(c){return c.active&&((c.modules||[]).indexOf(m.id)>=0||(c.modules||[]).indexOf("all")>=0);}).length;var s=document.createElement("span");s.className="mod-pill"+(n?" on":"");s.textContent=m.title+(n?" ("+n+")":"");pills.appendChild(s);});}
+function renderModChecks(){var box=$("chMods");box.innerHTML="";MODULES.filter(function(m){return m.id!=="all";}).forEach(function(m){var lab=document.createElement("label");lab.innerHTML='<input type="checkbox" value="'+m.id+'" data-mod> '+esc(m.title);box.appendChild(lab);});}
+function showFields(){var t=$("chType").value;["fCss","fText","fFlag","fConfig","fData","fJs","fNote"].forEach(function(id){$(id).style.display="none";});if(t==="css")$("fCss").style.display="block";if(t==="text")$("fText").style.display="block";if(t==="flag")$("fFlag").style.display="block";if(t==="config")$("fConfig").style.display="block";if(t==="data")$("fData").style.display="block";if(t==="js")$("fJs").style.display="block";if(t==="note")$("fNote").style.display="block";}
+$("chType").onchange=showFields;showFields();
+$("chAll").onchange=function(){var on=this.checked;document.querySelectorAll("[data-mod]").forEach(function(c){c.checked=on;c.disabled=on;});};
+function clearForm(){$("editId").value="";$("chTitle").value="";$("chType").value="css";$("chPri").value="100";$("chActive").value="1";$("chCss").value="";$("chFind").value="";$("chReplace").value="";$("chFlag").value="";$("chFlagVal").value="true";$("chConfig").value="";$("chDataKey").value="";$("chDataPath").value="";$("chDataVal").value="";$("chJs").value="";$("chNote").value="";$("chAll").checked=false;document.querySelectorAll("[data-mod]").forEach(function(c){c.checked=false;c.disabled=false;});showFields();}
+$("btnClrCh").onclick=clearForm;
+function collectPayload(type){if(type==="css")return{css:($("chCss").value||"").slice(0,50000)};if(type==="text")return{find:($("chFind").value||"").slice(0,200),replace:($("chReplace").value||"").slice(0,200)};if(type==="flag")return{name:($("chFlag").value||"").trim().slice(0,60),value:$("chFlagVal").value==="true"};if(type==="config"){var raw=$("chConfig").value||"{}";JSON.parse(raw);return{json:raw.slice(0,20000)};}if(type==="data")return{key:($("chDataKey").value||"").trim().slice(0,80),op:$("chDataOp").value,path:($("chDataPath").value||"").trim().slice(0,120),value:($("chDataVal").value||"").slice(0,10000)};if(type==="js")return{code:($("chJs").value||"").slice(0,30000)};if(type==="note")return{text:($("chNote").value||"").slice(0,5000)};return{};}
+$("btnSaveCh").onclick=lock(function(){var title=($("chTitle").value||"").trim();if(!title){toast("عنوان الزامی است",true);return;}var type=$("chType").value;var mods=[];if($("chAll").checked)mods=["all"];else document.querySelectorAll("[data-mod]:checked").forEach(function(c){mods.push(c.value);});if(!mods.length){toast("حداقل یک ماژول",true);return;}var payload;try{payload=collectPayload(type);}catch(e){toast("JSON نامعتبر",true);return;}if(type==="css"&&!(payload.css||"").trim()){toast("CSS خالی",true);return;}if(type==="flag"&&!payload.name){toast("نام فلگ؟",true);return;}if(type==="data"&&!payload.key){toast("کلید داده؟",true);return;}var id=$("editId").value?Number($("editId").value):null;var row={id:id||uid(),title:title.slice(0,120),type:type,modules:mods,priority:Math.max(0,Math.min(9999,parseInt($("chPri").value,10)||100)),active:$("chActive").value==="1",payload:payload,updated:now(),created:id?((db.changes.find(function(c){return c.id===id;})||{}).created||now()):now()};if(id){var i=db.changes.findIndex(function(c){return c.id===id;});if(i<0){toast("یافت نشد",true);return;}db.changes[i]=row;}else db.changes.unshift(row);if(!save(db))return;hist("save-change",title);buildRuntime();clearForm();toast("ذخیره شد");renderDash();});
+function renderList(){var q=($("filterQ").value||"").trim().toLowerCase();var ft=$("filterType").value;var tb=$("chList");tb.textContent="";db.changes.filter(function(c){if(ft&&c.type!==ft)return false;if(q&&(c.title||"").toLowerCase().indexOf(q)<0&&(c.type||"").indexOf(q)<0)return false;return true;}).forEach(function(c){var tr=document.createElement("tr");tr.innerHTML="<td>"+esc(c.title)+"<div class='note'>P"+esc(String(c.priority||0))+"</div></td><td><span class='badge teal'>"+esc(TYPE_LABEL[c.type]||c.type)+"</span></td><td style='font-size:.7rem'>"+esc((c.modules||[]).join("، "))+"</td><td>"+(c.active?"<span class='badge ok'>فعال</span>":"<span class='badge warn'>خاموش</span>")+"</td><td><button type='button' class='btn btn-b btn-sm' data-edit='"+c.id+"'>ویرایش</button> <button type='button' class='btn btn-o btn-sm' data-tog='"+c.id+"'>"+(c.active?"خاموش":"روشن")+"</button> <button type='button' class='btn btn-r btn-sm' data-del='"+c.id+"'>حذف</button></td>";tb.appendChild(tr);});}
+$("filterQ").oninput=function(){renderList();};
+$("filterType").onchange=function(){renderList();};
+document.body.addEventListener("click",function(e){var ed=e.target.closest("[data-edit]");if(ed){var c=db.changes.find(function(x){return String(x.id)===ed.getAttribute("data-edit");});if(!c)return;renderModChecks();$("editId").value=c.id;$("chTitle").value=c.title;$("chType").value=c.type;$("chPri").value=c.priority||100;$("chActive").value=c.active?"1":"0";var all=c.modules&&c.modules.indexOf("all")>=0;$("chAll").checked=!!all;document.querySelectorAll("[data-mod]").forEach(function(chk){chk.disabled=!!all;chk.checked=!all&&(c.modules||[]).indexOf(chk.value)>=0;});var p=c.payload||{};$("chCss").value=p.css||"";$("chFind").value=p.find||"";$("chReplace").value=p.replace||"";$("chFlag").value=p.name||"";$("chFlagVal").value=p.value===false?"false":"true";$("chConfig").value=p.json||"";$("chDataKey").value=p.key||"";$("chDataOp").value=p.op||"setPath";$("chDataPath").value=p.path||"";$("chDataVal").value=p.value||"";$("chJs").value=p.code||"";$("chNote").value=p.text||"";showFields();go("new");return;}var tg=e.target.closest("[data-tog]");if(tg){var c2=db.changes.find(function(x){return String(x.id)===tg.getAttribute("data-tog");});if(!c2)return;c2.active=!c2.active;save(db);buildRuntime();hist("toggle",c2.title);renderList();renderDash();toast(c2.active?"فعال":"خاموش");return;}var dl=e.target.closest("[data-del]");if(dl){if(!confirm("حذف؟"))return;var id=dl.getAttribute("data-del");db.changes=db.changes.filter(function(x){return String(x.id)!==id;});save(db);buildRuntime();hist("delete",id);renderList();renderDash();toast("حذف شد");return;}var ap=e.target.closest("[data-apply-pack]");if(ap){var pk=db.packages.find(function(x){return String(x.id)===ap.getAttribute("data-apply-pack");});if(!pk)return;(pk.changeIds||[]).forEach(function(cid){var ch=db.changes.find(function(x){return x.id===cid;});if(ch)ch.active=true;});save(db);buildRuntime();hist("apply-pack",pk.name);renderList();renderDash();toast("بسته فعال شد");return;}var dp=e.target.closest("[data-del-pack]");if(dp){if(!confirm("حذف بسته؟"))return;db.packages=db.packages.filter(function(x){return String(x.id)!==dp.getAttribute("data-del-pack");});save(db);renderPacks();toast("حذف شد");}});
+$("btnSavePack").onclick=lock(function(){var name=($("packName").value||"").trim();if(!name){toast("نام بسته؟",true);return;}var ids=($("packIds").value||"").split(/[,،\s]+/).map(function(x){return x.trim();}).filter(Boolean).map(Number).filter(function(n){return !isNaN(n);});if(!ids.length){toast("شناسه تغییر؟",true);return;}db.packages.unshift({id:uid(),name:name.slice(0,80),desc:($("packDesc").value||"").slice(0,300),changeIds:ids,created:now()});save(db);hist("pack",name);$("packName").value="";$("packDesc").value="";$("packIds").value="";renderPacks();toast("بسته ذخیره شد");});
+$("btnApplyPack").onclick=lock(function(){var ids=($("packIds").value||"").split(/[,،\s]+/).map(function(x){return x.trim();}).filter(Boolean).map(Number);ids.forEach(function(cid){var ch=db.changes.find(function(x){return x.id===cid;});if(ch)ch.active=true;});save(db);buildRuntime();toast("فعال شد");});
+function renderPacks(){var tb=$("packList");tb.textContent="";db.packages.forEach(function(p){var tr=document.createElement("tr");tr.innerHTML="<td>"+esc(p.name)+"<div class='note'>"+esc(p.desc||"")+"</div></td><td class='num'>"+(p.changeIds||[]).length+"</td><td><button type='button' class='btn btn-g btn-sm' data-apply-pack='"+p.id+"'>اعمال</button> <button type='button' class='btn btn-r btn-sm' data-del-pack='"+p.id+"'>حذف</button></td>";tb.appendChild(tr);});}
+function setByPath(obj,path,value){var parts=path.split(".").filter(Boolean);if(!parts.length)return value;var cur=obj;for(var i=0;i<parts.length-1;i++){if(cur[parts[i]]==null||typeof cur[parts[i]]!=="object")cur[parts[i]]={};cur=cur[parts[i]];}cur[parts[parts.length-1]]=value;return obj;}
+function delByPath(obj,path){var parts=path.split(".").filter(Boolean);if(!parts.length)return;var cur=obj;for(var i=0;i<parts.length-1;i++){if(cur[parts[i]]==null)return;cur=cur[parts[i]];}delete cur[parts[parts.length-1]];}
+$("btnRunData").onclick=lock(function(){if(!confirm("تبدیل‌های داده فعال اجرا شوند؟"))return;var logs=[];var list=db.changes.filter(function(c){return c.active&&c.type==="data";}).sort(function(a,b){return (b.priority||0)-(a.priority||0);});list.forEach(function(c){var p=c.payload||{},key=p.key;if(!key){logs.push("رد: بدون کلید — "+c.title);return;}try{var raw=localStorage.getItem(key);localStorage.setItem(key+"__bak_"+Date.now(),raw==null?"":raw);if(p.op==="clear"){localStorage.removeItem(key);logs.push("پاک: "+key);return;}if(p.op==="backup"){logs.push("پشتیبان: "+key);return;}var obj=raw?JSON.parse(raw):{};if(p.op==="setPath"){var val=p.value;try{val=JSON.parse(p.value);}catch(e){}setByPath(obj,p.path||"",val);localStorage.setItem(key,JSON.stringify(obj));logs.push("setPath "+key+" OK");}else if(p.op==="deletePath"){delByPath(obj,p.path||"");localStorage.setItem(key,JSON.stringify(obj));logs.push("deletePath "+key+" OK");}}catch(err){logs.push("خطا "+key+": "+err.message);}});hist("run-data",logs.length+" ops");$("dataLog").textContent=logs.join("\n")||"موردی نبود";toast("اجرا شد");});
+function renderInject(){
+  var lines=[
+    "<!-- SmartPatch injector -->",
+    "<script>",
+    "(function(){",
+    "  try{",
+    "    var RT=localStorage.getItem('smart_patches_runtime_v1');",
+    "    if(!RT)return;",
+    "    var rt=JSON.parse(RT);",
+    "    var mid=document.documentElement.getAttribute('data-module')||",
+    "      (location.pathname.split('/').pop()||'').replace(/\\.html$/,'').replace(/^index$/,'secretary')||'unknown';",
+    "    var map={'index':'secretary','cash-bank':'bank','hr-payroll':'hr','fixed-assets':'assets','pr-media':'pr','control-center':'control','petty-cash':'petty','change-engine':'patches'};",
+    "    if(map[mid]) mid=map[mid];",
+    "    var conf=rt.byModule&&rt.byModule[mid]; if(!conf)return;",
+    "    if(conf.css){var s=document.createElement('style');s.setAttribute('data-smart-patch','1');s.textContent=conf.css;document.head.appendChild(s);}",
+    "    if(conf.texts&&conf.texts.length){",
+    "      conf.texts.forEach(function(t){ if(!t.find)return;",
+    "        document.querySelectorAll('body *').forEach(function(el){",
+    "          if(el.children.length===0&&el.textContent&&el.textContent.indexOf(t.find)>=0)",
+    "            el.textContent=el.textContent.split(t.find).join(t.replace||'');",
+    "        });",
+    "      });",
+    "    }",
+    "    window.SmartPatch={moduleId:mid,flags:conf.flags||{},config:conf.config||{},ready:true};",
+    "    if(conf.scripts&&conf.scripts.length){",
+    "      conf.scripts.forEach(function(sc){ try{(new Function(sc.code))();}catch(e){console.warn('SmartPatch JS',e);} });",
+    "    }",
+    "  }catch(e){console.warn('SmartPatch',e);}",
+    "})();",
+    "</"+"script>"
+  ];
+  $("injectSnippet").textContent=lines.join("\n");
+}
+$("btnCopySnippet").onclick=function(){var t=$("injectSnippet").textContent;if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){toast("کپی شد");}).catch(function(){toast("دستی کپی کنید",true);});else toast("دستی از کادر کپی کنید",true);};
+function fillPrevMods(){var s=$("prevMod");s.innerHTML="";MODULES.filter(function(m){return m.id!=="all";}).forEach(function(m){var o=document.createElement("option");o.value=m.id;o.textContent=m.title;s.appendChild(o);});}
+$("btnPreview").onclick=function(){var rt=buildRuntime();if(!rt)return;$("prevOut").textContent=JSON.stringify(rt.byModule[$("prevMod").value]||{},null,2);};
+$("btnApplyAll").onclick=lock(function(){buildRuntime();hist("apply-all","");toast("Runtime بروزرسانی شد");renderDash();});
+$("btnRebuild").onclick=lock(function(){buildRuntime();toast("بازسازی شد");});
+$("btnExport").onclick=function(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));a.download="patches-"+today()+".json";a.click();hist("export","");};
+$("importFile").onchange=function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.changes))throw new Error("x");if(!confirm("جایگزینی همه تغییرات؟"))return;db=d;if(!Array.isArray(db.packages))db.packages=[];if(!Array.isArray(db.history))db.history=[];save(db);buildRuntime();hist("import","");renderDash();toast("بازیابی شد");}catch(err){toast("فایل نامعتبر",true);}};r.readAsText(f);};
+$("btnWipe").onclick=lock(function(){if(!confirm("همه تغییرات حذف شوند؟"))return;if(!confirm("نهایی؟"))return;db=def();save(db);buildRuntime();hist("wipe","");renderDash();toast("پاک شد");});
+function renderHist(){var tb=$("histList");tb.textContent="";db.history.slice(0,80).forEach(function(h){var tr=document.createElement("tr");tr.innerHTML="<td class='num'>"+esc(h.t)+"</td><td>"+esc(h.action)+"</td><td>"+esc(h.detail)+"</td>";tb.appendChild(tr);});}
+buildRuntime();renderDash();renderModChecks();renderInject();
+})();
+</script>
+</body>
+</html>
