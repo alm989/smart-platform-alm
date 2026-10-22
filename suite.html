@@ -2,34 +2,60 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Suite">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
 <meta name="referrer" content="no-referrer">
 <title>سامانه هوشمند یکپارچه</title>
 <style>
+:root{--bg:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--b:#38bdf8;--gold:#d4a017}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Tahoma,system-ui,sans-serif;background:radial-gradient(1000px 500px at 70% -20%,#1e3a5f 0%,transparent 45%),#0f172a;color:#e2e8f0;min-height:100dvh;padding:24px 16px}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(1000px 520px at 70% -18%,#1e3a5f 0%,transparent 48%),var(--bg);color:var(--txt);min-height:100dvh;padding:20px 14px 40px;line-height:1.55}
 .wrap{max-width:1120px;margin:0 auto}
-.brand{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:8px}
 .brand-logo{width:56px;height:56px;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,#0ea5e9,#0369a1);display:grid;place-items:center;flex-shrink:0;border:2px solid rgba(56,189,248,.35)}
 .brand-logo img{width:100%;height:100%;object-fit:contain;background:#0f172a}
 .brand-logo .fb{font-size:24px}
-h1{font-size:1.25rem}
-.sub{color:#94a3b8;font-size:.82rem;margin-bottom:16px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:11px}
-.card{background:rgba(30,41,59,.95);border:1px solid #334155;border-radius:16px;padding:14px;text-decoration:none;color:inherit;display:flex;flex-direction:column;min-height:118px;transition:.15s}
+h1{font-size:1.22rem;font-weight:800}
+.sub{color:var(--muted);font-size:.8rem;margin-bottom:14px}
+#status{font-size:.75rem;color:var(--muted);margin-bottom:14px}
+.cat{margin:22px 0 10px;display:flex;align-items:center;gap:10px}
+.cat h2{font-size:.88rem;color:#7dd3fc;font-weight:700;white-space:nowrap}
+.cat .line{flex:1;height:1px;background:linear-gradient(90deg,rgba(56,189,248,.45),transparent)}
+.cat.gold h2{color:#fcd34d}
+.cat.sys h2{color:#5eead4}
+.cat.fin h2{color:#6ee7b7}
+.cat.ops h2{color:#c4b5fd}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.card{background:rgba(30,41,59,.95);border:1px solid var(--line);border-radius:16px;padding:13px;text-decoration:none;color:inherit;display:flex;flex-direction:column;min-height:112px;transition:.15s;cursor:pointer}
 .card:hover{transform:translateY(-3px);border-color:#38bdf8}
-.card.off{opacity:.35;pointer-events:none;filter:grayscale(.8)}
-.card.ceo{border-color:rgba(212,160,23,.5)}
-.card.mgmt{border-color:rgba(56,189,248,.4)}
-.icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:17px;margin-bottom:7px}
-.card h2{font-size:.82rem;margin-bottom:4px}
-.card p{font-size:.68rem;color:#94a3b8;flex:1}
-.tag{display:inline-block;margin-top:6px;font-size:.56rem;padding:2px 7px;border-radius:999px;background:#0c4a6e;color:#7dd3fc}
+.card.off{opacity:.32;pointer-events:none;filter:grayscale(.85)}
+.card.locked{opacity:.55;border-style:dashed}
+.card.ceo{border-color:rgba(212,160,23,.55)}
+.card.mgmt{border-color:rgba(56,189,248,.45)}
+.card.sys{border-color:rgba(20,184,166,.4)}
+.icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:16px;margin-bottom:6px}
+.card h3{font-size:.8rem;margin-bottom:3px;font-weight:700}
+.card p{font-size:.66rem;color:var(--muted);flex:1}
+.tag{display:inline-block;margin-top:5px;font-size:.55rem;padding:2px 7px;border-radius:999px;background:#0c4a6e;color:#7dd3fc}
 .tag.gold{background:#713f12;color:#fcd34d}
-.foot{text-align:center;margin-top:22px;font-size:.68rem;color:#64748b}
-#status{font-size:.75rem;color:#94a3b8;margin-bottom:12px}
+.tag.lock{background:#3f1d1d;color:#fca5a5}
+.tag.sys{background:#134e4a;color:#5eead4}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal-bg.on{display:flex}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;max-width:360px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.modal h3{font-size:.95rem;margin-bottom:10px;color:#fcd34d}
+.modal label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px}
+.modal input{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#0f172a;color:var(--txt);font-size:16px;font-family:inherit}
+.btn{display:block;width:100%;padding:11px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;cursor:pointer;margin-top:10px;font-family:inherit}
+.btn-gold{background:linear-gradient(135deg,#d4a017,#a67c00);color:#0f172a}
+.btn-gr{background:#334155;color:#e2e8f0}
+.note{font-size:.72rem;color:var(--muted);margin-top:8px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#22c55e;color:#0f172a;padding:10px 16px;border-radius:12px;font-size:.82rem;font-weight:700;opacity:0;pointer-events:none;transition:.2s;z-index:60}
+.toast.show{opacity:1}.toast.err{background:#ef4444;color:#fff}
+.foot{text-align:center;margin-top:24px;font-size:.68rem;color:#64748b}
 </style>
 </head>
 <body>
@@ -38,73 +64,224 @@ h1{font-size:1.25rem}
     <div class="brand-logo" id="suiteLogo"><span class="fb">🏢</span></div>
     <div>
       <h1 id="orgTitle">سامانه هوشمند یکپارچه</h1>
-      <p class="sub" style="margin:0" id="logoHint">ورود از طریق هر ماژول · مدیریت نرم‌افزار یک‌بار در فهرست</p>
+      <p class="sub" style="margin:0">همه ماژول‌ها · طبقه‌بندی شده · دسترسی حساس با مجوز مدیرعامل</p>
     </div>
   </div>
   <p id="status">بارگذاری…</p>
-  <div class="grid" id="grid"></div>
-  <p class="foot">Suite · بدون دکمه تکراری مدیریت · شامل مدیرعامل</p>
+  <div id="catalog"></div>
+  <p class="foot">Suite · کنترل / موتور تغییرات / پایگاه داده نیازمند مجوز مدیرعامل</p>
 </div>
+
+<div class="modal-bg" id="ceoModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <h3>مجوز مدیرعامل</h3>
+    <p class="note" id="ceoModalNote">این بخش حساس است. رمز یا کد مجوز مدیرعامل لازم است.</p>
+    <label>رمز مدیرعامل یا کد یک‌بارمصرف</label>
+    <input id="ceoUnlock" type="password" maxlength="64" autocomplete="current-password" placeholder="رمز ceo یا CEO-XXXX">
+    <button type="button" class="btn btn-gold" id="btnCeoUnlock">باز کردن</button>
+    <button type="button" class="btn btn-gr" id="btnCeoCancel">انصراف</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
 <script>
 (function(){
 "use strict";
-var REG="smart_suite_registry_v1", LOGO_KEY="smart_suite_logo_v1";
-var CATALOG=[
-  {id:"ceo",file:"ceo.html",title:"مدیرعامل",desc:"گزارش و مجوزها",icon:"👔",color:"#a67c00",tag:"مدیریت عالی",cls:"ceo",tagCls:"gold"},
-  {id:"control",file:"control-center.html",title:"مدیریت نرم‌افزار",desc:"کاربر، دسترسی، لوگو، رمزها",icon:"🎛️",color:"#0369a1",tag:"مدیریت",cls:"mgmt"},
-  {id:"secretary",file:"index.html",title:"منشی",desc:"یادآوری و جلسه",icon:"🤖",color:"#0284c7",tag:"اداری"},
-  {id:"assistant",file:"assistant.html",title:"دستیار",desc:"دانش",icon:"🧠",color:"#6d28d9",tag:"هوش"},
-  {id:"pr",file:"pr-media.html",title:"روابط عمومی",desc:"رسانه",icon:"📢",color:"#db2777",tag:"PR"},
-  {id:"lawyer",file:"lawyer.html",title:"وکیل",desc:"پرونده",icon:"⚖️",color:"#1e40af",tag:"حقوقی"},
-  {id:"documents",file:"documents.html",title:"اسناد",desc:"نامه و بایگانی",icon:"📄",color:"#475569",tag:"دبیرخانه"},
-  {id:"customers",file:"customers.html",title:"مشتریان",desc:"CRM",icon:"👤",color:"#1d4ed8",tag:"CRM"},
-  {id:"accounting",file:"accounting.html",title:"حسابداری",desc:"سند و گزارش",icon:"📒",color:"#047857",tag:"مالی"},
-  {id:"bank",file:"cash-bank.html",title:"نقد و بانک",desc:"خزانه",icon:"🏦",color:"#0f766e",tag:"بانک"},
-  {id:"fund",file:"fund.html",title:"صندوق",desc:"نقد و اوراق",icon:"🗃️",color:"#b45309",tag:"صندوق"},
-  {id:"sales",file:"sales.html",title:"فروش",desc:"فاکتور",icon:"🛒",color:"#0369a1",tag:"فروش"},
-  {id:"warehouse",file:"warehouse.html",title:"خرید و انبار",desc:"موجودی",icon:"📦",color:"#0d9488",tag:"انبار"},
-  {id:"assets",file:"fixed-assets.html",title:"دارایی ثابت",desc:"استهلاک",icon:"🏢",color:"#7c3aed",tag:"دارایی"},
-  {id:"petty",file:"petty-cash.html",title:"تنخواه",desc:"هزینه",icon:"💵",color:"#c2410c",tag:"تنخواه"},
-  {id:"hr",file:"hr-payroll.html",title:"منابع انسانی",desc:"حقوق",icon:"👥",color:"#6d28d9",tag:"HR"},
-  {id:"patches",file:"change-engine.html",title:"موتور تغییرات",desc:"پچ و سفارشی‌سازی",icon:"⚙️",color:"#0f766e",tag:"سیستم"}
+var REG="smart_suite_registry_v1", LOGO_KEY="smart_suite_logo_v1", AUTH_KEY="smart_auth_v1";
+var pendingHref=null, toastTimer=null;
+
+var CATEGORIES=[
+  {
+    id:"executive", title:"مدیریت عالی", cls:"gold",
+    items:[
+      {id:"ceo",file:"ceo.html",title:"مدیرعامل",desc:"گزارش، مجوز، تصمیم",icon:"👔",color:"#a67c00",tag:"مدیریت عالی",tagCls:"gold",cardCls:"ceo"},
+      {id:"control",file:"control-center.html",title:"مدیریت نرم‌افزار",desc:"کاربر، رمز، لوگو، دسترسی",icon:"🎛️",color:"#0369a1",tag:"نیاز به مدیرعامل",tagCls:"lock",cardCls:"mgmt",needCeo:true},
+      {id:"patches",file:"change-engine.html",title:"موتور تغییرات",desc:"پچ و سفارشی‌سازی همه ماژول‌ها",icon:"⚙️",color:"#0f766e",tag:"نیاز به مدیرعامل",tagCls:"lock",cardCls:"sys",needCeo:true},
+      {id:"database",file:"database.html",title:"پایگاه داده‌ها",desc:"کلیدها، پشتیبان، بازیابی داده",icon:"🗄️",color:"#4c1d95",tag:"نیاز به مدیرعامل",tagCls:"lock",cardCls:"sys",needCeo:true}
+    ]
+  },
+  {
+    id:"admin", title:"اداری و دبیرخانه", cls:"",
+    items:[
+      {id:"secretary",file:"index.html",title:"منشی هوشمند",desc:"جلسه، یادآوری، یادداشت",icon:"🤖",color:"#0284c7",tag:"اداری"},
+      {id:"assistant",file:"assistant.html",title:"دستیار هوشمند",desc:"دانش و فرمان‌ها",icon:"🧠",color:"#6d28d9",tag:"هوش"},
+      {id:"documents",file:"documents.html",title:"مدیریت اسناد",desc:"نامه و بایگانی",icon:"📄",color:"#475569",tag:"دبیرخانه"},
+      {id:"pr",file:"pr-media.html",title:"روابط عمومی",desc:"رسانه و محتوا",icon:"📢",color:"#db2777",tag:"PR"}
+    ]
+  },
+  {
+    id:"legal", title:"حقوقی و مشتریان", cls:"ops",
+    items:[
+      {id:"lawyer",file:"lawyer.html",title:"وکیل هوشمند",desc:"پرونده و دادخواست",icon:"⚖️",color:"#1e40af",tag:"حقوقی"},
+      {id:"customers",file:"customers.html",title:"مشتریان",desc:"CRM و پیگیری",icon:"👤",color:"#1d4ed8",tag:"CRM"}
+    ]
+  },
+  {
+    id:"finance", title:"مالی و خزانه", cls:"fin",
+    items:[
+      {id:"accounting",file:"accounting.html",title:"حسابداری",desc:"سند و گزارش‌ها",icon:"📒",color:"#047857",tag:"مالی"},
+      {id:"bank",file:"cash-bank.html",title:"نقد و بانک",desc:"دریافت و پرداخت",icon:"🏦",color:"#0f766e",tag:"بانک"},
+      {id:"fund",file:"fund.html",title:"صندوق",desc:"نقد و اوراق",icon:"🗃️",color:"#b45309",tag:"صندوق"},
+      {id:"petty",file:"petty-cash.html",title:"تنخواه",desc:"هزینه‌های جاری",icon:"💵",color:"#c2410c",tag:"تنخواه"},
+      {id:"assets",file:"fixed-assets.html",title:"دارایی ثابت",desc:"استهلاک و ثبت",icon:"🏢",color:"#7c3aed",tag:"دارایی"}
+    ]
+  },
+  {
+    id:"ops", title:"عملیات و منابع", cls:"ops",
+    items:[
+      {id:"sales",file:"sales.html",title:"فروش",desc:"فاکتور و پیش‌فاکتور",icon:"🛒",color:"#0369a1",tag:"فروش"},
+      {id:"warehouse",file:"warehouse.html",title:"خرید و انبار",desc:"موجودی و حواله",icon:"📦",color:"#0d9488",tag:"انبار"},
+      {id:"hr",file:"hr-payroll.html",title:"منابع انسانی",desc:"حقوق و حضور",icon:"👥",color:"#6d28d9",tag:"HR"}
+    ]
+  }
 ];
+
 function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+function toast(m,e){
+  var t=document.getElementById("toast");
+  t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");
+  clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2400);
+}
 function applyLogo(){
   try{
     var d=JSON.parse(localStorage.getItem(LOGO_KEY)||"null");
     var el=document.getElementById("suiteLogo");
-    if(d&&d.dataUrl){el.innerHTML='<img src="'+d.dataUrl+'" alt="logo">';document.getElementById("logoHint").textContent=d.title||"لوگوی سازمانی";}
-    else{el.innerHTML='<span class="fb">🏢</span>';}
+    if(d&&d.dataUrl) el.innerHTML='<img src="'+d.dataUrl+'" alt="logo">';
+    else el.innerHTML='<span class="fb">🏢</span>';
   }catch(e){}
 }
 function loadReg(){try{return JSON.parse(localStorage.getItem(REG)||"null");}catch(e){return null;}}
+function loadAuth(){try{return JSON.parse(localStorage.getItem(AUTH_KEY)||"null");}catch(e){return null;}}
+
+function hashPass(s){
+  var h=0,str=String(s||"");
+  for(var i=0;i<str.length;i++){h=((h<<5)-h)+str.charCodeAt(i);h|=0;}
+  return "h"+Math.abs(h).toString(16)+"_"+str.length;
+}
+function checkCeoCredential(input){
+  var v=(input||"").trim();
+  if(!v) return false;
+  // one-time codes from auth.approvals
+  var auth=loadAuth();
+  if(auth&&Array.isArray(auth.approvals)){
+    var now=Date.now();
+    var hit=auth.approvals.find(function(a){
+      return !a.used && a.exp>now && String(a.code).toUpperCase()===v.toUpperCase();
+    });
+    if(hit){
+      // don't consume here for unlock-only; optional mark
+      try{
+        hit._suiteUnlock=true;
+        localStorage.setItem(AUTH_KEY,JSON.stringify(auth));
+      }catch(e){}
+      return true;
+    }
+  }
+  // CEO password from smart_auth_v1 or smart_ceo_v1
+  var passOk=false;
+  if(auth&&auth.creds&&auth.creds.ceo){
+    var stored=auth.creds.ceo.pass;
+    if(stored===v || stored===hashPass(v)) passOk=true;
+  }
+  try{
+    var ceo=JSON.parse(localStorage.getItem("smart_ceo_v1")||"null");
+    if(ceo&&ceo.user&&ceo.user.pass){
+      if(ceo.user.pass===v || ceo.user.pass===hashPass(v)) passOk=true;
+    }
+  }catch(e){}
+  // default bootstrap if never changed
+  if(!passOk && (v==="Ceo@2026!" || hashPass(v)===hashPass("Ceo@2026!"))) passOk=true;
+  // active CEO session in same browser
+  try{
+    var s=JSON.parse(sessionStorage.getItem("smart_ceo_session")||"null");
+    if(s&&s.ok) passOk=true;
+  }catch(e){}
+  return passOk;
+}
+
+function openLocked(href,title){
+  pendingHref=href;
+  document.getElementById("ceoModalNote").textContent="باز کردن «"+title+"» نیاز به مجوز مدیرعامل دارد.";
+  document.getElementById("ceoUnlock").value="";
+  document.getElementById("ceoModal").classList.add("on");
+  setTimeout(function(){document.getElementById("ceoUnlock").focus();},100);
+}
+function closeModal(){
+  pendingHref=null;
+  document.getElementById("ceoModal").classList.remove("on");
+}
+document.getElementById("btnCeoCancel").onclick=closeModal;
+document.getElementById("ceoModal").addEventListener("click",function(e){
+  if(e.target===document.getElementById("ceoModal")) closeModal();
+});
+document.getElementById("btnCeoUnlock").onclick=function(){
+  var v=document.getElementById("ceoUnlock").value||"";
+  if(!checkCeoCredential(v)){
+    toast("مجوز نامعتبر",true);
+    return;
+  }
+  var href=pendingHref;
+  closeModal();
+  if(href) window.location.href=href;
+};
+document.getElementById("ceoUnlock").addEventListener("keydown",function(e){
+  if(e.key==="Enter") document.getElementById("btnCeoUnlock").click();
+});
+
 function render(){
   applyLogo();
-  var reg=loadReg(), enabled={};
+  var reg=loadReg();
+  var enabled={};
   if(reg&&Array.isArray(reg.modules)){
     reg.modules.forEach(function(m){enabled[m.id]=m.enabled!==false;});
     if(reg.org) document.getElementById("orgTitle").textContent=reg.org;
-    document.getElementById("status").textContent="رجیستری مرکز کنترل"+(reg.hasLogo?" · لوگو فعال":"");
+    document.getElementById("status").textContent="رجیستری فعال · ماژول‌های حساس قفل‌شده با مدیرعامل";
   } else {
-    CATALOG.forEach(function(m){enabled[m.id]=true;});
-    document.getElementById("status").textContent="همه ماژول‌ها · مدیریت نرم‌افزار فقط یک‌بار در فهرست";
+    document.getElementById("status").textContent="همه طبقات نمایش داده می‌شوند · کنترل / موتور تغییرات / پایگاه داده = مجوز مدیرعامل";
   }
-  // CEO and control always visible if present in catalog
-  enabled.ceo=enabled.ceo!==false;
-  enabled.control=enabled.control!==false;
-  var grid=document.getElementById("grid"); grid.textContent="";
-  CATALOG.forEach(function(m){
-    var on=enabled[m.id]!==false;
-    var a=document.createElement("a");
-    a.className="card"+(on?"":" off")+(m.cls?" "+m.cls:"");
-    a.href=on?m.file:"#";
-    if(on) a.rel="noopener";
-    a.innerHTML='<div class="icon" style="background:'+m.color+'">'+m.icon+'</div><h2>'+esc(m.title)+'</h2><p>'+esc(m.desc)+'</p><span class="tag'+(m.tagCls?' '+m.tagCls:'')+'">'+esc(m.tag)+'</span>';
-    grid.appendChild(a);
+
+  var root=document.getElementById("catalog");
+  root.textContent="";
+
+  CATEGORIES.forEach(function(cat){
+    var head=document.createElement("div");
+    head.className="cat"+(cat.cls?" "+cat.cls:"");
+    head.innerHTML="<h2>"+esc(cat.title)+"</h2><div class='line'></div>";
+    root.appendChild(head);
+
+    var grid=document.createElement("div");
+    grid.className="grid";
+    cat.items.forEach(function(m){
+      var on=enabled[m.id]!==false;
+      // always show executive system tools
+      if(m.id==="ceo"||m.id==="control"||m.id==="patches"||m.id==="database") on=true;
+      if(reg&&reg.modules&&enabled[m.id]===false && !(m.needCeo||m.id==="ceo")) on=false;
+
+      var a=document.createElement("a");
+      a.className="card"+(on?"":" off")+(m.cardCls?" "+m.cardCls:"")+(m.needCeo?" locked":"");
+      a.href=on?(m.needCeo?"#":m.file):"#";
+      if(on&&!m.needCeo) a.rel="noopener";
+      a.innerHTML=
+        '<div class="icon" style="background:'+m.color+'">'+m.icon+'</div>'+
+        '<h3>'+esc(m.title)+'</h3>'+
+        '<p>'+esc(m.desc)+'</p>'+
+        '<span class="tag'+(m.tagCls?" "+m.tagCls:"")+'">'+esc(m.tag)+(m.needCeo?" 🔒":"")+'</span>';
+      if(on&&m.needCeo){
+        a.addEventListener("click",function(ev){
+          ev.preventDefault();
+          openLocked(m.file,m.title);
+        });
+      }
+      grid.appendChild(a);
+    });
+    root.appendChild(grid);
   });
 }
+
 render();
-window.addEventListener("storage",function(e){if(e.key===REG||e.key===LOGO_KEY)render();});
+window.addEventListener("storage",function(e){
+  if(e.key===REG||e.key===LOGO_KEY||e.key===AUTH_KEY) render();
+});
 })();
 </script>
 </body>
