@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#1d4ed8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; frame-ancestors 'none'"><title>چند شرکتی هوشمند</title><style>:root{--bg:#0b1220;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#2563eb;--ok:#22c55e;--bad:#ef4444}*{box-sizing:border-box;margin:0;padding:0}body{font-family:Tahoma,system-ui,sans-serif;background:radial-gradient(900px 420px at 80% -10%,#1e3a8a 0%,transparent 45%),var(--bg);color:var(--txt);min-height:100dvh}.top{position:sticky;top:0;z-index:30;background:rgba(11,18,32,.94);border-bottom:1px solid var(--line);padding:10px 14px}.top-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.back{color:#93c5fd;text-decoration:none;font-size:.8rem;border:1px solid var(--line);padding:7px 10px;border-radius:10px}.brand{display:flex;align-items:center;gap:10px;flex:1}.logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:grid;place-items:center;overflow:hidden}.logo img{width:100%;height:100%;object-fit:contain}h1{font-size:1rem}.sub{font-size:.72rem;color:var(--muted)}select.ctx{background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.8rem;font-family:inherit}.wrap{max-width:1100px;margin:0 auto;padding:14px 12px 70px}.nav{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px}.nav button{background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:12px;padding:10px 4px;font-size:.72rem;cursor:pointer;font-family:inherit}.nav button.on{background:var(--pri);color:#fff;border-color:var(--pri)}.panel{display:none}.panel.on{display:block}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}@media(max-width:800px){.grid3{grid-template-columns:1fr 1fr}.nav{grid-template-columns:repeat(3,1fr)}}@media(max-width:520px){.grid3{grid-template-columns:1fr}}.card{background:rgba(30,41,59,.95);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}.card h2{font-size:.9rem;margin-bottom:10px}.kpi .n{font-size:1.35rem;font-weight:800;color:#93c5fd}.kpi .l{font-size:.72rem;color:var(--muted)}label{display:block;font-size:.72rem;color:var(--muted);margin:8px 0 4px}input,select,textarea{width:100%;padding:10px;border-radius:11px;border:1px solid var(--line);background:#0f172a;color:var(--txt);font-family:inherit;font-size:15px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:600px){.row{grid-template-columns:1fr}}.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.btn{border:none;border-radius:11px;padding:10px 14px;font-weight:700;font-size:.8rem;cursor:pointer;font-family:inherit}.btn-p{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff}.btn-ok{background:var(--ok);color:#052e16}.btn-b{background:var(--bad);color:#fff}.btn-g{background:#334155;color:#e2e8f0}.btn-sm{padding:6px 10px;font-size:.72rem}table{width:100%;border-collapse:collapse;font-size:.78rem}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:right}th{color:#93c5fd;font-size:.72rem}.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.65rem}.badge-on{background:#14532d;color:#86efac}.badge-off{background:#3f1d1d;color:#fca5a5}.empty{color:var(--muted);font-size:.8rem;padding:10px 0}.hint{font-size:.72rem;color:var(--muted);margin-top:6px}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ok);color:#052e16;padding:10px 16px;border-radius:12px;font-weight:700;opacity:0;transition:.2s;z-index:80}.toast.show{opacity:1}.toast.err{background:var(--bad);color:#fff}.tabs-mini{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tabs-mini button{background:#0f172a;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:6px 12px;font-size:.72rem;cursor:pointer;font-family:inherit}.tabs-mini button.on{background:#1e40af;color:#fff}.foot{text-align:center;font-size:.68rem;color:#64748b;margin-top:10px}</style></head><body>
+<div class="top"><div class="top-in">
+<a class="back" href="suite.html">← Suite</a>
+<div class="brand"><div class="logo" id="headerLogo">🏛️</div>
+<div><h1>چند شرکتی هوشمند</h1><div class="sub">هلدینگ · شرکت · شعبه · بین‌شرکتی · گزارش</div></div></div>
+<select class="ctx" id="activeCompany" title="شرکت فعال"></select>
+</div></div>
+<div class="wrap">
+<div class="nav" id="nav">
+<button type="button" data-p="dash" class="on">داشبورد</button>
+<button type="button" data-p="companies">شرکت‌ها</button>
+<button type="button" data-p="branches">شعب</button>
+<button type="button" data-p="years">سال مالی</button>
+<button type="button" data-p="inter">بین‌شرکتی</button>
+<button type="button" data-p="reports">گزارش‌ها</button>
+</div>
+<div class="panel on" id="p-dash">
+<div class="grid3" id="kpiBox"></div>
+<div class="card"><h2>شرکت فعال و همسان‌سازی</h2>
+<p class="hint">شرکت فعال برای حسابداری و سایر ماژول‌ها در localStorage ذخیره می‌شود.</p>
+<div class="btns">
+<button type="button" class="btn btn-p" id="btnSyncCtx">همسان‌سازی زمینه</button>
+<button type="button" class="btn btn-g" id="btnBackup">پشتیبان JSON</button>
+<label class="btn btn-g" style="display:inline-block;cursor:pointer">بازیابی<input type="file" id="restoreFile" accept="application/json" hidden></label>
+</div></div>
+<div class="card"><h2>رویدادهای اخیر</h2><div id="recentBox" class="empty">—</div></div>
+</div>
+<div class="panel" id="p-companies">
+<div class="card"><h2 id="coFormTitle">ثبت / ویرایش شرکت</h2>
+<input type="hidden" id="coId">
+<div class="row"><div><label>کد شرکت *</label><input id="coCode" placeholder="C01"></div>
+<div><label>نام شرکت *</label><input id="coName"></div></div>
+<div class="row"><div><label>شناسه ملی / اقتصادی</label><input id="coNational"></div>
+<div><label>نوع</label><select id="coType"><option value="holding">هلدینگ</option><option value="subsidiary">تابعه</option><option value="branch_co">مستقل</option></select></div></div>
+<div class="row"><div><label>تلفن</label><input id="coPhone"></div>
+<div><label>وضعیت</label><select id="coStatus"><option value="active">فعال</option><option value="inactive">غیرفعال</option></select></div></div>
+<label>آدرس</label><textarea id="coAddr" rows="2"></textarea>
+<label>یادداشت</label><textarea id="coNote" rows="2"></textarea>
+<div class="btns"><button type="button" class="btn btn-p" id="btnCoSave">ذخیره شرکت</button>
+<button type="button" class="btn btn-g" id="btnCoReset">پاک‌سازی فرم</button></div></div>
+<div class="card"><h2>فهرست شرکت‌ها</h2>
+<input id="coSearch" placeholder="جستجو…" style="margin-bottom:10px">
+<div id="coList"></div></div>
+</div>
+<div class="panel" id="p-branches">
+<div class="card"><h2>ثبت شعبه</h2>
+<input type="hidden" id="brId">
+<div class="row"><div><label>شرکت *</label><select id="brCompany"></select></div>
+<div><label>کد شعبه *</label><input id="brCode"></div></div>
+<div class="row"><div><label>نام شعبه *</label><input id="brName"></div>
+<div><label>شهر</label><input id="brCity"></div></div>
+<div class="row"><div><label>مدیر شعبه</label><input id="brManager"></div>
+<div><label>وضعیت</label><select id="brStatus"><option value="active">فعال</option><option value="inactive">غیرفعال</option></select></div></div>
+<label>آدرس</label><textarea id="brAddr" rows="2"></textarea>
+<div class="btns"><button type="button" class="btn btn-p" id="btnBrSave">ذخیره شعبه</button>
+<button type="button" class="btn btn-g" id="btnBrReset">پاک‌سازی</button></div></div>
+<div class="card"><h2>فهرست شعب</h2><div id="brList"></div></div>
+</div>
+<div class="panel" id="p-years">
+<div class="card"><h2>سال مالی</h2>
+<div class="row"><div><label>شرکت *</label><select id="yrCompany"></select></div>
+<div><label>عنوان سال *</label><input id="yrTitle" placeholder="1404"></div></div>
+<div class="row"><div><label>شروع</label><input id="yrStart" placeholder="1404/01/01"></div>
+<div><label>پایان</label><input id="yrEnd"></div></div>
+<div class="row"><div><label>وضعیت</label><select id="yrStatus"><option value="open">باز</option><option value="closed">بسته</option></select></div>
+<div><label>ارز</label><select id="yrCurrency"><option>IRR</option><option>USD</option><option>EUR</option></select></div></div>
+<div class="btns"><button type="button" class="btn btn-p" id="btnYrSave">ذخیره سال مالی</button></div></div>
+<div class="card"><h2>فهرست سال‌ها</h2><div id="yrList"></div></div>
+</div>
+<div class="panel" id="p-inter">
+<div class="card"><h2>تراکنش بین‌شرکتی</h2>
+<div class="row"><div><label>از شرکت *</label><select id="icFrom"></select></div>
+<div><label>به شرکت *</label><select id="icTo"></select></div></div>
+<div class="row"><div><label>نوع</label><select id="icType"><option value="loan">وام</option><option value="sale">فروش</option><option value="service">خدمات</option><option value="transfer">انتقال وجه</option><option value="other">سایر</option></select></div>
+<div><label>مبلغ *</label><input id="icAmount" type="number" min="0"></div></div>
+<div class="row"><div><label>تاریخ</label><input id="icDate"></div>
+<div><label>مرجع</label><input id="icRef"></div></div>
+<label>شرح</label><textarea id="icDesc" rows="2"></textarea>
+<div class="btns"><button type="button" class="btn btn-p" id="btnIcSave">ثبت تراکنش</button></div>
+<p class="hint">سند حسابداری نهایی در ماژول حسابداری صادر می‌شود؛ اینجا برای کنترل هلدینگ است.</p></div>
+<div class="card"><h2>لیست بین‌شرکتی</h2><div id="icList"></div></div>
+</div>
+<div class="panel" id="p-reports">
+<div class="card"><h2>گزارش‌ها</h2>
+<div class="tabs-mini" id="repTabs">
+<button type="button" data-r="cos" class="on">شرکت‌ها</button>
+<button type="button" data-r="brs">شعب</button>
+<button type="button" data-r="ics">بین‌شرکتی</button>
+<button type="button" data-r="cons">تجمیعی</button>
+</div>
+<div id="repOut"></div>
+<div class="btns"><button type="button" class="btn btn-g" id="btnPrintRep">چاپ</button></div>
+</div></div>
+<p class="foot">Multi-Company Smart · v1 · localStorage</p>
+</div>
+<div class="toast" id="toast"></div>
+<script>(function(){"use strict";
+var KEY="smart_multicompany_v1",CTX_KEY="smart_active_company_v1",LOGO_KEY="smart_suite_logo_v1",toastTimer=null,repMode="cos";
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+function toast(m,e){var t=document.getElementById("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2400);}
+function money(n){return (Number(n)||0).toLocaleString("fa-IR");}
+function def(){return {version:1,companies:[],branches:[],years:[],inter:[],log:[],updated:null};}
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||"null");if(!d||typeof d!=="object")return def();d.companies=Array.isArray(d.companies)?d.companies:[];d.branches=Array.isArray(d.branches)?d.branches:[];d.years=Array.isArray(d.years)?d.years:[];d.inter=Array.isArray(d.inter)?d.inter:[];d.log=Array.isArray(d.log)?d.log:[];return d;}catch(e){return def();}}
+function save(d){d.updated=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(d));}
+function addLog(d,m){d.log.unshift({id:uid(),msg:m,at:new Date().toLocaleString("fa-IR")});if(d.log.length>80)d.log=d.log.slice(0,80);}
+function applyLogo(){try{var L=JSON.parse(localStorage.getItem(LOGO_KEY)||"null");var el=document.getElementById("headerLogo");if(L&&L.dataUrl)el.innerHTML="<img src=\""+L.dataUrl+"\" alt=\"logo\">";}catch(e){}}
+document.querySelectorAll("#nav button").forEach(function(b){b.onclick=function(){document.querySelectorAll("#nav button").forEach(function(x){x.classList.remove("on");});b.classList.add("on");document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});document.getElementById("p-"+b.getAttribute("data-p")).classList.add("on");refreshAll();};});
+function companyMap(d){var m={};d.companies.forEach(function(c){m[c.id]=c;});return m;}
+function fillCompanySelects(){var d=load();var opts=d.companies.map(function(c){return "<option value=\""+esc(c.id)+"\">"+esc(c.code+" — "+c.name)+"</option>";}).join("");["brCompany","yrCompany","icFrom","icTo","activeCompany"].forEach(function(id){var el=document.getElementById(id);if(!el)return;var cur=el.value;if(id==="activeCompany"){el.innerHTML="<option value=\"\">— شرکت فعال —</option>"+opts;try{var ctx=JSON.parse(localStorage.getItem(CTX_KEY)||"null");if(ctx&&ctx.id)el.value=ctx.id;}catch(e){}}else{el.innerHTML=opts||"<option value=\"\">شرکتی نیست</option>";if(cur)el.value=cur;}});}
+function setActiveCompany(id){var d=load();var c=d.companies.find(function(x){return x.id===id;});if(!c){localStorage.removeItem(CTX_KEY);return;}var ctx={id:c.id,code:c.code,name:c.name,type:c.type,at:new Date().toISOString()};localStorage.setItem(CTX_KEY,JSON.stringify(ctx));try{localStorage.setItem("smart_accounting_context_v1",JSON.stringify({companyId:c.id,companyCode:c.code,companyName:c.name}));}catch(e){}}
+document.getElementById("activeCompany").onchange=function(){if(this.value){setActiveCompany(this.value);toast("شرکت فعال تنظیم شد");}else{localStorage.removeItem(CTX_KEY);toast("برداشته شد");}renderDash();};
+function resetCo(){["coId","coCode","coName","coNational","coPhone","coAddr","coNote"].forEach(function(i){document.getElementById(i).value="";});document.getElementById("coType").value="subsidiary";document.getElementById("coStatus").value="active";document.getElementById("coFormTitle").textContent="ثبت / ویرایش شرکت";}
+document.getElementById("btnCoReset").onclick=resetCo;
+document.getElementById("btnCoSave").onclick=function(){var code=(document.getElementById("coCode").value||"").trim(),name=(document.getElementById("coName").value||"").trim();if(!code||!name){toast("کد و نام الزامی",true);return;}if(!/^[A-Za-z0-9._-]{1,20}$/.test(code)){toast("کد نامعتبر",true);return;}var d=load(),id=document.getElementById("coId").value;if(d.companies.some(function(c){return c.code.toLowerCase()===code.toLowerCase()&&c.id!==id;})){toast("کد تکراری",true);return;}var row={id:id||uid(),code:code,name:name,national:(document.getElementById("coNational").value||"").trim(),type:document.getElementById("coType").value,phone:(document.getElementById("coPhone").value||"").trim(),status:document.getElementById("coStatus").value,addr:(document.getElementById("coAddr").value||"").trim(),note:(document.getElementById("coNote").value||"").trim(),updated:new Date().toISOString()};if(id){d.companies=d.companies.map(function(c){return c.id===id?row:c;});addLog(d,"ویرایش "+code);}else{d.companies.push(row);addLog(d,"ثبت "+code);}save(d);resetCo();fillCompanySelects();renderCompanies();renderDash();toast("ذخیره شد");};
+function editCo(id){var c=load().companies.find(function(x){return x.id===id;});if(!c)return;document.getElementById("coId").value=c.id;document.getElementById("coCode").value=c.code;document.getElementById("coName").value=c.name;document.getElementById("coNational").value=c.national||"";document.getElementById("coType").value=c.type||"subsidiary";document.getElementById("coPhone").value=c.phone||"";document.getElementById("coStatus").value=c.status||"active";document.getElementById("coAddr").value=c.addr||"";document.getElementById("coNote").value=c.note||"";document.getElementById("coFormTitle").textContent="ویرایش شرکت";document.querySelector("#nav button[data-p=companies]").click();}
+function delCo(id){if(!confirm("حذف شرکت و وابستگی‌ها؟"))return;var d=load();d.companies=d.companies.filter(function(c){return c.id!==id;});d.branches=d.branches.filter(function(b){return b.companyId!==id;});d.years=d.years.filter(function(y){return y.companyId!==id;});d.inter=d.inter.filter(function(x){return x.fromId!==id&&x.toId!==id;});addLog(d,"حذف شرکت");save(d);fillCompanySelects();renderCompanies();renderBranches();renderYears();renderInter();renderDash();toast("حذف شد");}
+function renderCompanies(){var d=load(),q=(document.getElementById("coSearch").value||"").trim().toLowerCase(),list=d.companies.filter(function(c){return !q||(c.name+" "+c.code+" "+(c.national||"")).toLowerCase().indexOf(q)>=0;}),box=document.getElementById("coList");if(!list.length){box.innerHTML="<p class=\"empty\">شرکتی نیست</p>";return;}var tl={holding:"هلدینگ",subsidiary:"تابعه",branch_co:"مستقل"};var h="<table><thead><tr><th>کد</th><th>نام</th><th>نوع</th><th>وضعیت</th><th></th></tr></thead><tbody>";list.forEach(function(c){h+="<tr><td>"+esc(c.code)+"</td><td>"+esc(c.name)+"</td><td>"+esc(tl[c.type]||c.type)+"</td><td><span class=\"badge "+(c.status==="active"?"badge-on":"badge-off")+"\">"+(c.status==="active"?"فعال":"غیرفعال")+"</span></td><td><button type=\"button\" class=\"btn btn-g btn-sm\" data-e=\""+esc(c.id)+"\">ویرایش</button> <button type=\"button\" class=\"btn btn-b btn-sm\" data-d=\""+esc(c.id)+"\">حذف</button></td></tr>";});box.innerHTML=h+"</tbody></table>";box.querySelectorAll("[data-e]").forEach(function(b){b.onclick=function(){editCo(b.getAttribute("data-e"));};});box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){delCo(b.getAttribute("data-d"));};});}
+document.getElementById("coSearch").oninput=renderCompanies;
+function resetBr(){["brId","brCode","brName","brCity","brManager","brAddr"].forEach(function(i){document.getElementById(i).value="";});document.getElementById("brStatus").value="active";}
+document.getElementById("btnBrReset").onclick=resetBr;
+document.getElementById("btnBrSave").onclick=function(){var companyId=document.getElementById("brCompany").value,code=(document.getElementById("brCode").value||"").trim(),name=(document.getElementById("brName").value||"").trim();if(!companyId||!code||!name){toast("فیلدهای ضروری شعبه",true);return;}var d=load(),id=document.getElementById("brId").value,row={id:id||uid(),companyId:companyId,code:code,name:name,city:(document.getElementById("brCity").value||"").trim(),manager:(document.getElementById("brManager").value||"").trim(),status:document.getElementById("brStatus").value,addr:(document.getElementById("brAddr").value||"").trim()};if(id)d.branches=d.branches.map(function(b){return b.id===id?row:b;});else d.branches.push(row);addLog(d,"شعبه "+code);save(d);resetBr();renderBranches();renderDash();toast("ذخیره شد");};
+function delBr(id){if(!confirm("حذف شعبه؟"))return;var d=load();d.branches=d.branches.filter(function(b){return b.id!==id;});save(d);renderBranches();renderDash();toast("حذف شد");}
+function renderBranches(){var d=load(),map=companyMap(d),box=document.getElementById("brList");if(!d.branches.length){box.innerHTML="<p class=\"empty\">شعبه‌ای نیست</p>";return;}var h="<table><thead><tr><th>کد</th><th>شعبه</th><th>شرکت</th><th>شهر</th><th></th></tr></thead><tbody>";d.branches.forEach(function(b){h+="<tr><td>"+esc(b.code)+"</td><td>"+esc(b.name)+"</td><td>"+esc(map[b.companyId]?map[b.companyId].name:"—")+"</td><td>"+esc(b.city||"")+"</td><td><button type=\"button\" class=\"btn btn-b btn-sm\" data-d=\""+esc(b.id)+"\">حذف</button></td></tr>";});box.innerHTML=h+"</tbody></table>";box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){delBr(b.getAttribute("data-d"));};});}
+document.getElementById("btnYrSave").onclick=function(){var companyId=document.getElementById("yrCompany").value,title=(document.getElementById("yrTitle").value||"").trim();if(!companyId||!title){toast("شرکت و عنوان سال",true);return;}var d=load();d.years.push({id:uid(),companyId:companyId,title:title,start:(document.getElementById("yrStart").value||"").trim(),end:(document.getElementById("yrEnd").value||"").trim(),status:document.getElementById("yrStatus").value,currency:document.getElementById("yrCurrency").value,at:new Date().toISOString()});addLog(d,"سال "+title);save(d);renderYears();toast("ذخیره شد");};
+function delYr(id){if(!confirm("حذف؟"))return;var d=load();d.years=d.years.filter(function(y){return y.id!==id;});save(d);renderYears();toast("حذف شد");}
+function renderYears(){var d=load(),map=companyMap(d),box=document.getElementById("yrList");if(!d.years.length){box.innerHTML="<p class=\"empty\">سال مالی نیست</p>";return;}var h="<table><thead><tr><th>سال</th><th>شرکت</th><th>بازه</th><th>ارز</th><th>وضعیت</th><th></th></tr></thead><tbody>";d.years.forEach(function(y){h+="<tr><td>"+esc(y.title)+"</td><td>"+esc(map[y.companyId]?map[y.companyId].name:"—")+"</td><td>"+esc((y.start||"")+" تا "+(y.end||""))+"</td><td>"+esc(y.currency)+"</td><td><span class=\"badge "+(y.status==="open"?"badge-on":"badge-off")+"\">"+(y.status==="open"?"باز":"بسته")+"</span></td><td><button type=\"button\" class=\"btn btn-b btn-sm\" data-d=\""+esc(y.id)+"\">حذف</button></td></tr>";});box.innerHTML=h+"</tbody></table>";box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){delYr(b.getAttribute("data-d"));};});}
+document.getElementById("btnIcSave").onclick=function(){var fromId=document.getElementById("icFrom").value,toId=document.getElementById("icTo").value,amount=Number(document.getElementById("icAmount").value||0);if(!fromId||!toId){toast("مبدأ و مقصد",true);return;}if(fromId===toId){toast("نباید یکسان باشند",true);return;}if(!(amount>0)){toast("مبلغ نامعتبر",true);return;}var d=load();d.inter.unshift({id:uid(),fromId:fromId,toId:toId,type:document.getElementById("icType").value,amount:amount,date:(document.getElementById("icDate").value||"").trim(),ref:(document.getElementById("icRef").value||"").trim(),desc:(document.getElementById("icDesc").value||"").trim(),at:new Date().toISOString()});addLog(d,"بین‌شرکتی "+amount);save(d);document.getElementById("icAmount").value="";document.getElementById("icDesc").value="";renderInter();renderDash();toast("ثبت شد");};
+function delIc(id){if(!confirm("حذف؟"))return;var d=load();d.inter=d.inter.filter(function(x){return x.id!==id;});save(d);renderInter();renderDash();toast("حذف شد");}
+function renderInter(){var d=load(),map=companyMap(d),box=document.getElementById("icList");if(!d.inter.length){box.innerHTML="<p class=\"empty\">تراکنشی نیست</p>";return;}var tl={loan:"وام",sale:"فروش",service:"خدمات",transfer:"انتقال",other:"سایر"};var h="<table><thead><tr><th>از</th><th>به</th><th>نوع</th><th>مبلغ</th><th></th></tr></thead><tbody>";d.inter.forEach(function(x){h+="<tr><td>"+esc(map[x.fromId]?map[x.fromId].name:"—")+"</td><td>"+esc(map[x.toId]?map[x.toId].name:"—")+"</td><td>"+esc(tl[x.type]||x.type)+"</td><td>"+money(x.amount)+"</td><td><button type=\"button\" class=\"btn btn-b btn-sm\" data-d=\""+esc(x.id)+"\">حذف</button></td></tr>";});box.innerHTML=h+"</tbody></table>";box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){delIc(b.getAttribute("data-d"));};});}
+function renderDash(){var d=load(),active=d.companies.filter(function(c){return c.status==="active";}).length,sum=0;d.inter.forEach(function(x){sum+=Number(x.amount)||0;});var ctx="—";try{var c=JSON.parse(localStorage.getItem(CTX_KEY)||"null");if(c)ctx=c.code+" — "+c.name;}catch(e){}document.getElementById("kpiBox").innerHTML="<div class=\"card kpi\"><div class=\"n\">"+d.companies.length+"</div><div class=\"l\">شرکت‌ها</div></div><div class=\"card kpi\"><div class=\"n\">"+active+"</div><div class=\"l\">فعال</div></div><div class=\"card kpi\"><div class=\"n\">"+d.branches.length+"</div><div class=\"l\">شعب</div></div><div class=\"card kpi\"><div class=\"n\">"+d.years.length+"</div><div class=\"l\">سال مالی</div></div><div class=\"card kpi\"><div class=\"n\">"+d.inter.length+"</div><div class=\"l\">بین‌شرکتی</div></div><div class=\"card kpi\"><div class=\"n\">"+money(sum)+"</div><div class=\"l\">جمع مبلغ</div></div>";var rb=document.getElementById("recentBox");if(!d.log.length)rb.innerHTML="<p class=\"empty\">رویدادی نیست · فعال: "+esc(ctx)+"</p>";else rb.innerHTML="<p class=\"hint\">شرکت فعال: <b>"+esc(ctx)+"</b></p><table><tbody>"+d.log.slice(0,12).map(function(x){return "<tr><td>"+esc(x.at)+"</td><td>"+esc(x.msg)+"</td></tr>";}).join("")+"</tbody></table>";}
+document.querySelectorAll("#repTabs button").forEach(function(b){b.onclick=function(){document.querySelectorAll("#repTabs button").forEach(function(x){x.classList.remove("on");});b.classList.add("on");repMode=b.getAttribute("data-r");renderReport();};});
+function renderReport(){var d=load(),map=companyMap(d),out=document.getElementById("repOut");if(repMode==="cos"){if(!d.companies.length){out.innerHTML="<p class=\"empty\">داده نیست</p>";return;}var h="<table><thead><tr><th>کد</th><th>نام</th><th>نوع</th><th>شناسه</th><th>وضعیت</th></tr></thead><tbody>";d.companies.forEach(function(c){h+="<tr><td>"+esc(c.code)+"</td><td>"+esc(c.name)+"</td><td>"+esc(c.type)+"</td><td>"+esc(c.national||"")+"</td><td>"+esc(c.status)+"</td></tr>";});out.innerHTML=h+"</tbody></table>";}else if(repMode==="brs"){if(!d.branches.length){out.innerHTML="<p class=\"empty\">داده نیست</p>";return;}var h2="<table><thead><tr><th>کد</th><th>شعبه</th><th>شرکت</th><th>شهر</th></tr></thead><tbody>";d.branches.forEach(function(b){h2+="<tr><td>"+esc(b.code)+"</td><td>"+esc(b.name)+"</td><td>"+esc(map[b.companyId]?map[b.companyId].name:"")+"</td><td>"+esc(b.city||"")+"</td></tr>";});out.innerHTML=h2+"</tbody></table>";}else if(repMode==="ics"){if(!d.inter.length){out.innerHTML="<p class=\"empty\">داده نیست</p>";return;}var h3="<table><thead><tr><th>از</th><th>به</th><th>نوع</th><th>مبلغ</th></tr></thead><tbody>";d.inter.forEach(function(x){h3+="<tr><td>"+esc(map[x.fromId]?map[x.fromId].name:"")+"</td><td>"+esc(map[x.toId]?map[x.toId].name:"")+"</td><td>"+esc(x.type)+"</td><td>"+money(x.amount)+"</td></tr>";});out.innerHTML=h3+"</tbody></table>";}else{var by={};d.inter.forEach(function(x){by[x.fromId]=(by[x.fromId]||0)+(Number(x.amount)||0);});var h4="<table><thead><tr><th>شرکت مبدأ</th><th>جمع خروجی</th></tr></thead><tbody>";Object.keys(by).forEach(function(id){h4+="<tr><td>"+esc(map[id]?map[id].name:id)+"</td><td>"+money(by[id])+"</td></tr>";});if(!Object.keys(by).length)h4+="<tr><td colspan=\"2\">موردی نیست</td></tr>";out.innerHTML=h4+"</tbody></table>";}}
+document.getElementById("btnPrintRep").onclick=function(){window.print();};
+document.getElementById("btnBackup").onclick=function(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(load(),null,2)],{type:"application/json"}));a.download="multi-company-backup.json";a.click();toast("دانلود شد");};
+document.getElementById("restoreFile").onchange=function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.companies))throw new Error("x");save(d);refreshAll();toast("بازیابی شد");}catch(err){toast("فایل نامعتبر",true);}};r.readAsText(f);e.target.value="";};
+document.getElementById("btnSyncCtx").onclick=function(){var el=document.getElementById("activeCompany");if(!el.value){toast("شرکت فعال را انتخاب کنید",true);return;}setActiveCompany(el.value);toast("همسان‌سازی شد");renderDash();};
+function refreshAll(){applyLogo();fillCompanySelects();renderDash();renderCompanies();renderBranches();renderYears();renderInter();renderReport();}
+refreshAll();
+})();</script></body></html>
