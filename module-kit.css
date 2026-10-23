@@ -1,0 +1,223 @@
+/* module-kit.css v3 — header layout fixed */
+:root{
+  --bg:#070b14;--panel:#0c1222;--card:#151c2e;--line:#2a3548;--txt:#e8eef7;--muted:#8b9bb4;
+  --pri:#3b82f6;--pri-dim:rgba(59,130,246,.15);--ok:#22c55e;--bad:#ef4444;
+  --glass:rgba(21,28,46,.92);--shadow:0 18px 50px rgba(0,0,0,.45);--radius:14px;
+  --mic-on:#22c55e;--mic-off:#ef4444;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Tahoma,"Segoe UI",system-ui,sans-serif;
+  background:
+    radial-gradient(900px 480px at 10% -10%,rgba(59,130,246,.16),transparent 50%),
+    radial-gradient(700px 400px at 100% 0%,rgba(99,102,241,.1),transparent 45%),
+    var(--bg);
+  color:var(--txt);min-height:100dvh;line-height:1.55;
+}
+.app-shell{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  grid-template-rows:auto 1fr auto;
+  min-height:100dvh;
+}
+@media(max-width:960px){
+  .app-shell{grid-template-columns:1fr}
+  .side-panel{display:none}
+  .side-panel.open{
+    display:block;position:fixed;top:0;right:0;bottom:0;width:min(300px,92vw);
+    z-index:70;background:var(--panel);border-left:1px solid var(--line);
+    box-shadow:var(--shadow);overflow:auto;
+  }
+}
+
+/* ===== TOPBAR: راست=لوگو+نام | وسط=منو | چپ=تاریخ/ساعت/کاربر ===== */
+.topbar{
+  grid-column:1/-1;
+  display:flex;
+  flex-direction:row; /* با dir=rtl: اول راست، آخر چپ */
+  align-items:center;
+  gap:14px;
+  padding:10px 16px;
+  background:linear-gradient(180deg,rgba(12,18,34,.97),rgba(12,18,34,.9));
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(14px);
+  position:sticky;top:0;z-index:50;
+  flex-wrap:nowrap;
+}
+@media(max-width:720px){
+  .topbar{flex-wrap:wrap;gap:10px}
+  .mega{order:3;width:100%;justify-content:flex-start}
+}
+
+/* ۱) راست: لوگو + نام ماژول */
+.topbar .brand{
+  display:flex;align-items:center;gap:10px;
+  flex:0 0 auto;
+  order:1;
+}
+.topbar .logo{
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,#60a5fa,#1d4ed8);
+  display:grid;place-items:center;overflow:hidden;flex-shrink:0;
+  box-shadow:0 0 0 1px rgba(96,165,250,.35),0 8px 20px rgba(37,99,235,.22);
+}
+.topbar .logo img{width:100%;height:100%;object-fit:contain}
+.topbar h1{font-size:.95rem;font-weight:800;white-space:nowrap}
+
+/* ۲) وسط: منوی آبشاری */
+.mega{
+  display:flex;align-items:center;gap:4px;
+  flex:1 1 auto;
+  justify-content:center;
+  order:2;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:4px 6px;
+  min-width:0;
+}
+.mega-item{position:relative}
+.mega-item > .mega-btn{
+  display:block;background:transparent;border:none;color:var(--muted);
+  border-radius:10px;padding:9px 12px;font-size:.75rem;font-weight:700;
+  cursor:default;font-family:inherit;white-space:nowrap;
+  transition:background .15s,color .15s;
+}
+.mega-item:hover > .mega-btn,
+.mega-item:focus-within > .mega-btn{background:var(--pri);color:#fff}
+.mega-item .drop{
+  position:absolute;top:calc(100% + 6px);right:0;
+  min-width:170px;
+  background:var(--glass);border:1px solid var(--line);border-radius:14px;
+  padding:6px;z-index:60;box-shadow:var(--shadow);
+  opacity:0;visibility:hidden;transform:translateY(6px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  pointer-events:none;backdrop-filter:blur(12px);
+}
+.mega-item:hover > .drop,
+.mega-item:focus-within > .drop{
+  opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;
+}
+.mega-item::after{content:"";position:absolute;left:0;right:0;top:100%;height:10px}
+.mega-item .drop button{
+  display:block;width:100%;text-align:right;background:transparent;border:none;
+  color:var(--txt);padding:9px 12px;border-radius:10px;font-size:.78rem;
+  cursor:pointer;font-family:inherit;
+}
+.mega-item .drop button:hover{background:var(--pri-dim);color:#93c5fd}
+.btn-exit{
+  background:linear-gradient(135deg,#f87171,#dc2626);color:#fff;
+  border:none;border-radius:10px;padding:9px 12px;font-size:.74rem;font-weight:800;
+  cursor:pointer;font-family:inherit;flex-shrink:0;margin-right:2px;
+}
+.btn-exit:hover{filter:brightness(1.08)}
+
+/* ۳) چپ: تاریخ شمسی → میلادی → ساعت → کاربر (+ میکروفون) */
+.topbar-left{
+  display:flex;align-items:center;gap:8px;
+  flex:0 0 auto;
+  order:3;
+  margin-right:auto; /* در RTL این را به لبه چپ هل می‌دهد اگر لازم باشد */
+}
+/* در RTL با order، brand راست و left چپ می‌ماند؛ flex:1 روی mega وسط را پر می‌کند */
+
+.icon-btn{
+  width:38px;height:38px;border-radius:11px;border:1px solid var(--line);
+  background:var(--card);cursor:pointer;display:grid;place-items:center;font-size:15px;flex-shrink:0;
+}
+.icon-btn.mic-on{background:rgba(34,197,94,.18);border-color:var(--mic-on);color:var(--mic-on)}
+.icon-btn.mic-off{background:rgba(239,68,68,.12);border-color:var(--mic-off);color:var(--mic-off)}
+
+.datetime-box{
+  text-align:center;
+  direction:rtl;
+  font-variant-numeric:tabular-nums;
+  min-width:112px;
+  padding:6px 10px;
+  border-radius:12px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line);
+  line-height:1.35;
+}
+.datetime-box .j{font-size:.8rem;font-weight:800;color:#93c5fd}
+.datetime-box .g{font-size:.65rem;color:var(--muted);direction:ltr;unicode-bidi:isolate}
+.datetime-box .c{font-size:.78rem;color:#86efac;font-weight:700}
+.datetime-box .user-line{
+  margin-top:3px;padding-top:3px;border-top:1px solid var(--line);
+  font-size:.68rem;color:#fcd34d;font-weight:700;
+}
+
+/* پنل راست */
+.side-panel{
+  grid-row:2;grid-column:1;
+  border-left:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(12,18,34,.98),var(--panel));
+  padding:14px 12px;overflow:auto;
+}
+.side-panel h3{font-size:.72rem;color:#93c5fd;margin-bottom:12px}
+.tree details{margin-bottom:8px}
+.tree summary{
+  cursor:pointer;padding:10px 12px;border-radius:12px;
+  background:var(--card);border:1px solid var(--line);
+  font-size:.78rem;font-weight:700;list-style:none;
+}
+.tree summary::-webkit-details-marker{display:none}
+.tree details[open]>summary{border-color:rgba(59,130,246,.5);background:var(--pri-dim);color:#93c5fd}
+.tree .leaf{
+  display:block;width:100%;text-align:right;background:transparent;border:none;
+  color:var(--muted);padding:8px 14px;font-size:.75rem;cursor:pointer;
+  font-family:inherit;border-radius:10px;margin-top:2px;
+}
+.tree .leaf:hover,.tree .leaf.on{background:rgba(59,130,246,.12);color:var(--txt)}
+.main{grid-row:2;grid-column:2;padding:16px;overflow:auto}
+@media(max-width:960px){.main{grid-column:1}}
+.statusbar{
+  grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;
+  padding:8px 16px;border-top:1px solid var(--line);
+  background:rgba(12,18,34,.95);font-size:.72rem;color:var(--muted);
+}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.card h2{font-size:.9rem;margin-bottom:12px;font-weight:800}
+label{display:block;font-size:.72rem;color:var(--muted);margin:8px 0 4px}
+input,select,textarea{
+  width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);
+  background:#0a101c;color:var(--txt);font-family:inherit;font-size:15px;
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px rgba(59,130,246,.2)}
+input.err,select.err,textarea.err{border-color:var(--bad)}
+.field-error{color:#fca5a5;font-size:.68rem;min-height:1em;margin-top:3px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.row{grid-template-columns:1fr}}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{border:none;border-radius:12px;padding:10px 14px;font-weight:700;font-size:.8rem;cursor:pointer;font-family:inherit}
+.btn-p{background:linear-gradient(135deg,#60a5fa,#2563eb);color:#fff}
+.btn-g{background:#243044;color:#e2e8f0}
+.btn-b{background:var(--bad);color:#fff}
+.btn-sm{padding:6px 10px;font-size:.72rem}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th,td{border-bottom:1px solid var(--line);padding:9px 6px;text-align:right}
+th{color:#93c5fd;font-size:.72rem}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.65rem}
+.badge-on{background:#14532d;color:#86efac}.badge-off{background:#3f1d1d;color:#fca5a5}
+.empty{color:var(--muted);font-size:.8rem;padding:8px 0}
+.hint{font-size:.72rem;color:var(--muted)}
+.kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:12px}
+.kpi .box{background:linear-gradient(160deg,rgba(59,130,246,.14),rgba(21,28,46,.95));border:1px solid rgba(59,130,246,.28);border-radius:14px;padding:14px}
+.kpi .n{font-size:1.25rem;font-weight:800;color:#93c5fd}.kpi .l{font-size:.7rem;color:var(--muted)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ok);color:#052e16;padding:11px 18px;border-radius:14px;font-weight:700;opacity:0;transition:.2s;z-index:100;font-size:.82rem;box-shadow:var(--shadow)}
+.toast.show{opacity:1}.toast.err{background:var(--bad);color:#fff}
+.jcal-pop{position:absolute;z-index:80;background:var(--glass);border:1px solid var(--line);border-radius:16px;padding:12px;width:288px;box-shadow:var(--shadow);backdrop-filter:blur(12px)}
+.jcal-head{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-bottom:8px}
+.jcal-head button{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:#0a101c;color:var(--txt);cursor:pointer;font-size:.75rem}
+.jcal-head .title{font-size:.82rem;font-weight:800;color:#93c5fd}
+.jcal-week{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+.jcal-week span{text-align:center;font-size:.65rem;color:var(--muted);padding:4px 0}
+.jcal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.jcal-days button{border:none;background:transparent;color:var(--txt);border-radius:10px;padding:6px 2px;cursor:pointer;font-family:inherit;min-height:44px}
+.jcal-days button .jd{display:block;font-size:.8rem;font-weight:700}
+.jcal-days button .gd{display:block;font-size:.55rem;color:var(--muted)}
+.jcal-days button:hover{background:#243044}
+.jcal-days button.on{background:var(--pri);color:#fff}
+.jcal-days button.out{opacity:.3}
+.date-wrap{position:relative}
