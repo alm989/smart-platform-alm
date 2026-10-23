@@ -1,141 +1,614 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#1d4ed8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; frame-ancestors 'none'"><title>چند شرکتی هوشمند</title><style>:root{--bg:#0b1220;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#2563eb;--ok:#22c55e;--bad:#ef4444}*{box-sizing:border-box;margin:0;padding:0}body{font-family:Tahoma,system-ui,sans-serif;background:radial-gradient(900px 420px at 80% -10%,#1e3a8a 0%,transparent 45%),var(--bg);color:var(--txt);min-height:100dvh}.top{position:sticky;top:0;z-index:30;background:rgba(11,18,32,.94);border-bottom:1px solid var(--line);padding:10px 14px}.top-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.back{color:#93c5fd;text-decoration:none;font-size:.8rem;border:1px solid var(--line);padding:7px 10px;border-radius:10px}.brand{display:flex;align-items:center;gap:10px;flex:1}.logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:grid;place-items:center;overflow:hidden}.logo img{width:100%;height:100%;object-fit:contain}h1{font-size:1rem}.sub{font-size:.72rem;color:var(--muted)}select.ctx{background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.8rem;font-family:inherit}.wrap{max-width:1100px;margin:0 auto;padding:14px 12px 70px}.nav{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px}.nav button{background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:12px;padding:10px 4px;font-size:.72rem;cursor:pointer;font-family:inherit}.nav button.on{background:var(--pri);color:#fff;border-color:var(--pri)}.panel{display:none}.panel.on{display:block}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}@media(max-width:800px){.grid3{grid-template-columns:1fr 1fr}.nav{grid-template-columns:repeat(3,1fr)}}@media(max-width:520px){.grid3{grid-template-columns:1fr}}.card{background:rgba(30,41,59,.95);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}.card h2{font-size:.9rem;margin-bottom:10px}.kpi .n{font-size:1.35rem;font-weight:800;color:#93c5fd}.kpi .l{font-size:.72rem;color:var(--muted)}label{display:block;font-size:.72rem;color:var(--muted);margin:8px 0 4px}input,select,textarea{width:100%;padding:10px;border-radius:11px;border:1px solid var(--line);background:#0f172a;color:var(--txt);font-family:inherit;font-size:15px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:600px){.row{grid-template-columns:1fr}}.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.btn{border:none;border-radius:11px;padding:10px 14px;font-weight:700;font-size:.8rem;cursor:pointer;font-family:inherit}.btn-p{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff}.btn-ok{background:var(--ok);color:#052e16}.btn-b{background:var(--bad);color:#fff}.btn-g{background:#334155;color:#e2e8f0}.btn-sm{padding:6px 10px;font-size:.72rem}table{width:100%;border-collapse:collapse;font-size:.78rem}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:right}th{color:#93c5fd;font-size:.72rem}.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.65rem}.badge-on{background:#14532d;color:#86efac}.badge-off{background:#3f1d1d;color:#fca5a5}.empty{color:var(--muted);font-size:.8rem;padding:10px 0}.hint{font-size:.72rem;color:var(--muted);margin-top:6px}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ok);color:#052e16;padding:10px 16px;border-radius:12px;font-weight:700;opacity:0;transition:.2s;z-index:80}.toast.show{opacity:1}.toast.err{background:var(--bad);color:#fff}.tabs-mini{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tabs-mini button{background:#0f172a;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:6px 12px;font-size:.72rem;cursor:pointer;font-family:inherit}.tabs-mini button.on{background:#1e40af;color:#fff}.foot{text-align:center;font-size:.68rem;color:#64748b;margin-top:10px}</style></head><body>
-<div class="top"><div class="top-in">
-<a class="back" href="suite.html">← Suite</a>
-<div class="brand"><div class="logo" id="headerLogo">🏛️</div>
-<div><h1>چند شرکتی هوشمند</h1><div class="sub">هلدینگ · شرکت · شعبه · بین‌شرکتی · گزارش</div></div></div>
-<select class="ctx" id="activeCompany" title="شرکت فعال"></select>
-</div></div>
-<div class="wrap">
-<div class="nav" id="nav">
-<button type="button" data-p="dash" class="on">داشبورد</button>
-<button type="button" data-p="companies">شرکت‌ها</button>
-<button type="button" data-p="branches">شعب</button>
-<button type="button" data-p="years">سال مالی</button>
-<button type="button" data-p="inter">بین‌شرکتی</button>
-<button type="button" data-p="reports">گزارش‌ها</button>
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1d4ed8"><title>چند شرکتی هوشمند</title>
+<style>
+/* module-kit.css — پوسته مشترک همه ماژول‌ها */
+:root{
+  --bg:#070b14;--panel:#0c1222;--card:#151c2e;--line:#2a3548;--txt:#e8eef7;--muted:#8b9bb4;
+  --pri:#3b82f6;--pri-dim:rgba(59,130,246,.15);--ok:#22c55e;--bad:#ef4444;
+  --glass:rgba(21,28,46,.95);--shadow:0 16px 40px rgba(0,0,0,.45);--radius:14px;
+  --mic-on:#22c55e;--mic-off:#ef4444;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Tahoma,"Segoe UI",system-ui,sans-serif;
+  background:radial-gradient(900px 480px at 15% -10%,rgba(59,130,246,.12),transparent 50%),var(--bg);
+  color:var(--txt);min-height:100dvh;line-height:1.5;
+}
+.app-shell{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  grid-template-rows:auto 1fr auto;
+  min-height:100dvh;
+}
+@media(max-width:960px){
+  .app-shell{grid-template-columns:1fr}
+  .side-panel{display:none}
+  .side-panel.open{
+    display:block;position:fixed;top:0;right:0;bottom:0;width:min(280px,92vw);
+    z-index:70;background:var(--panel);border-left:1px solid var(--line);
+    box-shadow:var(--shadow);overflow:auto;
+  }
+}
+
+/* هدر: راست=تاریخ/ساعت/کاربر | وسط=منو+خروج | چپ=لوگو+نام */
+.topbar{
+  grid-column:1/-1;
+  display:flex;flex-direction:row;align-items:center;gap:12px;
+  padding:8px 14px;min-height:58px;
+  background:rgba(12,18,34,.97);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:50;
+}
+/* در RTL اولین فرزند سمت راست است */
+.header-clock{
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+  gap:1px;padding:5px 11px;border-radius:11px;
+  background:rgba(255,255,255,.03);border:1px solid var(--line);
+  line-height:1.3;flex:0 0 auto;min-width:118px;
+}
+.header-clock .j{font-size:.78rem;font-weight:800;color:#93c5fd}
+.header-clock .g{font-size:.62rem;color:var(--muted);direction:ltr;unicode-bidi:isolate}
+.header-clock .c{font-size:.74rem;color:#86efac;font-weight:700}
+.header-clock .u{font-size:.65rem;color:#fcd34d;font-weight:700;margin-top:2px;padding-top:2px;border-top:1px solid var(--line);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.mega{
+  display:flex;align-items:center;gap:3px;flex:1 1 auto;justify-content:center;
+  background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;
+  padding:3px 5px;min-width:0;
+}
+.mega-item{position:relative}
+.mega-item>.mega-btn{
+  display:block;background:transparent;border:none;color:var(--muted);
+  border-radius:9px;padding:8px 11px;font-size:.74rem;font-weight:700;
+  cursor:default;font-family:inherit;white-space:nowrap;
+}
+.mega-item:hover>.mega-btn,.mega-item:focus-within>.mega-btn{background:var(--pri);color:#fff}
+.mega-item .drop{
+  position:absolute;top:calc(100% + 5px);right:0;min-width:168px;
+  background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:5px;
+  z-index:60;box-shadow:var(--shadow);
+  opacity:0;visibility:hidden;transform:translateY(4px);transition:.14s;pointer-events:none;
+}
+.mega-item:hover>.drop,.mega-item:focus-within>.drop{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+.mega-item::after{content:"";position:absolute;left:0;right:0;top:100%;height:8px}
+.mega-item .drop button{
+  display:block;width:100%;text-align:right;background:transparent;border:none;
+  color:var(--txt);padding:8px 10px;border-radius:8px;font-size:.76rem;cursor:pointer;font-family:inherit;
+}
+.mega-item .drop button:hover{background:var(--pri-dim);color:#93c5fd}
+.btn-exit{
+  background:linear-gradient(135deg,#f87171,#dc2626);color:#fff;border:none;border-radius:9px;
+  padding:8px 12px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit;flex-shrink:0;
+}
+.icon-btn{
+  width:34px;height:34px;border-radius:10px;border:1px solid var(--line);
+  background:var(--card);cursor:pointer;display:grid;place-items:center;font-size:14px;flex-shrink:0;
+}
+.icon-btn.mic-on{background:rgba(34,197,94,.18);border-color:var(--mic-on);color:var(--mic-on)}
+.icon-btn.mic-off{background:rgba(239,68,68,.12);border-color:var(--mic-off);color:var(--mic-off)}
+
+.brand{display:flex;align-items:center;gap:8px;flex:0 0 auto;margin-right:auto}
+.logo{
+  width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#60a5fa,#1d4ed8);
+  display:grid;place-items:center;overflow:hidden;flex-shrink:0;
+}
+.logo img{width:100%;height:100%;object-fit:contain}
+.brand h1{font-size:.88rem;font-weight:800;white-space:nowrap}
+
+/* پنل درختی راست */
+.side-panel{
+  grid-row:2;grid-column:1;border-left:1px solid var(--line);
+  background:var(--panel);padding:12px 10px;overflow:auto;
+}
+.side-panel h3{font-size:.7rem;color:#93c5fd;margin-bottom:10px}
+.tree details{margin-bottom:6px}
+.tree summary{
+  cursor:pointer;padding:9px 11px;border-radius:11px;background:var(--card);
+  border:1px solid var(--line);font-size:.76rem;font-weight:700;list-style:none;
+}
+.tree summary::-webkit-details-marker{display:none}
+.tree details[open]>summary{border-color:rgba(59,130,246,.45);background:var(--pri-dim);color:#93c5fd}
+.tree .leaf{
+  display:block;width:100%;text-align:right;background:transparent;border:none;
+  color:var(--muted);padding:7px 12px;font-size:.73rem;cursor:pointer;font-family:inherit;border-radius:8px;margin-top:2px;
+}
+.tree .leaf:hover,.tree .leaf.on{background:rgba(59,130,246,.12);color:var(--txt)}
+.main{grid-row:2;grid-column:2;padding:14px;overflow:auto}
+@media(max-width:960px){.main{grid-column:1}}
+.statusbar{
+  grid-column:1/-1;display:flex;justify-content:space-between;padding:7px 14px;
+  border-top:1px solid var(--line);background:rgba(12,18,34,.95);font-size:.7rem;color:var(--muted);
+}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.card h2{font-size:.88rem;margin-bottom:10px;font-weight:800}
+label{display:block;font-size:.7rem;color:var(--muted);margin:7px 0 3px}
+input,select,textarea{
+  width:100%;padding:10px;border-radius:11px;border:1px solid var(--line);
+  background:#0a101c;color:var(--txt);font-family:inherit;font-size:14px;
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px rgba(59,130,246,.18)}
+input.err,select.err,textarea.err{border-color:var(--bad)}
+.field-error{color:#fca5a5;font-size:.65rem;min-height:.9em}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:600px){.row{grid-template-columns:1fr}}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn{border:none;border-radius:11px;padding:9px 13px;font-weight:700;font-size:.78rem;cursor:pointer;font-family:inherit}
+.btn-p{background:linear-gradient(135deg,#60a5fa,#2563eb);color:#fff}
+.btn-g{background:#243044;color:#e2e8f0}
+.btn-b{background:var(--bad);color:#fff}
+.btn-sm{padding:5px 9px;font-size:.7rem}
+table{width:100%;border-collapse:collapse;font-size:.76rem}
+th,td{border-bottom:1px solid var(--line);padding:8px 5px;text-align:right}
+th{color:#93c5fd;font-size:.7rem}
+.badge{display:inline-block;padding:2px 7px;border-radius:999px;font-size:.62rem}
+.badge-on{background:#14532d;color:#86efac}.badge-off{background:#3f1d1d;color:#fca5a5}
+.empty{color:var(--muted);font-size:.78rem;padding:6px 0}
+.kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:10px}
+.kpi .box{background:linear-gradient(160deg,rgba(59,130,246,.12),rgba(21,28,46,.95));border:1px solid rgba(59,130,246,.25);border-radius:12px;padding:12px}
+.kpi .n{font-size:1.15rem;font-weight:800;color:#93c5fd}.kpi .l{font-size:.68rem;color:var(--muted)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ok);color:#052e16;padding:10px 16px;border-radius:12px;font-weight:700;opacity:0;transition:.2s;z-index:100;font-size:.8rem}
+.toast.show{opacity:1}.toast.err{background:var(--bad);color:#fff}
+
+/* تقویم شمسی */
+.date-wrap{position:relative}
+.jcal-pop{
+  position:absolute;z-index:80;background:var(--glass);border:1px solid var(--line);
+  border-radius:14px;padding:12px;width:320px;box-shadow:var(--shadow);
+}
+.jcal-head{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-bottom:8px}
+.jcal-head button{
+  width:28px;height:28px;border-radius:8px;border:1px solid var(--line);
+  background:#0a101c;color:var(--txt);cursor:pointer;font-size:.75rem;
+}
+.jcal-head .title{font-size:.8rem;font-weight:800;color:#93c5fd}
+.jcal-week{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+.jcal-week span{text-align:center;font-size:.58rem;color:var(--muted);padding:4px 1px;line-height:1.2}
+.jcal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.jcal-days button{
+  border:none;background:transparent;color:var(--txt);border-radius:9px;
+  padding:5px 2px;cursor:pointer;font-family:inherit;min-height:48px;
+}
+.jcal-days button .jd{display:block;font-size:.78rem;font-weight:700}
+.jcal-days button .gd{display:block;font-size:.5rem;color:var(--muted);line-height:1.15;margin-top:1px}
+.jcal-days button:hover{background:#243044}
+.jcal-days button.on{background:var(--pri);color:#fff}
+.jcal-days button.on .gd{color:#dbeafe}
+.jcal-days button.out{opacity:.3}
+
+</style></head><body>
+<div class="app-shell">
+<header class="topbar">
+<div class="header-clock">
+<div class="j" id="dtJ">—</div>
+<div class="g" id="dtG">—</div>
+<div class="c" id="dtC">—</div>
+<div class="u" id="activeUser">—</div>
 </div>
-<div class="panel on" id="p-dash">
-<div class="grid3" id="kpiBox"></div>
-<div class="card"><h2>شرکت فعال و همسان‌سازی</h2>
-<p class="hint">شرکت فعال برای حسابداری و سایر ماژول‌ها در localStorage ذخیره می‌شود.</p>
-<div class="btns">
-<button type="button" class="btn btn-p" id="btnSyncCtx">همسان‌سازی زمینه</button>
-<button type="button" class="btn btn-g" id="btnBackup">پشتیبان JSON</button>
-<label class="btn btn-g" style="display:inline-block;cursor:pointer">بازیابی<input type="file" id="restoreFile" accept="application/json" hidden></label>
-</div></div>
-<div class="card"><h2>رویدادهای اخیر</h2><div id="recentBox" class="empty">—</div></div>
-</div>
-<div class="panel" id="p-companies">
-<div class="card"><h2 id="coFormTitle">ثبت / ویرایش شرکت</h2>
-<input type="hidden" id="coId">
-<div class="row"><div><label>کد شرکت *</label><input id="coCode" placeholder="C01"></div>
-<div><label>نام شرکت *</label><input id="coName"></div></div>
-<div class="row"><div><label>شناسه ملی / اقتصادی</label><input id="coNational"></div>
-<div><label>نوع</label><select id="coType"><option value="holding">هلدینگ</option><option value="subsidiary">تابعه</option><option value="branch_co">مستقل</option></select></div></div>
-<div class="row"><div><label>تلفن</label><input id="coPhone"></div>
+<button type="button" class="icon-btn mic-off" id="btnMic" title="میکروفون">🎤</button>
+<nav class="mega" id="megaMenu">
+<div class="mega-item"><div class="mega-btn">داشبورد</div><div class="drop">
+<button type="button" data-panel="p-dash">نمای کلی</button>
+<button type="button" data-panel="p-dash">همسان‌سازی</button></div></div>
+<div class="mega-item"><div class="mega-btn">ثبت</div><div class="drop">
+<button type="button" data-panel="p-companies">ثبت شرکت</button>
+<button type="button" data-panel="p-branches">ثبت شعبه</button>
+<button type="button" data-panel="p-years">سال مالی</button>
+<button type="button" data-panel="p-inter">بین‌شرکتی</button></div></div>
+<div class="mega-item"><div class="mega-btn">فهرست</div><div class="drop">
+<button type="button" data-panel="p-companies">شرکت‌ها</button>
+<button type="button" data-panel="p-branches">شعب</button>
+<button type="button" data-panel="p-years">سال‌ها</button>
+<button type="button" data-panel="p-inter">بین‌شرکتی</button></div></div>
+<div class="mega-item"><div class="mega-btn">گزارش‌ها</div><div class="drop">
+<button type="button" data-panel="p-reports">همه گزارش‌ها</button></div></div>
+<div class="mega-item"><div class="mega-btn">امکانات</div><div class="drop">
+<button type="button" id="btnBackup">پشتیبان</button>
+<button type="button" id="btnRestoreTrigger">بازیابی</button></div></div>
+<div class="mega-item"><div class="mega-btn">تنظیمات</div><div class="drop">
+<button type="button" data-panel="p-dash">شرکت فعال</button>
+<button type="button" id="btnToggleSide">منوی درختی</button></div></div>
+<button type="button" class="btn-exit" id="btnExit">خروج</button>
+</nav>
+<div class="brand"><div class="logo" id="headerLogo">🏛️</div><div><h1>چند شرکتی هوشمند</h1></div></div>
+</header>
+<aside class="side-panel" id="sidePanel"><h3>ناوبری</h3><div class="tree">
+<details open><summary>داشبورد</summary>
+<button type="button" class="leaf on" data-panel="p-dash">نمای کلی</button>
+<button type="button" class="leaf" data-panel="p-dash">همسان‌سازی</button></details>
+<details open><summary>ثبت</summary>
+<button type="button" class="leaf" data-panel="p-companies">ثبت شرکت</button>
+<button type="button" class="leaf" data-panel="p-branches">ثبت شعبه</button>
+<button type="button" class="leaf" data-panel="p-years">سال مالی</button>
+<button type="button" class="leaf" data-panel="p-inter">بین‌شرکتی</button></details>
+<details><summary>فهرست</summary>
+<button type="button" class="leaf" data-panel="p-companies">شرکت‌ها</button>
+<button type="button" class="leaf" data-panel="p-branches">شعب</button>
+<button type="button" class="leaf" data-panel="p-years">سال‌ها</button>
+<button type="button" class="leaf" data-panel="p-inter">بین‌شرکتی</button></details>
+<details><summary>گزارش‌ها</summary><button type="button" class="leaf" data-panel="p-reports">همه گزارش‌ها</button></details>
+<details><summary>امکانات</summary>
+<button type="button" class="leaf" id="leafBackup">پشتیبان</button>
+<button type="button" class="leaf" id="leafRestore">بازیابی</button></details>
+<details><summary>تنظیمات</summary><button type="button" class="leaf" data-panel="p-dash">شرکت فعال</button></details>
+</div></aside>
+<main class="main">
+<div class="panel on" id="p-dash"><div class="kpi" id="kpiBox"></div>
+<div class="card"><h2>شرکت فعال</h2><select id="activeCompany"></select>
+<div class="btns"><button type="button" class="btn btn-p" id="btnSyncCtx">همسان‌سازی</button></div></div>
+<div class="card"><h2>رویدادها</h2><div id="recentBox" class="empty">—</div></div></div>
+<div class="panel" id="p-companies"><div class="card"><h2>ثبت شرکت</h2>
+<div class="row"><div><label>کد *</label><input id="coCode" data-validate="required code"><div class="field-error"></div></div>
+<div><label>نام *</label><input id="coName" data-validate="required" spellcheck="true"><div class="field-error"></div></div></div>
+<div class="row"><div><label>شناسه</label><input id="coNational" data-validate="number"><div class="field-error"></div></div>
+<div><label>نوع</label><select id="coType"><option value="holding">هلدینگ</option><option value="subsidiary" selected>تابعه</option><option value="branch_co">مستقل</option></select></div></div>
+<div class="row"><div><label>تلفن</label><input id="coPhone" data-validate="phone"><div class="field-error"></div></div>
 <div><label>وضعیت</label><select id="coStatus"><option value="active">فعال</option><option value="inactive">غیرفعال</option></select></div></div>
-<label>آدرس</label><textarea id="coAddr" rows="2"></textarea>
-<label>یادداشت</label><textarea id="coNote" rows="2"></textarea>
-<div class="btns"><button type="button" class="btn btn-p" id="btnCoSave">ذخیره شرکت</button>
-<button type="button" class="btn btn-g" id="btnCoReset">پاک‌سازی فرم</button></div></div>
-<div class="card"><h2>فهرست شرکت‌ها</h2>
-<input id="coSearch" placeholder="جستجو…" style="margin-bottom:10px">
-<div id="coList"></div></div>
-</div>
-<div class="panel" id="p-branches">
-<div class="card"><h2>ثبت شعبه</h2>
-<input type="hidden" id="brId">
-<div class="row"><div><label>شرکت *</label><select id="brCompany"></select></div>
-<div><label>کد شعبه *</label><input id="brCode"></div></div>
-<div class="row"><div><label>نام شعبه *</label><input id="brName"></div>
-<div><label>شهر</label><input id="brCity"></div></div>
-<div class="row"><div><label>مدیر شعبه</label><input id="brManager"></div>
-<div><label>وضعیت</label><select id="brStatus"><option value="active">فعال</option><option value="inactive">غیرفعال</option></select></div></div>
-<label>آدرس</label><textarea id="brAddr" rows="2"></textarea>
-<div class="btns"><button type="button" class="btn btn-p" id="btnBrSave">ذخیره شعبه</button>
-<button type="button" class="btn btn-g" id="btnBrReset">پاک‌سازی</button></div></div>
-<div class="card"><h2>فهرست شعب</h2><div id="brList"></div></div>
-</div>
-<div class="panel" id="p-years">
-<div class="card"><h2>سال مالی</h2>
-<div class="row"><div><label>شرکت *</label><select id="yrCompany"></select></div>
-<div><label>عنوان سال *</label><input id="yrTitle" placeholder="1404"></div></div>
-<div class="row"><div><label>شروع</label><input id="yrStart" placeholder="1404/01/01"></div>
-<div><label>پایان</label><input id="yrEnd"></div></div>
-<div class="row"><div><label>وضعیت</label><select id="yrStatus"><option value="open">باز</option><option value="closed">بسته</option></select></div>
-<div><label>ارز</label><select id="yrCurrency"><option>IRR</option><option>USD</option><option>EUR</option></select></div></div>
-<div class="btns"><button type="button" class="btn btn-p" id="btnYrSave">ذخیره سال مالی</button></div></div>
-<div class="card"><h2>فهرست سال‌ها</h2><div id="yrList"></div></div>
-</div>
-<div class="panel" id="p-inter">
-<div class="card"><h2>تراکنش بین‌شرکتی</h2>
-<div class="row"><div><label>از شرکت *</label><select id="icFrom"></select></div>
-<div><label>به شرکت *</label><select id="icTo"></select></div></div>
-<div class="row"><div><label>نوع</label><select id="icType"><option value="loan">وام</option><option value="sale">فروش</option><option value="service">خدمات</option><option value="transfer">انتقال وجه</option><option value="other">سایر</option></select></div>
-<div><label>مبلغ *</label><input id="icAmount" type="number" min="0"></div></div>
-<div class="row"><div><label>تاریخ</label><input id="icDate"></div>
+<label>آدرس</label><textarea id="coAddr" rows="2" spellcheck="true"></textarea>
+<div class="btns"><button type="button" class="btn btn-p" id="btnCoSave">ذخیره</button></div></div>
+<div class="card"><h2>فهرست</h2><input id="coSearch" placeholder="جستجو"><div id="coList" style="margin-top:8px"></div></div></div>
+<div class="panel" id="p-branches"><div class="card"><h2>ثبت شعبه</h2>
+<div class="row"><div><label>شرکت</label><select id="brCompany"></select></div>
+<div><label>کد *</label><input id="brCode" data-validate="required code"><div class="field-error"></div></div></div>
+<div class="row"><div><label>نام *</label><input id="brName" data-validate="required" spellcheck="true"><div class="field-error"></div></div>
+<div><label>شهر</label><input id="brCity" spellcheck="true"></div></div>
+<div class="btns"><button type="button" class="btn btn-p" id="btnBrSave">ذخیره</button></div></div>
+<div class="card"><h2>فهرست</h2><div id="brList"></div></div></div>
+<div class="panel" id="p-years"><div class="card"><h2>سال مالی</h2>
+<div class="row"><div><label>شرکت</label><select id="yrCompany"></select></div>
+<div><label>عنوان *</label><input id="yrTitle" data-validate="required"><div class="field-error"></div></div></div>
+<div class="row"><div><label>شروع</label><input id="yrStart" class="jdate" data-jdate data-validate="date"><div class="field-error"></div></div>
+<div><label>پایان</label><input id="yrEnd" class="jdate" data-jdate data-validate="date"><div class="field-error"></div></div></div>
+<div class="btns"><button type="button" class="btn btn-p" id="btnYrSave">ذخیره</button></div></div>
+<div class="card"><h2>فهرست</h2><div id="yrList"></div></div></div>
+<div class="panel" id="p-inter"><div class="card"><h2>بین‌شرکتی</h2>
+<div class="row"><div><label>از</label><select id="icFrom"></select></div><div><label>به</label><select id="icTo"></select></div></div>
+<div class="row"><div><label>نوع</label><select id="icType"><option value="loan">وام</option><option value="sale">فروش</option><option value="transfer">انتقال</option><option value="other">سایر</option></select></div>
+<div><label>مبلغ *</label><input id="icAmount" data-validate="required number"><div class="field-error"></div></div></div>
+<div class="row"><div><label>تاریخ</label><input id="icDate" class="jdate" data-jdate data-validate="date"><div class="field-error"></div></div>
 <div><label>مرجع</label><input id="icRef"></div></div>
-<label>شرح</label><textarea id="icDesc" rows="2"></textarea>
-<div class="btns"><button type="button" class="btn btn-p" id="btnIcSave">ثبت تراکنش</button></div>
-<p class="hint">سند حسابداری نهایی در ماژول حسابداری صادر می‌شود؛ اینجا برای کنترل هلدینگ است.</p></div>
-<div class="card"><h2>لیست بین‌شرکتی</h2><div id="icList"></div></div>
-</div>
-<div class="panel" id="p-reports">
-<div class="card"><h2>گزارش‌ها</h2>
-<div class="tabs-mini" id="repTabs">
-<button type="button" data-r="cos" class="on">شرکت‌ها</button>
-<button type="button" data-r="brs">شعب</button>
-<button type="button" data-r="ics">بین‌شرکتی</button>
-<button type="button" data-r="cons">تجمیعی</button>
-</div>
-<div id="repOut"></div>
-<div class="btns"><button type="button" class="btn btn-g" id="btnPrintRep">چاپ</button></div>
-</div></div>
-<p class="foot">Multi-Company Smart · v1 · localStorage</p>
-</div>
-<div class="toast" id="toast"></div>
-<script>(function(){"use strict";
-var KEY="smart_multicompany_v1",CTX_KEY="smart_active_company_v1",LOGO_KEY="smart_suite_logo_v1",toastTimer=null,repMode="cos";
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+<div class="btns"><button type="button" class="btn btn-p" id="btnIcSave">ثبت</button></div></div>
+<div class="card"><h2>لیست</h2><div id="icList"></div></div></div>
+<div class="panel" id="p-reports"><div class="card"><h2>گزارش‌ها</h2>
+<div class="btns" style="margin-top:0">
+<button type="button" class="btn btn-g btn-sm" data-r="cos">شرکت‌ها</button>
+<button type="button" class="btn btn-g btn-sm" data-r="brs">شعب</button>
+<button type="button" class="btn btn-g btn-sm" data-r="ics">بین‌شرکتی</button>
+<button type="button" class="btn btn-p btn-sm" id="btnPrint">چاپ</button></div>
+<div id="repOut" style="margin-top:10px"></div></div></div>
+</main><footer class="statusbar"><span>چند شرکتی</span><span>Suite</span></footer></div>
+<input type="file" id="restoreFile" accept="application/json" hidden><div class="toast" id="toast"></div>
+<script>
+/* module-kit.js — پوسته مشترک همه ماژول‌ها */
+(function(global){
+"use strict";
+
+var FA=["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"];
+function toFa(n){return String(n).replace(/\d/g,function(d){return FA[+d];});}
+function toEn(s){
+  return String(s)
+    .replace(/[۰-۹]/g,function(d){return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);})
+    .replace(/[٠-٩]/g,function(d){return "٠١٢٣٤٥٦٧٨٩".indexOf(d);});
+}
+
+function g2j(gy,gm,gd){
+  var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];
+  var gy2=(gm>2)?(gy+1):gy;
+  var days=355666+365*gy+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+g_d_m[gm-1];
+  var jy=-1595+33*Math.floor(days/12053);days%=12053;
+  jy+=4*Math.floor(days/1461);days%=1461;
+  if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}
+  var jm=(days<186)?1+Math.floor(days/31):7+Math.floor((days-186)/30);
+  var jd=1+((days<186)?(days%31):((days-186)%30));
+  return {jy:jy,jm:jm,jd:jd};
+}
+function j2g(jy,jm,jd){
+  var jy2=jy-979,jm2=jm-1,jd2=jd-1;
+  var days=365*jy2+Math.floor(jy2/33)*8+Math.floor(((jy2%33)+3)/4);
+  for(var i=0;i<jm2;++i) days+=(i<6?31:30);
+  days+=jd2;
+  var gy=1600+400*Math.floor(days/146097);days%=146097;
+  var leap=true;
+  if(days>=36525){days--;gy+=100*Math.floor(days/36524);days%=36524;if(days>=365)leap=false;else days++;}
+  gy+=4*Math.floor(days/1461);days%=1461;
+  if(days>=366){leap=false;days--;gy+=Math.floor(days/365);days=days%365;}
+  var gd=days+1, sal_a=[0,31,(leap?29:28),31,30,31,30,31,31,30,31,30,31],gm;
+  for(gm=1;gm<=12&&gd>sal_a[gm];gm++) gd-=sal_a[gm];
+  return {gy:gy,gm:gm,gd:gd};
+}
+function jMonthLength(jy,jm){
+  if(jm<=6)return 31;
+  if(jm<=11)return 30;
+  var a=j2g(jy,12,30); var b=g2j(a.gy,a.gm,a.gd);
+  return (b.jy===jy&&b.jm===12&&b.jd===30)?30:29;
+}
+
+var JM=["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"];
+/* روزهای هفته کامل */
+var JW_FULL=["شنبه","یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه"];
+var JW_SHORT=["ش","ی","د","س","چ","پ","ج"];
+
+function startClock(elJ, elG, elC){
+  function tick(){
+    var n=new Date();
+    var j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());
+    if(elJ) elJ.textContent=toFa(j.jy)+"/"+toFa(String(j.jm).padStart(2,"0"))+"/"+toFa(String(j.jd).padStart(2,"0"));
+    if(elG) elG.textContent=n.getFullYear()+"/"+String(n.getMonth()+1).padStart(2,"0")+"/"+String(n.getDate()).padStart(2,"0");
+    if(elC) elC.textContent=toFa(String(n.getHours()).padStart(2,"0"))+":"+toFa(String(n.getMinutes()).padStart(2,"0"))+":"+toFa(String(n.getSeconds()).padStart(2,"0"));
+  }
+  tick(); setInterval(tick,1000);
+}
+
+function getActiveUser(){
+  try{
+    var a=JSON.parse(localStorage.getItem("smart_auth_v1")||"null");
+    if(a&&a.session&&a.session.user) return a.session.user;
+    if(a&&a.creds&&a.creds.admin&&a.creds.admin.user) return a.creds.admin.user;
+  }catch(e){}
+  try{
+    var s=JSON.parse(sessionStorage.getItem("smart_user_session")||"null");
+    if(s&&s.user) return s.user;
+  }catch(e){}
+  return "کاربر محلی";
+}
+
+var Validators={
+  required:function(v){return String(v||"").trim()?null:"این فیلد الزامی است";},
+  number:function(v){if(v===""||v==null)return null; if(!/^-?\d+(\.\d+)?$/.test(toEn(String(v)).trim())) return "فقط عدد وارد کنید"; return null;},
+  integer:function(v){if(v===""||v==null)return null; if(!/^-?\d+$/.test(toEn(String(v)).trim())) return "فقط عدد صحیح"; return null;},
+  date:function(v){if(v===""||v==null)return null; if(!/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/.test(toEn(String(v)).trim())) return "تاریخ نامعتبر (مثال: ۱۴۰۴/۰۷/۰۱)"; return null;},
+  time:function(v){if(v===""||v==null)return null; if(!/^\d{1,2}:\d{2}(:\d{2})?$/.test(toEn(String(v)).trim())) return "ساعت نامعتبر (مثال: ۱۴:۳۰)"; return null;},
+  code:function(v){if(v===""||v==null)return null; if(!/^[A-Za-z0-9._-]{1,20}$/.test(String(v).trim())) return "کد فقط حروف/عدد و ._-"; return null;},
+  phone:function(v){if(v===""||v==null)return null; var t=toEn(String(v)).replace(/\s/g,""); if(!/^0?\d{10,11}$/.test(t)&&!/^\+?\d{10,15}$/.test(t)) return "شماره تماس نامعتبر"; return null;}
+};
+
+function bindFieldValidation(root){
+  (root||document).querySelectorAll("[data-validate]").forEach(function(el){
+    var types=(el.getAttribute("data-validate")||"").split(/\s+/);
+    function run(){
+      var msg=null;
+      for(var i=0;i<types.length;i++){
+        var fn=Validators[types[i]];
+        if(fn){ msg=fn(el.value); if(msg) break; }
+      }
+      el.classList.toggle("err", !!msg);
+      var err=el.parentNode.querySelector(".field-error");
+      if(!err){ err=document.createElement("div"); err.className="field-error"; el.parentNode.appendChild(err); }
+      err.textContent=msg||"";
+      return !msg;
+    }
+    el.addEventListener("blur", run);
+    el.addEventListener("input", function(){ if(el.classList.contains("err")) run(); });
+    el._validate=run;
+  });
+}
+function validateForm(root){
+  var ok=true;
+  (root||document).querySelectorAll("[data-validate]").forEach(function(el){
+    if(el._validate && !el._validate()) ok=false;
+  });
+  return ok;
+}
+function enableSpellcheck(root){
+  (root||document).querySelectorAll("input[type=text], textarea").forEach(function(el){
+    el.setAttribute("spellcheck","true");
+    el.setAttribute("lang","fa");
+  });
+}
+
+var recog=null, micActive=false, micBtn=null;
+function initVoice(btn){
+  micBtn=btn;
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){ if(btn){ btn.title="پشتیبانی نمی‌شود"; btn.classList.add("mic-off"); } return; }
+  recog=new SR();
+  recog.lang="fa-IR";
+  recog.continuous=true;
+  recog.interimResults=false;
+  recog.onresult=function(ev){
+    var t="";
+    for(var i=ev.resultIndex;i<ev.results.length;i++) if(ev.results[i].isFinal) t+=ev.results[i][0].transcript;
+    if(t){
+      var a=document.activeElement;
+      if(a && (a.tagName==="INPUT"||a.tagName==="TEXTAREA") && a.type!=="password"){
+        var s=a.selectionStart||a.value.length;
+        a.value=a.value.slice(0,s)+t+a.value.slice(a.selectionEnd||s);
+        a.dispatchEvent(new Event("input",{bubbles:true}));
+      }
+    }
+  };
+  recog.onerror=function(){ stopMic(); };
+  recog.onend=function(){ if(micActive){ try{recog.start();}catch(e){} } };
+  if(btn){
+    btn.classList.add("mic-off");
+    btn.onclick=function(){ if(micActive) stopMic(); else startMic(); };
+  }
+}
+function startMic(){
+  if(!recog) return;
+  try{ recog.start(); micActive=true; if(micBtn){ micBtn.classList.remove("mic-off"); micBtn.classList.add("mic-on"); micBtn.title="میکروفون فعال"; } }catch(e){}
+}
+function stopMic(){
+  micActive=false;
+  try{ if(recog) recog.stop(); }catch(e){}
+  if(micBtn){ micBtn.classList.remove("mic-on"); micBtn.classList.add("mic-off"); micBtn.title="میکروفون خاموش"; }
+}
+
+function attachJalaliPicker(input){
+  if(!input || input._jcal) return;
+  input._jcal=true;
+  var dv=input.getAttribute("data-validate")||"";
+  if(dv.indexOf("date")<0) input.setAttribute("data-validate", (dv+" date").trim());
+  input.setAttribute("autocomplete","off");
+  input.setAttribute("inputmode","numeric");
+  var wrap=input.closest(".date-wrap")||input.parentNode;
+  if(!wrap.classList.contains("date-wrap")){
+    var w=document.createElement("div"); w.className="date-wrap";
+    input.parentNode.insertBefore(w, input); w.appendChild(input); wrap=w;
+  }
+  var pop=null, viewY, viewM;
+  function close(){ if(pop){ pop.remove(); pop=null; } document.removeEventListener("click", outside); }
+  function outside(e){ if(pop && !pop.contains(e.target) && e.target!==input) close(); }
+  function open(){
+    close();
+    var now=new Date();
+    var j=g2j(now.getFullYear(), now.getMonth()+1, now.getDate());
+    var cur=toEn(input.value||"");
+    var m=cur.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+    viewY=m?+m[1]:j.jy; viewM=m?+m[2]:j.jm;
+    pop=document.createElement("div"); pop.className="jcal-pop"; wrap.appendChild(pop);
+    render();
+    setTimeout(function(){ document.addEventListener("click", outside); }, 0);
+  }
+  function render(){
+    if(!pop) return;
+    var head=document.createElement("div"); head.className="jcal-head";
+    head.innerHTML=
+      '<button type="button" data-a="py" title="سال قبل">«</button>'+
+      '<button type="button" data-a="pm" title="ماه قبل">‹</button>'+
+      '<span class="title">'+JM[viewM-1]+' '+toFa(viewY)+'</span>'+
+      '<button type="button" data-a="nm" title="ماه بعد">›</button>'+
+      '<button type="button" data-a="ny" title="سال بعد">»</button>';
+    var week=document.createElement("div"); week.className="jcal-week";
+    JW_FULL.forEach(function(w){ var s=document.createElement("span"); s.textContent=w; week.appendChild(s); });
+    var days=document.createElement("div"); days.className="jcal-days";
+    var dim=jMonthLength(viewY, viewM);
+    var firstG=j2g(viewY, viewM, 1);
+    var first=new Date(firstG.gy, firstG.gm-1, firstG.gd);
+    var start=(first.getDay()+1)%7;
+    for(var i=0;i<start;i++){ var b0=document.createElement("button"); b0.type="button"; b0.className="out"; b0.disabled=true; days.appendChild(b0); }
+    for(var d=1;d<=dim;d++){
+      (function(day){
+        var g=j2g(viewY, viewM, day);
+        var gFull=g.gy+"/"+String(g.gm).padStart(2,"0")+"/"+String(g.gd).padStart(2,"0");
+        var btn=document.createElement("button"); btn.type="button";
+        btn.innerHTML='<span class="jd">'+toFa(day)+'</span><span class="gd">'+gFull+'</span>';
+        btn.onclick=function(ev){
+          ev.stopPropagation();
+          input.value=toFa(viewY)+"/"+toFa(String(viewM).padStart(2,"0"))+"/"+toFa(String(day).padStart(2,"0"));
+          input.dispatchEvent(new Event("input",{bubbles:true}));
+          input.dispatchEvent(new Event("change",{bubbles:true}));
+          if(input._validate) input._validate();
+          close();
+        };
+        days.appendChild(btn);
+      })(d);
+    }
+    pop.innerHTML=""; pop.appendChild(head); pop.appendChild(week); pop.appendChild(days);
+    head.querySelectorAll("button").forEach(function(b){
+      b.onclick=function(ev){
+        ev.stopPropagation();
+        var a=b.getAttribute("data-a");
+        if(a==="pm"){ viewM--; if(viewM<1){ viewM=12; viewY--; } }
+        if(a==="nm"){ viewM++; if(viewM>12){ viewM=1; viewY++; } }
+        if(a==="py") viewY--;
+        if(a==="ny") viewY++;
+        render();
+      };
+    });
+  }
+  input.addEventListener("focus", open);
+  input.addEventListener("click", open);
+}
+function attachAllDatePickers(root){
+  (root||document).querySelectorAll("input[data-jdate], input.jdate").forEach(attachJalaliPicker);
+}
+
+function showPanel(id){
+  document.querySelectorAll(".panel").forEach(function(p){ p.classList.remove("on"); });
+  var el=document.getElementById(id);
+  if(el) el.classList.add("on");
+  document.querySelectorAll(".tree .leaf").forEach(function(b){
+    b.classList.toggle("on", b.getAttribute("data-panel")===id);
+  });
+}
+
+function saveAndExit(saveFn, suiteUrl){
+  try{ if(typeof saveFn==="function") saveFn(); }catch(e){}
+  try{ localStorage.setItem("smart_last_exit", new Date().toISOString()); }catch(e){}
+  location.href=suiteUrl||"suite.html";
+}
+
+/** راه‌اندازی کامل پوسته مشترک */
+function bootShell(opts){
+  opts=opts||{};
+  var elJ=document.getElementById(opts.elJ||"dtJ");
+  var elG=document.getElementById(opts.elG||"dtG");
+  var elC=document.getElementById(opts.elC||"dtC");
+  var elU=document.getElementById(opts.elU||"activeUser");
+  var elMic=document.getElementById(opts.elMic||"btnMic");
+  var elExit=document.getElementById(opts.elExit||"btnExit");
+  startClock(elJ, elG, elC);
+  if(elU) elU.textContent=getActiveUser();
+  enableSpellcheck(document);
+  bindFieldValidation(document);
+  attachAllDatePickers(document);
+  if(elMic) initVoice(elMic);
+  document.querySelectorAll("[data-panel]").forEach(function(b){
+    b.addEventListener("click", function(e){
+      e.preventDefault();
+      showPanel(b.getAttribute("data-panel"));
+    });
+  });
+  var sideBtn=document.getElementById("btnToggleSide");
+  if(sideBtn) sideBtn.onclick=function(){ var s=document.getElementById("sidePanel"); if(s) s.classList.toggle("open"); };
+  if(elExit){
+    elExit.onclick=function(){
+      saveAndExit(opts.onSave, opts.suiteUrl||"suite.html");
+    };
+  }
+  window.addEventListener("beforeunload", function(){
+    try{ if(typeof opts.onSave==="function") opts.onSave(); }catch(e){}
+  });
+}
+
+global.ModuleKit={
+  toFa:toFa, toEn:toEn, g2j:g2j, j2g:j2g,
+  startClock:startClock, getActiveUser:getActiveUser,
+  bindFieldValidation:bindFieldValidation, validateForm:validateForm,
+  enableSpellcheck:enableSpellcheck,
+  initVoice:initVoice, startMic:startMic, stopMic:stopMic,
+  attachJalaliPicker:attachJalaliPicker, attachAllDatePickers:attachAllDatePickers,
+  showPanel:showPanel, saveAndExit:saveAndExit, bootShell:bootShell,
+  Validators:Validators, JW_FULL:JW_FULL
+};
+})(window);
+
+</script><script>
+document.addEventListener("DOMContentLoaded",function(){
+var KEY="smart_multicompany_v1",CTX="smart_active_company_v1",K=ModuleKit,tt=null,repMode="cos";
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
-function toast(m,e){var t=document.getElementById("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2400);}
+function toast(m,e){var t=document.getElementById("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(tt);tt=setTimeout(function(){t.classList.remove("show");},2200);}
 function money(n){return (Number(n)||0).toLocaleString("fa-IR");}
-function def(){return {version:1,companies:[],branches:[],years:[],inter:[],log:[],updated:null};}
-function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||"null");if(!d||typeof d!=="object")return def();d.companies=Array.isArray(d.companies)?d.companies:[];d.branches=Array.isArray(d.branches)?d.branches:[];d.years=Array.isArray(d.years)?d.years:[];d.inter=Array.isArray(d.inter)?d.inter:[];d.log=Array.isArray(d.log)?d.log:[];return d;}catch(e){return def();}}
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||"null");if(!d)return {companies:[],branches:[],years:[],inter:[],log:[]};d.companies=d.companies||[];d.branches=d.branches||[];d.years=d.years||[];d.inter=d.inter||[];d.log=d.log||[];return d;}catch(e){return {companies:[],branches:[],years:[],inter:[],log:[]};}}
 function save(d){d.updated=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(d));}
-function addLog(d,m){d.log.unshift({id:uid(),msg:m,at:new Date().toLocaleString("fa-IR")});if(d.log.length>80)d.log=d.log.slice(0,80);}
-function applyLogo(){try{var L=JSON.parse(localStorage.getItem(LOGO_KEY)||"null");var el=document.getElementById("headerLogo");if(L&&L.dataUrl)el.innerHTML="<img src=\""+L.dataUrl+"\" alt=\"logo\">";}catch(e){}}
-document.querySelectorAll("#nav button").forEach(function(b){b.onclick=function(){document.querySelectorAll("#nav button").forEach(function(x){x.classList.remove("on");});b.classList.add("on");document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});document.getElementById("p-"+b.getAttribute("data-p")).classList.add("on");refreshAll();};});
-function companyMap(d){var m={};d.companies.forEach(function(c){m[c.id]=c;});return m;}
-function fillCompanySelects(){var d=load();var opts=d.companies.map(function(c){return "<option value=\""+esc(c.id)+"\">"+esc(c.code+" — "+c.name)+"</option>";}).join("");["brCompany","yrCompany","icFrom","icTo","activeCompany"].forEach(function(id){var el=document.getElementById(id);if(!el)return;var cur=el.value;if(id==="activeCompany"){el.innerHTML="<option value=\"\">— شرکت فعال —</option>"+opts;try{var ctx=JSON.parse(localStorage.getItem(CTX_KEY)||"null");if(ctx&&ctx.id)el.value=ctx.id;}catch(e){}}else{el.innerHTML=opts||"<option value=\"\">شرکتی نیست</option>";if(cur)el.value=cur;}});}
-function setActiveCompany(id){var d=load();var c=d.companies.find(function(x){return x.id===id;});if(!c){localStorage.removeItem(CTX_KEY);return;}var ctx={id:c.id,code:c.code,name:c.name,type:c.type,at:new Date().toISOString()};localStorage.setItem(CTX_KEY,JSON.stringify(ctx));try{localStorage.setItem("smart_accounting_context_v1",JSON.stringify({companyId:c.id,companyCode:c.code,companyName:c.name}));}catch(e){}}
-document.getElementById("activeCompany").onchange=function(){if(this.value){setActiveCompany(this.value);toast("شرکت فعال تنظیم شد");}else{localStorage.removeItem(CTX_KEY);toast("برداشته شد");}renderDash();};
-function resetCo(){["coId","coCode","coName","coNational","coPhone","coAddr","coNote"].forEach(function(i){document.getElementById(i).value="";});document.getElementById("coType").value="subsidiary";document.getElementById("coStatus").value="active";document.getElementById("coFormTitle").textContent="ثبت / ویرایش شرکت";}
-document.getElementById("btnCoReset").onclick=resetCo;
-document.getElementById("btnCoSave").onclick=function(){var code=(document.getElementById("coCode").value||"").trim(),name=(document.getElementById("coName").value||"").trim();if(!code||!name){toast("کد و نام الزامی",true);return;}if(!/^[A-Za-z0-9._-]{1,20}$/.test(code)){toast("کد نامعتبر",true);return;}var d=load(),id=document.getElementById("coId").value;if(d.companies.some(function(c){return c.code.toLowerCase()===code.toLowerCase()&&c.id!==id;})){toast("کد تکراری",true);return;}var row={id:id||uid(),code:code,name:name,national:(document.getElementById("coNational").value||"").trim(),type:document.getElementById("coType").value,phone:(document.getElementById("coPhone").value||"").trim(),status:document.getElementById("coStatus").value,addr:(document.getElementById("coAddr").value||"").trim(),note:(document.getElementById("coNote").value||"").trim(),updated:new Date().toISOString()};if(id){d.companies=d.companies.map(function(c){return c.id===id?row:c;});addLog(d,"ویرایش "+code);}else{d.companies.push(row);addLog(d,"ثبت "+code);}save(d);resetCo();fillCompanySelects();renderCompanies();renderDash();toast("ذخیره شد");};
-function editCo(id){var c=load().companies.find(function(x){return x.id===id;});if(!c)return;document.getElementById("coId").value=c.id;document.getElementById("coCode").value=c.code;document.getElementById("coName").value=c.name;document.getElementById("coNational").value=c.national||"";document.getElementById("coType").value=c.type||"subsidiary";document.getElementById("coPhone").value=c.phone||"";document.getElementById("coStatus").value=c.status||"active";document.getElementById("coAddr").value=c.addr||"";document.getElementById("coNote").value=c.note||"";document.getElementById("coFormTitle").textContent="ویرایش شرکت";document.querySelector("#nav button[data-p=companies]").click();}
-function delCo(id){if(!confirm("حذف شرکت و وابستگی‌ها؟"))return;var d=load();d.companies=d.companies.filter(function(c){return c.id!==id;});d.branches=d.branches.filter(function(b){return b.companyId!==id;});d.years=d.years.filter(function(y){return y.companyId!==id;});d.inter=d.inter.filter(function(x){return x.fromId!==id&&x.toId!==id;});addLog(d,"حذف شرکت");save(d);fillCompanySelects();renderCompanies();renderBranches();renderYears();renderInter();renderDash();toast("حذف شد");}
-function renderCompanies(){var d=load(),q=(document.getElementById("coSearch").value||"").trim().toLowerCase(),list=d.companies.filter(function(c){return !q||(c.name+" "+c.code+" "+(c.national||"")).toLowerCase().indexOf(q)>=0;}),box=document.getElementById("coList");if(!list.length){box.innerHTML="<p class=\"empty\">شرکتی نیست</p>";return;}var tl={holding:"هلدینگ",subsidiary:"تابعه",branch_co:"مستقل"};var h="<table><thead><tr><th>کد</th><th>نام</th><th>نوع</th><th>وضعیت</th><th></th></tr></thead><tbody>";list.forEach(function(c){h+="<tr><td>"+esc(c.code)+"</td><td>"+esc(c.name)+"</td><td>"+esc(tl[c.type]||c.type)+"</td><td><span class=\"badge "+(c.status==="active"?"badge-on":"badge-off")+"\">"+(c.status==="active"?"فعال":"غیرفعال")+"</span></td><td><button type=\"button\" class=\"btn btn-g btn-sm\" data-e=\""+esc(c.id)+"\">ویرایش</button> <button type=\"button\" class=\"btn btn-b btn-sm\" data-d=\""+esc(c.id)+"\">حذف</button></td></tr>";});box.innerHTML=h+"</tbody></table>";box.querySelectorAll("[data-e]").forEach(function(b){b.onclick=function(){editCo(b.getAttribute("data-e"));};});box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){delCo(b.getAttribute("data-d"));};});}
-document.getElementById("coSearch").oninput=renderCompanies;
-function resetBr(){["brId","brCode","brName","brCity","brManager","brAddr"].forEach(function(i){document.getElementById(i).value="";});document.getElementById("brStatus").value="active";}
-document.getElementById("btnBrReset").onclick=resetBr;
-document.getElementById("btnBrSave").onclick=function(){var companyId=document.getElementById("brCompany").value,code=(document.getElementById("brCode").value||"").trim(),name=(document.getElementById("brName").value||"").trim();if(!companyId||!code||!name){toast("فیلدهای ضروری شعبه",true);return;}var d=load(),id=document.getElementById("brId").value,row={id:id||uid(),companyId:companyId,code:code,name:name,city:(document.getElementById("brCity").value||"").trim(),manager:(document.getElementById("brManager").value||"").trim(),status:document.getElementById("brStatus").value,addr:(document.getElementById("brAddr").value||"").trim()};if(id)d.branches=d.branches.map(function(b){return b.id===id?row:b;});else d.branches.push(row);addLog(d,"شعبه "+code);save(d);resetBr();renderBranches();renderDash();toast("ذخیره شد");};
-function delBr(id){if(!confirm("حذف شعبه؟"))return;var d=load();d.branches=d.branches.filter(function(b){return b.id!==id;});save(d);renderBranches();renderDash();toast("حذف شد");}
-function renderBranches(){var d=load(),map=companyMap(d),box=document.getElementById("brList");if(!d.branches.length){box.innerHTML="<p class=\"empty\">شعبه‌ای نیست</p>";return;}var h="<table><thead><tr><th>کد</th><th>شعبه</th><th>شرکت</th><th>شهر</th><th></th></tr></thead><tbody>";d.branches.forEach(function(b){h+="<tr><td>"+esc(b.code)+"</td><td>"+esc(b.name)+"</td><td>"+esc(map[b.companyId]?map[b.companyId].name:"—")+"</td><td>"+esc(b.city||"")+"</td><td><button type=\"button\" class=\"btn btn-b btn-sm\" data-d=\""+esc(b.id)+"\">حذف</button></td></tr>";});box.innerHTML=h+"</tbody></table>";box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){delBr(b.getAttribute("data-d"));};});}
-document.getElementById("btnYrSave").onclick=function(){var companyId=document.getElementById("yrCompany").value,title=(document.getElementById("yrTitle").value||"").trim();if(!companyId||!title){toast("شرکت و عنوان سال",true);return;}var d=load();d.years.push({id:uid(),companyId:companyId,title:title,start:(document.getElementById("yrStart").value||"").trim(),end:(document.getElementById("yrEnd").value||"").trim(),status:document.getElementById("yrStatus").value,currency:document.getElementById("yrCurrency").value,at:new Date().toISOString()});addLog(d,"سال "+title);save(d);renderYears();toast("ذخیره شد");};
-function delYr(id){if(!confirm("حذف؟"))return;var d=load();d.years=d.years.filter(function(y){return y.id!==id;});save(d);renderYears();toast("حذف شد");}
-function renderYears(){var d=load(),map=companyMap(d),box=document.getElementById("yrList");if(!d.years.length){box.innerHTML="<p class=\"empty\">سال مالی نیست</p>";return;}var h="<table><thead><tr><th>سال</th><th>شرکت</th><th>بازه</th><th>ارز</th><th>وضعیت</th><th></th></tr></thead><tbody>";d.years.forEach(function(y){h+="<tr><td>"+esc(y.title)+"</td><td>"+esc(map[y.companyId]?map[y.companyId].name:"—")+"</td><td>"+esc((y.start||"")+" تا "+(y.end||""))+"</td><td>"+esc(y.currency)+"</td><td><span class=\"badge "+(y.status==="open"?"badge-on":"badge-off")+"\">"+(y.status==="open"?"باز":"بسته")+"</span></td><td><button type=\"button\" class=\"btn btn-b btn-sm\" data-d=\""+esc(y.id)+"\">حذف</button></td></tr>";});box.innerHTML=h+"</tbody></table>";box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){delYr(b.getAttribute("data-d"));};});}
-document.getElementById("btnIcSave").onclick=function(){var fromId=document.getElementById("icFrom").value,toId=document.getElementById("icTo").value,amount=Number(document.getElementById("icAmount").value||0);if(!fromId||!toId){toast("مبدأ و مقصد",true);return;}if(fromId===toId){toast("نباید یکسان باشند",true);return;}if(!(amount>0)){toast("مبلغ نامعتبر",true);return;}var d=load();d.inter.unshift({id:uid(),fromId:fromId,toId:toId,type:document.getElementById("icType").value,amount:amount,date:(document.getElementById("icDate").value||"").trim(),ref:(document.getElementById("icRef").value||"").trim(),desc:(document.getElementById("icDesc").value||"").trim(),at:new Date().toISOString()});addLog(d,"بین‌شرکتی "+amount);save(d);document.getElementById("icAmount").value="";document.getElementById("icDesc").value="";renderInter();renderDash();toast("ثبت شد");};
-function delIc(id){if(!confirm("حذف؟"))return;var d=load();d.inter=d.inter.filter(function(x){return x.id!==id;});save(d);renderInter();renderDash();toast("حذف شد");}
-function renderInter(){var d=load(),map=companyMap(d),box=document.getElementById("icList");if(!d.inter.length){box.innerHTML="<p class=\"empty\">تراکنشی نیست</p>";return;}var tl={loan:"وام",sale:"فروش",service:"خدمات",transfer:"انتقال",other:"سایر"};var h="<table><thead><tr><th>از</th><th>به</th><th>نوع</th><th>مبلغ</th><th></th></tr></thead><tbody>";d.inter.forEach(function(x){h+="<tr><td>"+esc(map[x.fromId]?map[x.fromId].name:"—")+"</td><td>"+esc(map[x.toId]?map[x.toId].name:"—")+"</td><td>"+esc(tl[x.type]||x.type)+"</td><td>"+money(x.amount)+"</td><td><button type=\"button\" class=\"btn btn-b btn-sm\" data-d=\""+esc(x.id)+"\">حذف</button></td></tr>";});box.innerHTML=h+"</tbody></table>";box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){delIc(b.getAttribute("data-d"));};});}
-function renderDash(){var d=load(),active=d.companies.filter(function(c){return c.status==="active";}).length,sum=0;d.inter.forEach(function(x){sum+=Number(x.amount)||0;});var ctx="—";try{var c=JSON.parse(localStorage.getItem(CTX_KEY)||"null");if(c)ctx=c.code+" — "+c.name;}catch(e){}document.getElementById("kpiBox").innerHTML="<div class=\"card kpi\"><div class=\"n\">"+d.companies.length+"</div><div class=\"l\">شرکت‌ها</div></div><div class=\"card kpi\"><div class=\"n\">"+active+"</div><div class=\"l\">فعال</div></div><div class=\"card kpi\"><div class=\"n\">"+d.branches.length+"</div><div class=\"l\">شعب</div></div><div class=\"card kpi\"><div class=\"n\">"+d.years.length+"</div><div class=\"l\">سال مالی</div></div><div class=\"card kpi\"><div class=\"n\">"+d.inter.length+"</div><div class=\"l\">بین‌شرکتی</div></div><div class=\"card kpi\"><div class=\"n\">"+money(sum)+"</div><div class=\"l\">جمع مبلغ</div></div>";var rb=document.getElementById("recentBox");if(!d.log.length)rb.innerHTML="<p class=\"empty\">رویدادی نیست · فعال: "+esc(ctx)+"</p>";else rb.innerHTML="<p class=\"hint\">شرکت فعال: <b>"+esc(ctx)+"</b></p><table><tbody>"+d.log.slice(0,12).map(function(x){return "<tr><td>"+esc(x.at)+"</td><td>"+esc(x.msg)+"</td></tr>";}).join("")+"</tbody></table>";}
-document.querySelectorAll("#repTabs button").forEach(function(b){b.onclick=function(){document.querySelectorAll("#repTabs button").forEach(function(x){x.classList.remove("on");});b.classList.add("on");repMode=b.getAttribute("data-r");renderReport();};});
-function renderReport(){var d=load(),map=companyMap(d),out=document.getElementById("repOut");if(repMode==="cos"){if(!d.companies.length){out.innerHTML="<p class=\"empty\">داده نیست</p>";return;}var h="<table><thead><tr><th>کد</th><th>نام</th><th>نوع</th><th>شناسه</th><th>وضعیت</th></tr></thead><tbody>";d.companies.forEach(function(c){h+="<tr><td>"+esc(c.code)+"</td><td>"+esc(c.name)+"</td><td>"+esc(c.type)+"</td><td>"+esc(c.national||"")+"</td><td>"+esc(c.status)+"</td></tr>";});out.innerHTML=h+"</tbody></table>";}else if(repMode==="brs"){if(!d.branches.length){out.innerHTML="<p class=\"empty\">داده نیست</p>";return;}var h2="<table><thead><tr><th>کد</th><th>شعبه</th><th>شرکت</th><th>شهر</th></tr></thead><tbody>";d.branches.forEach(function(b){h2+="<tr><td>"+esc(b.code)+"</td><td>"+esc(b.name)+"</td><td>"+esc(map[b.companyId]?map[b.companyId].name:"")+"</td><td>"+esc(b.city||"")+"</td></tr>";});out.innerHTML=h2+"</tbody></table>";}else if(repMode==="ics"){if(!d.inter.length){out.innerHTML="<p class=\"empty\">داده نیست</p>";return;}var h3="<table><thead><tr><th>از</th><th>به</th><th>نوع</th><th>مبلغ</th></tr></thead><tbody>";d.inter.forEach(function(x){h3+="<tr><td>"+esc(map[x.fromId]?map[x.fromId].name:"")+"</td><td>"+esc(map[x.toId]?map[x.toId].name:"")+"</td><td>"+esc(x.type)+"</td><td>"+money(x.amount)+"</td></tr>";});out.innerHTML=h3+"</tbody></table>";}else{var by={};d.inter.forEach(function(x){by[x.fromId]=(by[x.fromId]||0)+(Number(x.amount)||0);});var h4="<table><thead><tr><th>شرکت مبدأ</th><th>جمع خروجی</th></tr></thead><tbody>";Object.keys(by).forEach(function(id){h4+="<tr><td>"+esc(map[id]?map[id].name:id)+"</td><td>"+money(by[id])+"</td></tr>";});if(!Object.keys(by).length)h4+="<tr><td colspan=\"2\">موردی نیست</td></tr>";out.innerHTML=h4+"</tbody></table>";}}
-document.getElementById("btnPrintRep").onclick=function(){window.print();};
-document.getElementById("btnBackup").onclick=function(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(load(),null,2)],{type:"application/json"}));a.download="multi-company-backup.json";a.click();toast("دانلود شد");};
-document.getElementById("restoreFile").onchange=function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.companies))throw new Error("x");save(d);refreshAll();toast("بازیابی شد");}catch(err){toast("فایل نامعتبر",true);}};r.readAsText(f);e.target.value="";};
-document.getElementById("btnSyncCtx").onclick=function(){var el=document.getElementById("activeCompany");if(!el.value){toast("شرکت فعال را انتخاب کنید",true);return;}setActiveCompany(el.value);toast("همسان‌سازی شد");renderDash();};
-function refreshAll(){applyLogo();fillCompanySelects();renderDash();renderCompanies();renderBranches();renderYears();renderInter();renderReport();}
-refreshAll();
-})();</script></body></html>
+function persist(){save(load());}
+K.bootShell({onSave:persist,suiteUrl:"suite.html"});
+function cmap(d){var m={};d.companies.forEach(function(c){m[c.id]=c;});return m;}
+function fillSel(){var d=load(),o=d.companies.map(function(c){return "<option value=\""+esc(c.id)+"\">"+esc(c.code+" — "+c.name)+"</option>";}).join("");["brCompany","yrCompany","icFrom","icTo","activeCompany"].forEach(function(id){var el=document.getElementById(id);if(!el)return;if(id==="activeCompany"){el.innerHTML="<option value=\"\">—</option>"+o;try{var c=JSON.parse(localStorage.getItem(CTX)||"null");if(c&&c.id)el.value=c.id;}catch(e){}}else el.innerHTML=o||"<option value=\"\">—</option>";});}
+function setCtx(id){var c=load().companies.find(function(x){return x.id===id;});if(!c)return;localStorage.setItem(CTX,JSON.stringify({id:c.id,code:c.code,name:c.name}));}
+document.getElementById("activeCompany").onchange=function(){if(this.value){setCtx(this.value);toast("فعال شد");}renderDash();};
+document.getElementById("btnSyncCtx").onclick=function(){var v=document.getElementById("activeCompany").value;if(!v){toast("انتخاب کنید",true);return;}setCtx(v);toast("همسان شد");};
+document.getElementById("btnCoSave").onclick=function(){if(!K.validateForm(document.getElementById("p-companies"))){toast("خطای فرم",true);return;}var d=load();d.companies.push({id:uid(),code:document.getElementById("coCode").value.trim(),name:document.getElementById("coName").value.trim(),national:document.getElementById("coNational").value.trim(),type:document.getElementById("coType").value,phone:document.getElementById("coPhone").value.trim(),status:document.getElementById("coStatus").value,addr:document.getElementById("coAddr").value.trim()});d.log=d.log||[];d.log.unshift({msg:"ثبت شرکت",at:new Date().toLocaleString("fa-IR")});save(d);fillSel();renderCos();renderDash();toast("ذخیره");};
+function renderCos(){var d=load(),q=(document.getElementById("coSearch").value||"").toLowerCase(),box=document.getElementById("coList"),list=d.companies.filter(function(c){return !q||(c.name+" "+c.code).toLowerCase().indexOf(q)>=0;});box.innerHTML=list.length?("<table><thead><tr><th>کد</th><th>نام</th><th></th></tr></thead><tbody>"+list.map(function(c){return "<tr><td>"+esc(c.code)+"</td><td>"+esc(c.name)+"</td><td><button type=\"button\" class=\"btn btn-b btn-sm\" data-d=\""+esc(c.id)+"\">حذف</button></td></tr>";}).join("")+"</tbody></table>"):"<p class=\"empty\">—</p>";box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){var d=load(),id=b.getAttribute("data-d");d.companies=d.companies.filter(function(c){return c.id!==id;});save(d);fillSel();renderCos();renderDash();};});}
+document.getElementById("coSearch").oninput=renderCos;
+document.getElementById("btnBrSave").onclick=function(){if(!K.validateForm(document.getElementById("p-branches"))){toast("خطا",true);return;}var d=load();d.branches.push({id:uid(),companyId:document.getElementById("brCompany").value,code:document.getElementById("brCode").value.trim(),name:document.getElementById("brName").value.trim(),city:document.getElementById("brCity").value.trim()});save(d);renderBr();renderDash();toast("ذخیره");};
+function renderBr(){var d=load(),m=cmap(d),box=document.getElementById("brList");box.innerHTML=d.branches.length?("<table><thead><tr><th>کد</th><th>نام</th><th>شرکت</th></tr></thead><tbody>"+d.branches.map(function(b){return "<tr><td>"+esc(b.code)+"</td><td>"+esc(b.name)+"</td><td>"+esc(m[b.companyId]?m[b.companyId].name:"")+"</td></tr>";}).join("")+"</tbody></table>"):"<p class=\"empty\">—</p>";}
+document.getElementById("btnYrSave").onclick=function(){if(!K.validateForm(document.getElementById("p-years"))){toast("خطا",true);return;}var d=load();d.years.push({id:uid(),companyId:document.getElementById("yrCompany").value,title:document.getElementById("yrTitle").value.trim(),start:document.getElementById("yrStart").value.trim(),end:document.getElementById("yrEnd").value.trim()});save(d);renderYr();toast("ذخیره");};
+function renderYr(){var d=load(),m=cmap(d),box=document.getElementById("yrList");box.innerHTML=d.years.length?("<table><thead><tr><th>سال</th><th>شرکت</th><th>بازه</th></tr></thead><tbody>"+d.years.map(function(y){return "<tr><td>"+esc(y.title)+"</td><td>"+esc(m[y.companyId]?m[y.companyId].name:"")+"</td><td>"+esc(y.start+" تا "+y.end)+"</td></tr>";}).join("")+"</tbody></table>"):"<p class=\"empty\">—</p>";}
+document.getElementById("btnIcSave").onclick=function(){if(!K.validateForm(document.getElementById("p-inter"))){toast("خطا",true);return;}var d=load();d.inter.unshift({id:uid(),fromId:document.getElementById("icFrom").value,toId:document.getElementById("icTo").value,type:document.getElementById("icType").value,amount:Number(K.toEn(document.getElementById("icAmount").value)||0),date:document.getElementById("icDate").value.trim(),ref:document.getElementById("icRef").value.trim()});save(d);renderIc();renderDash();toast("ثبت");};
+function renderIc(){var d=load(),m=cmap(d),box=document.getElementById("icList");box.innerHTML=d.inter.length?("<table><thead><tr><th>از</th><th>به</th><th>مبلغ</th></tr></thead><tbody>"+d.inter.map(function(x){return "<tr><td>"+esc(m[x.fromId]?m[x.fromId].name:"")+"</td><td>"+esc(m[x.toId]?m[x.toId].name:"")+"</td><td>"+money(x.amount)+"</td></tr>";}).join("")+"</tbody></table>"):"<p class=\"empty\">—</p>";}
+function renderDash(){var d=load(),sum=0;d.inter.forEach(function(x){sum+=Number(x.amount)||0;});document.getElementById("kpiBox").innerHTML="<div class=\"box\"><div class=\"n\">"+d.companies.length+"</div><div class=\"l\">شرکت</div></div><div class=\"box\"><div class=\"n\">"+d.branches.length+"</div><div class=\"l\">شعبه</div></div><div class=\"box\"><div class=\"n\">"+d.inter.length+"</div><div class=\"l\">بین‌شرکتی</div></div><div class=\"box\"><div class=\"n\">"+money(sum)+"</div><div class=\"l\">جمع</div></div>";document.getElementById("recentBox").innerHTML=(d.log&&d.log.length)?("<table><tbody>"+d.log.slice(0,8).map(function(x){return "<tr><td>"+esc(x.at)+"</td><td>"+esc(x.msg)+"</td></tr>";}).join("")+"</tbody></table>"):"<p class=\"empty\">—</p>";}
+function renderRep(){var d=load(),m=cmap(d),out=document.getElementById("repOut");if(repMode==="cos")out.innerHTML="<table><thead><tr><th>کد</th><th>نام</th></tr></thead><tbody>"+d.companies.map(function(c){return "<tr><td>"+esc(c.code)+"</td><td>"+esc(c.name)+"</td></tr>";}).join("")+"</tbody></table>";else if(repMode==="brs")out.innerHTML="<table><thead><tr><th>شعبه</th><th>شرکت</th></tr></thead><tbody>"+d.branches.map(function(b){return "<tr><td>"+esc(b.name)+"</td><td>"+esc(m[b.companyId]?m[b.companyId].name:"")+"</td></tr>";}).join("")+"</tbody></table>";else out.innerHTML="<table><thead><tr><th>از</th><th>به</th><th>مبلغ</th></tr></thead><tbody>"+d.inter.map(function(x){return "<tr><td>"+esc(m[x.fromId]?m[x.fromId].name:"")+"</td><td>"+esc(m[x.toId]?m[x.toId].name:"")+"</td><td>"+money(x.amount)+"</td></tr>";}).join("")+"</tbody></table>";}
+document.querySelectorAll("[data-r]").forEach(function(b){b.onclick=function(){repMode=b.getAttribute("data-r");renderRep();};});
+document.getElementById("btnPrint").onclick=function(){window.print();};
+function doBackup(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(load(),null,2)],{type:"application/json"}));a.download="multi-company-backup.json";a.click();toast("دانلود");}
+document.getElementById("btnBackup").onclick=doBackup;document.getElementById("leafBackup").onclick=doBackup;
+document.getElementById("btnRestoreTrigger").onclick=function(){document.getElementById("restoreFile").click();};
+document.getElementById("leafRestore").onclick=function(){document.getElementById("restoreFile").click();};
+document.getElementById("restoreFile").onchange=function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(!d.companies)throw 0;save(d);fillSel();renderAll();toast("بازیابی");}catch(err){toast("نامعتبر",true);}};r.readAsText(f);};
+function renderAll(){fillSel();renderDash();renderCos();renderBr();renderYr();renderIc();renderRep();}
+renderAll();
+});
+</script></body></html>
