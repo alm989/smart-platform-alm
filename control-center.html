@@ -1,530 +1,191 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0f172a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="مدیریت نرم‌افزار">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta name="referrer" content="no-referrer">
-<title>مدیریت نرم‌افزار</title>
-<style>
-:root{--bg:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--b:#38bdf8;--b2:#0ea5e9;--g:#22c55e;--r:#ef4444;--o:#f59e0b;--gold:#d4a017;--shadow:0 8px 32px rgba(0,0,0,.35);--safe:env(safe-area-inset-bottom,0px);--radius:14px}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(1000px 500px at 80% -10%,#1e3a5f 0%,transparent 50%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55}
-.box{max-width:1000px;margin:0 auto}
-.header{text-align:center;margin-bottom:12px}
-.logo-slot{width:64px;height:64px;border-radius:16px;margin:0 auto 8px;overflow:hidden;background:linear-gradient(135deg,var(--b),#0369a1);display:grid;place-items:center;box-shadow:0 8px 28px rgba(14,165,233,.4);border:2px solid rgba(56,189,248,.3)}
-.logo-slot img{width:100%;height:100%;object-fit:contain;background:#0f172a}
-.logo-slot .fb{font-size:26px;color:#fff}
-h1{font-size:clamp(1.1rem,3vw,1.3rem);font-weight:700}
-.sub{font-size:.8rem;color:var(--muted)}
-.warn-bar{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.4);color:#fbbf24;border-radius:12px;padding:10px 12px;font-size:.76rem;margin-bottom:12px}
-.nav{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(15,23,42,.92);backdrop-filter:blur(12px)}
-.nav button{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 2px;font-size:clamp(.48rem,1.1vw,.65rem);color:var(--muted);cursor:pointer;font-family:inherit}
-.nav button.on{background:linear-gradient(135deg,var(--b2),#0369a1);color:#fff;border-color:transparent}
-.panel{display:none!important}.panel.on{display:block!important;animation:fi .15s ease}
-@keyframes fi{from{opacity:.4}to{opacity:1}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
-.card h2{font-size:.92rem;margin-bottom:12px;color:#7dd3fc}
-.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
-.btn:disabled{opacity:.45}.btn-b{background:linear-gradient(135deg,var(--b2),#0369a1)}.btn-g{background:linear-gradient(135deg,var(--g),#16a34a)}
-.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#d97706)}
-.btn-gold{background:linear-gradient(135deg,var(--gold),#a67c00);color:#0f172a}
-.btn-gr{background:#334155;color:#e2e8f0}.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
-label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
-input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#0f172a;font-size:16px;font-family:inherit;color:var(--txt)}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(56,189,248,.15)}
-table{width:100%;border-collapse:collapse;font-size:.76rem}
-th,td{border:1px solid var(--line);padding:8px 5px;text-align:right}
-th{background:#0f172a;color:#7dd3fc;font-weight:700}
-tr:nth-child(even){background:rgba(15,23,42,.5)}
-.num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
-.scroll{overflow:auto;max-height:420px;border-radius:10px}
-.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
-.toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#0f172a;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center;font-weight:600}
-.toast.show{opacity:1}.toast.err{background:var(--r);color:#fff}
-.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
-.ok{background:rgba(34,197,94,.2);color:#4ade80}.bad{background:rgba(239,68,68,.2);color:#f87171}
-.warn{background:rgba(245,158,11,.2);color:#fbbf24}.info{background:rgba(56,189,248,.15);color:#7dd3fc}
-.login-box{max-width:360px;margin:40px auto}
-.footer{text-align:center;font-size:.7rem;color:#64748b;margin-top:14px}
-.chk-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.78rem}
-.chk-list label{display:flex;align-items:center;gap:6px;margin:0;font-weight:400;color:var(--txt)}
-.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
-.mod-card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#0f172a;font-size:.78rem}
-.logo-preview{width:120px;height:120px;border-radius:20px;border:2px dashed var(--line);margin:12px auto;display:grid;place-items:center;overflow:hidden;background:#0f172a}
-.logo-preview img{max-width:100%;max-height:100%;object-fit:contain}
-@media(max-width:720px){.nav{grid-template-columns:repeat(3,1fr)}.chk-list{grid-template-columns:1fr}}
-</style>
-</head>
-<body>
-<div class="box">
-  <header class="header">
-    <div class="logo-slot" id="headerLogo"><span class="fb">🎛️</span></div>
-    <h1>مدیریت نرم‌افزار</h1>
-    <p class="sub">کاربران · رمز ماژول‌ها · لوگو · دسترسی · همسان‌سازی Suite</p>
-  </header>
-
-  <div id="loginView">
-    <section class="card login-box">
-      <h2>ورود به مدیریت نرم‌افزار</h2>
-      <label>نام کاربری</label>
-      <input id="loginUser" maxlength="40" autocomplete="username">
-      <label>رمز عبور</label>
-      <input id="loginPass" type="password" maxlength="64" autocomplete="current-password">
-      <button type="button" class="btn btn-b" id="btnLogin">ورود</button>
-      <p class="note" id="loginHint" style="display:none"></p>
-    </section>
-  </div>
-
-  <div id="appView" style="display:none">
-    <p class="note" style="text-align:center;margin-bottom:8px">مدیر: <b id="who">—</b>
-      <button type="button" class="btn btn-gr btn-sm" id="btnLogout" style="margin-right:8px">خروج</button>
-      <button type="button" class="btn btn-gr btn-sm" id="btnOpenSuite">Suite</button>
-      <button type="button" class="btn btn-gr btn-sm" id="btnOpenCeo">مدیرعامل</button>
-    </p>
-    <div class="warn-bar">تغییر رمز «مدیریت نرم‌افزار» و «مدیرعامل» فقط با مجوز مدیرعامل. پس از تغییر رمز، راهنمای پیش‌فرض ورود حذف می‌شود.</div>
-    <nav class="nav" id="nav">
-      <button type="button" class="on" data-tab="creds">رمز ماژول‌ها</button>
-      <button type="button" data-tab="logo">لوگو</button>
-      <button type="button" data-tab="mods">ماژول‌ها</button>
-      <button type="button" data-tab="sync">همسان‌سازی</button>
-      <button type="button" data-tab="ceoap">مجوز مدیرعامل</button>
-      <button type="button" data-tab="set">تنظیمات</button>
-    </nav>
-
-    <main id="creds" class="panel on">
-      <section class="card">
-        <h2>نام کاربری و رمز پیش‌فرض / فعلی همه ماژول‌ها</h2>
-        <p class="note">این اطلاعات مرجع سامانه است. ماژول‌ها می‌توانند از کلید <b>smart_auth_v1</b> بخوانند.</p>
-        <div class="scroll"><table>
-          <thead><tr><th>ماژول</th><th>نام کاربری</th><th>وضعیت رمز</th><th></th></tr></thead>
-          <tbody id="credList"></tbody>
-        </table></div>
-      </section>
-      <section class="card">
-        <h2>ویرایش ورود یک ماژول</h2>
-        <label>ماژول</label>
-        <select id="cMod"></select>
-        <label>نام کاربری جدید</label>
-        <input id="cUser" maxlength="40" autocomplete="off">
-        <label>رمز جدید</label>
-        <input id="cPass" type="password" maxlength="64" autocomplete="new-password">
-        <label>تکرار رمز</label>
-        <input id="cPass2" type="password" maxlength="64" autocomplete="new-password">
-        <div id="ceoGateBox" style="display:none">
-          <p class="note" style="color:#fbbf24">این نقش حساس است. یا کد مجوز مدیرعامل را وارد کنید، یا از پنل مدیرعامل درخواست را تأیید کنید.</p>
-          <label>کد مجوز مدیرعامل (یک‌بارمصرف)</label>
-          <input id="ceoCode" maxlength="20" placeholder="مثلاً CEO-XXXX">
-        </div>
-        <button type="button" class="btn btn-g" id="btnSaveCred">ذخیره نام کاربری و رمز</button>
-      </section>
-    </main>
-
-    <main id="logo" class="panel">
-      <section class="card">
-        <h2>لوگوی سازمانی (سراسری)</h2>
-        <div class="logo-preview" id="logoPreview"><span style="color:#64748b;font-size:.8rem">بدون لوگو</span></div>
-        <label>تصویر</label>
-        <input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp">
-        <label>عنوان</label>
-        <input id="logoTitle" maxlength="60">
-        <div class="grid2">
-          <button type="button" class="btn btn-g" id="btnLogoSave">ذخیره لوگو</button>
-          <button type="button" class="btn btn-r" id="btnLogoDel">حذف لوگو</button>
-        </div>
-        <p class="note" id="logoMeta">—</p>
-      </section>
-    </main>
-
-    <main id="mods" class="panel">
-      <section class="card">
-        <h2>فعال / غیرفعال در Suite</h2>
-        <div class="mod-grid" id="modToggle"></div>
-        <button type="button" class="btn btn-b" id="btnSaveMods">ذخیره</button>
-      </section>
-    </main>
-
-    <main id="sync" class="panel">
-      <section class="card">
-        <h2>همسان‌سازی با Suite</h2>
-        <button type="button" class="btn btn-g" id="btnSyncSuite">همسان‌سازی رجیستری</button>
-        <pre class="note" id="syncOut" style="white-space:pre-wrap;margin-top:10px;background:#0f172a;padding:12px;border-radius:10px;border:1px solid var(--line)">—</pre>
-      </section>
-    </main>
-
-    <main id="ceoap" class="panel">
-      <section class="card">
-        <h2>درخواست / وضعیت مجوز مدیرعامل</h2>
-        <p class="note">برای تغییر رمز مدیریت نرم‌افزار یا مدیرعامل، یک درخواست ثبت کنید. مدیرعامل در پنل خود تأیید می‌کند و کد یک‌بارمصرف صادر می‌شود.</p>
-        <label>نوع درخواست</label>
-        <select id="reqType">
-          <option value="control">تغییر رمز مدیریت نرم‌افزار</option>
-          <option value="ceo">تغییر رمز مدیرعامل</option>
-        </select>
-        <label>توضیح</label>
-        <textarea id="reqNote" maxlength="300" style="min-height:70px"></textarea>
-        <button type="button" class="btn btn-gold" id="btnReqCeo">ثبت درخواست برای مدیرعامل</button>
-      </section>
-      <section class="card">
-        <h2>کدهای مجوز فعال</h2>
-        <div class="scroll"><table>
-          <thead><tr><th>کد</th><th>برای</th><th>انقضا</th><th>وضعیت</th></tr></thead>
-          <tbody id="codeList"></tbody>
-        </table></div>
-        <p class="note">مدیرعامل می‌تواند از پنل خود با کلید <b>smart_auth_v1</b> فیلد approvals را تأیید کند. دکمه زیر برای شبیه‌سازی تأیید (فقط اگر در همین مرورگر به عنوان ceo وارد شده‌اید از طریق بررسی نشست ceo):</p>
-        <button type="button" class="btn btn-o" id="btnIssueCode">صدور کد (نیاز به نشست مدیرعامل)</button>
-      </section>
-    </main>
-
-    <main id="set" class="panel">
-      <section class="card">
-        <h2>تنظیمات</h2>
-        <label>نام سازمان</label>
-        <input id="orgName" maxlength="100">
-        <button type="button" class="btn btn-b" id="btnSaveSet">ذخیره</button>
-      </section>
-      <section class="card">
-        <h2>پشتیبان</h2>
-        <button type="button" class="btn btn-g" id="btnBackup">دانلود JSON</button>
-        <label>بازیابی</label>
-        <input type="file" id="restoreFile" accept=".json,application/json">
-      </section>
-    </main>
-  </div>
-  <p class="footer">مدیریت نرم‌افزار · یک نقطه ورود · smart_auth_v1</p>
-</div>
-<div class="toast" id="toast" role="status"></div>
-<script>
-(function(){
-"use strict";
-var AUTH_KEY="smart_auth_v1", CTRL_KEY="smart_control_v1", SUITE_KEY="smart_suite_registry_v1", LOGO_KEY="smart_suite_logo_v1", SESSION="smart_control_session", CEO_SESS="smart_ceo_session";
-var busy=false, toastTimer=null, session=null, pendingLogo=null;
-var MODS=[
-{id:"ceo",title:"مدیرعامل",file:"ceo.html",sensitive:true},
-{id:"control",title:"مدیریت نرم‌افزار",file:"control-center.html",sensitive:true},
-{id:"secretary",title:"منشی",file:"index.html"},
-{id:"assistant",title:"دستیار / مدیر هوشمند",file:"assistant.html"},
-{id:"accounting",title:"حسابداری",file:"accounting.html"},
-{id:"bank",title:"نقد و بانک",file:"cash-bank.html"},
-{id:"fund",title:"صندوق",file:"fund.html"},
-{id:"petty",title:"تنخواه",file:"petty-cash.html"},
-{id:"hr",title:"منابع انسانی",file:"hr-payroll.html"},
-{id:"sales",title:"فروش",file:"sales.html"},
-{id:"warehouse",title:"انبار",file:"warehouse.html"},
-{id:"customers",title:"مشتریان",file:"customers.html"},
-{id:"documents",title:"اسناد",file:"documents.html"},
-{id:"assets",title:"دارایی ثابت",file:"fixed-assets.html"},
-{id:"lawyer",title:"وکیل",file:"lawyer.html"},
-{id:"pr",title:"روابط عمومی",file:"pr-media.html"},
-{id:"patches",title:"موتور تغییرات",file:"change-engine.html"}
-];
-var DEFAULT_PASS={ceo:"Ceo@2026!",control:"admin123",secretary:"Sec@2026",assistant:"Ast@2026",accounting:"Acc@2026",bank:"Bnk@2026",fund:"Fnd@2026",petty:"Pty@2026",hr:"Hr@2026",sales:"Sls@2026",warehouse:"Wh@2026",customers:"Crm@2026",documents:"Doc@2026",assets:"AstF@2026",lawyer:"Law@2026",pr:"Pr@2026",patches:"Pch@2026"};
-var DEFAULT_USER={ceo:"ceo",control:"admin",secretary:"secretary",assistant:"assistant",accounting:"accounting",bank:"bank",fund:"fund",petty:"petty",hr:"hr",sales:"sales",warehouse:"warehouse",customers:"customers",documents:"documents",assets:"assets",lawyer:"lawyer",pr:"pr",patches:"patches"};
-function $(id){return document.getElementById(id);}
-function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2500);}
-function now(){return new Date().toISOString();}
-function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>کنترلر</title><style>
+:root{
+  --bg:#e8f4fc;--panel:#d6ebf8;--card:#ffffff;--line:#a8d4f0;--txt:#0c4a6e;--muted:#0369a1;
+  --pri:#0ea5e9;--pri-dark:#0284c7;--pri-dim:rgba(14,165,233,.15);--ok:#10b981;--bad:#ef4444;
+  --warn:#f59e0b;--glass:rgba(255,255,255,.97);--shadow:0 10px 28px rgba(14,165,233,.18);
+  --sky:#38bdf8;--sky-deep:#0369a1;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:linear-gradient(160deg,#e0f2fe 0%,#bae6fd 40%,#e8f4fc 100%);color:var(--txt);min-height:100dvh;line-height:1.55}
+.app-shell{display:grid;grid-template-columns:270px 1fr;grid-template-rows:auto 1fr auto;min-height:100dvh}
+@media(max-width:960px){.app-shell{grid-template-columns:1fr}.side-panel{display:none}.side-panel.open{display:block;position:fixed;top:0;right:0;bottom:0;width:min(300px,92vw);z-index:80;background:var(--panel);border-left:1px solid var(--line);overflow:auto}}
+.topbar{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:10px 14px;min-height:64px;background:linear-gradient(90deg,#0284c7,#0ea5e9);border-bottom:2px solid #0369a1;position:sticky;top:0;z-index:50;color:#fff}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo{width:36px;height:36px;border-radius:10px;background:#fff;display:grid;place-items:center;font-size:18px}
+.brand h1{font-size:.9rem;font-weight:800;color:#fff}
+.mega{display:flex;align-items:center;gap:4px;flex:1;justify-content:center;flex-wrap:wrap}
+.mega-item{position:relative}
+.mega-item>.mega-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:8px 12px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit}
+.mega-item.open>.mega-btn,.mega-item:hover>.mega-btn{background:#fff;color:#0369a1}
+.mega-item .drop{position:absolute;top:calc(100% + 4px);right:0;min-width:190px;background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:6px;z-index:60;box-shadow:var(--shadow);display:none}
+.mega-item.open .drop,.mega-item:hover .drop{display:block}
+.mega-item .drop button{display:block;width:100%;text-align:right;background:transparent;border:none;color:var(--txt);padding:9px 12px;border-radius:8px;font-size:.8rem;cursor:pointer;font-family:inherit}
+.mega-item .drop button:hover{background:var(--pri-dim);color:var(--pri-dark)}
+.btn-exit{background:#fef2f2;color:#b91c1c;border:none;border-radius:8px;padding:8px 14px;font-size:.75rem;font-weight:800;cursor:pointer;font-family:inherit}
+.header-left{display:flex;align-items:center;gap:10px;flex-shrink:0;margin-right:auto}
+.icon-btn{width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:16px}
+.icon-btn.mic-on{background:#10b981;border-color:#059669}
+.icon-btn.mic-off{background:rgba(239,68,68,.35);border-color:#fca5a5}
+.header-clock{display:flex;flex-direction:column;gap:2px;padding:6px 12px;border-radius:10px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);min-width:140px}
+.header-clock span{display:block;font-size:12px;font-weight:700;line-height:1.35;color:#fff;white-space:nowrap}
+.header-clock .g{opacity:.9;direction:ltr;unicode-bidi:isolate;font-size:11px}
+.side-panel{grid-row:2;grid-column:1;border-left:1px solid var(--line);background:var(--panel);padding:12px 10px;overflow:auto;display:flex;flex-direction:column}
+.side-panel h3{font-size:.75rem;color:var(--sky-deep);margin-bottom:10px;font-weight:800}
+.tree{flex:1}
+.tree details{margin-bottom:6px}
+.tree summary{cursor:pointer;padding:9px 12px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:.8rem;font-weight:700;list-style:none;color:var(--txt)}
+.tree summary::-webkit-details-marker{display:none}
+.tree details[open]>summary{background:var(--pri-dim);border-color:var(--pri);color:var(--pri-dark)}
+.tree .leaf{display:block;width:100%;text-align:right;background:transparent;border:none;color:var(--muted);padding:8px 12px;font-size:.78rem;cursor:pointer;font-family:inherit;border-radius:8px}
+.tree .leaf:hover,.tree .leaf.on{background:rgba(14,165,233,.12);color:var(--txt)}
+.side-alerts{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.side-alerts .alert-btn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 12px;margin-bottom:6px;border-radius:10px;border:1px solid var(--line);background:var(--card);cursor:pointer;font-family:inherit;color:var(--txt);font-size:.78rem;font-weight:700}
+.side-alerts .badge{background:var(--pri);color:#fff;border-radius:999px;padding:2px 8px;font-size:.7rem}
+.side-alerts .alert-btn.blink{animation:blink 1s infinite;border-color:var(--warn);background:#fffbeb}
+@keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.4)}50%{box-shadow:0 0 0 6px rgba(245,158,11,0)}}
+.main{grid-row:2;grid-column:2;padding:14px;overflow:auto}
+@media(max-width:960px){.main{grid-column:1}}
+.statusbar{grid-column:1/-1;padding:8px 14px;border-top:1px solid var(--line);font-size:.72rem;color:var(--muted);display:flex;justify-content:space-between;background:var(--panel)}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(14,165,233,.08)}
+.card h2{font-size:.95rem;margin-bottom:10px;color:var(--sky-deep)}
+label{display:block;font-size:.72rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
+input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#f0f9ff;color:var(--txt);font-family:inherit;font-size:14px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pri);background:#fff}
+input.err{border-color:var(--bad)}.field-error{color:#dc2626;font-size:.7rem;min-height:1em}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.row{grid-template-columns:1fr}}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:700px){.row3{grid-template-columns:1fr}}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn{border:none;border-radius:10px;padding:9px 14px;font-weight:700;font-size:.8rem;cursor:pointer;font-family:inherit}
+.btn-p{background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff}
+.btn-g{background:#e0f2fe;color:var(--sky-deep);border:1px solid var(--line)}
+.btn-b{background:var(--bad);color:#fff}
+.btn-sm{padding:5px 10px;font-size:.72rem}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:right}
+th{color:var(--sky-deep);font-size:.72rem;background:#f0f9ff}
+.empty{color:var(--muted);font-size:.85rem;padding:8px 0}
+.kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:12px}
+.kpi .box{background:linear-gradient(145deg,#fff,#e0f2fe);border:1px solid var(--line);border-radius:12px;padding:12px}
+.kpi .n{font-size:1.25rem;font-weight:800;color:var(--pri-dark)}.kpi .l{font-size:.7rem;color:var(--muted)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:10px 16px;border-radius:12px;font-weight:700;opacity:0;transition:.2s;z-index:100}
+.toast.show{opacity:1}.toast.err{background:var(--bad)}
+.code-wrap{display:flex;gap:6px;align-items:stretch}
+.code-wrap input{flex:1}
+.code-wrap .code-btn{width:42px;border-radius:10px;border:1px solid var(--line);background:#e0f2fe;cursor:pointer;font-size:16px}
+.modal{position:fixed;inset:0;background:rgba(3,105,161,.35);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.open{display:flex}
+.modal .box{background:#fff;border-radius:16px;padding:16px;max-width:480px;width:100%;max-height:80vh;overflow:auto;border:1px solid var(--line)}
+.modal .box h3{margin-bottom:10px;color:var(--sky-deep)}
+.excel-grid{width:100%;border-collapse:collapse;font-size:.78rem}
+.excel-grid th,.excel-grid td{border:1px solid var(--line);padding:4px}
+.excel-grid input{border:none;background:transparent;padding:6px;width:100%}
+.excel-grid th{background:#e0f2fe}
+.login-mask{position:fixed;inset:0;background:linear-gradient(160deg,#0284c7,#38bdf8);z-index:300;display:flex;align-items:center;justify-content:center}
+.login-box{background:#fff;border-radius:16px;padding:24px;width:min(360px,92vw);box-shadow:var(--shadow)}
+.login-box h2{color:var(--sky-deep);margin-bottom:12px;text-align:center}
+.date-wrap{position:relative}
+.jcal-pop{position:absolute;z-index:90;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;width:300px;box-shadow:var(--shadow)}
+.jcal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.jcal-head button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:#f0f9ff;color:var(--txt);cursor:pointer}
+.jcal-head .title{font-size:.85rem;font-weight:800;color:var(--sky-deep)}
+.jcal-week,.jcal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.jcal-week span{text-align:center;font-size:.6rem;color:var(--muted)}
+.jcal-days button{border:none;background:transparent;color:var(--txt);border-radius:8px;padding:4px;cursor:pointer;font-family:inherit;min-height:42px}
+.jcal-days button .jd{display:block;font-size:.8rem;font-weight:700}
+.jcal-days button .gd{display:block;font-size:.55rem;color:var(--muted)}
+.jcal-days button:hover{background:#e0f2fe}
+</style></head><body><div class="app-shell"><header class="topbar"><div class="brand"><div class="logo">🎛️</div><div><h1>کنترلر</h1></div></div><nav class="mega"><div class="mega-item"><div class="mega-btn">داشبورد</div><div class="drop"><button type="button" data-panel="p-dash">نمای کلی</button></div></div><div class="mega-item"><div class="mega-btn">ثبت</div><div class="drop"><button type="button" data-panel="p-reg">کاربر</button><button type="button" data-panel="p-reg">دسترسی</button></div></div><div class="mega-item"><div class="mega-btn">فهرست</div><div class="drop"><button type="button" data-panel="p-list">همه موارد</button></div></div><div class="mega-item"><div class="mega-btn">گزارش‌ها</div><div class="drop"><button type="button" data-panel="p-rep">گزارش خلاصه</button></div></div><div class="mega-item"><div class="mega-btn">امکانات</div><div class="drop"><button type="button" data-panel="p-office">ورد / اکسل / پاورپوینت / PDF / تصویر</button><button type="button" id="btnBackup">پشتیبان</button><button type="button" id="btnRestoreTrigger">بازیابی</button><button type="button" data-panel="p-users">کاربران ماژول</button></div></div><div class="mega-item"><div class="mega-btn">تنظیمات</div><div class="drop"><button type="button" id="btnToggleSide">منوی درختی</button><button type="button" data-panel="p-fiscal">سال مالی</button></div></div><button type="button" class="btn-exit" id="btnExit">خروج به Suite</button></nav><div class="header-left"><button type="button" class="icon-btn mic-off" id="btnMic">🎤</button><div class="header-clock"><span class="j" id="dtJ">—</span><span class="g" id="dtG">—</span><span class="c" id="dtC">—</span><span class="u" id="activeUser">—</span><span id="fiscalYear" style="font-size:11px;opacity:.95">—</span></div></div></header><aside class="side-panel" id="sidePanel"><h3>ناوبری</h3><div class="tree"><details open><summary>داشبورد</summary><button type="button" class="leaf on" data-panel="p-dash">نمای کلی</button></details><details open><summary>ثبت</summary><button type="button" class="leaf" data-panel="p-reg">کاربر</button><button type="button" class="leaf" data-panel="p-reg">دسترسی</button></details><details open><summary>فهرست</summary><button type="button" class="leaf" data-panel="p-list">همه موارد</button></details><details><summary>گزارش‌ها</summary><button type="button" class="leaf" data-panel="p-rep">گزارش</button></details><details><summary>امکانات</summary><button type="button" class="leaf" data-panel="p-office">افزونه‌های اداری</button></details></div><div class="side-alerts"><button type="button" class="alert-btn" id="alertNotes"><span>📝 یادداشت</span><span class="badge">0</span></button><button type="button" class="alert-btn" id="alertRems"><span>⏰ یادآوری</span><span class="badge">0</span></button><button type="button" class="alert-btn" id="alertCart"><span>📥 کارتابل</span><span class="badge">0</span></button></div></aside><main class="main"><div class="panel on" id="p-dash"><div class="kpi" id="kpiBox"></div><div class="card"><h2>خلاصه</h2><p class="empty" id="dashNote">—</p></div></div><div class="panel" id="p-reg"><div class="card"><h2>ثبت</h2><div class="row"><div><label>عنوان *</label><input id="fTitle" data-validate="required"><div class="field-error"></div></div><div><label>کد حساب / کدینگ</label><input id="fCode" data-code-picker data-validate="code"><div class="field-error"></div></div></div><div class="row"><div><label>تاریخ</label><input id="fDate" class="jdate" data-jdate data-validate="date"><div class="field-error"></div></div><div><label>مبلغ</label><input id="fAmount" data-validate="number"><div class="field-error"></div></div></div><label>توضیحات</label><textarea id="fNote" rows="2"></textarea><div class="btns"><button type="button" class="btn btn-p" id="btnSave">ذخیره</button><button type="button" class="btn btn-g" id="btnToAcc">ارسال به مخزن حسابداری</button></div></div></div><div class="panel" id="p-list"><div class="card"><h2>فهرست</h2><input id="fSearch" placeholder="جستجو"><div id="listBox" style="margin-top:8px"></div></div></div><div class="panel" id="p-rep"><div class="card"><h2>گزارش</h2><div id="repBox"></div></div></div><div class="panel" id="p-office"><div class="card"><h2>افزونه‌های اداری</h2><p class="empty">فایل را انتخاب کنید تا در مرورگر باز/دانلود شود (ورد، اکسل، پاورپوینت، PDF، تصویر).</p><input type="file" id="officeFile" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,image/*"><div id="officePrev" style="margin-top:10px"></div></div></div><div class="panel" id="p-notes"><div class="card"><h2>یادداشت‌های داخلی ماژول</h2><input id="noteText" placeholder="متن یادداشت"><div class="btns"><button type="button" class="btn btn-p" id="btnAddNote">افزودن</button></div><div id="notesList"></div></div></div><div class="panel" id="p-rems"><div class="card"><h2>یادآوری‌ها</h2><div class="row"><div><input id="remText" placeholder="عنوان"></div><div><input id="remDate" class="jdate" data-jdate placeholder="تاریخ"></div></div><div class="btns"><button type="button" class="btn btn-p" id="btnAddRem">افزودن یادآوری</button></div><div id="remsList"></div></div></div><div class="panel" id="p-cartable"><div class="card"><h2>کارتابل</h2><div class="row"><div><label>گیرنده (نام کاربر یا * برای همه)</label><input id="cartTo" placeholder="*"></div><div><label>پیام</label><input id="cartMsg"></div></div><label>فایل پیوست</label><input type="file" id="cartFile"><div class="btns"><button type="button" class="btn btn-p" id="btnCartSend">ارسال به کارتابل</button></div><div id="cartList"></div></div></div><div class="panel" id="p-users"><div class="card"><h2>کاربران ماژول</h2><div class="row"><div><input id="nuUser" placeholder="نام کاربری"></div><div><input id="nuPass" placeholder="رمز"></div><div><input id="nuName" placeholder="نام نمایشی"></div></div><div class="btns"><button type="button" class="btn btn-p" id="btnAddUser">افزودن کاربر</button></div><div id="usersList"></div></div></div><div class="panel" id="p-fiscal"><div class="card"><h2>سال مالی پروژه</h2><label>سال مالی شمسی</label><input id="fyInput" data-validate="number"><div class="btns"><button type="button" class="btn btn-p" id="btnFy">ذخیره سال مالی</button></div><p class="empty">سال مالی برای همه ماژول‌ها مشترک است.</p></div></div></main><footer class="statusbar"><span>کنترلر · سال مالی مشترک</span><span>Suite</span></footer></div><input type="file" id="restoreFile" accept="application/json" hidden><div class="toast" id="toast"></div><script>(function(g){"use strict";
+var FA=["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"];
+function toFa(n){return String(n).replace(/\d/g,function(d){return FA[+d];});}
+function toEn(s){return String(s).replace(/[۰-۹]/g,function(d){return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);});}
+function g2j(gy,gm,gd){var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];var gy2=(gm>2)?(gy+1):gy;var days=355666+365*gy+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+g_d_m[gm-1];var jy=-1595+33*Math.floor(days/12053);days%=12053;jy+=4*Math.floor(days/1461);days%=1461;if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}var jm=(days<186)?1+Math.floor(days/31):7+Math.floor((days-186)/30);var jd=1+((days<186)?(days%31):((days-186)%30));return {jy:jy,jm:jm,jd:jd};}
+function j2g(jy,jm,jd){var jy2=jy-979,jm2=jm-1,jd2=jd-1;var days=365*jy2+Math.floor(jy2/33)*8+Math.floor(((jy2%33)+3)/4);for(var i=0;i<jm2;++i)days+=(i<6?31:30);days+=jd2;var gy=1600+400*Math.floor(days/146097);days%=146097;var leap=true;if(days>=36525){days--;gy+=100*Math.floor(days/36524);days%=36524;if(days>=365)leap=false;else days++;}gy+=4*Math.floor(days/1461);days%=1461;if(days>=366){leap=false;days--;gy+=Math.floor(days/365);days=days%365;}var gd=days+1,sal_a=[0,31,(leap?29:28),31,30,31,30,31,31,30,31,30,31],gm;for(gm=1;gm<=12&&gd>sal_a[gm];gm++)gd-=sal_a[gm];return {gy:gy,gm:gm,gd:gd};}
+function jMonthLength(jy,jm){if(jm<=6)return 31;if(jm<=11)return 30;var a=j2g(jy,12,30);var b=g2j(a.gy,a.gm,a.gd);return (b.jy===jy&&b.jm===12&&b.jd===30)?30:29;}
+var JM=["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"];
+var JW_FULL=["شنبه","یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه"];
+function startClock(elJ,elG,elC){function tick(){var n=new Date();var j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());if(elJ)elJ.textContent=toFa(j.jy)+"/"+toFa(String(j.jm).padStart(2,"0"))+"/"+toFa(String(j.jd).padStart(2,"0"));if(elG)elG.textContent=n.getFullYear()+"/"+String(n.getMonth()+1).padStart(2,"0")+"/"+String(n.getDate()).padStart(2,"0");if(elC)elC.textContent=toFa(String(n.getHours()).padStart(2,"0"))+":"+toFa(String(n.getMinutes()).padStart(2,"0"))+":"+toFa(String(n.getSeconds()).padStart(2,"0"));}tick();setInterval(tick,1000);}
+function getFiscalYear(){try{var f=JSON.parse(localStorage.getItem("smart_fiscal_v1")||"null");if(f&&f.year)return f.year;}catch(e){}var n=new Date();var j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());return j.jy;}
+function setFiscalYear(y){localStorage.setItem("smart_fiscal_v1",JSON.stringify({year:y,updated:new Date().toISOString()}));}
+function getAuth(modId){try{return JSON.parse(localStorage.getItem("smart_users_"+modId)||"null")||{users:[{user:"admin",pass:"admin",name:"مدیر"}],session:null};}catch(e){return {users:[{user:"admin",pass:"admin",name:"مدیر"}],session:null};}}
+function saveAuth(modId,data){localStorage.setItem("smart_users_"+modId,JSON.stringify(data));}
+function getActiveUser(modId){var a=getAuth(modId);if(a.session&&a.session.user)return a.session.name||a.session.user;return "مهمان";}
+function requireLogin(modId){var a=getAuth(modId);if(a.session&&a.session.user)return true;var mask=document.createElement("div");mask.className="login-mask";mask.innerHTML='<div class="login-box"><h2>ورود به ماژول</h2><label>نام کاربری</label><input id="lgUser"><label>رمز عبور</label><input id="lgPass" type="password"><div class="btns" style="margin-top:12px"><button type="button" class="btn btn-p" id="lgGo" style="width:100%">ورود</button></div><p style="font-size:.7rem;color:#0369a1;margin-top:8px;text-align:center">پیش‌فرض: admin / admin</p></div>';document.body.appendChild(mask);document.getElementById("lgGo").onclick=function(){var u=document.getElementById("lgUser").value.trim();var p=document.getElementById("lgPass").value;var found=a.users.find(function(x){return x.user===u&&x.pass===p;});if(!found){alert("نام کاربری یا رمز اشتباه");return;}a.session={user:found.user,name:found.name||found.user};saveAuth(modId,a);mask.remove();var el=document.getElementById("activeUser");if(el)el.textContent=found.name||found.user;};return false;}
+var Validators={required:function(v){return String(v||"").trim()?null:"الزامی";},number:function(v){if(!String(v||"").trim())return null;if(!/^-?\d+(\.\d+)?$/.test(toEn(String(v)).trim()))return "فقط عدد";return null;},date:function(v){if(!String(v||"").trim())return null;if(!/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/.test(toEn(String(v)).trim()))return "تاریخ نامعتبر";return null;},code:function(v){if(!String(v||"").trim())return null;return null;}};
+function clearFieldError(el){el.classList.remove("err");var err=el.parentNode&&el.parentNode.querySelector(".field-error");if(err)err.textContent="";}
+function bindFieldValidation(root){(root||document).querySelectorAll("[data-validate]").forEach(function(el){var types=(el.getAttribute("data-validate")||"").split(/\s+/).filter(Boolean);function run(){var val=el.value;if(!String(val||"").trim()&&types.indexOf("required")<0){clearFieldError(el);return true;}if(!String(val||"").trim()&&types.indexOf("required")>=0){el.classList.add("err");var err=el.parentNode.querySelector(".field-error");if(!err){err=document.createElement("div");err.className="field-error";el.parentNode.appendChild(err);}err.textContent="الزامی";return false;}var msg=null;for(var i=0;i<types.length;i++){var fn=Validators[types[i]];if(fn){msg=fn(val);if(msg)break;}}if(msg){el.classList.add("err");var err=el.parentNode.querySelector(".field-error");if(!err){err=document.createElement("div");err.className="field-error";el.parentNode.appendChild(err);}err.textContent=msg;return false;}clearFieldError(el);return true;}el.addEventListener("blur",run);el.addEventListener("input",run);el._validate=run;});}
+function validateForm(root){var ok=true;(root||document).querySelectorAll("[data-validate]").forEach(function(el){if(el._validate&&!el._validate())ok=false;});return ok;}
+var recog=null,micActive=false,micBtn=null;
+function insertText(t){if(!t)return;var a=document.activeElement;if(a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA")&&a.type!=="password"){var s=a.selectionStart!=null?a.selectionStart:a.value.length;var e=a.selectionEnd!=null?a.selectionEnd:s;a.value=a.value.slice(0,s)+t+a.value.slice(e);try{a.setSelectionRange(s+t.length,s+t.length);}catch(err){}a.dispatchEvent(new Event("input",{bubbles:true}));}}
+function initVoice(btn){micBtn=btn;var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){if(btn)btn.classList.add("mic-off");return;}recog=new SR();recog.lang="fa-IR";recog.continuous=true;recog.interimResults=true;recog.maxAlternatives=1;
+recog.onresult=function(ev){var final="";for(var i=ev.resultIndex;i<ev.results.length;i++)if(ev.results[i].isFinal)final+=ev.results[i][0].transcript;if(final)insertText(final);};
+recog.onerror=function(e){if(e.error==="no-speech"||e.error==="aborted")return;};
+recog.onend=function(){if(micActive)setTimeout(function(){if(micActive){try{recog.start();}catch(e){}}},100);};
+if(btn){btn.classList.add("mic-off");btn.onclick=function(){if(micActive)stopMic();else startMic();};}}
+function startMic(){if(!recog)return;try{recog.start();micActive=true;if(micBtn){micBtn.classList.remove("mic-off");micBtn.classList.add("mic-on");}}catch(e){}}
+function stopMic(){micActive=false;try{if(recog)recog.stop();}catch(e){}if(micBtn){micBtn.classList.remove("mic-on");micBtn.classList.add("mic-off");}}
+function attachJalaliPicker(input){if(!input||input._jcal)return;input._jcal=true;var wrap=input.closest(".date-wrap")||input.parentNode;if(!wrap.classList.contains("date-wrap")){var w=document.createElement("div");w.className="date-wrap";input.parentNode.insertBefore(w,input);w.appendChild(input);wrap=w;}var pop=null,viewY,viewM;function close(){if(pop){pop.remove();pop=null;}document.removeEventListener("click",outside);}function outside(e){if(pop&&!pop.contains(e.target)&&e.target!==input)close();}function open(){close();var now=new Date();var j=g2j(now.getFullYear(),now.getMonth()+1,now.getDate());var cur=toEn(input.value||"");var m=cur.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);viewY=m?+m[1]:j.jy;viewM=m?+m[2]:j.jm;pop=document.createElement("div");pop.className="jcal-pop";wrap.appendChild(pop);render();setTimeout(function(){document.addEventListener("click",outside);},0);}function render(){if(!pop)return;var head=document.createElement("div");head.className="jcal-head";head.innerHTML='<button type="button" data-a="py">«</button><button type="button" data-a="pm">‹</button><span class="title">'+JM[viewM-1]+' '+toFa(viewY)+'</span><button type="button" data-a="nm">›</button><button type="button" data-a="ny">»</button>';var week=document.createElement("div");week.className="jcal-week";JW_FULL.forEach(function(w){var s=document.createElement("span");s.textContent=w;week.appendChild(s);});var days=document.createElement("div");days.className="jcal-days";var dim=jMonthLength(viewY,viewM);var firstG=j2g(viewY,viewM,1);var first=new Date(firstG.gy,firstG.gm-1,firstG.gd);var start=(first.getDay()+1)%7;for(var i=0;i<start;i++){var b0=document.createElement("button");b0.type="button";b0.disabled=true;days.appendChild(b0);}for(var d=1;d<=dim;d++){(function(day){var g=j2g(viewY,viewM,day);var gFull=g.gy+"/"+String(g.gm).padStart(2,"0")+"/"+String(g.gd).padStart(2,"0");var btn=document.createElement("button");btn.type="button";btn.innerHTML='<span class="jd">'+toFa(day)+'</span><span class="gd">'+gFull+'</span>';btn.onclick=function(ev){ev.stopPropagation();input.value=toFa(viewY)+"/"+toFa(String(viewM).padStart(2,"0"))+"/"+toFa(String(day).padStart(2,"0"));input.dispatchEvent(new Event("input",{bubbles:true}));close();};days.appendChild(btn);})(d);}pop.innerHTML="";pop.appendChild(head);pop.appendChild(week);pop.appendChild(days);head.querySelectorAll("button").forEach(function(b){b.onclick=function(ev){ev.stopPropagation();var a=b.getAttribute("data-a");if(a==="pm"){viewM--;if(viewM<1){viewM=12;viewY--;}}if(a==="nm"){viewM++;if(viewM>12){viewM=1;viewY++;}}if(a==="py")viewY--;if(a==="ny")viewY++;render();};});}input.addEventListener("focus",open);input.addEventListener("click",open);}
+function attachAllDatePickers(root){(root||document).querySelectorAll("input[data-jdate],input.jdate").forEach(attachJalaliPicker);}
+function showPanel(id){document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});var el=document.getElementById(id);if(el)el.classList.add("on");document.querySelectorAll(".tree .leaf").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-panel")===id);});}
+function bindMegaHover(){document.querySelectorAll(".mega-item").forEach(function(item){item.addEventListener("mouseenter",function(){document.querySelectorAll(".mega-item.open").forEach(function(o){if(o!==item)o.classList.remove("open");});item.classList.add("open");});item.addEventListener("mouseleave",function(){item.classList.remove("open");});});}
+/* Code picker */
+function openCodePicker(input, codes){codes=codes||[];var modal=document.createElement("div");modal.className="modal open";modal.innerHTML='<div class="box"><h3>انتخاب کد</h3><input id="codeSearch" placeholder="جستجو..." style="margin-bottom:8px"><div id="codeList"></div><div class="btns"><button type="button" class="btn btn-g" id="codeClose">بستن</button></div></div>';document.body.appendChild(modal);function render(q){q=(q||"").toLowerCase();var list=codes.filter(function(c){return !q||(c.code+" "+(c.title||"")).toLowerCase().indexOf(q)>=0;});var box=document.getElementById("codeList");box.innerHTML=list.length?("<table><tbody>"+list.map(function(c){return "<tr style=\\"cursor:pointer\\" data-c=\\""+c.code+"\\"><td>"+c.code+"</td><td>"+(c.title||"")+"</td></tr>";}).join("")+"</tbody></table>"):"<p class=\\"empty\\">موردی نیست</p>";box.querySelectorAll("[data-c]").forEach(function(tr){tr.onclick=function(){input.value=tr.getAttribute("data-c");input.dispatchEvent(new Event("input",{bubbles:true}));modal.remove();};});}
+document.getElementById("codeSearch").oninput=function(){render(this.value);};
+document.getElementById("codeClose").onclick=function(){modal.remove();};
+render("");}
+function bindCodePickers(codes){document.querySelectorAll("[data-code-picker]").forEach(function(inp){var wrap=inp.parentNode;if(wrap.classList.contains("code-wrap"))return;var w=document.createElement("div");w.className="code-wrap";inp.parentNode.insertBefore(w,inp);w.appendChild(inp);var btn=document.createElement("button");btn.type="button";btn.className="code-btn";btn.title="لیست کدها";btn.textContent="📋";btn.onclick=function(){openCodePicker(inp,codes);};w.appendChild(btn);});}
+/* Notes & reminders & cartable */
+function modNotesKey(modId){return "smart_mod_notes_"+modId;}
+function modRemKey(modId){return "smart_mod_rem_"+modId;}
+function cartableKey(){return "smart_cartable_v1";}
+function loadJSON(k,def){try{return JSON.parse(localStorage.getItem(k)||"null")||def;}catch(e){return def;}}
+function saveJSON(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function playBeep(){try{var ctx=new (window.AudioContext||window.webkitAudioContext)();var o=ctx.createOscillator();var g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=660;g.gain.value=0.08;o.start();setTimeout(function(){o.stop();ctx.close();},200);}catch(e){}}
+function updateSideAlerts(modId){var notes=loadJSON(modNotesKey(modId),[]);var rems=loadJSON(modRemKey(modId),[]);var cart=loadJSON(cartableKey(),{items:[]});var user=getActiveUser(modId);var myCart=(cart.items||[]).filter(function(x){return x.to===user||x.to==="*"||!x.to;});var due=rems.filter(function(r){if(!r.date||r.done)return false;return true;});var nBtn=document.getElementById("alertNotes");var rBtn=document.getElementById("alertRems");var cBtn=document.getElementById("alertCart");if(nBtn){nBtn.querySelector(".badge").textContent=notes.length;nBtn.classList.toggle("blink",false);}if(rBtn){rBtn.querySelector(".badge").textContent=due.length;if(due.length){rBtn.classList.add("blink");playBeep();}else rBtn.classList.remove("blink");}if(cBtn){var unread=myCart.filter(function(x){return !x.read;}).length;cBtn.querySelector(".badge").textContent=unread;if(unread){cBtn.classList.add("blink");playBeep();}else cBtn.classList.remove("blink");}}
+function bootShell(opts){opts=opts||{};var modId=opts.modId||"mod";requireLogin(modId);startClock(document.getElementById("dtJ"),document.getElementById("dtG"),document.getElementById("dtC"));var u=document.getElementById("activeUser");if(u)u.textContent=getActiveUser(modId);var fy=document.getElementById("fiscalYear");if(fy)fy.textContent="سال مالی "+toFa(getFiscalYear());bindFieldValidation(document);attachAllDatePickers(document);initVoice(document.getElementById("btnMic"));bindMegaHover();bindCodePickers(opts.codes||[]);document.querySelectorAll("[data-panel]").forEach(function(b){b.addEventListener("click",function(e){e.preventDefault();showPanel(b.getAttribute("data-panel"));});});var sb=document.getElementById("btnToggleSide");if(sb)sb.onclick=function(){var s=document.getElementById("sidePanel");if(s)s.classList.toggle("open");};var ex=document.getElementById("btnExit");if(ex)ex.onclick=function(){try{if(opts.onSave)opts.onSave();}catch(e){}location.href=opts.suiteUrl||"index.html";};updateSideAlerts(modId);setInterval(function(){updateSideAlerts(modId);},30000);if(document.getElementById("alertNotes"))document.getElementById("alertNotes").onclick=function(){showPanel("p-notes");};if(document.getElementById("alertRems"))document.getElementById("alertRems").onclick=function(){showPanel("p-rems");};if(document.getElementById("alertCart"))document.getElementById("alertCart").onclick=function(){showPanel("p-cartable");};}
+/* Accounting queue */
+function pushToAccQueue(source,payload,uniqueId){var q=loadJSON("smart_acc_queue_v1",{items:[]});if(uniqueId&&q.items.some(function(x){return x.uniqueId===uniqueId;}))return false;q.items.push({id:Date.now().toString(36),source:source,uniqueId:uniqueId||null,payload:payload,at:new Date().toISOString(),posted:false});saveJSON("smart_acc_queue_v1",q);return true;}
+function getAccQueue(){return loadJSON("smart_acc_queue_v1",{items:[]});}
+function clearPostedQueue(){var q=getAccQueue();q.items=q.items.filter(function(x){return !x.posted;});saveJSON("smart_acc_queue_v1",q);}
+g.ModuleKit={toFa:toFa,toEn:toEn,bootShell:bootShell,validateForm:validateForm,showPanel:showPanel,getFiscalYear:getFiscalYear,setFiscalYear:setFiscalYear,getActiveUser:getActiveUser,getAuth:getAuth,saveAuth:saveAuth,openCodePicker:openCodePicker,loadJSON:loadJSON,saveJSON:saveJSON,pushToAccQueue:pushToAccQueue,getAccQueue:getAccQueue,clearPostedQueue:clearPostedQueue,modNotesKey:modNotesKey,modRemKey:modRemKey,cartableKey:cartableKey,updateSideAlerts:updateSideAlerts};
+})(window);
+</script><script>
+document.addEventListener("DOMContentLoaded",function(){
+var MOD="control",KEY="smart_control_v1",K=ModuleKit,tt=null;
+var CODES=[{"code": "1101", "title": "صندوق"}, {"code": "1102", "title": "بانک"}, {"code": "1201", "title": "حساب دریافتنی"}, {"code": "2101", "title": "حساب پرداختنی"}, {"code": "4101", "title": "فروش"}, {"code": "5101", "title": "بهای تمام‌شده"}];
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
-function lock(fn){return function(){if(busy)return;busy=true;try{fn.apply(this,arguments);}catch(e){console.error(e);toast("خطا",true);}finally{busy=false;};};}
-function hashPass(s){var h=0,str=String(s||"");for(var i=0;i<str.length;i++){h=((h<<5)-h)+str.charCodeAt(i);h|=0;}return "h"+Math.abs(h).toString(16)+"_"+str.length;}
-async function hashStrong(s){try{if(window.crypto&&crypto.subtle){var buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("auth-v1:"+s));return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");}}catch(e){}return hashPass(s);}
-function defAuth(){
-  var creds={};
-  MODS.forEach(function(m){
-    creds[m.id]={username:DEFAULT_USER[m.id]||m.id,pass:hashPass(DEFAULT_PASS[m.id]||"ChangeMe1"),passPlainDefault:true,updated:null};
-  });
-  return {version:1,creds:creds,showLoginHints:true,moduleEnabled:{},orgName:"سامانه هوشمند یکپارچه",approvals:[],requests:[],audit:[]};
-}
-function loadAuth(){
-  try{
-    var d=JSON.parse(localStorage.getItem(AUTH_KEY)||"null");
-    if(!d){d=defAuth();localStorage.setItem(AUTH_KEY,JSON.stringify(d));return d;}
-    if(!d.creds)d.creds={};
-    MODS.forEach(function(m){
-      if(!d.creds[m.id])d.creds[m.id]={username:DEFAULT_USER[m.id]||m.id,pass:hashPass(DEFAULT_PASS[m.id]||"ChangeMe1"),passPlainDefault:true,updated:null};
-    });
-    if(d.showLoginHints===undefined)d.showLoginHints=true;
-    if(!d.moduleEnabled)d.moduleEnabled={};
-    if(!Array.isArray(d.approvals))d.approvals=[];
-    if(!Array.isArray(d.requests))d.requests=[];
-    if(!Array.isArray(d.audit))d.audit=[];
-    return d;
-  }catch(e){return defAuth();}
-}
-function saveAuth(x){try{localStorage.setItem(AUTH_KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
-var auth=loadAuth();
-function audit(a,d){auth.audit.unshift({t:now(),action:a,detail:String(d||"").slice(0,200)});if(auth.audit.length>200)auth.audit=auth.audit.slice(0,200);saveAuth(auth);}
-function matchPass(stored,plain){
-  var h1=hashPass(plain);
-  if(stored===h1||stored===plain)return true;
-  return false;
-}
-async function matchPassAsync(stored,plain){
-  if(matchPass(stored,plain))return true;
-  var h2=await hashStrong(plain);
-  return stored===h2;
-}
-function applyLogo(){
-  try{
-    var d=JSON.parse(localStorage.getItem(LOGO_KEY)||"null");
-    var el=$("headerLogo");
-    if(d&&d.dataUrl)el.innerHTML="<img src=\""+d.dataUrl+"\" alt=\"logo\">";
-    else el.innerHTML="<span class=\"fb\">🎛️</span>";
-    var prev=$("logoPreview");
-    if(prev){
-      if(d&&d.dataUrl){prev.innerHTML="<img src=\""+d.dataUrl+"\" alt=\"p\">";$("logoMeta").textContent=(d.title||"")+" · "+(d.updated||"");if(d.title)$("logoTitle").value=d.title;}
-      else{prev.innerHTML="<span style=\"color:#64748b\">بدون لوگو</span>";$("logoMeta").textContent="—";}
-    }
-  }catch(e){}
-}
-function updateLoginHint(){
-  var h=$("loginHint");
-  if(!h)return;
-  if(auth.showLoginHints){
-    h.style.display="block";
-    h.innerHTML="پیش‌فرض اولیه: کاربر <b>admin</b> — پس از اولین تغییر رمز، این راهنما حذف می‌شود.";
-  } else {
-    h.style.display="none";
-    h.textContent="";
-  }
-}
-function showApp(){
-  $("loginView").style.display="none";
-  $("appView").style.display="block";
-  $("who").textContent=(auth.creds.control&&auth.creds.control.username)||"admin";
-  applyLogo();
-  renderCreds();
-  fillModSelect();
-}
-function showLogin(){
-  session=null;
-  sessionStorage.removeItem(SESSION);
-  $("appView").style.display="none";
-  $("loginView").style.display="block";
-  updateLoginHint();
-  applyLogo();
-}
-$("btnLogin").onclick=lock(async function(){
-  var name=($("loginUser").value||"").trim().toLowerCase();
-  var pass=$("loginPass").value||"";
-  if(!name||!pass){toast("کاربر و رمز؟",true);return;}
-  var c=auth.creds.control;
-  if(!c||name!==String(c.username).toLowerCase()){toast("نامعتبر",true);audit("login-fail",name);return;}
-  var ok=await matchPassAsync(c.pass,pass);
-  if(!ok){toast("رمز اشتباه",true);audit("login-fail","pass");return;}
-  if(c.pass===pass){c.pass=await hashStrong(pass);saveAuth(auth);}
-  session={ok:true,ts:Date.now(),user:c.username};
-  sessionStorage.setItem(SESSION,JSON.stringify(session));
-  audit("login","ok");
-  $("loginPass").value="";
-  showApp();
-  toast("ورود موفق");
+function toast(m,e){var t=document.getElementById("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(tt);tt=setTimeout(function(){t.classList.remove("show");},2000);}
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||"null");if(!d||!Array.isArray(d.items))return {items:[]};return d;}catch(e){return {items:[]};}}
+function save(d){d.updated=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(d));}
+K.bootShell({modId:MOD,codes:CODES,onSave:function(){save(load());},suiteUrl:"index.html"});
+function render(){var d=load(),box=document.getElementById("listBox"),q=(document.getElementById("fSearch").value||"").toLowerCase();
+var list=d.items.filter(function(x){return !q||(x.title+" "+(x.code||"")).toLowerCase().indexOf(q)>=0;});
+document.getElementById("kpiBox").innerHTML="<div class=\"box\"><div class=\"n\">"+d.items.length+"</div><div class=\"l\">رکورد</div></div>";
+document.getElementById("dashNote").textContent=d.items.length?d.items.length+" مورد":"آماده ثبت";
+if(!list.length)box.innerHTML="<p class=\"empty\">خالی</p>";else{box.innerHTML="<table><thead><tr><th>عنوان</th><th>کد</th><th>تاریخ</th><th>مبلغ</th><th></th></tr></thead><tbody>"+list.map(function(x){return "<tr><td>"+esc(x.title)+"</td><td>"+esc(x.code||"")+"</td><td>"+esc(x.date||"")+"</td><td>"+esc(x.amount||"")+"</td><td><button type=\"button\" class=\"btn btn-b btn-sm\" data-d=\""+esc(x.id)+"\">حذف</button></td></tr>";}).join("")+"</tbody></table>";
+box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){var d=load();d.items=d.items.filter(function(x){return x.id!==b.getAttribute("data-d");});save(d);render();};});}
+document.getElementById("repBox").innerHTML="<p>تعداد: "+d.items.length+"</p>";renderNotes();renderRems();renderCart();renderUsers();}
+document.getElementById("btnSave").onclick=function(){if(!K.validateForm(document.getElementById("p-reg"))){toast("خطا",true);return;}var d=load();d.items.unshift({id:uid(),title:document.getElementById("fTitle").value.trim(),code:document.getElementById("fCode").value.trim(),date:document.getElementById("fDate").value.trim(),amount:document.getElementById("fAmount").value.trim(),note:document.getElementById("fNote").value.trim(),fiscal:K.getFiscalYear()});save(d);render();toast("ذخیره");};
+document.getElementById("btnToAcc").onclick=function(){var d=load();if(!d.items.length){toast("موردی نیست",true);return;}var last=d.items[0];var ok=K.pushToAccQueue(MOD,{title:last.title,code:last.code,amount:last.amount,date:last.date},last.id);toast(ok?"به مخزن حسابداری ارسال شد":"قبلاً ارسال شده (تکراری نیست)");};
+document.getElementById("fSearch").oninput=render;
+document.getElementById("officeFile").onchange=function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var url=URL.createObjectURL(f);var p=document.getElementById("officePrev");if(f.type.indexOf("image")===0)p.innerHTML="<img src=\""+url+"\" style=\"max-width:100%;border-radius:8px\">";else p.innerHTML="<a class=\"btn btn-p\" href=\""+url+"\" download=\""+f.name+"\">دانلود / باز کردن "+f.name+"</a>";};
+function renderNotes(){var n=K.loadJSON(K.modNotesKey(MOD),[]);document.getElementById("notesList").innerHTML=n.map(function(x,i){return "<div style=\"padding:6px 0;border-bottom:1px solid #a8d4f0\">"+esc(x.text)+" <button class=\"btn btn-b btn-sm\" data-ni=\""+i+"\">×</button></div>";}).join("")||"<p class=\"empty\">—</p>";document.querySelectorAll("[data-ni]").forEach(function(b){b.onclick=function(){var n=K.loadJSON(K.modNotesKey(MOD),[]);n.splice(+b.getAttribute("data-ni"),1);K.saveJSON(K.modNotesKey(MOD),n);renderNotes();K.updateSideAlerts(MOD);};});}
+document.getElementById("btnAddNote").onclick=function(){var t=document.getElementById("noteText").value.trim();if(!t)return;var n=K.loadJSON(K.modNotesKey(MOD),[]);n.unshift({text:t,user:K.getActiveUser(MOD),at:new Date().toISOString()});K.saveJSON(K.modNotesKey(MOD),n);document.getElementById("noteText").value="";renderNotes();K.updateSideAlerts(MOD);};
+function renderRems(){var n=K.loadJSON(K.modRemKey(MOD),[]);document.getElementById("remsList").innerHTML=n.map(function(x,i){return "<div style=\"padding:6px 0;border-bottom:1px solid #a8d4f0\">"+esc(x.text)+" — "+esc(x.date||"")+"</div>";}).join("")||"<p class=\"empty\">—</p>";}
+document.getElementById("btnAddRem").onclick=function(){var t=document.getElementById("remText").value.trim();var d=document.getElementById("remDate").value.trim();if(!t)return;var n=K.loadJSON(K.modRemKey(MOD),[]);n.unshift({text:t,date:d,done:false});K.saveJSON(K.modRemKey(MOD),n);renderRems();K.updateSideAlerts(MOD);toast("یادآوری ثبت شد");};
+function renderCart(){var c=K.loadJSON(K.cartableKey(),{items:[]});var u=K.getActiveUser(MOD);var list=(c.items||[]).filter(function(x){return x.to===u||x.to==="*"||x.from===u;});document.getElementById("cartList").innerHTML=list.map(function(x){return "<div style=\"padding:8px 0;border-bottom:1px solid #a8d4f0\"><b>"+esc(x.from)+"</b> → "+esc(x.to)+": "+esc(x.msg)+(x.fileName?" ["+esc(x.fileName)+"]":"")+"</div>";}).join("")||"<p class=\"empty\">خالی</p>";}
+document.getElementById("btnCartSend").onclick=function(){var c=K.loadJSON(K.cartableKey(),{items:[]});var file=document.getElementById("cartFile").files[0];var item={id:uid(),from:K.getActiveUser(MOD),to:document.getElementById("cartTo").value.trim()||"*",msg:document.getElementById("cartMsg").value.trim(),fileName:file?file.name:"",read:false,at:new Date().toISOString()};if(file){var r=new FileReader();r.onload=function(){item.fileData=r.result;c.items.unshift(item);K.saveJSON(K.cartableKey(),c);renderCart();K.updateSideAlerts(MOD);toast("ارسال شد");};r.readAsDataURL(file);}else{c.items.unshift(item);K.saveJSON(K.cartableKey(),c);renderCart();K.updateSideAlerts(MOD);toast("ارسال شد");}};
+function renderUsers(){var a=K.getAuth(MOD);document.getElementById("usersList").innerHTML="<table><tbody>"+(a.users||[]).map(function(x){return "<tr><td>"+esc(x.user)+"</td><td>"+esc(x.name||"")+"</td></tr>";}).join("")+"</tbody></table>";}
+document.getElementById("btnAddUser").onclick=function(){var a=K.getAuth(MOD);a.users.push({user:document.getElementById("nuUser").value.trim(),pass:document.getElementById("nuPass").value,name:document.getElementById("nuName").value.trim()});K.saveAuth(MOD,a);renderUsers();toast("کاربر اضافه شد");};
+document.getElementById("btnFy").onclick=function(){var y=parseInt(K.toEn(document.getElementById("fyInput").value),10);if(!y){toast("سال نامعتبر",true);return;}K.setFiscalYear(y);document.getElementById("fiscalYear").textContent="سال مالی "+K.toFa(y);toast("سال مالی ذخیره شد");};
+document.getElementById("fyInput").value=K.getFiscalYear();
+function doBackup(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(load(),null,2)],{type:"application/json"}));a.download=KEY+"-backup.json";a.click();}
+document.getElementById("btnBackup").onclick=doBackup;
+document.getElementById("btnRestoreTrigger").onclick=function(){document.getElementById("restoreFile").click();};
+document.getElementById("restoreFile").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{save(JSON.parse(r.result));render();toast("بازیابی");}catch(err){toast("نامعتبر",true);}};r.readAsText(f);};
+render();
 });
-$("btnLogout").onclick=function(){audit("logout","");showLogin();toast("خروج");};
-function go(tab,btn){
-  if(!session)return;
-  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
-  document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
-  var el=$(tab);if(el)el.classList.add("on");
-  if(btn)btn.classList.add("on");
-  else{var n=document.querySelector("#nav button[data-tab=\""+tab+"\"]");if(n)n.classList.add("on");}
-  if(tab==="creds"){renderCreds();fillModSelect();}
-  if(tab==="logo")applyLogo();
-  if(tab==="mods")renderModToggle();
-  if(tab==="ceoap")renderCodes();
-  if(tab==="set")$("orgName").value=auth.orgName||"";
-}
-$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
-function renderCreds(){
-  var tb=$("credList");tb.textContent="";
-  MODS.forEach(function(m){
-    var c=auth.creds[m.id]||{};
-    var st=c.passPlainDefault?"پیش‌فرض":"تغییر یافته";
-    var badge=c.passPlainDefault?"warn":"ok";
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td>"+esc(m.title)+(m.sensitive?" <span class=\"badge info\">حساس</span>":"")+"</td>"+
-      "<td class=\"num\">"+esc(c.username||"—")+"</td>"+
-      "<td><span class=\"badge "+badge+"\">"+st+"</span></td>"+
-      "<td><button type=\"button\" class=\"btn btn-b btn-sm\" data-pick=\""+m.id+"\">انتخاب</button></td>";
-    tb.appendChild(tr);
-  });
-}
-function fillModSelect(){
-  var s=$("cMod");s.innerHTML="";
-  MODS.forEach(function(m){var o=document.createElement("option");o.value=m.id;o.textContent=m.title;s.appendChild(o);});
-  updateCeoGate();
-}
-$("cMod").onchange=updateCeoGate;
-function updateCeoGate(){
-  var id=$("cMod").value;
-  var m=MODS.find(function(x){return x.id===id;});
-  $("ceoGateBox").style.display=(m&&m.sensitive)?"block":"none";
-  var c=auth.creds[id];
-  if(c)$("cUser").value=c.username||"";
-  $("cPass").value="";$("cPass2").value="";$("ceoCode").value="";
-}
-function consumeCode(code,forId){
-  var nowTs=Date.now();
-  var a=auth.approvals.find(function(x){return x.code===code&&x.forId===forId&&!x.used&&x.exp>nowTs;});
-  if(!a)return false;
-  a.used=true;
-  saveAuth(auth);
-  return true;
-}
-$("btnSaveCred").onclick=lock(async function(){
-  var id=$("cMod").value;
-  var m=MODS.find(function(x){return x.id===id;});
-  if(!m)return;
-  var user=($("cUser").value||"").trim().toLowerCase();
-  var p1=$("cPass").value||"";
-  var p2=$("cPass2").value||"";
-  if(!user||user.length<3){toast("نام کاربری نامعتبر",true);return;}
-  if(!p1||p1.length<6){toast("رمز حداقل ۶ کاراکتر",true);return;}
-  if(p1!==p2){toast("تکرار رمز یکسان نیست",true);return;}
-  if(m.sensitive){
-    var code=($("ceoCode").value||"").trim().toUpperCase();
-    if(!code||!consumeCode(code,id)){toast("کد مجوز مدیرعامل نامعتبر یا منقضی",true);return;}
-  }
-  auth.creds[id]={username:user,pass:await hashStrong(p1),passPlainDefault:false,updated:now()};
-  auth.showLoginHints=false;
-  saveAuth(auth);
-  audit("cred-change",id+":"+user);
-  // sync ceo module local if needed
-  if(id==="ceo"){
-    try{
-      var ceo=JSON.parse(localStorage.getItem("smart_ceo_v1")||"null");
-      if(ceo&&ceo.user){ceo.user.username=user;ceo.user.pass=auth.creds.ceo.pass;localStorage.setItem("smart_ceo_v1",JSON.stringify(ceo));}
-    }catch(e){}
-  }
-  renderCreds();
-  updateLoginHint();
-  toast("ذخیره شد — راهنمای ورود پیش‌فرض حذف شد");
-});
-document.body.addEventListener("click",function(e){
-  var p=e.target.closest("[data-pick]");
-  if(p){$("cMod").value=p.getAttribute("data-pick");updateCeoGate();go("creds");}
-});
-$("logoFile").onchange=function(e){
-  var f=e.target.files&&e.target.files[0];if(!f)return;
-  if(f.size>5*1024*1024){toast("حداکثر ۵MB",true);return;}
-  var r=new FileReader();
-  r.onload=function(){
-    var img=new Image();
-    img.onload=function(){
-      var max=512,w=img.width,h=img.height,sc=1;
-      if(w>max||h>max)sc=max/Math.max(w,h);
-      var c=document.createElement("canvas");c.width=Math.round(w*sc);c.height=Math.round(h*sc);
-      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
-      pendingLogo=c.toDataURL("image/jpeg",0.72);
-      $("logoPreview").innerHTML="<img src=\""+pendingLogo+"\">";
-      toast("پیش‌نمایش آماده");
-    };
-    img.src=r.result;
-  };
-  r.readAsDataURL(f);
-};
-$("btnLogoSave").onclick=lock(function(){
-  var data=pendingLogo;
-  if(!data){try{var cur=JSON.parse(localStorage.getItem(LOGO_KEY)||"null");if(cur)data=cur.dataUrl;}catch(e){}}
-  if(!data){toast("تصویر انتخاب کنید",true);return;}
-  try{localStorage.setItem(LOGO_KEY,JSON.stringify({dataUrl:data,title:($("logoTitle").value||"").slice(0,60),updated:now(),v:1}));}catch(e){toast("فضا پر است",true);return;}
-  pendingLogo=null;applyLogo();audit("logo-save","");toast("لوگو ذخیره شد");
-});
-$("btnLogoDel").onclick=lock(function(){
-  if(!confirm("حذف لوگو؟"))return;
-  localStorage.removeItem(LOGO_KEY);pendingLogo=null;$("logoTitle").value="";applyLogo();audit("logo-del","");toast("حذف شد");
-});
-function renderModToggle(){
-  var box=$("modToggle");box.textContent="";
-  MODS.forEach(function(m){
-    if(m.id==="control")return;
-    var on=auth.moduleEnabled[m.id]!==false;
-    var div=document.createElement("div");div.className="mod-card";
-    div.innerHTML="<b>"+esc(m.title)+"</b><br><label style=\"margin:0;color:#e2e8f0;font-size:.75rem\"><input type=\"checkbox\" data-men=\""+m.id+"\" "+(on?"checked":"")+"> فعال در Suite</label>";
-    box.appendChild(div);
-  });
-}
-$("btnSaveMods").onclick=lock(function(){
-  document.querySelectorAll("[data-men]").forEach(function(c){auth.moduleEnabled[c.getAttribute("data-men")]=c.checked;});
-  saveAuth(auth);writeSuite();audit("mods","");toast("ذخیره شد");
-});
-function writeSuite(){
-  var logo=null;try{logo=JSON.parse(localStorage.getItem(LOGO_KEY)||"null");}catch(e){}
-  var reg={updated:Date.now(),org:auth.orgName||"",hasLogo:!!(logo&&logo.dataUrl),logoKey:LOGO_KEY,
-    modules:MODS.filter(function(m){return m.id!=="control";}).map(function(m){
-      return {id:m.id,file:m.file,title:m.title,enabled:auth.moduleEnabled[m.id]!==false};
-    })};
-  try{localStorage.setItem(SUITE_KEY,JSON.stringify(reg));return true;}catch(e){return false;}
-}
-$("btnSyncSuite").onclick=lock(function(){
-  var ok=writeSuite();
-  $("syncOut").textContent=ok?"رجیستری Suite نوشته شد · شامل مدیرعامل · مدیریت نرم‌افزار فقط یک کارت در Suite":"خطا";
-  toast(ok?"همسان شد":"خطا",!ok);
-});
-$("btnReqCeo").onclick=lock(function(){
-  var t=$("reqType").value;
-  auth.requests.unshift({id:uid(),t:now(),forId:t,note:($("reqNote").value||"").slice(0,300),status:"pending"});
-  if(auth.requests.length>50)auth.requests=auth.requests.slice(0,50);
-  saveAuth(auth);
-  audit("req-ceo",t);
-  $("reqNote").value="";
-  toast("درخواست ثبت شد — مدیرعامل تأیید کند");
-});
-function hasCeoSession(){
-  try{var s=JSON.parse(sessionStorage.getItem(CEO_SESS)||"null");return !!(s&&s.ok);}catch(e){return false;}
-}
-$("btnIssueCode").onclick=lock(function(){
-  if(!hasCeoSession()){toast("ابتدا در پنل مدیرعامل وارد شوید (همین مرورگر)",true);return;}
-  var pending=auth.requests.find(function(r){return r.status==="pending";});
-  var forId=pending?pending.forId:"control";
-  var code="CEO-"+Math.random().toString(36).slice(2,6).toUpperCase()+Math.floor(Math.random()*90+10);
-  auth.approvals.unshift({code:code,forId:forId,exp:Date.now()+2*3600*1000,used:false,t:now()});
-  if(pending)pending.status="approved";
-  if(auth.approvals.length>40)auth.approvals=auth.approvals.slice(0,40);
-  saveAuth(auth);
-  audit("issue-code",code);
-  renderCodes();
-  toast("کد: "+code);
-});
-function renderCodes(){
-  var tb=$("codeList");tb.textContent="";
-  auth.approvals.slice(0,20).forEach(function(a){
-    var st=a.used?"استفاده شده":(a.exp<Date.now()?"منقضی":"فعال");
-    var b=a.used||a.exp<Date.now()?"warn":"ok";
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td class=\"num\">"+esc(a.code)+"</td><td>"+esc(a.forId)+"</td><td class=\"num\">"+esc(new Date(a.exp).toLocaleString("fa-IR"))+"</td><td><span class=\"badge "+b+"\">"+st+"</span></td>";
-    tb.appendChild(tr);
-  });
-}
-$("btnSaveSet").onclick=lock(function(){
-  auth.orgName=($("orgName").value||"").slice(0,100);
-  saveAuth(auth);writeSuite();toast("ذخیره شد");
-});
-$("btnBackup").onclick=function(){
-  var a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([JSON.stringify({auth:auth,exported:now()},null,2)],{type:"application/json"}));
-  a.download="auth-backup.json";a.click();
-};
-$("restoreFile").onchange=function(e){
-  var f=e.target.files&&e.target.files[0];if(!f)return;
-  var r=new FileReader();
-  r.onload=function(){try{var d=JSON.parse(r.result);if(d.auth)auth=d.auth;else if(d.creds)auth=d;else throw new Error("x");saveAuth(auth);toast("بازیابی شد");renderCreds();}catch(err){toast("نامعتبر",true);}};
-  r.readAsText(f);
-};
-$("btnOpenSuite").onclick=function(){window.open("suite.html","_blank","noopener,noreferrer");};
-$("btnOpenCeo").onclick=function(){window.open("ceo.html","_blank","noopener,noreferrer");};
-// boot
-try{var s=JSON.parse(sessionStorage.getItem(SESSION)||"null");if(s&&s.ok)session=s;}catch(e){}
-applyLogo();
-updateLoginHint();
-if(session)showApp();else showLogin();
-writeSuite();
-})();
-</script>
-</body>
-</html>
+</script></body></html>
