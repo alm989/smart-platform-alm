@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مغز متفکر</title>
+<style>
+body{font-family:Tahoma,system-ui;background:#0b1220;color:#e8eef7;margin:0;padding:20px;line-height:1.5}
+h1{font-size:1.2rem}.sub{color:#94a3b8;font-size:.85rem;margin-bottom:16px}
+.card{background:#1a2332;border:1px solid #2d3a4f;border-radius:14px;padding:14px;margin-bottom:12px}
+.card h2{font-size:.95rem;margin-bottom:10px;color:#7dd3fc}
+.btn{border:none;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;font-family:inherit;margin:4px}
+.btn-p{background:#2563eb;color:#fff}.btn-g{background:#334155;color:#e2e8f0}.btn-ok{background:#16a34a;color:#fff}
+table{width:100%;border-collapse:collapse;font-size:.8rem}th,td{border-bottom:1px solid #2d3a4f;padding:8px;text-align:right}
+th{color:#7dd3fc}.ok{color:#86efac}.no{color:#fca5a5}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+a.back{color:#7dd3fc;text-decoration:none;font-weight:700}
+.note{font-size:.8rem;color:#94a3b8;margin-top:8px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#22c55e;color:#052e16;padding:10px 16px;border-radius:12px;font-weight:700;opacity:0;transition:.2s}
+#toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="top">
+  <div>
+    <h1>🧬 مغز متفکر (محلی)</h1>
+    <p class="sub">رصد ماژول‌ها · پایگاه محلی IndexedDB · پشتیبان برای Google Drive</p>
+  </div>
+  <a class="back" href="index.html">← بازگشت به Suite</a>
+</div>
+
+<div class="card">
+  <h2>عملیات</h2>
+  <button type="button" class="btn btn-p" id="btnScan">اسکن وضعیت ماژول‌ها</button>
+  <button type="button" class="btn btn-ok" id="btnBackup">دانلود پشتیبان کامل JSON</button>
+  <button type="button" class="btn btn-g" id="btnSnap">ذخیره اسنپ‌شات در IndexedDB</button>
+  <button type="button" class="btn btn-g" id="btnListSnap">لیست اسنپ‌شات‌ها</button>
+  <label class="btn btn-g" style="display:inline-block">بازیابی از JSON
+    <input type="file" id="fileIn" accept="application/json" hidden>
+  </label>
+  <p class="note">برای Google Drive: پس از «دانلود پشتیبان»، فایل را در پوشه Drive خود آپلود کنید. بازیابی: همان فایل را از Drive دانلود و اینجا انتخاب کنید. اتصال مستقیم API نیاز به Client ID گوگل دارد و جداگانه قابل فعال‌سازی است.</p>
+</div>
+
+<div class="card">
+  <h2>وضعیت ماژول‌ها</h2>
+  <div id="scanBox">دکمه اسکن را بزنید.</div>
+</div>
+
+<div class="card">
+  <h2>اسنپ‌شات‌های محلی</h2>
+  <div id="snapBox">—</div>
+</div>
+
+<div id="toast"></div>
+<script src="core.js"></script>
+<script>
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2200);}
+document.getElementById("btnScan").onclick=function(){
+  var r=SmartCore.scanLocalStorage();
+  var html="<p>کلیدهای smart_*: "+r.allSmartKeys.length+" | حجم تقریبی: "+r.totalBytes+" بایت</p>";
+  html+="<table><thead><tr><th>ماژول</th><th>فایل</th><th>داده</th><th>حجم</th></tr></thead><tbody>";
+  r.modules.forEach(function(m){
+    html+="<tr><td>"+m.title+"</td><td>"+m.file+"</td><td class='"+(m.ok?"ok":"no")+"'>"+(m.ok?"دارد":"خالی")+"</td><td>"+m.bytes+"</td></tr>";
+  });
+  html+="</tbody></table>";
+  document.getElementById("scanBox").innerHTML=html;
+  toast("اسکن انجام شد");
+};
+document.getElementById("btnBackup").onclick=function(){SmartCore.downloadBackup();toast("دانلود پشتیبان");};
+document.getElementById("btnSnap").onclick=function(){
+  SmartCore.saveSnapshotToIDB().then(function(){toast("اسنپ‌شات ذخیره شد");}).catch(function(e){toast("خطا: "+e.message);});
+};
+document.getElementById("btnListSnap").onclick=function(){
+  SmartCore.listSnapshots().then(function(list){
+    if(!list.length){document.getElementById("snapBox").textContent="اسنپ‌شاتی نیست";return;}
+    document.getElementById("snapBox").innerHTML="<ul>"+list.map(function(s){return "<li>#"+s.id+" — "+(s.at||"")+"</li>";}).join("")+"</ul>";
+  }).catch(function(e){document.getElementById("snapBox").textContent=e.message;});
+};
+document.getElementById("fileIn").onchange=function(e){
+  var f=e.target.files&&e.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){
+    try{SmartCore.importAllJSON(JSON.parse(r.result));toast("بازیابی شد");}
+    catch(err){toast("فایل نامعتبر");}
+  };
+  r.readAsText(f);
+};
+document.getElementById("btnScan").click();
+</script>
+</body>
+</html>
