@@ -1,701 +1,191 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#db2777">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="روابط عمومی">
-<meta name="description" content="روابط عمومی و رسانه — محتوا، شبکه اجتماعی، بیانیه، کمپین، بحران">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta name="referrer" content="no-referrer">
-<title>روابط عمومی و رسانه‌ای هوشمند</title>
-<style>
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>روابط عمومی</title><style>
 :root{
-  --bg:#fdf2f8;--card:#fff;--line:#fbcfe8;--txt:#831843;--muted:#be185d;
-  --b:#ec4899;--b2:#db2777;--g:#059669;--r:#dc2626;--o:#d97706;--p:#7c3aed;--c:#0891b2;
-  --shadow:0 4px 22px rgba(219,39,119,.1);--safe:env(safe-area-inset-bottom,0px);--radius:14px;
+  --bg:#e8f4fc;--panel:#d6ebf8;--card:#ffffff;--line:#a8d4f0;--txt:#0c4a6e;--muted:#0369a1;
+  --pri:#0ea5e9;--pri-dark:#0284c7;--pri-dim:rgba(14,165,233,.15);--ok:#10b981;--bad:#ef4444;
+  --warn:#f59e0b;--glass:rgba(255,255,255,.97);--shadow:0 10px 28px rgba(14,165,233,.18);
+  --sky:#38bdf8;--sky-deep:#0369a1;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 400px at 100% 0%,#fce7f3 0%,transparent 55%),var(--bg);color:var(--txt);min-height:100dvh;padding:12px 12px calc(58px + var(--safe));line-height:1.55}
-.box{max-width:980px;margin:0 auto}
-.header{text-align:center;margin-bottom:12px}
-.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;display:grid;place-items:center;font-size:26px;margin:0 auto 8px;box-shadow:0 8px 24px rgba(236,72,153,.35)}
-h1{font-size:clamp(1.05rem,3vw,1.25rem);color:#9d174d;font-weight:700}
-.sub{font-size:.8rem;color:var(--muted)}
-.nav{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin-bottom:12px;position:sticky;top:0;z-index:40;padding:8px 0;background:rgba(253,242,248,.94);backdrop-filter:blur(12px)}
-.nav button{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 1px;font-size:clamp(.4rem,1.05vw,.6rem);color:var(--muted);cursor:pointer;font-family:inherit}
-.nav button.on{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;border-color:transparent}
-.panel{display:none!important}.panel.on{display:block!important;animation:fi .15s ease}
-@keyframes fi{from{opacity:.4}to{opacity:1}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
-.card h2{font-size:.92rem;margin-bottom:12px;color:#9d174d}
-.btn{display:block;width:100%;padding:12px;border:none;border-radius:11px;font-size:.86rem;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;font-family:inherit;text-align:center}
-.btn:disabled{opacity:.45}.btn-b{background:linear-gradient(135deg,var(--b),var(--b2))}.btn-g{background:linear-gradient(135deg,var(--g),#047857)}
-.btn-r{background:linear-gradient(135deg,var(--r),#b91c1c)}.btn-o{background:linear-gradient(135deg,var(--o),#b45309)}
-.btn-c{background:linear-gradient(135deg,var(--c),#0e7490)}.btn-p{background:linear-gradient(135deg,var(--p),#6d28d9)}
-.btn-gr{background:#e2e8f0;color:#334155}.btn-sm{padding:5px 9px;margin:0;width:auto;font-size:.7rem;display:inline-block}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 .btn{margin-top:0}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-label{display:block;font-size:.74rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
-input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fdf4ff;font-size:16px;font-family:inherit;color:var(--txt)}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(236,72,153,.15)}
-textarea{min-height:80px;resize:vertical}
-table{width:100%;border-collapse:collapse;font-size:.78rem}
-th,td{border:1px solid var(--line);padding:7px 5px;text-align:right}
-th{background:#fce7f3;color:#9d174d;font-weight:700}
-tr:nth-child(even){background:#fdf2f8}
-.num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums}
-.scroll{overflow:auto;max-height:400px;border-radius:10px}
-.note{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
-.stat .n{font-size:1.05rem;font-weight:700;color:var(--b)}.stat .l{font-size:.66rem;color:var(--muted);margin-top:3px}
-.toast{position:fixed;bottom:calc(14px + var(--safe));left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:11px 16px;border-radius:12px;font-size:.84rem;opacity:0;pointer-events:none;z-index:100;transition:.2s;max-width:90%;text-align:center}
-.toast.show{opacity:1}.toast.err{background:var(--r)}
-.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:600}
-.ok{background:#d1fae5;color:#065f46}.warn{background:#fef3c7;color:#92400e}.info{background:#e0e7ff;color:#3730a3}.draft{background:#f3e8ff;color:#6b21a8}
-.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.filters button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:.72rem;cursor:pointer;font-family:inherit;color:var(--muted)}
-.filters button.on{background:var(--b);color:#fff;border-color:var(--b)}
-.post-card{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px;background:#fff}
-.post-card .t{font-weight:700}.post-card .m{font-size:.78rem;color:var(--muted);margin-top:4px}
-.chk-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:.82rem}
-.footer{text-align:center;font-size:.7rem;color:#f472b6;margin-top:14px}
-@media(max-width:800px){.nav{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
-@media print{.nav,.btn,nav{display:none!important}body{background:#fff}}
-</style>
-</head>
-<body>
-<div class="box">
-  <header class="header">
-    <div class="logo">📢</div>
-    <h1>روابط عمومی و رسانه‌ای</h1>
-    <p class="sub">محتوا · شبکه اجتماعی · وب‌سایت · بیانیه · کمپین · بحران · رسانه</p>
-  </header>
-  <nav class="nav" id="nav" role="tablist">
-    <button type="button" class="on" data-tab="dash">داشبورد</button>
-    <button type="button" data-tab="cal">تقویم</button>
-    <button type="button" data-tab="post">محتوا</button>
-    <button type="button" data-tab="press">بیانیه</button>
-    <button type="button" data-tab="media">رسانه</button>
-    <button type="button" data-tab="camp">کمپین</button>
-    <button type="button" data-tab="web">وب‌سایت</button>
-    <button type="button" data-tab="rep">گزارش</button>
-  </nav>
-
-  <main id="dash" class="panel on">
-    <div class="stats">
-      <div class="stat"><div class="n" id="stPost">۰</div><div class="l">محتوای ماه</div></div>
-      <div class="stat"><div class="n" id="stDraft">۰</div><div class="l">پیش‌نویس</div></div>
-      <div class="stat"><div class="n" id="stCamp">۰</div><div class="l">کمپین فعال</div></div>
-      <div class="stat"><div class="n" id="stPress">۰</div><div class="l">بیانیه</div></div>
-    </div>
-    <section class="card">
-      <h2>اتصال منشی و اسناد</h2>
-      <p class="note" id="linkStatus">—</p>
-      <div class="grid2">
-        <button type="button" class="btn btn-c" id="btnOpenSec">منشی</button>
-        <button type="button" class="btn btn-gr" id="btnOpenDoc">اسناد</button>
-      </div>
-    </section>
-    <section class="card">
-      <h2>محتوای نزدیک انتشار</h2>
-      <div class="scroll" id="dashSoon"><p class="note">موردی نیست.</p></div>
-    </section>
-    <section class="card">
-      <h2>چک‌لیست بحران رسانه‌ای</h2>
-      <div id="crisisBox"></div>
-      <button type="button" class="btn btn-o" id="btnCrisisNote">ثبت یادداشت بحران + منشی</button>
-    </section>
-  </main>
-
-  <main id="cal" class="panel">
-    <section class="card">
-      <h2>تقویم محتوا</h2>
-      <div class="grid2">
-        <div><label>از</label><input type="date" id="calFrom"></div>
-        <div><label>تا</label><input type="date" id="calTo"></div>
-      </div>
-      <div class="filters" id="calFilt">
-        <button type="button" class="on" data-f="all">همه</button>
-        <button type="button" data-f="instagram">اینستاگرام</button>
-        <button type="button" data-f="telegram">تلگرام</button>
-        <button type="button" data-f="linkedin">لینکدین</button>
-        <button type="button" data-f="x">ایکس</button>
-        <button type="button" data-f="website">وب‌سایت</button>
-        <button type="button" data-f="other">سایر</button>
-      </div>
-      <button type="button" class="btn btn-b" id="btnCal">نمایش</button>
-      <div class="scroll" style="margin-top:10px"><table><thead><tr><th>تاریخ</th><th>کانال</th><th>عنوان</th><th>وضعیت</th><th></th></tr></thead><tbody id="calList"></tbody></table></div>
-    </section>
-  </main>
-
-  <main id="post" class="panel">
-    <section class="card">
-      <h2>تولید / ثبت محتوا</h2>
-      <input type="hidden" id="postId">
-      <div class="grid2">
-        <div><label>عنوان *</label><input id="postTitle" maxlength="200" autocomplete="off"></div>
-        <div><label>تاریخ انتشار برنامه‌ای</label><input id="postDate" type="date"></div>
-      </div>
-      <div class="grid3">
-        <div><label>کانال *</label>
-          <select id="postCh">
-            <option value="instagram">اینستاگرام</option>
-            <option value="telegram">تلگرام</option>
-            <option value="linkedin">لینکدین</option>
-            <option value="x">ایکس (توییتر)</option>
-            <option value="website">وب‌سایت / بلاگ</option>
-            <option value="youtube">یوتیوب</option>
-            <option value="aparat">آپارات</option>
-            <option value="other">سایر</option>
-          </select>
-        </div>
-        <div><label>نوع</label>
-          <select id="postType">
-            <option value="post">پست</option>
-            <option value="story">استوری</option>
-            <option value="reel">ریلز / ویدئو</option>
-            <option value="article">مقاله</option>
-            <option value="ad">تبلیغ</option>
-          </select>
-        </div>
-        <div><label>وضعیت</label>
-          <select id="postStatus">
-            <option value="draft">پیش‌نویس</option>
-            <option value="review">بازبینی</option>
-            <option value="approved">تأیید شده</option>
-            <option value="scheduled">زمان‌بندی</option>
-            <option value="published">منتشر شده</option>
-            <option value="archived">بایگانی</option>
-          </select>
-        </div>
-      </div>
-      <label>متن / کپشن *</label><textarea id="postBody" maxlength="5000"></textarea>
-      <label>هشتگ / کلمات کلیدی</label><input id="postTags" maxlength="300" placeholder="#برند #محصول">
-      <label>لینک / پیوست (شرح)</label><input id="postLink" maxlength="300">
-      <div class="grid2">
-        <button type="button" class="btn btn-g" id="btnPost">ذخیره</button>
-        <button type="button" class="btn btn-gr" id="btnPostClr">جدید</button>
-      </div>
-      <button type="button" class="btn btn-p" id="btnPostSec">ذخیره + یادآوری منشی برای انتشار</button>
-    </section>
-    <section class="card">
-      <h2>فهرست محتوا</h2>
-      <input id="postSearch" placeholder="جستجو…" maxlength="80">
-      <div class="filters" id="postFilt">
-        <button type="button" class="on" data-f="all">همه</button>
-        <button type="button" data-f="draft">پیش‌نویس</button>
-        <button type="button" data-f="scheduled">زمان‌بندی</button>
-        <button type="button" data-f="published">منتشر</button>
-      </div>
-      <div id="postCards"></div>
-    </section>
-  </main>
-
-  <main id="press" class="panel">
-    <section class="card">
-      <h2>بیانیه / خبر رسمی</h2>
-      <input type="hidden" id="prId">
-      <div class="grid2">
-        <div><label>عنوان *</label><input id="prTitle" maxlength="250"></div>
-        <div><label>تاریخ</label><input id="prDate" type="date"></div>
-      </div>
-      <div class="grid2">
-        <div><label>نوع</label>
-          <select id="prType">
-            <option value="release">خبرنامه / Press Release</option>
-            <option value="statement">بیانیه رسمی</option>
-            <option value="response">پاسخ به رسانه</option>
-            <option value="event">رویداد / افتتاح</option>
-          </select>
-        </div>
-        <div><label>وضعیت</label>
-          <select id="prStatus">
-            <option value="draft">پیش‌نویس</option>
-            <option value="approved">تأیید</option>
-            <option value="sent">ارسال‌شده</option>
-            <option value="published">منتشر</option>
-          </select>
-        </div>
-      </div>
-      <label>متن بیانیه *</label><textarea id="prBody" maxlength="8000" style="min-height:140px"></textarea>
-      <label>مخاطب رسانه (اختیاری)</label><input id="prTo" maxlength="200">
-      <div class="grid2">
-        <button type="button" class="btn btn-g" id="btnPress">ذخیره</button>
-        <button type="button" class="btn btn-b" id="btnPressTpl">قالب خبر رسمی</button>
-      </div>
-    </section>
-    <section class="card">
-      <h2>فهرست بیانیه‌ها</h2>
-      <div class="scroll"><table><thead><tr><th>تاریخ</th><th>عنوان</th><th>نوع</th><th>وضعیت</th><th></th></tr></thead><tbody id="pressList"></tbody></table></div>
-    </section>
-  </main>
-
-  <main id="media" class="panel">
-    <section class="card">
-      <h2>دفترچه رسانه / خبرنگار</h2>
-      <input type="hidden" id="mId">
-      <div class="grid2">
-        <div><label>نام *</label><input id="mName" maxlength="120"></div>
-        <div><label>رسانه / سازمان</label><input id="mOrg" maxlength="120"></div>
-      </div>
-      <div class="grid3">
-        <div><label>حوزه</label>
-          <select id="mBeat">
-            <option value="general">عمومی</option>
-            <option value="economy">اقتصاد</option>
-            <option value="tech">فناوری</option>
-            <option value="culture">فرهنگ</option>
-            <option value="sport">ورزش</option>
-            <option value="politics">سیاست</option>
-            <option value="other">سایر</option>
-          </select>
-        </div>
-        <div><label>موبایل</label><input id="mMobile" maxlength="20" class="num"></div>
-        <div><label>ایمیل</label><input id="mEmail" maxlength="100" type="email"></div>
-      </div>
-      <label>یادداشت</label><input id="mNote" maxlength="300">
-      <button type="button" class="btn btn-g" id="btnMedia">ذخیره</button>
-      <button type="button" class="btn btn-gr" id="btnMediaClr">جدید</button>
-    </section>
-    <section class="card">
-      <h2>فهرست</h2>
-      <input id="mediaSearch" placeholder="جستجو…" maxlength="80">
-      <div class="scroll" style="margin-top:8px"><table><thead><tr><th>نام</th><th>رسانه</th><th>حوزه</th><th>تماس</th><th></th></tr></thead><tbody id="mediaList"></tbody></table></div>
-    </section>
-  </main>
-
-  <main id="camp" class="panel">
-    <section class="card">
-      <h2>کمپین روابط عمومی / بازاریابی محتوا</h2>
-      <input type="hidden" id="campId">
-      <div class="grid2">
-        <div><label>نام کمپین *</label><input id="campName" maxlength="150"></div>
-        <div><label>وضعیت</label>
-          <select id="campStatus">
-            <option value="plan">برنامه‌ریزی</option>
-            <option value="active">فعال</option>
-            <option value="done">پایان‌یافته</option>
-            <option value="pause">متوقف</option>
-          </select>
-        </div>
-      </div>
-      <div class="grid2">
-        <div><label>شروع</label><input id="campFrom" type="date"></div>
-        <div><label>پایان</label><input id="campTo" type="date"></div>
-      </div>
-      <label>هدف</label><textarea id="campGoal" maxlength="500"></textarea>
-      <label>کانال‌ها / تاکتیک</label><input id="campCh" maxlength="300" placeholder="اینستاگرام، خبر، رویداد…">
-      <label>KPI / شاخص</label><input id="campKpi" maxlength="300" placeholder="بازدید، تعامل، پوشش خبری…">
-      <button type="button" class="btn btn-g" id="btnCamp">ذخیره کمپین</button>
-    </section>
-    <section class="card">
-      <h2>کمپین‌ها</h2>
-      <div class="scroll"><table><thead><tr><th>نام</th><th>بازه</th><th>وضعیت</th><th></th></tr></thead><tbody id="campList"></tbody></table></div>
-    </section>
-  </main>
-
-  <main id="web" class="panel">
-    <section class="card">
-      <h2>مدیریت صفحات / مطالب وب‌سایت</h2>
-      <p class="note">برای هماهنگی محتوا با سایت؛ انتشار واقعی روی سرور جداگانه انجام می‌شود.</p>
-      <input type="hidden" id="wId">
-      <div class="grid2">
-        <div><label>عنوان صفحه *</label><input id="wTitle" maxlength="200"></div>
-        <div><label>اسلاگ / مسیر</label><input id="wSlug" maxlength="120" placeholder="about-us" class="num"></div>
-      </div>
-      <div class="grid2">
-        <div><label>نوع</label>
-          <select id="wType">
-            <option value="page">صفحه ثابت</option>
-            <option value="blog">مقاله بلاگ</option>
-            <option value="landing">لندینگ</option>
-            <option value="news">خبر سایت</option>
-          </select>
-        </div>
-        <div><label>وضعیت</label>
-          <select id="wStatus">
-            <option value="draft">پیش‌نویس</option>
-            <option value="review">بازبینی</option>
-            <option value="live">آنلاین</option>
-            <option value="offline">آفلاین</option>
-          </select>
-        </div>
-      </div>
-      <label>SEO عنوان</label><input id="wSeoTitle" maxlength="70">
-      <label>SEO توضیحات</label><input id="wSeoDesc" maxlength="160">
-      <label>متن / خلاصه</label><textarea id="wBody" maxlength="5000"></textarea>
-      <button type="button" class="btn btn-g" id="btnWeb">ذخیره</button>
-      <button type="button" class="btn btn-gr" id="btnWebClr">جدید</button>
-    </section>
-    <section class="card">
-      <h2>فهرست صفحات</h2>
-      <div class="scroll"><table><thead><tr><th>عنوان</th><th>مسیر</th><th>نوع</th><th>وضعیت</th><th></th></tr></thead><tbody id="webList"></tbody></table></div>
-    </section>
-  </main>
-
-  <main id="rep" class="panel">
-    <section class="card">
-      <h2>گزارش و پشتیبان</h2>
-      <div class="filters" id="repTabs">
-        <button type="button" class="on" data-r="posts">محتوا</button>
-        <button type="button" data-r="press">بیانیه</button>
-        <button type="button" data-r="camp">کمپین</button>
-        <button type="button" data-r="media">رسانه</button>
-        <button type="button" data-r="web">وب</button>
-        <button type="button" data-r="ch">بر اساس کانال</button>
-      </div>
-      <button type="button" class="btn btn-b" id="btnRep">اجرا</button>
-      <button type="button" class="btn btn-gr" id="btnPrint">چاپ</button>
-      <button type="button" class="btn btn-g" id="btnBackup">پشتیبان</button>
-      <label>بازیابی</label>
-      <input type="file" id="restoreFile" accept=".json,application/json">
-      <button type="button" class="btn btn-r" id="btnWipe">حذف همه</button>
-    </section>
-    <section class="card">
-      <h2 id="repTitle">نتیجه</h2>
-      <div class="scroll" id="repOut"><p class="note">گزارش را اجرا کنید.</p></div>
-    </section>
-  </main>
-  <p class="footer">روابط عمومی هوشمند · تقویم محتوا · داده محلی · انتشار واقعی در پلتفرم‌ها دستی است</p>
-</div>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script>
-(function(){
-"use strict";
-var KEY="smart_pr_v1", SEC_KEY="items";
-var busy=false, toastTimer=null, calFilt="all", postFilt="all", repMode="posts";
-var CH={instagram:"اینستاگرام",telegram:"تلگرام",linkedin:"لینکدین",x:"ایکس",website:"وب‌سایت",youtube:"یوتیوب",aparat:"آپارات",other:"سایر"};
-var ST={draft:"پیش‌نویس",review:"بازبینی",approved:"تأیید",scheduled:"زمان‌بندی",published:"منتشر",archived:"بایگانی",sent:"ارسال",plan:"برنامه",active:"فعال",done:"پایان",pause:"توقف",live:"آنلاین",offline:"آفلاین"};
-var CRISIS=["تشکیل تیم بحران و سخنگو","جمع‌آوری واقعیت‌ها — بدون گمانه‌زنی","پیام واحد و کوتاه برای رسانه","اطلاع‌رسانی داخلی قبل از عمومی","مانیتورینگ شبکه‌های اجتماعی","پاسخ به سؤالات پرتکرار (FAQ)","به‌روزرسانی بیانیه در صورت نیاز","جمع‌بندی و درس‌آموخته پس از بحران"];
-
-function $(id){return document.getElementById(id);}
-function toast(m,e){var t=$("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},2200);}
-function today(){return new Date().toISOString().slice(0,10);}
-function uid(){return Date.now()*1000+Math.floor(Math.random()*999);}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:linear-gradient(160deg,#e0f2fe 0%,#bae6fd 40%,#e8f4fc 100%);color:var(--txt);min-height:100dvh;line-height:1.55}
+.app-shell{display:grid;grid-template-columns:270px 1fr;grid-template-rows:auto 1fr auto;min-height:100dvh}
+@media(max-width:960px){.app-shell{grid-template-columns:1fr}.side-panel{display:none}.side-panel.open{display:block;position:fixed;top:0;right:0;bottom:0;width:min(300px,92vw);z-index:80;background:var(--panel);border-left:1px solid var(--line);overflow:auto}}
+.topbar{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:10px 14px;min-height:64px;background:linear-gradient(90deg,#0284c7,#0ea5e9);border-bottom:2px solid #0369a1;position:sticky;top:0;z-index:50;color:#fff}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo{width:36px;height:36px;border-radius:10px;background:#fff;display:grid;place-items:center;font-size:18px}
+.brand h1{font-size:.9rem;font-weight:800;color:#fff}
+.mega{display:flex;align-items:center;gap:4px;flex:1;justify-content:center;flex-wrap:wrap}
+.mega-item{position:relative}
+.mega-item>.mega-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:8px 12px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit}
+.mega-item.open>.mega-btn,.mega-item:hover>.mega-btn{background:#fff;color:#0369a1}
+.mega-item .drop{position:absolute;top:calc(100% + 4px);right:0;min-width:190px;background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:6px;z-index:60;box-shadow:var(--shadow);display:none}
+.mega-item.open .drop,.mega-item:hover .drop{display:block}
+.mega-item .drop button{display:block;width:100%;text-align:right;background:transparent;border:none;color:var(--txt);padding:9px 12px;border-radius:8px;font-size:.8rem;cursor:pointer;font-family:inherit}
+.mega-item .drop button:hover{background:var(--pri-dim);color:var(--pri-dark)}
+.btn-exit{background:#fef2f2;color:#b91c1c;border:none;border-radius:8px;padding:8px 14px;font-size:.75rem;font-weight:800;cursor:pointer;font-family:inherit}
+.header-left{display:flex;align-items:center;gap:10px;flex-shrink:0;margin-right:auto}
+.icon-btn{width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:16px}
+.icon-btn.mic-on{background:#10b981;border-color:#059669}
+.icon-btn.mic-off{background:rgba(239,68,68,.35);border-color:#fca5a5}
+.header-clock{display:flex;flex-direction:column;gap:2px;padding:6px 12px;border-radius:10px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);min-width:140px}
+.header-clock span{display:block;font-size:12px;font-weight:700;line-height:1.35;color:#fff;white-space:nowrap}
+.header-clock .g{opacity:.9;direction:ltr;unicode-bidi:isolate;font-size:11px}
+.side-panel{grid-row:2;grid-column:1;border-left:1px solid var(--line);background:var(--panel);padding:12px 10px;overflow:auto;display:flex;flex-direction:column}
+.side-panel h3{font-size:.75rem;color:var(--sky-deep);margin-bottom:10px;font-weight:800}
+.tree{flex:1}
+.tree details{margin-bottom:6px}
+.tree summary{cursor:pointer;padding:9px 12px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:.8rem;font-weight:700;list-style:none;color:var(--txt)}
+.tree summary::-webkit-details-marker{display:none}
+.tree details[open]>summary{background:var(--pri-dim);border-color:var(--pri);color:var(--pri-dark)}
+.tree .leaf{display:block;width:100%;text-align:right;background:transparent;border:none;color:var(--muted);padding:8px 12px;font-size:.78rem;cursor:pointer;font-family:inherit;border-radius:8px}
+.tree .leaf:hover,.tree .leaf.on{background:rgba(14,165,233,.12);color:var(--txt)}
+.side-alerts{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.side-alerts .alert-btn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 12px;margin-bottom:6px;border-radius:10px;border:1px solid var(--line);background:var(--card);cursor:pointer;font-family:inherit;color:var(--txt);font-size:.78rem;font-weight:700}
+.side-alerts .badge{background:var(--pri);color:#fff;border-radius:999px;padding:2px 8px;font-size:.7rem}
+.side-alerts .alert-btn.blink{animation:blink 1s infinite;border-color:var(--warn);background:#fffbeb}
+@keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.4)}50%{box-shadow:0 0 0 6px rgba(245,158,11,0)}}
+.main{grid-row:2;grid-column:2;padding:14px;overflow:auto}
+@media(max-width:960px){.main{grid-column:1}}
+.statusbar{grid-column:1/-1;padding:8px 14px;border-top:1px solid var(--line);font-size:.72rem;color:var(--muted);display:flex;justify-content:space-between;background:var(--panel)}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(14,165,233,.08)}
+.card h2{font-size:.95rem;margin-bottom:10px;color:var(--sky-deep)}
+label{display:block;font-size:.72rem;color:var(--muted);margin:8px 0 4px;font-weight:600}
+input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#f0f9ff;color:var(--txt);font-family:inherit;font-size:14px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pri);background:#fff}
+input.err{border-color:var(--bad)}.field-error{color:#dc2626;font-size:.7rem;min-height:1em}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.row{grid-template-columns:1fr}}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:700px){.row3{grid-template-columns:1fr}}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn{border:none;border-radius:10px;padding:9px 14px;font-weight:700;font-size:.8rem;cursor:pointer;font-family:inherit}
+.btn-p{background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff}
+.btn-g{background:#e0f2fe;color:var(--sky-deep);border:1px solid var(--line)}
+.btn-b{background:var(--bad);color:#fff}
+.btn-sm{padding:5px 10px;font-size:.72rem}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:right}
+th{color:var(--sky-deep);font-size:.72rem;background:#f0f9ff}
+.empty{color:var(--muted);font-size:.85rem;padding:8px 0}
+.kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:12px}
+.kpi .box{background:linear-gradient(145deg,#fff,#e0f2fe);border:1px solid var(--line);border-radius:12px;padding:12px}
+.kpi .n{font-size:1.25rem;font-weight:800;color:var(--pri-dark)}.kpi .l{font-size:.7rem;color:var(--muted)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:10px 16px;border-radius:12px;font-weight:700;opacity:0;transition:.2s;z-index:100}
+.toast.show{opacity:1}.toast.err{background:var(--bad)}
+.code-wrap{display:flex;gap:6px;align-items:stretch}
+.code-wrap input{flex:1}
+.code-wrap .code-btn{width:42px;border-radius:10px;border:1px solid var(--line);background:#e0f2fe;cursor:pointer;font-size:16px}
+.modal{position:fixed;inset:0;background:rgba(3,105,161,.35);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.open{display:flex}
+.modal .box{background:#fff;border-radius:16px;padding:16px;max-width:480px;width:100%;max-height:80vh;overflow:auto;border:1px solid var(--line)}
+.modal .box h3{margin-bottom:10px;color:var(--sky-deep)}
+.excel-grid{width:100%;border-collapse:collapse;font-size:.78rem}
+.excel-grid th,.excel-grid td{border:1px solid var(--line);padding:4px}
+.excel-grid input{border:none;background:transparent;padding:6px;width:100%}
+.excel-grid th{background:#e0f2fe}
+.login-mask{position:fixed;inset:0;background:linear-gradient(160deg,#0284c7,#38bdf8);z-index:300;display:flex;align-items:center;justify-content:center}
+.login-box{background:#fff;border-radius:16px;padding:24px;width:min(360px,92vw);box-shadow:var(--shadow)}
+.login-box h2{color:var(--sky-deep);margin-bottom:12px;text-align:center}
+.date-wrap{position:relative}
+.jcal-pop{position:absolute;z-index:90;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;width:300px;box-shadow:var(--shadow)}
+.jcal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.jcal-head button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:#f0f9ff;color:var(--txt);cursor:pointer}
+.jcal-head .title{font-size:.85rem;font-weight:800;color:var(--sky-deep)}
+.jcal-week,.jcal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.jcal-week span{text-align:center;font-size:.6rem;color:var(--muted)}
+.jcal-days button{border:none;background:transparent;color:var(--txt);border-radius:8px;padding:4px;cursor:pointer;font-family:inherit;min-height:42px}
+.jcal-days button .jd{display:block;font-size:.8rem;font-weight:700}
+.jcal-days button .gd{display:block;font-size:.55rem;color:var(--muted)}
+.jcal-days button:hover{background:#e0f2fe}
+</style></head><body><div class="app-shell"><header class="topbar"><div class="brand"><div class="logo">📢</div><div><h1>روابط عمومی</h1></div></div><nav class="mega"><div class="mega-item"><div class="mega-btn">داشبورد</div><div class="drop"><button type="button" data-panel="p-dash">نمای کلی</button></div></div><div class="mega-item"><div class="mega-btn">ثبت</div><div class="drop"><button type="button" data-panel="p-reg">محتوا</button><button type="button" data-panel="p-reg">کمپین</button></div></div><div class="mega-item"><div class="mega-btn">فهرست</div><div class="drop"><button type="button" data-panel="p-list">همه موارد</button></div></div><div class="mega-item"><div class="mega-btn">گزارش‌ها</div><div class="drop"><button type="button" data-panel="p-rep">گزارش خلاصه</button></div></div><div class="mega-item"><div class="mega-btn">امکانات</div><div class="drop"><button type="button" data-panel="p-office">ورد / اکسل / پاورپوینت / PDF / تصویر</button><button type="button" id="btnBackup">پشتیبان</button><button type="button" id="btnRestoreTrigger">بازیابی</button><button type="button" data-panel="p-users">کاربران ماژول</button></div></div><div class="mega-item"><div class="mega-btn">تنظیمات</div><div class="drop"><button type="button" id="btnToggleSide">منوی درختی</button><button type="button" data-panel="p-fiscal">سال مالی</button></div></div><button type="button" class="btn-exit" id="btnExit">خروج به Suite</button></nav><div class="header-left"><button type="button" class="icon-btn mic-off" id="btnMic">🎤</button><div class="header-clock"><span class="j" id="dtJ">—</span><span class="g" id="dtG">—</span><span class="c" id="dtC">—</span><span class="u" id="activeUser">—</span><span id="fiscalYear" style="font-size:11px;opacity:.95">—</span></div></div></header><aside class="side-panel" id="sidePanel"><h3>ناوبری</h3><div class="tree"><details open><summary>داشبورد</summary><button type="button" class="leaf on" data-panel="p-dash">نمای کلی</button></details><details open><summary>ثبت</summary><button type="button" class="leaf" data-panel="p-reg">محتوا</button><button type="button" class="leaf" data-panel="p-reg">کمپین</button></details><details open><summary>فهرست</summary><button type="button" class="leaf" data-panel="p-list">همه موارد</button></details><details><summary>گزارش‌ها</summary><button type="button" class="leaf" data-panel="p-rep">گزارش</button></details><details><summary>امکانات</summary><button type="button" class="leaf" data-panel="p-office">افزونه‌های اداری</button></details></div><div class="side-alerts"><button type="button" class="alert-btn" id="alertNotes"><span>📝 یادداشت</span><span class="badge">0</span></button><button type="button" class="alert-btn" id="alertRems"><span>⏰ یادآوری</span><span class="badge">0</span></button><button type="button" class="alert-btn" id="alertCart"><span>📥 کارتابل</span><span class="badge">0</span></button></div></aside><main class="main"><div class="panel on" id="p-dash"><div class="kpi" id="kpiBox"></div><div class="card"><h2>خلاصه</h2><p class="empty" id="dashNote">—</p></div></div><div class="panel" id="p-reg"><div class="card"><h2>ثبت</h2><div class="row"><div><label>عنوان *</label><input id="fTitle" data-validate="required"><div class="field-error"></div></div><div><label>کد حساب / کدینگ</label><input id="fCode" data-code-picker data-validate="code"><div class="field-error"></div></div></div><div class="row"><div><label>تاریخ</label><input id="fDate" class="jdate" data-jdate data-validate="date"><div class="field-error"></div></div><div><label>مبلغ</label><input id="fAmount" data-validate="number"><div class="field-error"></div></div></div><label>توضیحات</label><textarea id="fNote" rows="2"></textarea><div class="btns"><button type="button" class="btn btn-p" id="btnSave">ذخیره</button><button type="button" class="btn btn-g" id="btnToAcc">ارسال به مخزن حسابداری</button></div></div></div><div class="panel" id="p-list"><div class="card"><h2>فهرست</h2><input id="fSearch" placeholder="جستجو"><div id="listBox" style="margin-top:8px"></div></div></div><div class="panel" id="p-rep"><div class="card"><h2>گزارش</h2><div id="repBox"></div></div></div><div class="panel" id="p-office"><div class="card"><h2>افزونه‌های اداری</h2><p class="empty">فایل را انتخاب کنید تا در مرورگر باز/دانلود شود (ورد، اکسل، پاورپوینت، PDF، تصویر).</p><input type="file" id="officeFile" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,image/*"><div id="officePrev" style="margin-top:10px"></div></div></div><div class="panel" id="p-notes"><div class="card"><h2>یادداشت‌های داخلی ماژول</h2><input id="noteText" placeholder="متن یادداشت"><div class="btns"><button type="button" class="btn btn-p" id="btnAddNote">افزودن</button></div><div id="notesList"></div></div></div><div class="panel" id="p-rems"><div class="card"><h2>یادآوری‌ها</h2><div class="row"><div><input id="remText" placeholder="عنوان"></div><div><input id="remDate" class="jdate" data-jdate placeholder="تاریخ"></div></div><div class="btns"><button type="button" class="btn btn-p" id="btnAddRem">افزودن یادآوری</button></div><div id="remsList"></div></div></div><div class="panel" id="p-cartable"><div class="card"><h2>کارتابل</h2><div class="row"><div><label>گیرنده (نام کاربر یا * برای همه)</label><input id="cartTo" placeholder="*"></div><div><label>پیام</label><input id="cartMsg"></div></div><label>فایل پیوست</label><input type="file" id="cartFile"><div class="btns"><button type="button" class="btn btn-p" id="btnCartSend">ارسال به کارتابل</button></div><div id="cartList"></div></div></div><div class="panel" id="p-users"><div class="card"><h2>کاربران ماژول</h2><div class="row"><div><input id="nuUser" placeholder="نام کاربری"></div><div><input id="nuPass" placeholder="رمز"></div><div><input id="nuName" placeholder="نام نمایشی"></div></div><div class="btns"><button type="button" class="btn btn-p" id="btnAddUser">افزودن کاربر</button></div><div id="usersList"></div></div></div><div class="panel" id="p-fiscal"><div class="card"><h2>سال مالی پروژه</h2><label>سال مالی شمسی</label><input id="fyInput" data-validate="number"><div class="btns"><button type="button" class="btn btn-p" id="btnFy">ذخیره سال مالی</button></div><p class="empty">سال مالی برای همه ماژول‌ها مشترک است.</p></div></div></main><footer class="statusbar"><span>روابط عمومی · سال مالی مشترک</span><span>Suite</span></footer></div><input type="file" id="restoreFile" accept="application/json" hidden><div class="toast" id="toast"></div><script>(function(g){"use strict";
+var FA=["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"];
+function toFa(n){return String(n).replace(/\d/g,function(d){return FA[+d];});}
+function toEn(s){return String(s).replace(/[۰-۹]/g,function(d){return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);});}
+function g2j(gy,gm,gd){var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];var gy2=(gm>2)?(gy+1):gy;var days=355666+365*gy+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+g_d_m[gm-1];var jy=-1595+33*Math.floor(days/12053);days%=12053;jy+=4*Math.floor(days/1461);days%=1461;if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}var jm=(days<186)?1+Math.floor(days/31):7+Math.floor((days-186)/30);var jd=1+((days<186)?(days%31):((days-186)%30));return {jy:jy,jm:jm,jd:jd};}
+function j2g(jy,jm,jd){var jy2=jy-979,jm2=jm-1,jd2=jd-1;var days=365*jy2+Math.floor(jy2/33)*8+Math.floor(((jy2%33)+3)/4);for(var i=0;i<jm2;++i)days+=(i<6?31:30);days+=jd2;var gy=1600+400*Math.floor(days/146097);days%=146097;var leap=true;if(days>=36525){days--;gy+=100*Math.floor(days/36524);days%=36524;if(days>=365)leap=false;else days++;}gy+=4*Math.floor(days/1461);days%=1461;if(days>=366){leap=false;days--;gy+=Math.floor(days/365);days=days%365;}var gd=days+1,sal_a=[0,31,(leap?29:28),31,30,31,30,31,31,30,31,30,31],gm;for(gm=1;gm<=12&&gd>sal_a[gm];gm++)gd-=sal_a[gm];return {gy:gy,gm:gm,gd:gd};}
+function jMonthLength(jy,jm){if(jm<=6)return 31;if(jm<=11)return 30;var a=j2g(jy,12,30);var b=g2j(a.gy,a.gm,a.gd);return (b.jy===jy&&b.jm===12&&b.jd===30)?30:29;}
+var JM=["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"];
+var JW_FULL=["شنبه","یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه"];
+function startClock(elJ,elG,elC){function tick(){var n=new Date();var j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());if(elJ)elJ.textContent=toFa(j.jy)+"/"+toFa(String(j.jm).padStart(2,"0"))+"/"+toFa(String(j.jd).padStart(2,"0"));if(elG)elG.textContent=n.getFullYear()+"/"+String(n.getMonth()+1).padStart(2,"0")+"/"+String(n.getDate()).padStart(2,"0");if(elC)elC.textContent=toFa(String(n.getHours()).padStart(2,"0"))+":"+toFa(String(n.getMinutes()).padStart(2,"0"))+":"+toFa(String(n.getSeconds()).padStart(2,"0"));}tick();setInterval(tick,1000);}
+function getFiscalYear(){try{var f=JSON.parse(localStorage.getItem("smart_fiscal_v1")||"null");if(f&&f.year)return f.year;}catch(e){}var n=new Date();var j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());return j.jy;}
+function setFiscalYear(y){localStorage.setItem("smart_fiscal_v1",JSON.stringify({year:y,updated:new Date().toISOString()}));}
+function getAuth(modId){try{return JSON.parse(localStorage.getItem("smart_users_"+modId)||"null")||{users:[{user:"admin",pass:"admin",name:"مدیر"}],session:null};}catch(e){return {users:[{user:"admin",pass:"admin",name:"مدیر"}],session:null};}}
+function saveAuth(modId,data){localStorage.setItem("smart_users_"+modId,JSON.stringify(data));}
+function getActiveUser(modId){var a=getAuth(modId);if(a.session&&a.session.user)return a.session.name||a.session.user;return "مهمان";}
+function requireLogin(modId){var a=getAuth(modId);if(a.session&&a.session.user)return true;var mask=document.createElement("div");mask.className="login-mask";mask.innerHTML='<div class="login-box"><h2>ورود به ماژول</h2><label>نام کاربری</label><input id="lgUser"><label>رمز عبور</label><input id="lgPass" type="password"><div class="btns" style="margin-top:12px"><button type="button" class="btn btn-p" id="lgGo" style="width:100%">ورود</button></div><p style="font-size:.7rem;color:#0369a1;margin-top:8px;text-align:center">پیش‌فرض: admin / admin</p></div>';document.body.appendChild(mask);document.getElementById("lgGo").onclick=function(){var u=document.getElementById("lgUser").value.trim();var p=document.getElementById("lgPass").value;var found=a.users.find(function(x){return x.user===u&&x.pass===p;});if(!found){alert("نام کاربری یا رمز اشتباه");return;}a.session={user:found.user,name:found.name||found.user};saveAuth(modId,a);mask.remove();var el=document.getElementById("activeUser");if(el)el.textContent=found.name||found.user;};return false;}
+var Validators={required:function(v){return String(v||"").trim()?null:"الزامی";},number:function(v){if(!String(v||"").trim())return null;if(!/^-?\d+(\.\d+)?$/.test(toEn(String(v)).trim()))return "فقط عدد";return null;},date:function(v){if(!String(v||"").trim())return null;if(!/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/.test(toEn(String(v)).trim()))return "تاریخ نامعتبر";return null;},code:function(v){if(!String(v||"").trim())return null;return null;}};
+function clearFieldError(el){el.classList.remove("err");var err=el.parentNode&&el.parentNode.querySelector(".field-error");if(err)err.textContent="";}
+function bindFieldValidation(root){(root||document).querySelectorAll("[data-validate]").forEach(function(el){var types=(el.getAttribute("data-validate")||"").split(/\s+/).filter(Boolean);function run(){var val=el.value;if(!String(val||"").trim()&&types.indexOf("required")<0){clearFieldError(el);return true;}if(!String(val||"").trim()&&types.indexOf("required")>=0){el.classList.add("err");var err=el.parentNode.querySelector(".field-error");if(!err){err=document.createElement("div");err.className="field-error";el.parentNode.appendChild(err);}err.textContent="الزامی";return false;}var msg=null;for(var i=0;i<types.length;i++){var fn=Validators[types[i]];if(fn){msg=fn(val);if(msg)break;}}if(msg){el.classList.add("err");var err=el.parentNode.querySelector(".field-error");if(!err){err=document.createElement("div");err.className="field-error";el.parentNode.appendChild(err);}err.textContent=msg;return false;}clearFieldError(el);return true;}el.addEventListener("blur",run);el.addEventListener("input",run);el._validate=run;});}
+function validateForm(root){var ok=true;(root||document).querySelectorAll("[data-validate]").forEach(function(el){if(el._validate&&!el._validate())ok=false;});return ok;}
+var recog=null,micActive=false,micBtn=null;
+function insertText(t){if(!t)return;var a=document.activeElement;if(a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA")&&a.type!=="password"){var s=a.selectionStart!=null?a.selectionStart:a.value.length;var e=a.selectionEnd!=null?a.selectionEnd:s;a.value=a.value.slice(0,s)+t+a.value.slice(e);try{a.setSelectionRange(s+t.length,s+t.length);}catch(err){}a.dispatchEvent(new Event("input",{bubbles:true}));}}
+function initVoice(btn){micBtn=btn;var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){if(btn)btn.classList.add("mic-off");return;}recog=new SR();recog.lang="fa-IR";recog.continuous=true;recog.interimResults=true;recog.maxAlternatives=1;
+recog.onresult=function(ev){var final="";for(var i=ev.resultIndex;i<ev.results.length;i++)if(ev.results[i].isFinal)final+=ev.results[i][0].transcript;if(final)insertText(final);};
+recog.onerror=function(e){if(e.error==="no-speech"||e.error==="aborted")return;};
+recog.onend=function(){if(micActive)setTimeout(function(){if(micActive){try{recog.start();}catch(e){}}},100);};
+if(btn){btn.classList.add("mic-off");btn.onclick=function(){if(micActive)stopMic();else startMic();};}}
+function startMic(){if(!recog)return;try{recog.start();micActive=true;if(micBtn){micBtn.classList.remove("mic-off");micBtn.classList.add("mic-on");}}catch(e){}}
+function stopMic(){micActive=false;try{if(recog)recog.stop();}catch(e){}if(micBtn){micBtn.classList.remove("mic-on");micBtn.classList.add("mic-off");}}
+function attachJalaliPicker(input){if(!input||input._jcal)return;input._jcal=true;var wrap=input.closest(".date-wrap")||input.parentNode;if(!wrap.classList.contains("date-wrap")){var w=document.createElement("div");w.className="date-wrap";input.parentNode.insertBefore(w,input);w.appendChild(input);wrap=w;}var pop=null,viewY,viewM;function close(){if(pop){pop.remove();pop=null;}document.removeEventListener("click",outside);}function outside(e){if(pop&&!pop.contains(e.target)&&e.target!==input)close();}function open(){close();var now=new Date();var j=g2j(now.getFullYear(),now.getMonth()+1,now.getDate());var cur=toEn(input.value||"");var m=cur.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);viewY=m?+m[1]:j.jy;viewM=m?+m[2]:j.jm;pop=document.createElement("div");pop.className="jcal-pop";wrap.appendChild(pop);render();setTimeout(function(){document.addEventListener("click",outside);},0);}function render(){if(!pop)return;var head=document.createElement("div");head.className="jcal-head";head.innerHTML='<button type="button" data-a="py">«</button><button type="button" data-a="pm">‹</button><span class="title">'+JM[viewM-1]+' '+toFa(viewY)+'</span><button type="button" data-a="nm">›</button><button type="button" data-a="ny">»</button>';var week=document.createElement("div");week.className="jcal-week";JW_FULL.forEach(function(w){var s=document.createElement("span");s.textContent=w;week.appendChild(s);});var days=document.createElement("div");days.className="jcal-days";var dim=jMonthLength(viewY,viewM);var firstG=j2g(viewY,viewM,1);var first=new Date(firstG.gy,firstG.gm-1,firstG.gd);var start=(first.getDay()+1)%7;for(var i=0;i<start;i++){var b0=document.createElement("button");b0.type="button";b0.disabled=true;days.appendChild(b0);}for(var d=1;d<=dim;d++){(function(day){var g=j2g(viewY,viewM,day);var gFull=g.gy+"/"+String(g.gm).padStart(2,"0")+"/"+String(g.gd).padStart(2,"0");var btn=document.createElement("button");btn.type="button";btn.innerHTML='<span class="jd">'+toFa(day)+'</span><span class="gd">'+gFull+'</span>';btn.onclick=function(ev){ev.stopPropagation();input.value=toFa(viewY)+"/"+toFa(String(viewM).padStart(2,"0"))+"/"+toFa(String(day).padStart(2,"0"));input.dispatchEvent(new Event("input",{bubbles:true}));close();};days.appendChild(btn);})(d);}pop.innerHTML="";pop.appendChild(head);pop.appendChild(week);pop.appendChild(days);head.querySelectorAll("button").forEach(function(b){b.onclick=function(ev){ev.stopPropagation();var a=b.getAttribute("data-a");if(a==="pm"){viewM--;if(viewM<1){viewM=12;viewY--;}}if(a==="nm"){viewM++;if(viewM>12){viewM=1;viewY++;}}if(a==="py")viewY--;if(a==="ny")viewY++;render();};});}input.addEventListener("focus",open);input.addEventListener("click",open);}
+function attachAllDatePickers(root){(root||document).querySelectorAll("input[data-jdate],input.jdate").forEach(attachJalaliPicker);}
+function showPanel(id){document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});var el=document.getElementById(id);if(el)el.classList.add("on");document.querySelectorAll(".tree .leaf").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-panel")===id);});}
+function bindMegaHover(){document.querySelectorAll(".mega-item").forEach(function(item){item.addEventListener("mouseenter",function(){document.querySelectorAll(".mega-item.open").forEach(function(o){if(o!==item)o.classList.remove("open");});item.classList.add("open");});item.addEventListener("mouseleave",function(){item.classList.remove("open");});});}
+/* Code picker */
+function openCodePicker(input, codes){codes=codes||[];var modal=document.createElement("div");modal.className="modal open";modal.innerHTML='<div class="box"><h3>انتخاب کد</h3><input id="codeSearch" placeholder="جستجو..." style="margin-bottom:8px"><div id="codeList"></div><div class="btns"><button type="button" class="btn btn-g" id="codeClose">بستن</button></div></div>';document.body.appendChild(modal);function render(q){q=(q||"").toLowerCase();var list=codes.filter(function(c){return !q||(c.code+" "+(c.title||"")).toLowerCase().indexOf(q)>=0;});var box=document.getElementById("codeList");box.innerHTML=list.length?("<table><tbody>"+list.map(function(c){return "<tr style=\\"cursor:pointer\\" data-c=\\""+c.code+"\\"><td>"+c.code+"</td><td>"+(c.title||"")+"</td></tr>";}).join("")+"</tbody></table>"):"<p class=\\"empty\\">موردی نیست</p>";box.querySelectorAll("[data-c]").forEach(function(tr){tr.onclick=function(){input.value=tr.getAttribute("data-c");input.dispatchEvent(new Event("input",{bubbles:true}));modal.remove();};});}
+document.getElementById("codeSearch").oninput=function(){render(this.value);};
+document.getElementById("codeClose").onclick=function(){modal.remove();};
+render("");}
+function bindCodePickers(codes){document.querySelectorAll("[data-code-picker]").forEach(function(inp){var wrap=inp.parentNode;if(wrap.classList.contains("code-wrap"))return;var w=document.createElement("div");w.className="code-wrap";inp.parentNode.insertBefore(w,inp);w.appendChild(inp);var btn=document.createElement("button");btn.type="button";btn.className="code-btn";btn.title="لیست کدها";btn.textContent="📋";btn.onclick=function(){openCodePicker(inp,codes);};w.appendChild(btn);});}
+/* Notes & reminders & cartable */
+function modNotesKey(modId){return "smart_mod_notes_"+modId;}
+function modRemKey(modId){return "smart_mod_rem_"+modId;}
+function cartableKey(){return "smart_cartable_v1";}
+function loadJSON(k,def){try{return JSON.parse(localStorage.getItem(k)||"null")||def;}catch(e){return def;}}
+function saveJSON(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function playBeep(){try{var ctx=new (window.AudioContext||window.webkitAudioContext)();var o=ctx.createOscillator();var g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=660;g.gain.value=0.08;o.start();setTimeout(function(){o.stop();ctx.close();},200);}catch(e){}}
+function updateSideAlerts(modId){var notes=loadJSON(modNotesKey(modId),[]);var rems=loadJSON(modRemKey(modId),[]);var cart=loadJSON(cartableKey(),{items:[]});var user=getActiveUser(modId);var myCart=(cart.items||[]).filter(function(x){return x.to===user||x.to==="*"||!x.to;});var due=rems.filter(function(r){if(!r.date||r.done)return false;return true;});var nBtn=document.getElementById("alertNotes");var rBtn=document.getElementById("alertRems");var cBtn=document.getElementById("alertCart");if(nBtn){nBtn.querySelector(".badge").textContent=notes.length;nBtn.classList.toggle("blink",false);}if(rBtn){rBtn.querySelector(".badge").textContent=due.length;if(due.length){rBtn.classList.add("blink");playBeep();}else rBtn.classList.remove("blink");}if(cBtn){var unread=myCart.filter(function(x){return !x.read;}).length;cBtn.querySelector(".badge").textContent=unread;if(unread){cBtn.classList.add("blink");playBeep();}else cBtn.classList.remove("blink");}}
+function bootShell(opts){opts=opts||{};var modId=opts.modId||"mod";requireLogin(modId);startClock(document.getElementById("dtJ"),document.getElementById("dtG"),document.getElementById("dtC"));var u=document.getElementById("activeUser");if(u)u.textContent=getActiveUser(modId);var fy=document.getElementById("fiscalYear");if(fy)fy.textContent="سال مالی "+toFa(getFiscalYear());bindFieldValidation(document);attachAllDatePickers(document);initVoice(document.getElementById("btnMic"));bindMegaHover();bindCodePickers(opts.codes||[]);document.querySelectorAll("[data-panel]").forEach(function(b){b.addEventListener("click",function(e){e.preventDefault();showPanel(b.getAttribute("data-panel"));});});var sb=document.getElementById("btnToggleSide");if(sb)sb.onclick=function(){var s=document.getElementById("sidePanel");if(s)s.classList.toggle("open");};var ex=document.getElementById("btnExit");if(ex)ex.onclick=function(){try{if(opts.onSave)opts.onSave();}catch(e){}location.href=opts.suiteUrl||"index.html";};updateSideAlerts(modId);setInterval(function(){updateSideAlerts(modId);},30000);if(document.getElementById("alertNotes"))document.getElementById("alertNotes").onclick=function(){showPanel("p-notes");};if(document.getElementById("alertRems"))document.getElementById("alertRems").onclick=function(){showPanel("p-rems");};if(document.getElementById("alertCart"))document.getElementById("alertCart").onclick=function(){showPanel("p-cartable");};}
+/* Accounting queue */
+function pushToAccQueue(source,payload,uniqueId){var q=loadJSON("smart_acc_queue_v1",{items:[]});if(uniqueId&&q.items.some(function(x){return x.uniqueId===uniqueId;}))return false;q.items.push({id:Date.now().toString(36),source:source,uniqueId:uniqueId||null,payload:payload,at:new Date().toISOString(),posted:false});saveJSON("smart_acc_queue_v1",q);return true;}
+function getAccQueue(){return loadJSON("smart_acc_queue_v1",{items:[]});}
+function clearPostedQueue(){var q=getAccQueue();q.items=q.items.filter(function(x){return !x.posted;});saveJSON("smart_acc_queue_v1",q);}
+g.ModuleKit={toFa:toFa,toEn:toEn,bootShell:bootShell,validateForm:validateForm,showPanel:showPanel,getFiscalYear:getFiscalYear,setFiscalYear:setFiscalYear,getActiveUser:getActiveUser,getAuth:getAuth,saveAuth:saveAuth,openCodePicker:openCodePicker,loadJSON:loadJSON,saveJSON:saveJSON,pushToAccQueue:pushToAccQueue,getAccQueue:getAccQueue,clearPostedQueue:clearPostedQueue,modNotesKey:modNotesKey,modRemKey:modRemKey,cartableKey:cartableKey,updateSideAlerts:updateSideAlerts};
+})(window);
+</script><script>
+document.addEventListener("DOMContentLoaded",function(){
+var MOD="pr",KEY="smart_pr_v1",K=ModuleKit,tt=null;
+var CODES=[{"code": "1101", "title": "صندوق"}, {"code": "1102", "title": "بانک"}, {"code": "1201", "title": "حساب دریافتنی"}, {"code": "2101", "title": "حساب پرداختنی"}, {"code": "4101", "title": "فروش"}, {"code": "5101", "title": "بهای تمام‌شده"}];
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
-
-function def(){return {posts:[],press:[],media:[],campaigns:[],pages:[],version:1};}
-function load(){
-  try{
-    var d=JSON.parse(localStorage.getItem(KEY)||"null");
-    if(!d) return def();
-    ["posts","press","media","campaigns","pages"].forEach(function(k){if(!Array.isArray(d[k]))d[k]=[];});
-    return d;
-  }catch(e){return def();}
-}
-function save(x){try{localStorage.setItem(KEY,JSON.stringify(x));return true;}catch(e){toast("خطای ذخیره",true);return false;}}
-var db=load();
-
-function lock(fn){return function(){if(busy)return;busy=true;try{fn();}catch(e){toast("خطا",true);}finally{busy=false;};};}
-function pushSec(title,note,date){
-  try{
-    var items=JSON.parse(localStorage.getItem(SEC_KEY)||"[]");
-    if(!Array.isArray(items)) items=[];
-    items.unshift({id:uid(),type:"reminder",title:title,note:note||"",date:date||today(),status:"pending",priority:"high",source:"pr",created:Date.now()});
-    localStorage.setItem(SEC_KEY,JSON.stringify(items));
-    return true;
-  }catch(e){return false;}
-}
-
-function go(tab,btn){
-  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
-  document.querySelectorAll("#nav button").forEach(function(b){b.classList.remove("on");});
-  var el=$(tab); if(el) el.classList.add("on");
-  if(btn) btn.classList.add("on");
-  else {var n=document.querySelector('#nav button[data-tab="'+tab+'"]'); if(n) n.classList.add("on");}
-  if(tab==="dash") renderDash();
-  if(tab==="cal"){ if(!$("calFrom").value)$("calFrom").value=today().slice(0,8)+"01"; if(!$("calTo").value)$("calTo").value=today(); renderCal(); }
-  if(tab==="post"){ if(!$("postDate").value)$("postDate").value=today(); renderPosts(); }
-  if(tab==="press"){ if(!$("prDate").value)$("prDate").value=today(); renderPress(); }
-  if(tab==="media") renderMedia();
-  if(tab==="camp") renderCamps();
-  if(tab==="web") renderWeb();
-}
-
-function renderDash(){
-  var ym=today().slice(0,7);
-  $("stPost").textContent=String(db.posts.filter(function(p){return String(p.date||"").slice(0,7)===ym;}).length);
-  $("stDraft").textContent=String(db.posts.filter(function(p){return p.status==="draft"||p.status==="review";}).length);
-  $("stCamp").textContent=String(db.campaigns.filter(function(c){return c.status==="active"||c.status==="plan";}).length);
-  $("stPress").textContent=String(db.press.length);
-  var sec=false; try{sec=!!localStorage.getItem(SEC_KEY);}catch(e){}
-  $("linkStatus").innerHTML=(sec?'<span class="badge ok">منشی متصل</span>':'<span class="badge warn">منشی نیست</span>')+' · انتشار در شبکه‌ها دستی است.';
-
-  var soon=db.posts.filter(function(p){
-    return p.status==="scheduled"||p.status==="approved";
-  }).sort(function(a,b){return (a.date||"")<(b.date||"")?-1:1;}).slice(0,10);
-  var box=$("dashSoon");
-  if(!soon.length){ box.innerHTML='<p class="note">محتوای زمان‌بندی‌شده نیست.</p>'; }
-  else {
-    var h='<table><thead><tr><th>تاریخ</th><th>کانال</th><th>عنوان</th><th>وضعیت</th></tr></thead><tbody>';
-    soon.forEach(function(p){h+="<tr><td class='num'>"+esc(p.date)+"</td><td>"+esc(CH[p.channel]||p.channel)+"</td><td>"+esc(p.title)+"</td><td>"+esc(ST[p.status]||p.status)+"</td></tr>";});
-    h+="</tbody></table>";
-    box.innerHTML=h;
-  }
-  var cb=$("crisisBox"); cb.innerHTML="";
-  CRISIS.forEach(function(t,i){
-    var lab=document.createElement("label");
-    lab.className="chk-row";
-    lab.innerHTML='<input type="checkbox" id="cr'+i+'"> <span>'+esc(t)+'</span>';
-    cb.appendChild(lab);
-  });
-}
-
-$("btnCrisisNote").onclick=lock(function(){
-  var ok=pushSec("چک‌لیست بحران روابط عمومی","اقدامات بحران رسانه‌ای را پیگیری کنید",today());
-  toast(ok?"یادآوری منشی ثبت شد":"منشی در دسترس نیست",!ok);
+function toast(m,e){var t=document.getElementById("toast");t.textContent=m;t.classList.toggle("err",!!e);t.classList.add("show");clearTimeout(tt);tt=setTimeout(function(){t.classList.remove("show");},2000);}
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||"null");if(!d||!Array.isArray(d.items))return {items:[]};return d;}catch(e){return {items:[]};}}
+function save(d){d.updated=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(d));}
+K.bootShell({modId:MOD,codes:CODES,onSave:function(){save(load());},suiteUrl:"index.html"});
+function render(){var d=load(),box=document.getElementById("listBox"),q=(document.getElementById("fSearch").value||"").toLowerCase();
+var list=d.items.filter(function(x){return !q||(x.title+" "+(x.code||"")).toLowerCase().indexOf(q)>=0;});
+document.getElementById("kpiBox").innerHTML="<div class=\"box\"><div class=\"n\">"+d.items.length+"</div><div class=\"l\">رکورد</div></div>";
+document.getElementById("dashNote").textContent=d.items.length?d.items.length+" مورد":"آماده ثبت";
+if(!list.length)box.innerHTML="<p class=\"empty\">خالی</p>";else{box.innerHTML="<table><thead><tr><th>عنوان</th><th>کد</th><th>تاریخ</th><th>مبلغ</th><th></th></tr></thead><tbody>"+list.map(function(x){return "<tr><td>"+esc(x.title)+"</td><td>"+esc(x.code||"")+"</td><td>"+esc(x.date||"")+"</td><td>"+esc(x.amount||"")+"</td><td><button type=\"button\" class=\"btn btn-b btn-sm\" data-d=\""+esc(x.id)+"\">حذف</button></td></tr>";}).join("")+"</tbody></table>";
+box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){var d=load();d.items=d.items.filter(function(x){return x.id!==b.getAttribute("data-d");});save(d);render();};});}
+document.getElementById("repBox").innerHTML="<p>تعداد: "+d.items.length+"</p>";renderNotes();renderRems();renderCart();renderUsers();}
+document.getElementById("btnSave").onclick=function(){if(!K.validateForm(document.getElementById("p-reg"))){toast("خطا",true);return;}var d=load();d.items.unshift({id:uid(),title:document.getElementById("fTitle").value.trim(),code:document.getElementById("fCode").value.trim(),date:document.getElementById("fDate").value.trim(),amount:document.getElementById("fAmount").value.trim(),note:document.getElementById("fNote").value.trim(),fiscal:K.getFiscalYear()});save(d);render();toast("ذخیره");};
+document.getElementById("btnToAcc").onclick=function(){var d=load();if(!d.items.length){toast("موردی نیست",true);return;}var last=d.items[0];var ok=K.pushToAccQueue(MOD,{title:last.title,code:last.code,amount:last.amount,date:last.date},last.id);toast(ok?"به مخزن حسابداری ارسال شد":"قبلاً ارسال شده (تکراری نیست)");};
+document.getElementById("fSearch").oninput=render;
+document.getElementById("officeFile").onchange=function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var url=URL.createObjectURL(f);var p=document.getElementById("officePrev");if(f.type.indexOf("image")===0)p.innerHTML="<img src=\""+url+"\" style=\"max-width:100%;border-radius:8px\">";else p.innerHTML="<a class=\"btn btn-p\" href=\""+url+"\" download=\""+f.name+"\">دانلود / باز کردن "+f.name+"</a>";};
+function renderNotes(){var n=K.loadJSON(K.modNotesKey(MOD),[]);document.getElementById("notesList").innerHTML=n.map(function(x,i){return "<div style=\"padding:6px 0;border-bottom:1px solid #a8d4f0\">"+esc(x.text)+" <button class=\"btn btn-b btn-sm\" data-ni=\""+i+"\">×</button></div>";}).join("")||"<p class=\"empty\">—</p>";document.querySelectorAll("[data-ni]").forEach(function(b){b.onclick=function(){var n=K.loadJSON(K.modNotesKey(MOD),[]);n.splice(+b.getAttribute("data-ni"),1);K.saveJSON(K.modNotesKey(MOD),n);renderNotes();K.updateSideAlerts(MOD);};});}
+document.getElementById("btnAddNote").onclick=function(){var t=document.getElementById("noteText").value.trim();if(!t)return;var n=K.loadJSON(K.modNotesKey(MOD),[]);n.unshift({text:t,user:K.getActiveUser(MOD),at:new Date().toISOString()});K.saveJSON(K.modNotesKey(MOD),n);document.getElementById("noteText").value="";renderNotes();K.updateSideAlerts(MOD);};
+function renderRems(){var n=K.loadJSON(K.modRemKey(MOD),[]);document.getElementById("remsList").innerHTML=n.map(function(x,i){return "<div style=\"padding:6px 0;border-bottom:1px solid #a8d4f0\">"+esc(x.text)+" — "+esc(x.date||"")+"</div>";}).join("")||"<p class=\"empty\">—</p>";}
+document.getElementById("btnAddRem").onclick=function(){var t=document.getElementById("remText").value.trim();var d=document.getElementById("remDate").value.trim();if(!t)return;var n=K.loadJSON(K.modRemKey(MOD),[]);n.unshift({text:t,date:d,done:false});K.saveJSON(K.modRemKey(MOD),n);renderRems();K.updateSideAlerts(MOD);toast("یادآوری ثبت شد");};
+function renderCart(){var c=K.loadJSON(K.cartableKey(),{items:[]});var u=K.getActiveUser(MOD);var list=(c.items||[]).filter(function(x){return x.to===u||x.to==="*"||x.from===u;});document.getElementById("cartList").innerHTML=list.map(function(x){return "<div style=\"padding:8px 0;border-bottom:1px solid #a8d4f0\"><b>"+esc(x.from)+"</b> → "+esc(x.to)+": "+esc(x.msg)+(x.fileName?" ["+esc(x.fileName)+"]":"")+"</div>";}).join("")||"<p class=\"empty\">خالی</p>";}
+document.getElementById("btnCartSend").onclick=function(){var c=K.loadJSON(K.cartableKey(),{items:[]});var file=document.getElementById("cartFile").files[0];var item={id:uid(),from:K.getActiveUser(MOD),to:document.getElementById("cartTo").value.trim()||"*",msg:document.getElementById("cartMsg").value.trim(),fileName:file?file.name:"",read:false,at:new Date().toISOString()};if(file){var r=new FileReader();r.onload=function(){item.fileData=r.result;c.items.unshift(item);K.saveJSON(K.cartableKey(),c);renderCart();K.updateSideAlerts(MOD);toast("ارسال شد");};r.readAsDataURL(file);}else{c.items.unshift(item);K.saveJSON(K.cartableKey(),c);renderCart();K.updateSideAlerts(MOD);toast("ارسال شد");}};
+function renderUsers(){var a=K.getAuth(MOD);document.getElementById("usersList").innerHTML="<table><tbody>"+(a.users||[]).map(function(x){return "<tr><td>"+esc(x.user)+"</td><td>"+esc(x.name||"")+"</td></tr>";}).join("")+"</tbody></table>";}
+document.getElementById("btnAddUser").onclick=function(){var a=K.getAuth(MOD);a.users.push({user:document.getElementById("nuUser").value.trim(),pass:document.getElementById("nuPass").value,name:document.getElementById("nuName").value.trim()});K.saveAuth(MOD,a);renderUsers();toast("کاربر اضافه شد");};
+document.getElementById("btnFy").onclick=function(){var y=parseInt(K.toEn(document.getElementById("fyInput").value),10);if(!y){toast("سال نامعتبر",true);return;}K.setFiscalYear(y);document.getElementById("fiscalYear").textContent="سال مالی "+K.toFa(y);toast("سال مالی ذخیره شد");};
+document.getElementById("fyInput").value=K.getFiscalYear();
+function doBackup(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(load(),null,2)],{type:"application/json"}));a.download=KEY+"-backup.json";a.click();}
+document.getElementById("btnBackup").onclick=doBackup;
+document.getElementById("btnRestoreTrigger").onclick=function(){document.getElementById("restoreFile").click();};
+document.getElementById("restoreFile").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{save(JSON.parse(r.result));render();toast("بازیابی");}catch(err){toast("نامعتبر",true);}};r.readAsText(f);};
+render();
 });
-
-function renderCal(){
-  var from=$("calFrom").value, to=$("calTo").value;
-  var list=db.posts.filter(function(p){
-    if(from&&p.date&&p.date<from) return false;
-    if(to&&p.date&&p.date>to) return false;
-    if(calFilt!=="all"&&p.channel!==calFilt) return false;
-    return true;
-  }).sort(function(a,b){return (a.date||"")<(b.date||"")?-1:1;});
-  var tb=$("calList"); tb.textContent="";
-  list.forEach(function(p){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td class='num'>"+esc(p.date)+"</td><td>"+esc(CH[p.channel]||p.channel)+"</td><td>"+esc(p.title)+"</td><td>"+esc(ST[p.status]||"")+"</td>"+
-      "<td><button type='button' class='btn btn-b btn-sm' data-edit-post='"+p.id+"'>ویرایش</button></td>";
-    tb.appendChild(tr);
-  });
-}
-$("btnCal").onclick=renderCal;
-
-function clearPost(){ $("postId").value="";$("postTitle").value="";$("postBody").value="";$("postTags").value="";$("postLink").value="";$("postStatus").value="draft";$("postCh").value="instagram";$("postType").value="post"; }
-$("btnPostClr").onclick=clearPost;
-function renderPosts(){
-  var q=($("postSearch").value||"").trim().toLowerCase();
-  var box=$("postCards"); box.textContent="";
-  var list=db.posts.slice().reverse().filter(function(p){
-    if(postFilt!=="all"&&p.status!==postFilt) return false;
-    if(!q) return true;
-    return (p.title+" "+(p.body||"")+" "+(p.tags||"")).toLowerCase().indexOf(q)>=0;
-  });
-  if(!list.length){ box.innerHTML='<p class="note">موردی نیست.</p>'; return; }
-  list.forEach(function(p){
-    var div=document.createElement("div");
-    div.className="post-card";
-    div.innerHTML='<div class="t">'+esc(p.title)+' <span class="badge '+(p.status==="published"?"ok":p.status==="draft"?"draft":"info")+'">'+esc(ST[p.status]||p.status)+'</span></div>'+
-      '<div class="m">'+esc(CH[p.channel]||"")+' · '+esc(p.date||"")+' · '+esc(p.type||"")+'</div>'+
-      '<div class="m">'+(esc((p.body||"").slice(0,120)))+(p.body&&p.body.length>120?"…":"")+'</div>'+
-      '<div style="margin-top:8px"><button type="button" class="btn btn-b btn-sm" data-edit-post="'+p.id+'">ویرایش</button> '+
-      '<button type="button" class="btn btn-r btn-sm" data-del-post="'+p.id+'">حذف</button></div>';
-    box.appendChild(div);
-  });
-}
-$("postSearch").oninput=renderPosts;
-function savePost(toSec){
-  var title=($("postTitle").value||"").trim(), body=($("postBody").value||"").trim();
-  if(!title||!body){toast("عنوان و متن الزامی",true);return;}
-  var row={
-    id:$("postId").value?Number($("postId").value):uid(),
-    title:title.slice(0,200), date:$("postDate").value||today(), channel:$("postCh").value, type:$("postType").value,
-    status:$("postStatus").value, body:body.slice(0,5000), tags:($("postTags").value||"").slice(0,300),
-    link:($("postLink").value||"").slice(0,300), updated:Date.now()
-  };
-  var i=db.posts.findIndex(function(x){return String(x.id)===String(row.id);});
-  if(i>=0) db.posts[i]=row; else db.posts.push(row);
-  if(!save(db)) return;
-  if(toSec){
-    var ok=pushSec("انتشار محتوا: "+row.title, CH[row.channel]+" — "+row.status, row.date);
-    toast(ok?"ذخیره + منشی":"ذخیره شد", !ok);
-  } else toast("ذخیره شد");
-  clearPost(); renderPosts(); renderDash();
-}
-$("btnPost").onclick=lock(function(){savePost(false);});
-$("btnPostSec").onclick=lock(function(){savePost(true);});
-
-function renderPress(){
-  var tb=$("pressList"); tb.textContent="";
-  db.press.slice().reverse().forEach(function(p){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td class='num'>"+esc(p.date)+"</td><td>"+esc(p.title)+"</td><td>"+esc(p.type)+"</td><td>"+esc(ST[p.status]||p.status)+"</td>"+
-      "<td><button type='button' class='btn btn-b btn-sm' data-edit-pr='"+p.id+"'>ویرایش</button> "+
-      "<button type='button' class='btn btn-r btn-sm' data-del-pr='"+p.id+"'>حذف</button></td>";
-    tb.appendChild(tr);
-  });
-}
-$("btnPressTpl").onclick=function(){
-  var t=($("prTitle").value||"عنوان خبر").trim();
-  $("prBody").value="بسمه تعالی\n\nخبر فوری / بیانیه\n\nعنوان: "+t+"\n\n[شهر] — [سازمان] اعلام کرد:\n\n[پاراگراف اول: چه کسی، چه چیزی، کجا، کی]\n\n[جزئیات و نقل‌قول سخنگو]\n\n[اطلاعات تماس روابط عمومی]\n\nپایان خبر\n";
-  toast("قالب بارگذاری شد");
-};
-$("btnPress").onclick=lock(function(){
-  var title=($("prTitle").value||"").trim(), body=($("prBody").value||"").trim();
-  if(!title||!body){toast("عنوان و متن؟",true);return;}
-  var row={id:$("prId").value?Number($("prId").value):uid(),title:title.slice(0,250),date:$("prDate").value||today(),type:$("prType").value,status:$("prStatus").value,body:body.slice(0,8000),to:($("prTo").value||"").slice(0,200)};
-  var i=db.press.findIndex(function(x){return String(x.id)===String(row.id);});
-  if(i>=0) db.press[i]=row; else db.press.push(row);
-  if(!save(db)) return;
-  $("prId").value="";$("prTitle").value="";$("prBody").value="";$("prTo").value="";
-  renderPress(); renderDash(); toast("بیانیه ذخیره شد");
-});
-
-function clearMedia(){ $("mId").value="";$("mName").value="";$("mOrg").value="";$("mBeat").value="general";$("mMobile").value="";$("mEmail").value="";$("mNote").value=""; }
-$("btnMediaClr").onclick=clearMedia;
-function renderMedia(){
-  var q=($("mediaSearch").value||"").trim().toLowerCase();
-  var tb=$("mediaList"); tb.textContent="";
-  db.media.filter(function(m){return !q||(m.name+" "+(m.org||"")).toLowerCase().indexOf(q)>=0;}).forEach(function(m){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td>"+esc(m.name)+"</td><td>"+esc(m.org||"")+"</td><td>"+esc(m.beat)+"</td><td class='num'>"+esc(m.mobile||m.email||"")+"</td>"+
-      "<td><button type='button' class='btn btn-b btn-sm' data-edit-m='"+m.id+"'>ویرایش</button> "+
-      "<button type='button' class='btn btn-r btn-sm' data-del-m='"+m.id+"'>حذف</button></td>";
-    tb.appendChild(tr);
-  });
-}
-$("mediaSearch").oninput=renderMedia;
-$("btnMedia").onclick=lock(function(){
-  var name=($("mName").value||"").trim();
-  if(!name){toast("نام؟",true);return;}
-  var row={id:$("mId").value?Number($("mId").value):uid(),name:name.slice(0,120),org:($("mOrg").value||"").slice(0,120),beat:$("mBeat").value,mobile:($("mMobile").value||"").slice(0,20),email:($("mEmail").value||"").slice(0,100),note:($("mNote").value||"").slice(0,300)};
-  var i=db.media.findIndex(function(x){return String(x.id)===String(row.id);});
-  if(i>=0) db.media[i]=row; else db.media.push(row);
-  if(!save(db)) return;
-  clearMedia(); renderMedia(); toast("ذخیره شد");
-});
-
-function renderCamps(){
-  var tb=$("campList"); tb.textContent="";
-  db.campaigns.slice().reverse().forEach(function(c){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td>"+esc(c.name)+"</td><td class='num'>"+esc((c.from||"")+" → "+(c.to||""))+"</td><td>"+esc(ST[c.status]||c.status)+"</td>"+
-      "<td><button type='button' class='btn btn-b btn-sm' data-edit-camp='"+c.id+"'>ویرایش</button> "+
-      "<button type='button' class='btn btn-r btn-sm' data-del-camp='"+c.id+"'>حذف</button></td>";
-    tb.appendChild(tr);
-  });
-}
-$("btnCamp").onclick=lock(function(){
-  var name=($("campName").value||"").trim();
-  if(!name){toast("نام کمپین؟",true);return;}
-  var row={id:$("campId").value?Number($("campId").value):uid(),name:name.slice(0,150),status:$("campStatus").value,from:$("campFrom").value,to:$("campTo").value,goal:($("campGoal").value||"").slice(0,500),channels:($("campCh").value||"").slice(0,300),kpi:($("campKpi").value||"").slice(0,300)};
-  var i=db.campaigns.findIndex(function(x){return String(x.id)===String(row.id);});
-  if(i>=0) db.campaigns[i]=row; else db.campaigns.push(row);
-  if(!save(db)) return;
-  $("campId").value="";$("campName").value="";$("campGoal").value="";$("campCh").value="";$("campKpi").value="";
-  renderCamps(); renderDash(); toast("کمپین ذخیره شد");
-});
-
-function clearWeb(){ $("wId").value="";$("wTitle").value="";$("wSlug").value="";$("wType").value="page";$("wStatus").value="draft";$("wSeoTitle").value="";$("wSeoDesc").value="";$("wBody").value=""; }
-$("btnWebClr").onclick=clearWeb;
-function renderWeb(){
-  var tb=$("webList"); tb.textContent="";
-  db.pages.slice().reverse().forEach(function(p){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td>"+esc(p.title)+"</td><td class='num'>"+esc(p.slug||"")+"</td><td>"+esc(p.type)+"</td><td>"+esc(ST[p.status]||p.status)+"</td>"+
-      "<td><button type='button' class='btn btn-b btn-sm' data-edit-w='"+p.id+"'>ویرایش</button> "+
-      "<button type='button' class='btn btn-r btn-sm' data-del-w='"+p.id+"'>حذف</button></td>";
-    tb.appendChild(tr);
-  });
-}
-$("btnWeb").onclick=lock(function(){
-  var title=($("wTitle").value||"").trim();
-  if(!title){toast("عنوان؟",true);return;}
-  var row={id:$("wId").value?Number($("wId").value):uid(),title:title.slice(0,200),slug:($("wSlug").value||"").slice(0,120),type:$("wType").value,status:$("wStatus").value,seoTitle:($("wSeoTitle").value||"").slice(0,70),seoDesc:($("wSeoDesc").value||"").slice(0,160),body:($("wBody").value||"").slice(0,5000)};
-  var i=db.pages.findIndex(function(x){return String(x.id)===String(row.id);});
-  if(i>=0) db.pages[i]=row; else db.pages.push(row);
-  if(!save(db)) return;
-  clearWeb(); renderWeb(); toast("صفحه ذخیره شد");
-});
-
-function runRep(){
-  var h="", title="";
-  if(repMode==="posts"){
-    title="محتوا";
-    h="<table><thead><tr><th>تاریخ</th><th>کانال</th><th>عنوان</th><th>وضعیت</th></tr></thead><tbody>";
-    db.posts.forEach(function(p){h+="<tr><td class='num'>"+esc(p.date)+"</td><td>"+esc(CH[p.channel]||"")+"</td><td>"+esc(p.title)+"</td><td>"+esc(ST[p.status]||"")+"</td></tr>";});
-    h+="</tbody></table>";
-  } else if(repMode==="press"){
-    title="بیانیه‌ها";
-    h="<table><thead><tr><th>تاریخ</th><th>عنوان</th><th>وضعیت</th></tr></thead><tbody>";
-    db.press.forEach(function(p){h+="<tr><td class='num'>"+esc(p.date)+"</td><td>"+esc(p.title)+"</td><td>"+esc(p.status)+"</td></tr>";});
-    h+="</tbody></table>";
-  } else if(repMode==="camp"){
-    title="کمپین‌ها";
-    h="<table><thead><tr><th>نام</th><th>وضعیت</th><th>هدف</th></tr></thead><tbody>";
-    db.campaigns.forEach(function(c){h+="<tr><td>"+esc(c.name)+"</td><td>"+esc(c.status)+"</td><td>"+esc((c.goal||"").slice(0,80))+"</td></tr>";});
-    h+="</tbody></table>";
-  } else if(repMode==="media"){
-    title="رسانه‌ها";
-    h="<table><thead><tr><th>نام</th><th>سازمان</th><th>حوزه</th></tr></thead><tbody>";
-    db.media.forEach(function(m){h+="<tr><td>"+esc(m.name)+"</td><td>"+esc(m.org||"")+"</td><td>"+esc(m.beat)+"</td></tr>";});
-    h+="</tbody></table>";
-  } else if(repMode==="web"){
-    title="صفحات وب";
-    h="<table><thead><tr><th>عنوان</th><th>مسیر</th><th>وضعیت</th></tr></thead><tbody>";
-    db.pages.forEach(function(p){h+="<tr><td>"+esc(p.title)+"</td><td class='num'>"+esc(p.slug||"")+"</td><td>"+esc(p.status)+"</td></tr>";});
-    h+="</tbody></table>";
-  } else {
-    title="بر اساس کانال";
-    var map={};
-    db.posts.forEach(function(p){map[p.channel]=(map[p.channel]||0)+1;});
-    h="<table><thead><tr><th>کانال</th><th>تعداد</th></tr></thead><tbody>";
-    Object.keys(map).forEach(function(k){h+="<tr><td>"+esc(CH[k]||k)+"</td><td class='num'>"+map[k]+"</td></tr>";});
-    h+="</tbody></table>";
-  }
-  $("repTitle").textContent=title;
-  $("repOut").innerHTML=h||"<p class='note'>موردی نیست.</p>";
-  toast("گزارش آماده");
-}
-$("btnRep").onclick=lock(runRep);
-$("btnPrint").onclick=function(){window.print();};
-$("btnOpenSec").onclick=function(){window.open("index.html","_blank","noopener,noreferrer");};
-$("btnOpenDoc").onclick=function(){window.open("documents.html","_blank","noopener,noreferrer");};
-$("btnBackup").onclick=function(){
-  var a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
-  a.download="pr-backup-"+today()+".json"; a.click();
-};
-$("restoreFile").onchange=function(e){
-  var f=e.target.files&&e.target.files[0]; if(!f)return;
-  var r=new FileReader();
-  r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.posts))throw new Error("x");db=d;["press","media","campaigns","pages"].forEach(function(k){if(!Array.isArray(db[k]))db[k]=[];});save(db);toast("بازیابی شد");renderDash();}catch(err){toast("نامعتبر",true);}};
-  r.readAsText(f);
-};
-$("btnWipe").onclick=lock(function(){if(!confirm("حذف همه؟"))return;if(!confirm("نهایی؟"))return;db=def();save(db);toast("حذف شد");renderDash();});
-
-$("nav").addEventListener("click",function(e){var b=e.target.closest("[data-tab]");if(b)go(b.getAttribute("data-tab"),b);});
-document.body.addEventListener("click",function(e){
-  var ep=e.target.closest("[data-edit-post]");
-  if(ep){var p=db.posts.find(function(x){return String(x.id)===ep.getAttribute("data-edit-post");});if(!p)return;
-    $("postId").value=p.id;$("postTitle").value=p.title;$("postDate").value=p.date||"";$("postCh").value=p.channel;$("postType").value=p.type||"post";
-    $("postStatus").value=p.status;$("postBody").value=p.body||"";$("postTags").value=p.tags||"";$("postLink").value=p.link||"";go("post");return;}
-  var dp=e.target.closest("[data-del-post]");
-  if(dp){if(!confirm("حذف؟"))return;db.posts=db.posts.filter(function(x){return String(x.id)!==dp.getAttribute("data-del-post");});save(db);renderPosts();renderDash();return;}
-  var epr=e.target.closest("[data-edit-pr]");
-  if(epr){var pr=db.press.find(function(x){return String(x.id)===epr.getAttribute("data-edit-pr");});if(!pr)return;
-    $("prId").value=pr.id;$("prTitle").value=pr.title;$("prDate").value=pr.date||"";$("prType").value=pr.type;$("prStatus").value=pr.status;$("prBody").value=pr.body||"";$("prTo").value=pr.to||"";go("press");return;}
-  var dpr=e.target.closest("[data-del-pr]");
-  if(dpr){db.press=db.press.filter(function(x){return String(x.id)!==dpr.getAttribute("data-del-pr");});save(db);renderPress();renderDash();return;}
-  var em=e.target.closest("[data-edit-m]");
-  if(em){var m=db.media.find(function(x){return String(x.id)===em.getAttribute("data-edit-m");});if(!m)return;
-    $("mId").value=m.id;$("mName").value=m.name;$("mOrg").value=m.org||"";$("mBeat").value=m.beat;$("mMobile").value=m.mobile||"";$("mEmail").value=m.email||"";$("mNote").value=m.note||"";go("media");return;}
-  var dm=e.target.closest("[data-del-m]");
-  if(dm){db.media=db.media.filter(function(x){return String(x.id)!==dm.getAttribute("data-del-m");});save(db);renderMedia();return;}
-  var ec=e.target.closest("[data-edit-camp]");
-  if(ec){var c=db.campaigns.find(function(x){return String(x.id)===ec.getAttribute("data-edit-camp");});if(!c)return;
-    $("campId").value=c.id;$("campName").value=c.name;$("campStatus").value=c.status;$("campFrom").value=c.from||"";$("campTo").value=c.to||"";$("campGoal").value=c.goal||"";$("campCh").value=c.channels||"";$("campKpi").value=c.kpi||"";go("camp");return;}
-  var dc=e.target.closest("[data-del-camp]");
-  if(dc){db.campaigns=db.campaigns.filter(function(x){return String(x.id)!==dc.getAttribute("data-del-camp");});save(db);renderCamps();renderDash();return;}
-  var ew=e.target.closest("[data-edit-w]");
-  if(ew){var w=db.pages.find(function(x){return String(x.id)===ew.getAttribute("data-edit-w");});if(!w)return;
-    $("wId").value=w.id;$("wTitle").value=w.title;$("wSlug").value=w.slug||"";$("wType").value=w.type;$("wStatus").value=w.status;$("wSeoTitle").value=w.seoTitle||"";$("wSeoDesc").value=w.seoDesc||"";$("wBody").value=w.body||"";go("web");return;}
-  var dw=e.target.closest("[data-del-w]");
-  if(dw){db.pages=db.pages.filter(function(x){return String(x.id)!==dw.getAttribute("data-del-w");});save(db);renderWeb();return;}
-});
-$("calFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;calFilt=b.getAttribute("data-f");document.querySelectorAll("#calFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderCal();});
-$("postFilt").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;postFilt=b.getAttribute("data-f");document.querySelectorAll("#postFilt button").forEach(function(x){x.classList.toggle("on",x===b);});renderPosts();});
-$("repTabs").addEventListener("click",function(e){var b=e.target.closest("[data-r]");if(!b)return;repMode=b.getAttribute("data-r");document.querySelectorAll("#repTabs button").forEach(function(x){x.classList.toggle("on",x===b);});});
-
-renderDash();
-})();
-</script>
-</body>
-</html>
+</script></body></html>
