@@ -1,0 +1,20 @@
+# تغییر نام پروژه و انتقال (مورد ۳)
+
+پیشنهاد نام جدید مخزن: **smart-suite**
+
+## مراحل در GitHub
+1. وارد مخزن smart-secretary شوید
+2. Settings → General → Repository name
+3. نام را به smart-suite تغییر دهید → Rename
+4. آدرس جدید: https://alm989.github.io/smart-suite/
+5. Settings → Pages را باز کنید و مسیر را تأیید کنید
+
+## انتقال فایل‌ها
+- همه فایل‌های HTML/JS/CSS را در همان مخزن (root) نگه دارید
+- database.html را حذف کنید (دیگر استفاده نمی‌شود)
+- index.html = Suite
+- secretary.html = منشی
+- brain.html + core.js = مغز متفکر + پایگاه محلی
+
+## بعد از تغییر نام
+لینک‌های داخل فایل‌ها نسبی هستند (index.html, secretary.html) و نیازی به تغییر دامنه در کد ندارند.
