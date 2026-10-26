@@ -48,6 +48,7 @@ input,select,textarea{width:100%;padding:8px;border-radius:10px;border:1px solid
 @media(max-width:800px){.row,.row4{grid-template-columns:1fr}}
 .btn{border:none;border-radius:10px;padding:8px 12px;font-weight:700;font-size:.74rem;cursor:pointer;font-family:inherit;margin:3px}
 .btn-p{background:var(--pri);color:#fff}.btn-g{background:#334155;color:#e2e8f0}.btn-b{background:#7f1d1d;color:#fecaca}.btn-ok{background:#166534;color:#bbf7d0}
+.btn-print{background:#0ea5e9;color:#fff}.btn-preview{background:#6366f1;color:#fff}
 .kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:8px;margin-bottom:12px}
 .kpi .box{background:#0f172a;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
 .kpi .n{font-size:1.1rem;font-weight:800;color:#93c5fd}.kpi .l{font-size:.62rem;color:var(--muted)}
@@ -104,9 +105,15 @@ tfoot td{font-weight:800;border-top:2px solid var(--line);color:#93c5fd}
 .sheet-footer-desc .fl{font-size:.8rem;color:#93c5fd;font-weight:800;white-space:nowrap}
 .sheet-footer-desc input{flex:1;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#020617;color:var(--txt);font-family:inherit;font-size:13px}
 .sheet-footer-desc input:focus{outline:1px solid #3b82f6;border-color:#3b82f6}
+.voucher-actions{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:8px}
 .q-btn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:12px 14px;margin:6px 0;border-radius:12px;border:2px solid;font-weight:800;font-size:.85rem;cursor:pointer;font-family:inherit}
 .q-btn.ok{background:rgba(34,197,94,.15);border-color:#22c55e;color:#86efac}
 .q-btn.empty{background:rgba(239,68,68,.12);border-color:#ef4444;color:#fca5a5;cursor:default}
+@media print{
+  body *{visibility:hidden}
+  #printArea,.printArea,*#printArea *{visibility:visible}
+  #printArea{position:absolute;left:0;top:0;width:100%}
+}
 </style>
 </head>
 <body>
@@ -187,8 +194,12 @@ tfoot td{font-weight:800;border-top:2px solid var(--line);color:#93c5fd}
       </div>
     </div>
     <div class="bal" id="vBal">تراز: —</div>
-    <button type="button" class="btn btn-p" id="btnSaveVoucher">ثبت سند</button>
-    <button type="button" class="btn btn-ok" id="btnFromQueue">صدور سند از مخزن</button>
+    <div class="voucher-actions">
+      <button type="button" class="btn btn-p" id="btnSaveVoucher">ثبت سند</button>
+      <button type="button" class="btn btn-ok" id="btnFromQueue">صدور سند از مخزن</button>
+      <button type="button" class="btn btn-preview" id="btnPreview">🖨 پیش‌نمایش</button>
+      <button type="button" class="btn btn-print" id="btnPrint">🖨 پرینت</button>
+    </div>
   </div></div>
 
   <div class="panel" id="p-coding"><div class="card has-exit">
@@ -211,8 +222,6 @@ tfoot td{font-weight:800;border-top:2px solid var(--line);color:#93c5fd}
             <option>سایر هزینه‌ها و درآمدها</option><option>حساب‌های انتظامی</option>
           </select>
         </div><div><label>والد</label><input id="cParent"></div></div>
-        <div class="row"><div><label>وضعیت</label><select id="cStatus"><option>فعال</option><option>غیرفعال</option></select></div>
-          <div><label>نوع</label><select id="cKind"><option>دائمی</option><option>موقت</option><option>انتظامی</option></select></div></div>
         <button type="button" class="btn btn-p" id="btnSaveCode">ذخیره</button>
         <button type="button" class="btn btn-g" id="btnNewCode">جدید</button>
         <button type="button" class="btn btn-g" id="btnSeedCodes">درخت استاندارد</button>
@@ -467,61 +476,32 @@ box.innerHTML=html||'<p class="empty">درخت استاندارد را بارگ�
 box.querySelectorAll("[data-goggle]").forEach(function(h){h.onclick=function(){h.parentElement.classList.toggle("open");};});
 box.querySelectorAll("[data-tog]").forEach(function(b){b.onclick=function(e){e.stopPropagation();var item=b.closest(".tree-item");item.classList.toggle("open");b.textContent=item.classList.contains("open")?"▾":"▸";};});
 box.querySelectorAll("[data-sel]").forEach(function(r){r.onclick=function(){selectedCode=r.getAttribute("data-sel");var c=(loadDB().codes||[]).find(function(x){return x.code===selectedCode;});
-if(c){document.getElementById("cCode").value=c.code;document.getElementById("cName").value=c.name;document.getElementById("cLevel").value=String(c.level||1);document.getElementById("cNature").value=c.nature||"فرقی ندارد";document.getElementById("cGroup").value=c.group||MAIN_GROUPS[0];document.getElementById("cParent").value=c.parent||"";document.getElementById("cStatus").value=c.status||"فعال";document.getElementById("cKind").value=c.kind||"دائمی";}
+if(c){document.getElementById("cCode").value=c.code;document.getElementById("cName").value=c.name;document.getElementById("cLevel").value=String(c.level||1);document.getElementById("cNature").value=c.nature||"فرقی ندارد";document.getElementById("cGroup").value=c.group||MAIN_GROUPS[0];document.getElementById("cParent").value=c.parent||"";}
 renderTree();};});}
 document.getElementById("treeSearch").oninput=renderTree;
-document.getElementById("btnNewCode").onclick=function(){selectedCode=null;["cCode","cName","cParent"].forEach(function(id){document.getElementById(id).value="";});document.getElementById("cLevel").value="3";};
+document.getElementById("btnNewCode").onclick=function(){selectedCode=null;["cCode","cName","cParent"].forEach(function(id){document.getElementById(id).value="";});};
 document.getElementById("btnSaveCode").onclick=function(){var code=document.getElementById("cCode").value.trim(),name=document.getElementById("cName").value.trim();if(!code||!name){toast("کد و نام","err");return;}
-var db=loadDB();db.codes=db.codes||[];var row={code:code,name:name,level:+document.getElementById("cLevel").value,nature:document.getElementById("cNature").value,group:document.getElementById("cGroup").value,parent:document.getElementById("cParent").value.trim(),status:document.getElementById("cStatus").value,kind:document.getElementById("cKind").value};
+var db=loadDB();db.codes=db.codes||[];var row={code:code,name:name,level:+document.getElementById("cLevel").value,nature:document.getElementById("cNature").value,group:document.getElementById("cGroup").value,parent:document.getElementById("cParent").value.trim(),status:"فعال",kind:"دائمی"};
 var idx=db.codes.findIndex(function(x){return x.code===code;});if(idx>=0)db.codes[idx]=row;else db.codes.push(row);saveDB(db);selectedCode=code;renderTree();toast("ذخیره");};
-document.getElementById("btnDelCode").onclick=function(){if(!selectedCode)return;var db=loadDB();if((db.codes||[]).some(function(x){return x.parent===selectedCode;})){toast("زیرحساب دارد","err");return;}db.codes=(db.codes||[]).filter(function(x){return x.code!==selectedCode;});saveDB(db);selectedCode=null;renderTree();};
+document.getElementById("btnDelCode").onclick=function(){if(!selectedCode)return;var db=loadDB();db.codes=(db.codes||[]).filter(function(x){return x.code!==selectedCode;});saveDB(db);selectedCode=null;renderTree();};
 document.getElementById("btnSeedCodes").onclick=function(){if(!confirm("جایگزین؟"))return;var db=loadDB();db.codes=JSON.parse(JSON.stringify(SEED));saveDB(db);renderTree();toast("بارگذاری");};
 
-/* ===== TWO-WAY: footer شرح <-> detail row شرح ===== */
 function isRowFilled(tr){var code=tr.querySelector(".lc").value.trim();var deb=parseAmountInput(tr.querySelector(".ldb").value);var cre=parseAmountInput(tr.querySelector(".lcr").value);return !!(code||deb||cre||tr.querySelector(".ld").value.trim());}
 function ensureEmptyRow(){var rows=document.querySelectorAll("#vBody tr");if(!rows.length||isRowFilled(rows[rows.length-1]))addLine();}
-
 function bindDescTwoWay(ldInput){
-  ldInput.addEventListener("focus",function(){
-    activeDescInput=ldInput;
-    var ft=document.getElementById("ftDescInput");
-    if(document.activeElement!==ft) ft.value=ldInput.value||"";
-  });
-  ldInput.addEventListener("input",function(){
-    activeDescInput=ldInput;
-    var ft=document.getElementById("ftDescInput");
-    if(document.activeElement!==ft) ft.value=ldInput.value||"";
-    updateBal();ensureEmptyRow();
-  });
+  ldInput.addEventListener("focus",function(){activeDescInput=ldInput;var ft=document.getElementById("ftDescInput");if(document.activeElement!==ft)ft.value=ldInput.value||"";});
+  ldInput.addEventListener("input",function(){activeDescInput=ldInput;var ft=document.getElementById("ftDescInput");if(document.activeElement!==ft)ft.value=ldInput.value||"";updateBal();ensureEmptyRow();});
 }
-
 function footerToDetail(){
-  var ft=document.getElementById("ftDescInput");
-  var val=ft.value||"";
-  if(activeDescInput && document.getElementById("vBody").contains(activeDescInput)){
-    activeDescInput.value=val;
-  } else {
-    // apply to last non-empty row, else last row
-    var rows=document.querySelectorAll("#vBody tr");
-    var target=null;
-    rows.forEach(function(tr){
-      var ld=tr.querySelector(".ld");
-      if(ld && (tr.querySelector(".lc").value.trim() || ld.value.trim() || tr.querySelector(".ldb").value || tr.querySelector(".lcr").value)) target=ld;
-    });
-    if(!target && rows.length) target=rows[rows.length-1].querySelector(".ld");
-    if(target){ target.value=val; activeDescInput=target; }
-  }
+  var ft=document.getElementById("ftDescInput");var val=ft.value||"";
+  if(activeDescInput&&document.getElementById("vBody").contains(activeDescInput)){activeDescInput.value=val;}
+  else{var rows=document.querySelectorAll("#vBody tr");var target=null;
+    rows.forEach(function(tr){var ld=tr.querySelector(".ld");if(ld&&(tr.querySelector(".lc").value.trim()||ld.value.trim()))target=ld;});
+    if(!target&&rows.length)target=rows[rows.length-1].querySelector(".ld");
+    if(target){target.value=val;activeDescInput=target;}}
   updateBal();ensureEmptyRow();
 }
-
 document.getElementById("ftDescInput").addEventListener("input",footerToDetail);
-document.getElementById("ftDescInput").addEventListener("focus",function(){
-  // keep active row; if none, pick last
-  if(!activeDescInput || !document.getElementById("vBody").contains(activeDescInput)){
-    var rows=document.querySelectorAll("#vBody tr");
-    if(rows.length) activeDescInput=rows[rows.length-1].querySelector(".ld");
-  }
-});
 
 function addLine(data){data=data||{};var tbody=document.getElementById("vBody");var tr=document.createElement("tr");
 tr.innerHTML='<td class="rn">'+toFa(tbody.children.length+1)+'</td>'+
@@ -532,30 +512,13 @@ tr.innerHTML='<td class="rn">'+toFa(tbody.children.length+1)+'</td>'+
   '<td><input class="lcr amount" data-amount value="'+(data.credit?formatAmount(data.credit):"")+'"></td>'+
   '<td><button type="button" class="btn btn-b" style="padding:4px 6px;margin:0">×</button></td>';
 tbody.appendChild(tr);
-var ld=tr.querySelector(".ld");
-bindDescTwoWay(ld);
+var ld=tr.querySelector(".ld");bindDescTwoWay(ld);
 function onEdit(){updateBal();ensureEmptyRow();}
-tr.querySelectorAll("input").forEach(function(inp){
-  if(!inp.classList.contains("ld")){
-    inp.addEventListener("input",onEdit);
-    inp.addEventListener("blur",function(){
-      if(inp.classList.contains("amount")){var v=parseAmountInput(inp.value);if(v)inp.value=formatAmount(v);}
-      updateBal();ensureEmptyRow();
-    });
-  }
-});
-tr.querySelector(".btn-b").onclick=function(){
-  if(activeDescInput===ld) activeDescInput=null;
-  if(document.querySelectorAll("#vBody tr").length<=1){tr.querySelectorAll("input").forEach(function(i){i.value="";});document.getElementById("ftDescInput").value="";updateBal();return;}
-  tr.remove();renumber();updateBal();ensureEmptyRow();
-};
+tr.querySelectorAll("input").forEach(function(inp){if(!inp.classList.contains("ld")){inp.addEventListener("input",onEdit);inp.addEventListener("blur",function(){if(inp.classList.contains("amount")){var v=parseAmountInput(inp.value);if(v)inp.value=formatAmount(v);}updateBal();ensureEmptyRow();});}});
+tr.querySelector(".btn-b").onclick=function(){if(activeDescInput===ld)activeDescInput=null;if(document.querySelectorAll("#vBody tr").length<=1){tr.querySelectorAll("input").forEach(function(i){i.value="";});document.getElementById("ftDescInput").value="";updateBal();return;}tr.remove();renumber();updateBal();ensureEmptyRow();};
 tr.querySelector(".code-btn").onclick=function(){openCodePicker(function(c){tr.querySelector(".lc").value=c.code;tr.querySelector(".ln").value=c.name;onEdit();});};
 tr.querySelector(".lc").addEventListener("change",function(){var c=(loadDB().codes||[]).find(function(x){return x.code===tr.querySelector(".lc").value.trim();});if(c)tr.querySelector(".ln").value=c.name;});
-renumber();
-// if data.desc, sync footer when this is first/only
-if(data.desc){activeDescInput=ld;document.getElementById("ftDescInput").value=data.desc;}
-}
-
+renumber();if(data.desc){activeDescInput=ld;document.getElementById("ftDescInput").value=data.desc;}}
 function renumber(){document.querySelectorAll("#vBody tr").forEach(function(tr,i){var td=tr.querySelector(".rn");if(td)td.textContent=toFa(i+1);});}
 function updateBal(){var deb=0,cre=0;document.querySelectorAll("#vBody tr").forEach(function(tr){deb+=parseAmountInput(tr.querySelector(".ldb").value);cre+=parseAmountInput(tr.querySelector(".lcr").value);});
 document.getElementById("ftDebit").textContent=faAmt(deb);document.getElementById("ftCredit").textContent=faAmt(cre);
@@ -566,6 +529,91 @@ function ren(q){q=(q||"").toLowerCase();var list=(loadDB().codes||[]).filter(fun
 document.getElementById("codePickList").innerHTML=list.map(function(c){return '<div class="list-item" data-c="'+c.code+'">'+esc(c.code)+' — '+esc(c.name)+'</div>';}).join("")||'<p class="empty">—</p>';
 document.getElementById("codePickList").querySelectorAll("[data-c]").forEach(function(el){el.onclick=function(){var c=(loadDB().codes||[]).find(function(x){return x.code===el.getAttribute("data-c");});if(c){cb(c);modal.classList.remove("open");}};});}
 document.getElementById("codeSearch").oninput=function(){ren(this.value);};document.getElementById("codeModalClose").onclick=function(){modal.classList.remove("open");};ren("");}
+
+/* ===== PRINT / PREVIEW ===== */
+function collectVoucherPrintData(){
+  var lines=[];
+  document.querySelectorAll("#vBody tr").forEach(function(tr){
+    var code=tr.querySelector(".lc").value.trim();
+    if(!code) return;
+    lines.push({
+      code:code,
+      name:tr.querySelector(".ln").value.trim(),
+      desc:tr.querySelector(".ld").value.trim(),
+      debit:parseAmountInput(tr.querySelector(".ldb").value),
+      credit:parseAmountInput(tr.querySelector(".lcr").value)
+    });
+  });
+  var deb=0,cre=0;lines.forEach(function(l){deb+=l.debit;cre+=l.credit;});
+  return {
+    no:document.getElementById("vNo").value,
+    date:document.getElementById("vDate").value,
+    type:document.getElementById("vType").value,
+    headerDesc:document.getElementById("vDesc").value.trim(),
+    footerDesc:document.getElementById("ftDescInput").value.trim(),
+    lines:lines,
+    debit:deb,
+    credit:cre,
+    user:userName()
+  };
+}
+function buildPrintHtml(d,preview){
+  var rows=d.lines.map(function(l,i){
+    return '<tr><td>'+toFa(i+1)+'</td><td>'+esc(l.code)+'</td><td>'+esc(l.name)+'</td><td>'+esc(l.desc)+'</td><td style="text-align:left">'+formatAmount(l.debit)+'</td><td style="text-align:left">'+formatAmount(l.credit)+'</td></tr>';
+  }).join("");
+  if(!rows) rows='<tr><td colspan="6" style="text-align:center;color:#666">ردیفی ثبت نشده</td></tr>';
+  var toolbar=preview
+    ? '<div class="toolbar no-print"><button onclick="window.print()">🖨 پرینت</button><button onclick="window.close()">بستن</button></div>'
+    : '';
+  return '<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8"><title>سند '+esc(d.no)+'</title>'+
+    '<style>'+
+    'body{font-family:Tahoma,Arial,sans-serif;padding:24px;color:#111;background:#fff}'+
+    '.toolbar{margin-bottom:16px;display:flex;gap:8px}'+
+    '.toolbar button{padding:8px 16px;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;background:#0ea5e9;color:#fff}'+
+    '.toolbar button:last-child{background:#64748b}'+
+    'h1{font-size:18px;text-align:center;margin-bottom:4px}'+
+    '.meta{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin:16px 0;font-size:13px}'+
+    '.meta div{border:1px solid #ccc;padding:8px;border-radius:6px}'+
+    '.meta b{display:block;color:#555;font-size:11px;margin-bottom:2px}'+
+    'table{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}'+
+    'th,td{border:1px solid #333;padding:6px 8px;text-align:right}'+
+    'th{background:#eee}'+
+    'tfoot td{font-weight:800;background:#f5f5f5}'+
+    '.desc{margin-top:12px;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:13px}'+
+    '.sign{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:40px;text-align:center;font-size:12px}'+
+    '.sign div{border-top:1px solid #333;padding-top:8px}'+
+    '@media print{.no-print{display:none!important}body{padding:8px}}'+
+    '</style></head><body>'+toolbar+
+    '<h1>سند حسابداری</h1>'+
+    '<div class="meta">'+
+    '<div><b>شماره سند</b>'+esc(d.no)+'</div>'+
+    '<div><b>تاریخ</b>'+esc(d.date)+'</div>'+
+    '<div><b>نوع سند</b>'+esc(d.type)+'</div>'+
+    '<div><b>کاربر</b>'+esc(d.user)+'</div>'+
+    '</div>'+
+    (d.headerDesc?'<div class="desc"><b>شرح سند:</b> '+esc(d.headerDesc)+'</div>':'')+
+    '<table><thead><tr><th>ردیف</th><th>کد حساب</th><th>نام حساب</th><th>شرح</th><th>بدهکار</th><th>بستانکار</th></tr></thead>'+
+    '<tbody>'+rows+'</tbody>'+
+    '<tfoot><tr><td colspan="4">جمع</td><td style="text-align:left">'+formatAmount(d.debit)+'</td><td style="text-align:left">'+formatAmount(d.credit)+'</td></tr></tfoot>'+
+    '</table>'+
+    (d.footerDesc?'<div class="desc"><b>شرح:</b> '+esc(d.footerDesc)+'</div>':'')+
+    '<div class="sign"><div>تنظیم‌کننده</div><div>تأییدکننده</div><div>امضا</div></div>'+
+    '</body></html>';
+}
+function openPrintWindow(autoPrint){
+  var d=collectVoucherPrintData();
+  if(!d.lines.length){toast("ردیفی برای پرینت نیست","err");return;}
+  var w=window.open("","_blank","width=900,height=700");
+  if(!w){toast("پنجره مسدود شد — اجازه پاپ‌آپ بدهید","err");return;}
+  w.document.write(buildPrintHtml(d,true));
+  w.document.close();
+  if(autoPrint){
+    w.focus();
+    setTimeout(function(){try{w.print();}catch(e){}},350);
+  }
+}
+document.getElementById("btnPreview").onclick=function(){openPrintWindow(false);};
+document.getElementById("btnPrint").onclick=function(){openPrintWindow(true);};
 
 document.getElementById("btnSaveVoucher").onclick=function(){var lines=[];document.querySelectorAll("#vBody tr").forEach(function(tr){var code=tr.querySelector(".lc").value.trim();if(!code)return;
 lines.push({code:code,name:tr.querySelector(".ln").value.trim(),desc:tr.querySelector(".ld").value.trim(),debit:parseAmountInput(tr.querySelector(".ldb").value),credit:parseAmountInput(tr.querySelector(".lcr").value)});});
@@ -594,7 +642,6 @@ document.getElementById("queueModalClose").onclick=closeQueueModal;
 document.getElementById("queueModalExit").onclick=closeQueueModal;
 document.getElementById("btnSeedQueue").onclick=function(){var q=loadQ();q.items=q.items||[];
 q.items.push({id:uid(),type:"صندوق",msg:"دریافت صندوق",posted:false,lines:[{code:"1101",name:"صندوق",desc:"دریافت نقدی",debit:1000000,credit:0},{code:"1201",name:"حساب‌های دریافتنی تجاری",desc:"تسویه مشتری",debit:0,credit:1000000}]});
-q.items.push({id:uid(),type:"بانک",msg:"واریز",posted:false,lines:[{code:"110301",name:"بانک ملی جاری",desc:"واریز فروش",debit:5000000,credit:0},{code:"61",name:"فروش کالا",desc:"فروش نقدی",debit:0,credit:5000000}]});
 saveQ(q);renderQueue();toast("نمونه مخزن");};
 
 function addMisc(type,date,amt,desc){var db=loadDB();db.misc=db.misc||[];db.misc.unshift({id:uid(),type:type,date:date,amount:parseAmountInput(amt),desc:desc});saveDB(db);renderAll();toast("ثبت");}
