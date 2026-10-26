@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>قالب ماژول</title>
+<link rel="stylesheet" href="module-kit.css">
+<style>
+/* استایل اختصاصی ماژول در صورت نیاز */
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="brand"><div class="logo">📄</div><b>قالب ماژول</b></div>
+  <nav class="nav">
+    <button type="button" class="mic" id="btnMic">🎤</button>
+    <div class="nav-item"><button type="button" class="nb on" data-panel="p-dash">داشبورد</button>
+      <div class="dd"><button type="button" data-panel="p-dash">نمای کلی</button></div></div>
+    <div class="nav-item"><button type="button" class="nb">ثبت</button>
+      <div class="dd">
+        <!-- __REGISTER_ITEMS__ -->
+        <button type="button" data-panel="p-form1">فرم اصلی</button>
+      </div></div>
+    <div class="nav-item"><button type="button" class="nb">فهرست</button>
+      <div class="dd">
+        <button type="button" data-panel="p-list">فهرست رکوردها</button>
+      </div></div>
+    <div class="nav-item"><button type="button" class="nb">گزارش</button>
+      <div class="dd">
+        <button type="button" data-panel="p-rep">گزارش خلاصه</button>
+      </div></div>
+    <div class="nav-item"><button type="button" class="nb">امکانات</button>
+      <div class="dd">
+        <button type="button" data-panel="p-cal">تقویم شمسی</button>
+        <button type="button" data-panel="p-notes">یادداشت</button>
+        <button type="button" data-panel="p-rems">یادآوری</button>
+        <button type="button" data-panel="p-cartable">کارتابل</button>
+        <button type="button" data-panel="p-office">آفیس (ورد/اکسل/پاورپوینت)</button>
+      </div></div>
+    <div class="nav-item"><button type="button" class="nb">تنظیمات</button>
+      <div class="dd">
+        <button type="button" data-panel="p-users">کاربران</button>
+        <button type="button" data-panel="p-backup">پشتیبان / بازیابی</button>
+      </div></div>
+    <button type="button" class="exit-top" id="btnExit">خروج</button>
+  </nav>
+  <div class="clock">
+    <div class="j" id="dtJ">—</div>
+    <div class="g" id="dtG">—</div>
+    <div class="c" id="dtC">—</div>
+    <div class="u" id="activeUser">کاربر فعال: —</div>
+  </div>
+</header>
+
+<div class="body-row">
+  <main class="main">
+    <div class="panel on" id="p-dash">
+      <div class="kpi" id="kpi"></div>
+      <div class="card"><h2>داشبورد قالب ماژول</h2><p class="empty">آمار یادداشت، یادآوری، کارتابل و فعالیت‌های ماژول</p></div>
+    </div>
+    <div class="panel" id="p-form1"><div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>فرم اصلی</h2>
+      <label>تاریخ</label><input class="jdate" data-jdate>
+      <label>شرح</label><input id="fDesc">
+      <button type="button" class="btn btn-p">ذخیره</button>
+    </div></div>
+    <div class="panel" id="p-list"><div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>فهرست</h2><div class="empty">—</div>
+    </div></div>
+    <div class="panel" id="p-rep"><div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>گزارش</h2><div class="empty">—</div>
+    </div></div>
+    <div class="panel" id="p-cal"><div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>تقویم شمسی</h2>
+      <div id="fullCal"></div>
+      <p class="empty" style="margin-top:8px">با کلیک روی هر روز می‌توانید یادآوری ثبت کنید</p>
+    </div></div>
+    <div class="panel" id="p-notes"><div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>یادداشت</h2><textarea id="noteText" rows="3"></textarea>
+      <div class="list-box" id="notesList"></div>
+      <button type="button" class="btn btn-p" id="btnNoteSave">ذخیره</button>
+      <button type="button" class="btn btn-b" id="btnNoteDel">حذف</button>
+    </div></div>
+    <div class="panel" id="p-rems"><div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>یادآوری</h2>
+      <div class="row"><input id="remText" placeholder="متن"><input id="remDate" class="jdate" data-jdate></div>
+      <button type="button" class="btn btn-p" id="btnRemAdd">افزودن</button>
+      <div class="list-box" id="remsList"></div>
+      <button type="button" class="btn btn-g" id="btnRemProg">در حال انجام</button>
+      <button type="button" class="btn btn-ok" id="btnRemDone">انجام شد</button>
+      <button type="button" class="btn btn-p" id="btnRemSave">ذخیره</button>
+    </div></div>
+    <div class="panel" id="p-cartable"><div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>کارتابل</h2>
+      <div class="row"><input id="cartTo" placeholder="گیرنده"><input id="cartMsg" placeholder="پیام"></div>
+      <input type="file" id="cartFile">
+      <button type="button" class="btn btn-p" id="btnCartSend">ارسال</button>
+      <div class="list-box" id="cartList"></div>
+      <button type="button" class="btn btn-g">در حال انجام</button>
+      <button type="button" class="btn btn-ok">انجام شد</button>
+      <button type="button" class="btn btn-p">ذخیره</button>
+      <button type="button" class="btn btn-b">حذف</button>
+    </div></div>
+    <div class="panel" id="p-office"><div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>آفیس</h2>
+      <button type="button" class="btn btn-p" id="dlWord">ورد</button>
+      <button type="button" class="btn btn-p" id="dlExcel">اکسل</button>
+      <button type="button" class="btn btn-p" id="dlPpt">پاورپوینت</button>
+    </div></div>
+    <div class="panel" id="p-users"><div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>کاربران (فقط Admin)</h2>
+      <div class="row"><input id="nuUser" placeholder="یوزر"><input id="nuPass" type="password" placeholder="رمز"><input id="nuName" placeholder="نام"></div>
+      <button type="button" class="btn btn-p">ایجاد کاربر</button>
+    </div></div>
+    <div class="panel" id="p-backup"><div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>پشتیبان / بازیابی</h2>
+      <button type="button" class="btn btn-p">دانلود محلی</button>
+      <button type="button" class="btn btn-g">بازیابی محلی</button>
+      <p class="empty" style="margin-top:8px">ذخیره ابری (گوگل درایو) — در صورت اتصال</p>
+    </div></div>
+  </main>
+
+  <aside class="side">
+    <div class="block"><button type="button" class="hd">داشبورد</button>
+      <div class="sub"><button type="button" data-panel="p-dash">نمای کلی</button></div></div>
+    <div class="block"><button type="button" class="hd">ثبت</button>
+      <div class="sub"><button type="button" data-panel="p-form1">فرم اصلی</button></div></div>
+    <div class="block"><button type="button" class="hd">فهرست</button>
+      <div class="sub"><button type="button" data-panel="p-list">فهرست رکوردها</button></div></div>
+    <div class="block"><button type="button" class="hd">گزارش</button>
+      <div class="sub"><button type="button" data-panel="p-rep">گزارش خلاصه</button></div></div>
+    <div class="block"><button type="button" class="hd">امکانات</button>
+      <div class="sub">
+        <button type="button" data-panel="p-cal">تقویم شمسی</button>
+        <button type="button" data-panel="p-notes">یادداشت</button>
+        <button type="button" data-panel="p-rems">یادآوری</button>
+        <button type="button" data-panel="p-cartable">کارتابل</button>
+        <button type="button" data-panel="p-office">آفیس</button>
+      </div></div>
+    <div class="block"><button type="button" class="hd">تنظیمات</button>
+      <div class="sub">
+        <button type="button" data-panel="p-users">کاربران</button>
+        <button type="button" data-panel="p-backup">پشتیبان / بازیابی</button>
+      </div></div>
+    <div class="alerts">
+      <button type="button" class="alert" data-panel="p-notes"><span>یادداشت باز</span><span class="n" id="aNotes">0</span></button>
+      <button type="button" class="alert" data-panel="p-rems"><span>یادآوری باز</span><span class="n" id="aRems">0</span></button>
+      <button type="button" class="alert" data-panel="p-cartable"><span>کارتابل</span><span class="n" id="aCart">0</span></button>
+    </div>
+  </aside>
+</div>
+<div class="toast" id="toast"></div>
+<script src="module-kit.js"></script>
+<script>
+(function(){
+  ModuleKit.init({defaultPanel:"p-dash",suiteUrl:"index.html"});
+  ModuleKit.onCalDayClick=function(val){
+    var rem=document.getElementById("remDate");
+    if(rem)rem.value=val;
+    ModuleKit.showPanel("p-rems");
+  };
+  document.getElementById("activeUser").textContent="کاربر فعال: مهمان";
+})();
+</script>
+</body>
+</html>
