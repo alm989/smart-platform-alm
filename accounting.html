@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="app-features" content="voucher,open,close,recon,coding,struct,pl-close,renumber,temp2perm,fiscal,persons,treasury,lock,copy,void,queue,diff,ledger,pl,bs,turn,groups,kol,moin,detail,contrary,legal,journal,trial">
+<meta name="app-features" content="voucher,open,close,recon,coding,struct,pl-close,renumber,temp2perm,fiscal,persons,treasury,lock,copy,void,diff,ledger,pl,bs,cogs,turn,groups,kol,moin,detail,contrary,legal,journal,gl,subledger,detail-ledger,trial,list-v">
 <title>حسابداری</title>
 <style>
 :root{--bg:#0b1220;--panel:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#0ea5e9}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100dvh;display:flex;flex-direction:column}
 .header{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#020617;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:8px}.brand .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:grid;place-items:center;font-size:14px}
+.brand{display:flex;align-items:center;gap:8px}.brand .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:grid;place-items:center}
 .brand b{font-size:.82rem}
 .nav{display:flex;align-items:center;gap:2px;flex:1;justify-content:center;flex-wrap:wrap}
 .nav-item{position:relative}
 .nav-item>.nb{background:#1e293b;border:1px solid var(--line);color:#cbd5e1;border-radius:999px;padding:6px 10px;font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit}
 .nav-item:hover>.nb,.nb.on{background:var(--pri);color:#fff;border-color:var(--pri)}
-.nav-item .dd{display:none;position:absolute;top:calc(100% + 4px);right:0;min-width:210px;background:#1e293b;border:1px solid var(--line);border-radius:12px;padding:5px;z-index:120;box-shadow:0 12px 28px rgba(0,0,0,.5);max-height:72vh;overflow:auto}
+.nav-item .dd{display:none;position:absolute;top:calc(100% + 4px);right:0;min-width:220px;background:#1e293b;border:1px solid var(--line);border-radius:12px;padding:5px;z-index:120;box-shadow:0 12px 28px rgba(0,0,0,.5);max-height:72vh;overflow:auto}
 .nav-item:hover .dd{display:block}
 .nav-item .dd button{display:block;width:100%;text-align:right;background:transparent;border:none;color:var(--txt);padding:7px 10px;border-radius:8px;font-size:.7rem;cursor:pointer;font-family:inherit}
 .nav-item .dd button:hover{background:rgba(14,165,233,.25)}
-.mic{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#7f1d1d;color:#fff;cursor:pointer;font-size:13px}.mic.on{background:#166534}
+.mic{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#7f1d1d;color:#fff;cursor:pointer}.mic.on{background:#166534}
 .exit-top{background:#dc2626;color:#fff;border:none;border-radius:999px;padding:6px 11px;font-size:.7rem;font-weight:800;cursor:pointer;font-family:inherit}
 .clock{display:flex;flex-direction:column;gap:1px;background:#1e293b;border:1px solid #475569;border-radius:10px;padding:4px 8px;min-width:105px;margin-inline-start:auto}
 .clock div{font-size:10px;font-weight:700;line-height:1.35}
@@ -52,7 +52,9 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 @media(max-width:1000px){.row6,.row4{grid-template-columns:1fr 1fr}}
 .btn{border:none;border-radius:8px;padding:6px 11px;font-weight:700;font-size:.7rem;cursor:pointer;font-family:inherit;margin:2px}
 .btn-p{background:var(--pri);color:#fff}.btn-g{background:#334155;color:#e2e8f0}.btn-b{background:#7f1d1d;color:#fecaca}
-.btn-ok{background:#166534;color:#bbf7d0}.btn-print{background:#0ea5e9;color:#fff}.btn-blue{background:#2563eb;color:#fff}.btn-green{background:#16a34a;color:#fff;width:100%;padding:10px;font-size:.8rem}
+.btn-ok{background:#166534;color:#bbf7d0}.btn-print{background:#0ea5e9;color:#fff}.btn-blue{background:#2563eb;color:#fff}
+.btn-green{background:#16a34a;color:#fff}.btn-red{background:#dc2626;color:#fff}
+.btn-sm{padding:4px 8px;font-size:.65rem;border-radius:6px;border:none;font-weight:700;cursor:pointer;font-family:inherit;margin:1px}
 .kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:6px;margin-bottom:9px}
 .kpi .box{background:#0f172a;border:1px solid var(--line);border-radius:11px;padding:9px;text-align:center}
 .kpi .n{font-size:1rem;font-weight:800;color:#7dd3fc}.kpi .l{font-size:.58rem;color:var(--muted)}
@@ -87,7 +89,6 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 .level-tabs button.on{background:#0ea5e9;color:#fff}
 .chk{display:inline-flex;align-items:center;gap:3px;font-size:.7rem;margin:0 5px;color:var(--muted)}.chk input{width:auto}
 .bal{font-weight:800;margin-top:5px;font-size:.78rem}.bal.ok{color:#86efac}.bal.bad{color:#fca5a5}
-.voucher-actions{display:flex;flex-wrap:wrap;gap:3px;margin-top:7px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:160;display:none;align-items:center;justify-content:center;padding:10px}
 .modal.open{display:flex}
 .modal .box{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px;width:min(400px,96vw);max-height:85vh;overflow:auto;position:relative}
@@ -98,16 +99,12 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 .data-table th{background:#1e293b;color:#7dd3fc;padding:7px 5px;border:1px solid var(--line);white-space:nowrap}
 .data-table td{padding:6px 5px;border:1px solid var(--line);background:#0f172a}
 .data-table tfoot td{background:#1e293b;font-weight:800;color:#7dd3fc}
-.data-table a{color:#38bdf8;text-decoration:none;cursor:pointer}
+.data-table a{color:#38bdf8;text-decoration:none}
 .fy-form{border:1px solid var(--line);border-radius:11px;padding:11px;background:#0f172a;margin-bottom:9px;display:none}
 .fy-form.open{display:block}
 .note-box{background:#1e3a5f;border:1px solid #334155;border-radius:9px;padding:8px 10px;font-size:.72rem;color:#cbd5e1;margin:8px 0}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:9px}@media(max-width:800px){.split{grid-template-columns:1fr}}
-.recon-box{border:1px solid var(--line);border-radius:11px;padding:10px;background:#0f172a;margin-bottom:8px}
-.recon-box h3{font-size:.76rem;color:#7dd3fc;margin-bottom:6px}
-.recon-line{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:.74rem;border-bottom:1px dashed #334155}
-.recon-line input{width:120px;text-align:left;direction:ltr}
-.recon-total{font-weight:800;color:#7dd3fc;font-size:.8rem;margin-top:6px;padding-top:6px;border-top:2px solid var(--line);display:flex;justify-content:space-between}
+.btn-green{background:#16a34a;color:#fff}.btn-red{background:#dc2626;color:#fff}
+.status-btns{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}
 </style>
 </head>
 <body>
@@ -136,6 +133,7 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 <div class="nav-item"><button type="button" class="nb">فهرست</button><div class="dd">
 <button type="button" data-panel="p-list-v">فهرست اسناد</button>
 <button type="button" data-panel="p-diff">اسناد دارای مغایرت</button>
+<button type="button" data-panel="p-kol">حساب‌های کل</button>
 <button type="button" data-panel="p-moin">حساب‌های معین</button>
 <button type="button" data-panel="p-detail">تفصیل‌ها</button>
 </div></div>
@@ -143,8 +141,9 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 <button type="button" data-panel="p-fiscal">سال مالی</button>
 <button type="button" data-panel="p-diff">اسناد دارای مغایرت</button>
 <button type="button" data-panel="p-ledger">مرور حساب</button>
-<button type="button" data-panel="p-pl">سود و زیان</button>
 <button type="button" data-panel="p-bs">ترازنامه</button>
+<button type="button" data-panel="p-pl">گزارش سود و زیان</button>
+<button type="button" data-panel="p-cogs">گزارش قیمت تمام‌شده فروش</button>
 <button type="button" data-panel="p-turn">گردش حساب‌ها</button>
 <button type="button" data-panel="p-groups">گروه حساب‌ها</button>
 <button type="button" data-panel="p-kol">حساب‌های کل</button>
@@ -153,6 +152,9 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 <button type="button" data-panel="p-contrary">حساب‌های خلاف ماهیت</button>
 <button type="button" data-panel="p-legal">دفاتر قانونی</button>
 <button type="button" data-panel="p-rep-j">دفتر روزنامه</button>
+<button type="button" data-panel="p-gl">دفتر کل</button>
+<button type="button" data-panel="p-sl">دفتر معین</button>
+<button type="button" data-panel="p-dl">دفتر تفصیلی</button>
 <button type="button" data-panel="p-rep-tb">تراز آزمایشی</button>
 </div></div>
 <div class="nav-item"><button type="button" class="nb">امکانات</button><div class="dd">
@@ -171,8 +173,7 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 </header>
 
 <div class="body-row"><main class="main">
-<div class="panel on" id="p-dash"><div class="kpi" id="kpi"></div><div class="card"><h2>داشبورد حسابداری</h2><p class="empty" id="dashMeta">—</p>
-<p class="note-box">همه فرم‌های ثبت و گزارش در منو موجودند. در صورت حذف ظاهری، فایل کامل را دوباره آپلود کنید.</p></div></div>
+<div class="panel on" id="p-dash"><div class="kpi" id="kpi"></div><div class="card"><h2>داشبورد</h2><p class="empty" id="dashMeta">—</p></div></div>
 
 <div class="panel" id="p-voucher"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>سند حسابداری</h2>
@@ -191,7 +192,7 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 <div class="row3"><div><label>شماره</label><input id="opNo" readonly></div><div><label>تاریخ</label><input id="opDate" class="jdate"></div><div><label>شرح</label><input id="opDesc" value="سند افتتاحیه"></div></div>
 <div class="sheet-wrap"><table class="sheet"><thead><tr><th style="width:34px">ردیف</th><th style="width:95px">کد</th><th style="width:110px">نام</th><th>شرح</th><th style="width:95px">بدهکار</th><th style="width:95px">بستانکار</th><th style="width:30px"></th></tr></thead>
 <tbody id="opBody"></tbody><tfoot><tr><td colspan="4">جمع</td><td id="opFtD">۰</td><td id="opFtC">۰</td><td></td></tr></tfoot></table></div>
-<button type="button" class="btn btn-p" id="btnSaveOpen">ثبت افتتاحیه</button>
+<button type="button" class="btn btn-p" id="btnSaveOpen">ثبت</button>
 </div></div>
 
 <div class="panel" id="p-close"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
@@ -199,8 +200,8 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 <div class="row3"><div><label>شماره</label><input id="clNo" readonly></div><div><label>تاریخ</label><input id="clDate" class="jdate"></div><div><label>شرح</label><input id="clDesc" value="سند اختتامیه"></div></div>
 <div class="sheet-wrap"><table class="sheet"><thead><tr><th style="width:34px">ردیف</th><th style="width:95px">کد</th><th style="width:110px">نام</th><th>شرح</th><th style="width:95px">بدهکار</th><th style="width:95px">بستانکار</th><th style="width:30px"></th></tr></thead>
 <tbody id="clBody"></tbody><tfoot><tr><td colspan="4">جمع</td><td id="clFtD">۰</td><td id="clFtC">۰</td><td></td></tr></tfoot></table></div>
-<button type="button" class="btn btn-ok" id="btnCalcClose">محاسبه از اسناد</button>
-<button type="button" class="btn btn-p" id="btnSaveClose">ثبت اختتامیه</button>
+<button type="button" class="btn btn-ok" id="btnCalcClose">محاسبه</button>
+<button type="button" class="btn btn-p" id="btnSaveClose">ثبت</button>
 </div></div>
 
 <div class="panel" id="p-recon"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
@@ -216,7 +217,7 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 <div class="row4"><div><label>کد</label><input id="cCode"></div><div><label>نام</label><input id="cName"></div>
 <div><label>سطح</label><select id="cLevel"><option value="0">گروه</option><option value="1">کل</option><option value="2">معین</option><option value="3">تفصیلی</option></select></div>
 <div><label>گروه</label><select id="cGroup"><option>دارایی‌های جاری</option><option>دارایی‌های غیرجاری</option><option>حقوق صاحبان سهام</option><option>بدهی‌های جاری</option><option>بدهی‌های غیرجاری</option><option>درآمدها</option><option>هزینه‌ها</option></select></div></div>
-<div class="row"><div><label>ماهیت</label><select id="cNature"><option>بدهکار</option><option>بستانکار</option><option>فرقی ندارد</option></select></div><div><label>کل والد</label><input id="cParent" placeholder="کد کل"></div></div>
+<div class="row"><div><label>ماهیت</label><select id="cNature"><option>بدهکار</option><option>بستانکار</option><option>فرقی ندارد</option></select></div><div><label>کل والد</label><input id="cParent"></div></div>
 <button type="button" class="btn btn-p" id="btnSaveCode">ذخیره</button>
 <button type="button" class="btn btn-g" id="btnSeedCodes">استاندارد</button>
 <div class="list-box" id="codeList"></div>
@@ -256,11 +257,11 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 
 <div class="panel" id="p-fiscal"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>سال مالی</h2>
-<div class="toolbar"><button type="button" class="btn btn-p" id="btnFyNew">＋ سال مالی</button><button type="button" class="btn btn-print" onclick="printPanel('p-fiscal')">چاپ</button><span class="spacer"></span><input id="fySearch" placeholder="جستجو" style="max-width:150px"></div>
+<div class="toolbar"><button type="button" class="btn btn-p" id="btnFyNew">＋ سال مالی</button><span class="spacer"></span><input id="fySearch" placeholder="جستجو" style="max-width:150px"></div>
 <div class="fy-form" id="fyForm"><div class="row3"><div><label>نام *</label><input id="fyName"></div><div><label>شروع *</label><input id="fyStart" class="jdate"></div><div><label>پایان *</label><input id="fyEnd" class="jdate"></div></div>
 <label class="chk"><input type="checkbox" id="fyCurrent"> جاری</label>
 <button type="button" class="btn btn-p" id="btnFySave">ثبت</button><button type="button" class="btn btn-g" id="btnFyCancel">انصراف</button></div>
-<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>عملیات</th><th>ردیف</th><th>شناسه</th><th>نام</th><th>تاریخ شروع</th><th>تاریخ پایان</th><th>ثبت کننده</th></tr></thead><tbody id="fyBody"></tbody></table></div>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>شناسه</th><th>نام</th><th>شروع</th><th>پایان</th><th>ثبت کننده</th></tr></thead><tbody id="fyBody"></tbody></table></div>
 </div></div>
 
 <div class="panel" id="p-persons"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
@@ -295,285 +296,290 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 <button type="button" class="btn btn-b" id="btnVoid">ابطال</button><div id="vdResult" class="list-box"></div>
 </div></div>
 
+<!-- فهرست اسناد - با ستون‌های درخواستی و دکمه‌های موقت/قطعی/تراز -->
+<div class="panel" id="p-list-v"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+<h2>فهرست اسناد</h2>
+<div class="toolbar">
+<button type="button" class="btn btn-p" data-panel="p-voucher">＋ سند جدید</button>
+<button type="button" class="btn btn-print" onclick="printPanel('p-list-v')">چاپ</button>
+<button type="button" class="btn btn-g" id="btnListRefresh">↻</button>
+<span class="spacer"></span>
+<input id="listSearch" placeholder="جستجو" style="max-width:160px">
+</div>
+<div class="sheet-wrap" style="overflow-x:auto">
+<table class="data-table">
+<thead><tr>
+<th></th><th>ردیف</th><th>شماره سند</th><th>تاریخ سند</th><th>شرح</th>
+<th>جمع بدهکار</th><th>جمع بستانکار</th><th>مانده</th>
+<th>وضعیت</th>
+</tr></thead>
+<tbody id="listVBody"></tbody>
+</table>
+</div>
+<p class="empty" id="listVEmpty">داده‌ای موجود نیست</p>
+</div></div>
+
 <div class="panel" id="p-diff"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>اسناد دارای مغایرت</h2>
-<div class="toolbar"><button type="button" class="btn btn-p" data-panel="p-voucher">＋ سند جدید</button><button type="button" class="btn btn-print" onclick="printPanel('p-diff')">چاپ</button><button type="button" class="btn btn-g" id="btnDiffRefresh">↻</button><span class="spacer"></span><input id="diffSearch" placeholder="جستجو" style="max-width:150px"></div>
-<div class="sheet-wrap" style="overflow-x:auto"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>شماره</th><th>نوع</th><th>تاریخ</th><th>بدهکار</th><th>بستانکار</th><th>وضعیت</th><th>ثبت کننده</th></tr></thead><tbody id="diffBody"></tbody></table></div>
+<div class="toolbar"><button type="button" class="btn btn-g" id="btnDiffRefresh">↻</button><span class="spacer"></span><input id="diffSearch" placeholder="جستجو" style="max-width:150px"></div>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>شماره</th><th>نوع</th><th>تاریخ</th><th>بدهکار</th><th>بستانکار</th><th>وضعیت</th></tr></thead><tbody id="diffBody"></tbody></table></div>
 <p class="empty" id="diffEmpty">داده‌ای موجود نیست</p>
 </div></div>
 
 <div class="panel" id="p-ledger"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>مرور حساب</h2>
-<div class="toolbar"><button type="button" class="btn btn-print" onclick="printPanel('p-ledger')">چاپ</button><span class="spacer"></span><input id="ledSearch" placeholder="جستجو" style="max-width:150px"></div>
 <div class="filter-box">
-<div class="row6">
-<div><label>نوع مانده</label><select id="ledBalType"><option value="">بدهکار بستانکار</option><option value="debit">بدهکار</option><option value="credit">بستانکار</option></select></div>
+<div class="row4">
 <div><label>از سال مالی</label><input id="ledFyFrom" placeholder="1405"></div>
 <div><label>تا سال مالی</label><input id="ledFyTo" placeholder="1405"></div>
-<div><label>ماه</label><select id="ledMonth"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select></div>
-<div><label>از ماه</label><input id="ledMonthFrom"></div>
-<div><label>تا ماه</label><input id="ledMonthTo"></div>
+<div><label>از تاریخ</label><input id="ledFrom" class="jdate"></div>
+<div><label>تا تاریخ</label><input id="ledTo" class="jdate"></div>
 </div>
-<div class="row4" style="margin-top:5px">
-<div><label>از شماره</label><input id="ledNoFrom"></div>
-<div><label>تا شماره</label><input id="ledNoTo"></div>
-<div><label>گروه</label><input id="ledGroup"></div>
-<div><label>نوع سند</label><select id="ledVType"><option value="">—</option><option>عمومی</option><option>افتتاحیه</option><option>اختتامیه</option></select></div>
-</div>
-<div style="margin-top:7px;display:flex;flex-wrap:wrap;align-items:center;gap:5px">
+<div style="margin-top:7px">
 <label class="chk"><input type="checkbox" id="ledNoClose"> بدون اختتامیه</label>
 <label class="chk"><input type="checkbox" id="ledNoOpen"> بدون افتتاحیه</label>
 <label class="chk"><input type="checkbox" id="ledNoTemp"> بدون موقت</label>
-<button type="button" class="btn btn-blue" id="btnledRun">بروزرسانی گزارش</button>
+<button type="button" class="btn btn-blue" id="btnledRun">بروزرسانی</button>
 </div>
 </div>
-<div class="level-tabs" id="ledLevels"><button type="button" class="on" data-lv="group">گروه</button><button type="button" data-lv="kol">کل</button><button type="button" data-lv="moin">معین</button><button type="button" data-lv="det">تفصیل</button><button type="button" data-lv="back">برگشت</button></div>
 <div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>توضیحات</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده بدهکار</th><th>مانده بستانکار</th></tr></thead>
 <tbody id="ledBody"></tbody><tfoot><tr><td colspan="4">جمع</td><td id="ledSumD">۰</td><td id="ledSumC">۰</td><td id="ledBalD">۰</td><td id="ledBalC">۰</td></tr></tfoot></table></div>
-<p class="empty" id="ledEmpty">داده‌ای موجود نیست</p>
-</div></div>
-
-<div class="panel" id="p-pl"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-<h2>سود و زیان</h2>
-<div class="filter-box">
-<div class="row6">
-<div><label>نوع مانده</label><select id="plBalType"><option value="">بدهکار بستانکار</option><option value="debit">بدهکار</option><option value="credit">بستانکار</option></select></div>
-<div><label>از سال مالی</label><input id="plFyFrom" placeholder="1405"></div>
-<div><label>تا سال مالی</label><input id="plFyTo" placeholder="1405"></div>
-<div><label>ماه</label><select id="plMonth"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select></div>
-<div><label>از ماه</label><input id="plMonthFrom"></div>
-<div><label>تا ماه</label><input id="plMonthTo"></div>
-</div>
-<div class="row4" style="margin-top:5px">
-<div><label>از شماره</label><input id="plNoFrom"></div>
-<div><label>تا شماره</label><input id="plNoTo"></div>
-<div><label>گروه</label><input id="plGroup"></div>
-<div><label>نوع سند</label><select id="plVType"><option value="">—</option><option>عمومی</option><option>افتتاحیه</option><option>اختتامیه</option></select></div>
-</div>
-<div style="margin-top:7px;display:flex;flex-wrap:wrap;align-items:center;gap:5px">
-<label class="chk"><input type="checkbox" id="plNoClose"> بدون اختتامیه</label>
-<label class="chk"><input type="checkbox" id="plNoOpen"> بدون افتتاحیه</label>
-<label class="chk"><input type="checkbox" id="plNoTemp"> بدون موقت</label>
-<button type="button" class="btn btn-blue" id="btnplRun">بروزرسانی گزارش</button>
-</div>
-</div>
-<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>توضیحات</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده بدهکار</th><th>مانده بستانکار</th></tr></thead>
-<tbody id="plBody"></tbody><tfoot><tr><td colspan="4">جمع</td><td id="plSumD">۰</td><td id="plSumC">۰</td><td id="plBalD">۰</td><td id="plBalC">۰</td></tr>
-<tr><td colspan="4">مانده</td><td colspan="4" id="plRem" style="text-align:center">۰</td></tr></tfoot></table></div>
-<p class="empty" id="plEmpty">داده‌ای موجود نیست</p>
 </div></div>
 
 <div class="panel" id="p-bs"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>ترازنامه</h2>
 <div class="filter-box">
-<div class="row6">
-<div><label>نوع مانده</label><select id="bsBalType"><option value="">بدهکار بستانکار</option><option value="debit">بدهکار</option><option value="credit">بستانکار</option></select></div>
+<div class="row4">
 <div><label>از سال مالی</label><input id="bsFyFrom" placeholder="1405"></div>
 <div><label>تا سال مالی</label><input id="bsFyTo" placeholder="1405"></div>
-<div><label>ماه</label><select id="bsMonth"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select></div>
-<div><label>از ماه</label><input id="bsMonthFrom"></div>
-<div><label>تا ماه</label><input id="bsMonthTo"></div>
+<div><label>از تاریخ</label><input id="bsFrom" class="jdate"></div>
+<div><label>تا تاریخ</label><input id="bsTo" class="jdate"></div>
 </div>
-<div class="row4" style="margin-top:5px">
-<div><label>از شماره</label><input id="bsNoFrom"></div>
-<div><label>تا شماره</label><input id="bsNoTo"></div>
-<div><label>گروه</label><input id="bsGroup"></div>
-<div><label>نوع سند</label><select id="bsVType"><option value="">—</option><option>عمومی</option><option>افتتاحیه</option><option>اختتامیه</option></select></div>
-</div>
-<div style="margin-top:7px;display:flex;flex-wrap:wrap;align-items:center;gap:5px">
+<div style="margin-top:7px">
 <label class="chk"><input type="checkbox" id="bsNoClose"> بدون اختتامیه</label>
 <label class="chk"><input type="checkbox" id="bsNoOpen"> بدون افتتاحیه</label>
 <label class="chk"><input type="checkbox" id="bsNoTemp"> بدون موقت</label>
-<button type="button" class="btn btn-blue" id="btnbsRun">بروزرسانی گزارش</button>
+<button type="button" class="btn btn-blue" id="btnbsRun">بروزرسانی</button>
 </div>
 </div>
-<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>توضیحات</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده بدهکار</th><th>مانده بستانکار</th></tr></thead>
-<tbody id="bsBody"></tbody><tfoot><tr><td colspan="4">جمع دارایی‌ها</td><td id="bsAstD">۰</td><td id="bsAstC">۰</td><td id="bsAstBD">۰</td><td id="bsAstBC">۰</td></tr>
-<tr><td colspan="4">جمع بدهی و حقوق</td><td id="bsLiabD">۰</td><td id="bsLiabC">۰</td><td id="bsLiabBD">۰</td><td id="bsLiabBC">۰</td></tr></tfoot></table></div>
-<p class="empty" id="bsEmpty">داده‌ای موجود نیست</p>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>توضیحات</th><th>مانده بدهکار</th><th>مانده بستانکار</th></tr></thead>
+<tbody id="bsBody"></tbody><tfoot><tr><td colspan="4">جمع</td><td id="bsBalD">۰</td><td id="bsBalC">۰</td></tr></tfoot></table></div>
+</div></div>
+
+<div class="panel" id="p-pl"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+<h2>گزارش سود و زیان</h2>
+<div class="filter-box">
+<div class="row4">
+<div><label>از سال مالی</label><input id="plFyFrom" placeholder="1405"></div>
+<div><label>تا سال مالی</label><input id="plFyTo" placeholder="1405"></div>
+<div><label>از تاریخ</label><input id="plFrom" class="jdate"></div>
+<div><label>تا تاریخ</label><input id="plTo" class="jdate"></div>
+</div>
+<div style="margin-top:7px">
+<label class="chk"><input type="checkbox" id="plNoClose"> بدون اختتامیه</label>
+<label class="chk"><input type="checkbox" id="plNoOpen"> بدون افتتاحیه</label>
+<label class="chk"><input type="checkbox" id="plNoTemp"> بدون موقت</label>
+<button type="button" class="btn btn-blue" id="btnplRun">بروزرسانی</button>
+</div>
+</div>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>توضیحات</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده</th></tr></thead>
+<tbody id="plBody"></tbody><tfoot><tr><td colspan="4">نتیجه</td><td id="plSumD">۰</td><td id="plSumC">۰</td><td id="plRem">۰</td></tr></tfoot></table></div>
+</div></div>
+
+<!-- قیمت تمام‌شده فروش -->
+<div class="panel" id="p-cogs"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+<h2>گزارش قیمت تمام‌شده فروش</h2>
+<div class="filter-box">
+<div class="row4">
+<div><label>از سال مالی</label><input id="cogsFyFrom" placeholder="1405"></div>
+<div><label>تا سال مالی</label><input id="cogsFyTo" placeholder="1405"></div>
+<div><label>از تاریخ</label><input id="cogsFrom" class="jdate"></div>
+<div><label>تا تاریخ</label><input id="cogsTo" class="jdate"></div>
+</div>
+<div style="margin-top:7px">
+<label class="chk"><input type="checkbox" id="cogsNoClose"> بدون اختتامیه</label>
+<label class="chk"><input type="checkbox" id="cogsNoOpen"> بدون افتتاحیه</label>
+<label class="chk"><input type="checkbox" id="cogsNoTemp"> بدون موقت</label>
+<button type="button" class="btn btn-blue" id="btncogsRun">بروزرسانی</button>
+</div>
+</div>
+<div class="filter-box" style="margin-top:-4px">
+<div class="row3">
+<div><label>موجودی اول دوره</label><input id="cogsBeg" class="amount" value="0"></div>
+<div><label>خرید طی دوره</label><input id="cogsPurch" class="amount" value="0"></div>
+<div><label>موجودی پایان دوره</label><input id="cogsEnd" class="amount" value="0"></div>
+</div>
+<button type="button" class="btn btn-blue" id="btnCogsCalc" style="margin-top:8px">محاسبه قیمت تمام‌شده</button>
+</div>
+<div class="sheet-wrap"><table class="data-table">
+<thead><tr><th>شرح</th><th>مبلغ</th></tr></thead>
+<tbody id="cogsBody"></tbody>
+</table></div>
 </div></div>
 
 <div class="panel" id="p-turn"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>گردش حساب‌ها</h2>
 <div class="filter-box">
-<div class="row4"><div><label>کد حساب *</label><div class="code-wrap"><input id="turnCode"><button type="button" class="code-btn" id="btnTurnPick">📋</button></div></div>
-<div><label>از تاریخ</label><input id="turnFrom" class="jdate"></div><div><label>تا تاریخ</label><input id="turnTo" class="jdate"></div>
-<div><label>نوع سند</label><select id="turnVType"><option value="">همه</option><option>عمومی</option><option>افتتاحیه</option><option>اختتامیه</option></select></div></div>
-<button type="button" class="btn btn-blue" id="btnTurnRun">بروزرسانی گزارش</button>
+<div class="row3"><div><label>کد حساب</label><div class="code-wrap"><input id="turnCode"><button type="button" class="code-btn" id="btnTurnPick">📋</button></div></div>
+<div><label>از تاریخ</label><input id="turnFrom" class="jdate"></div><div><label>تا تاریخ</label><input id="turnTo" class="jdate"></div></div>
+<button type="button" class="btn btn-blue" id="btnTurnRun">بروزرسانی</button>
 </div>
-<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>شماره</th><th>تاریخ</th><th>نوع</th><th>شرح</th><th>بدهکار</th><th>بستانکار</th><th>مانده</th></tr></thead>
-<tbody id="turnBody"></tbody><tfoot><tr><td colspan="5">جمع</td><td></td><td id="turnSumD">۰</td><td id="turnSumC">۰</td><td id="turnSumBal">۰</td></tr></tfoot></table></div>
-<p class="empty" id="turnEmpty">کد حساب را وارد کنید</p>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th>ردیف</th><th>شماره سند</th><th>تاریخ سند</th><th>شرح سند</th><th>بدهکار</th><th>بستانکار</th><th>مانده</th></tr></thead>
+<tbody id="turnBody"></tbody></table></div>
 </div></div>
 
 <div class="panel" id="p-groups"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>گروه حساب‌ها</h2>
-<div class="toolbar"><button type="button" class="btn btn-p" id="btnGrpNew">＋ گروه</button><button type="button" class="btn btn-g" id="btnGrpRefresh">↻</button><span class="spacer"></span><input id="grpSearch" placeholder="جستجو" style="max-width:150px"></div>
+<div class="toolbar"><button type="button" class="btn btn-p" id="btnGrpNew">＋ گروه</button><button type="button" class="btn btn-g" id="btnGrpRefresh">↻</button></div>
 <div class="fy-form" id="grpForm"><div class="row3"><div><label>کد</label><input id="grpCode"></div><div><label>عنوان</label><input id="grpTitle"></div>
 <div><label>ماهیت</label><select id="grpNature"><option>بدهکار</option><option>بستانکار</option><option>فرقی ندارد</option></select></div></div>
 <button type="button" class="btn btn-p" id="btnGrpSave">ثبت</button><button type="button" class="btn btn-g" id="btnGrpCancel">انصراف</button></div>
-<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>عنوان</th><th>ماهیت</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده بدهکار</th><th>مانده بستانکار</th></tr></thead>
-<tbody id="grpBody"></tbody></table></div>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>عنوان</th><th>ماهیت</th></tr></thead><tbody id="grpBody"></tbody></table></div>
 </div></div>
 
 <div class="panel" id="p-kol"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>حساب‌های کل</h2>
-<div class="toolbar"><button type="button" class="btn btn-p" data-panel="p-coding">＋ حساب</button><button type="button" class="btn btn-g" id="btnKolRefresh">↻</button><span class="spacer"></span><input id="kolSearch" placeholder="جستجو" style="max-width:150px"></div>
-<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>عنوان</th><th>گروه</th><th>ماهیت</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده بدهکار</th><th>مانده بستانکار</th></tr></thead>
+<div class="toolbar">
+<button type="button" class="btn btn-p" data-panel="p-coding">＋ حساب کل</button>
+<button type="button" class="btn btn-print" onclick="printPanel('p-kol')">چاپ</button>
+<button type="button" class="btn btn-g" id="btnKolRefresh">↻</button>
+<span class="spacer"></span><input id="kolSearch" placeholder="جستجو" style="max-width:150px">
+</div>
+<div class="sheet-wrap"><table class="data-table">
+<thead><tr><th></th><th>عملیات</th><th>ردیف</th><th>کد</th><th>عنوان</th><th>گروه</th><th>ماهیت</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده بدهکار</th><th>مانده بستانکار</th></tr></thead>
 <tbody id="kolBody"></tbody></table></div>
+<p class="empty" id="kolEmpty" style="display:none">داده‌ای موجود نیست</p>
 </div></div>
 
-<!-- حساب‌های معین - تصویر 17 -->
 <div class="panel" id="p-moin"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>حساب‌های معین</h2>
 <div class="toolbar">
 <button type="button" class="btn btn-p" id="btnMoinNew">＋ معین جدید</button>
 <button type="button" class="btn btn-print" onclick="printPanel('p-moin')">چاپ</button>
-<button type="button" class="btn btn-g" onclick="excelTable('moinBody','moin.csv')">اکسل</button>
 <button type="button" class="btn btn-g" id="btnMoinRefresh">↻</button>
-<span class="spacer"></span>
-<input id="moinSearch" placeholder="جستجو" style="max-width:160px">
+<span class="spacer"></span><input id="moinSearch" placeholder="جستجو" style="max-width:150px">
 </div>
 <div class="fy-form" id="moinForm">
-<div class="row4">
-<div><label>کد *</label><input id="moinCode" placeholder="11010"></div>
-<div><label>نام *</label><input id="moinName"></div>
+<div class="row4"><div><label>کد *</label><input id="moinCode"></div><div><label>نام *</label><input id="moinName"></div>
 <div><label>گروه</label><select id="moinGroup"><option>دارایی‌های جاری</option><option>دارایی‌های غیرجاری</option><option>حقوق صاحبان سهام</option><option>بدهی‌های جاری</option><option>بدهی‌های غیرجاری</option><option>درآمدها</option><option>هزینه‌ها</option></select></div>
-<div><label>کل</label><input id="moinKol" placeholder="کد کل مثلاً 11"></div>
+<div><label>کل</label><input id="moinKol"></div></div>
+<div class="row"><div><label>ماهیت</label><select id="moinNature"><option>بدهکار</option><option>بستانکار</option><option>فرقی ندارد</option></select></div><div><label>توضیحات</label><input id="moinNote"></div></div>
+<button type="button" class="btn btn-p" id="btnMoinSave">ثبت</button><button type="button" class="btn btn-g" id="btnMoinCancel">انصراف</button>
 </div>
-<div class="row4">
-<div><label>ماهیت</label><select id="moinNature"><option>بدهکار</option><option>بستانکار</option><option>فرقی ندارد</option></select></div>
-<div><label>نوع</label><select id="moinType"><option value="">—</option><option>دائم</option><option>موقت</option></select></div>
-<div><label>پیگیری</label><select id="moinTrack"><option value="">—</option><option>دارد</option><option>ندارد</option></select></div>
-<div><label>توضیحات</label><input id="moinNote"></div>
-</div>
-<button type="button" class="btn btn-p" id="btnMoinSave">ثبت</button>
-<button type="button" class="btn btn-g" id="btnMoinCancel">انصراف</button>
-</div>
-<div class="sheet-wrap" style="overflow-x:auto">
-<table class="data-table">
-<thead><tr>
-<th style="width:28px"></th><th style="width:40px">عملیات</th><th style="width:36px">ردیف</th>
-<th>کد</th><th>گروه</th><th>کل</th><th>نام</th><th>ماهیت</th><th>نوع</th><th>پیگیری</th><th>توضیحات</th>
-</tr></thead>
-<tbody id="moinBody"></tbody>
-</table>
-</div>
-<p class="empty" id="moinEmpty" style="display:none">داده‌ای موجود نیست</p>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>گروه</th><th>کل</th><th>نام</th><th>ماهیت</th><th>توضیحات</th></tr></thead><tbody id="moinBody"></tbody></table></div>
 </div></div>
 
-<!-- تفصیل‌ها - تصویر 18 -->
 <div class="panel" id="p-detail"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>تفصیل‌ها</h2>
 <div class="toolbar">
 <button type="button" class="btn btn-p" id="btnDetNew">＋ سطح تفصیل</button>
 <button type="button" class="btn btn-print" onclick="printPanel('p-detail')">چاپ</button>
-<button type="button" class="btn btn-g" onclick="excelTable('detBody','detail.csv')">اکسل</button>
 <button type="button" class="btn btn-g" id="btnDetRefresh">↻</button>
-<span class="spacer"></span>
-<input id="detSearch" placeholder="جستجو" style="max-width:160px">
+<span class="spacer"></span><input id="detSearch" placeholder="جستجو" style="max-width:150px">
 </div>
 <div class="fy-form" id="detForm">
-<div class="row4">
-<div><label>نام *</label><input id="detName"></div>
-<div><label>کد حساب</label><input id="detAccCode"></div>
-<div><label>گروه</label><select id="detGroup"><option>سایر</option><option>اشخاص</option><option>مرکز هزینه</option><option>پروژه</option></select></div>
-<div><label>اتصال به زیرسیستم</label><input id="detSubsys"></div>
+<div class="row3"><div><label>نام *</label><input id="detName"></div><div><label>کد حساب</label><input id="detAccCode"></div>
+<div><label>گروه</label><select id="detGroup"><option>سایر</option><option>اشخاص</option><option>مرکز هزینه</option><option>پروژه</option></select></div></div>
+<div class="row"><div><label>اتصال به زیرسیستم</label><input id="detSubsys"></div><div><label>توضیحات</label><input id="detNote"></div></div>
+<button type="button" class="btn btn-p" id="btnDetSave">ثبت</button><button type="button" class="btn btn-g" id="btnDetCancel">انصراف</button>
 </div>
-<div class="row"><div><label>برچسب</label><input id="detTag"></div><div><label>توضیحات</label><input id="detNote"></div></div>
-<button type="button" class="btn btn-p" id="btnDetSave">ثبت</button>
-<button type="button" class="btn btn-g" id="btnDetCancel">انصراف</button>
-</div>
-<div class="sheet-wrap" style="overflow-x:auto">
-<table class="data-table">
-<thead><tr>
-<th style="width:28px"></th><th style="width:40px">عملیات</th><th style="width:36px">ردیف</th>
-<th>شناسه</th><th>نام</th><th>کد حساب</th><th>گروه</th><th>اتصال به زیرسیستم</th><th>برچسب</th><th>توضیحات</th><th>ثبت کننده</th>
-</tr></thead>
-<tbody id="detBody"></tbody>
-</table>
-</div>
-<p class="empty" id="detEmpty" style="display:none">داده‌ای موجود نیست</p>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>شناسه</th><th>نام</th><th>کد حساب</th><th>گروه</th><th>زیرسیستم</th><th>ثبت کننده</th></tr></thead><tbody id="detBody"></tbody></table></div>
 </div></div>
 
-<!-- حساب‌های خلاف ماهیت - تصویر 19 -->
 <div class="panel" id="p-contrary"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>حساب‌های خلاف ماهیت</h2>
-<div class="toolbar">
-<button type="button" class="btn btn-print" onclick="printPanel('p-contrary')">چاپ</button>
-<button type="button" class="btn btn-g" onclick="excelTable('ctrBody','contrary.csv')">اکسل</button>
-<button type="button" class="btn btn-g" id="btnCtrRefresh">↻</button>
-<span class="spacer"></span>
-<input id="ctrSearch" placeholder="جستجو" style="max-width:150px">
-</div>
-<div class="filter-box">
-<div class="row4">
-<div><label>از سال مالی</label><input id="ctrFyFrom" placeholder="1405"></div>
-<div><label>تا سال مالی</label><input id="ctrFyTo" placeholder="1405"></div>
-<div><label>نوع سند</label><select id="ctrVType"><option value="">—</option><option>عمومی</option><option>افتتاحیه</option><option>اختتامیه</option></select></div>
-<div><label>ماه</label><select id="ctrMonth"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select></div>
-</div>
-<div class="row4" style="margin-top:5px">
-<div><label>از ماه</label><input id="ctrMonthFrom"></div>
-<div><label>تا ماه</label><input id="ctrMonthTo"></div>
-<div><label>تاریخ</label><input id="ctrDate" class="jdate"></div>
-<div><label>گروه</label><input id="ctrGroup"></div>
-</div>
-<div class="row4" style="margin-top:5px">
-<div><label>کل</label><input id="ctrKol"></div>
-<div><label>معین</label><input id="ctrMoin"></div>
-<div><label>سطح تفصیل</label><input id="ctrDet"></div>
-<div></div>
-</div>
 <div class="note-box">فقط برای ردیف‌هایی که معین حساب مقابل تعیین شده باشد سند تعدیل ماهیت ثبت می‌شود</div>
-<button type="button" class="btn btn-green" id="btnCtrAdjust">ثبت سند تعدیل حساب</button>
-</div>
-<div class="sheet-wrap" style="overflow-x:auto">
-<table class="data-table">
-<thead><tr>
-<th style="width:28px"></th><th style="width:36px">ردیف</th><th>معین</th><th>سطح چهارم</th><th>ماهیت</th>
-<th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده</th><th>حساب معین مقابل</th>
-</tr></thead>
-<tbody id="ctrBody"></tbody>
-</table>
-</div>
+<button type="button" class="btn btn-ok" id="btnCtrRefresh">بروزرسانی</button>
+<button type="button" class="btn btn-green" id="btnCtrAdjust" style="width:auto">ثبت سند تعدیل حساب</button>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>معین</th><th>ماهیت</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده</th><th>حساب معین مقابل</th></tr></thead><tbody id="ctrBody"></tbody></table></div>
 <p class="empty" id="ctrEmpty">داده‌ای موجود نیست</p>
 </div></div>
 
-<!-- دفاتر قانونی - تصویر 12 -->
 <div class="panel" id="p-legal"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>دفاتر قانونی</h2>
 <div class="filter-box">
-<div class="row3">
-<div><label>نوع دفتر</label><select id="legType"><option value="kol">کل</option><option value="roozname">روزنامه</option><option value="moin">معین</option></select></div>
-<div><label>از سال مالی</label><input id="legFyFrom" placeholder="1405"></div>
-<div><label>تا سال مالی</label><input id="legFyTo" placeholder="1405"></div>
+<div class="row3"><div><label>نوع دفتر</label><select id="legType"><option value="kol">کل</option><option value="roozname">روزنامه</option><option value="moin">معین</option></select></div>
+<div><label>از تاریخ</label><input id="legFrom" class="jdate"></div><div><label>تا تاریخ</label><input id="legTo" class="jdate"></div></div>
+<div class="row"><div><label>حساب کل</label><div class="code-wrap"><input id="legKol"><button type="button" class="code-btn" id="btnLegPick">📋</button></div></div><div></div></div>
+<button type="button" class="btn btn-p" id="btnLegRun">دریافت گزارش</button>
 </div>
-<div class="row3" style="margin-top:6px">
-<div><label>حساب کل</label><div class="code-wrap"><input id="legKol" placeholder="کد حساب کل"><button type="button" class="code-btn" id="btnLegPick">📋</button></div></div>
-<div><label>از تاریخ</label><input id="legFrom" class="jdate"></div>
-<div><label>تا تاریخ</label><input id="legTo" class="jdate"></div>
-</div>
-<button type="button" class="btn btn-p" id="btnLegRun" style="margin-top:10px">دریافت گزارش</button>
-</div>
-<div class="sheet-wrap" style="overflow-x:auto">
-<table class="data-table">
-<thead><tr>
-<th>ردیف</th><th>شماره سند</th><th>تاریخ</th><th>کد حساب</th><th>نام حساب</th><th>شرح</th><th>بدهکار</th><th>بستانکار</th><th>مانده</th>
-</tr></thead>
-<tbody id="legBody"></tbody>
-<tfoot><tr><td colspan="6">جمع</td><td id="legSumD">۰</td><td id="legSumC">۰</td><td id="legSumBal">۰</td></tr></tfoot>
-</table>
-</div>
-<p class="empty" id="legEmpty">پس از تنظیم فیلترها، دریافت گزارش را بزنید</p>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th>ردیف</th><th>شماره سند</th><th>تاریخ سند</th><th>شرح سند</th><th>بدهکار</th><th>بستانکار</th></tr></thead>
+<tbody id="legBody"></tbody></table></div>
 </div></div>
 
-<div class="panel" id="p-list-v"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-<h2>فهرست اسناد</h2><div id="listV"></div></div></div>
+<!-- دفتر روزنامه / کل / معین / تفصیلی - با ستون‌های درخواستی -->
 <div class="panel" id="p-rep-j"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-<h2>دفتر روزنامه</h2><div id="repJ"></div></div></div>
+<h2>دفتر روزنامه</h2>
+<div class="filter-box">
+<div class="row4">
+<div><label>از سال مالی</label><input id="jnlFyFrom" placeholder="1405"></div>
+<div><label>تا سال مالی</label><input id="jnlFyTo" placeholder="1405"></div>
+<div><label>از تاریخ</label><input id="jnlFrom" class="jdate"></div>
+<div><label>تا تاریخ</label><input id="jnlTo" class="jdate"></div>
+</div>
+<div style="margin-top:7px">
+<label class="chk"><input type="checkbox" id="jnlNoClose"> بدون اختتامیه</label>
+<label class="chk"><input type="checkbox" id="jnlNoOpen"> بدون افتتاحیه</label>
+<label class="chk"><input type="checkbox" id="jnlNoTemp"> بدون موقت</label>
+<button type="button" class="btn btn-blue" id="btnjnlRun">بروزرسانی</button>
+</div>
+</div>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th>ردیف</th><th>شماره سند</th><th>تاریخ سند</th><th>شرح سند</th><th>کد</th><th>بدهکار</th><th>بستانکار</th></tr></thead>
+<tbody id="jnlBody"></tbody><tfoot><tr><td colspan="5">جمع</td><td id="jnlSumD">۰</td><td id="jnlSumC">۰</td></tr></tfoot></table></div>
+</div></div>
+
+<div class="panel" id="p-gl"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+<h2>دفتر کل</h2>
+<div class="filter-box">
+<div class="row3"><div><label>کد حساب کل</label><div class="code-wrap"><input id="glCode"><button type="button" class="code-btn" id="btnGlPick">📋</button></div></div>
+<div><label>از تاریخ</label><input id="glFrom" class="jdate"></div><div><label>تا تاریخ</label><input id="glTo" class="jdate"></div></div>
+<button type="button" class="btn btn-blue" id="btnGlRun">بروزرسانی</button>
+</div>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th>ردیف</th><th>شماره سند</th><th>تاریخ سند</th><th>شرح سند</th><th>بدهکار</th><th>بستانکار</th><th>مانده</th></tr></thead>
+<tbody id="glBody"></tbody><tfoot><tr><td colspan="4">جمع</td><td id="glSumD">۰</td><td id="glSumC">۰</td><td id="glSumBal">۰</td></tr></tfoot></table></div>
+</div></div>
+
+<div class="panel" id="p-sl"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+<h2>دفتر معین</h2>
+<div class="filter-box">
+<div class="row3"><div><label>کد حساب معین</label><div class="code-wrap"><input id="slCode"><button type="button" class="code-btn" id="btnSlPick">📋</button></div></div>
+<div><label>از تاریخ</label><input id="slFrom" class="jdate"></div><div><label>تا تاریخ</label><input id="slTo" class="jdate"></div></div>
+<button type="button" class="btn btn-blue" id="btnSlRun">بروزرسانی</button>
+</div>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th>ردیف</th><th>شماره سند</th><th>تاریخ سند</th><th>شرح سند</th><th>بدهکار</th><th>بستانکار</th><th>مانده</th></tr></thead>
+<tbody id="slBody"></tbody><tfoot><tr><td colspan="4">جمع</td><td id="slSumD">۰</td><td id="slSumC">۰</td><td id="slSumBal">۰</td></tr></tfoot></table></div>
+</div></div>
+
+<div class="panel" id="p-dl"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+<h2>دفتر تفصیلی</h2>
+<div class="filter-box">
+<div class="row3"><div><label>کد / نام تفصیل</label><input id="dlCode" placeholder="کد یا نام تفصیل"></div>
+<div><label>از تاریخ</label><input id="dlFrom" class="jdate"></div><div><label>تا تاریخ</label><input id="dlTo" class="jdate"></div></div>
+<button type="button" class="btn btn-blue" id="btnDlRun">بروزرسانی</button>
+</div>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th>ردیف</th><th>شماره سند</th><th>تاریخ سند</th><th>شرح سند</th><th>بدهکار</th><th>بستانکار</th><th>مانده</th></tr></thead>
+<tbody id="dlBody"></tbody><tfoot><tr><td colspan="4">جمع</td><td id="dlSumD">۰</td><td id="dlSumC">۰</td><td id="dlSumBal">۰</td></tr></tfoot></table></div>
+</div></div>
+
 <div class="panel" id="p-rep-tb"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-<h2>تراز آزمایشی</h2><div id="repTB"></div></div></div>
+<h2>تراز آزمایشی</h2>
+<div class="filter-box">
+<div class="row4">
+<div><label>از سال مالی</label><input id="tbFyFrom" placeholder="1405"></div>
+<div><label>تا سال مالی</label><input id="tbFyTo" placeholder="1405"></div>
+<div><label>از تاریخ</label><input id="tbFrom" class="jdate"></div>
+<div><label>تا تاریخ</label><input id="tbTo" class="jdate"></div>
+</div>
+<div style="margin-top:7px">
+<label class="chk"><input type="checkbox" id="tbNoClose"> بدون اختتامیه</label>
+<label class="chk"><input type="checkbox" id="tbNoOpen"> بدون افتتاحیه</label>
+<label class="chk"><input type="checkbox" id="tbNoTemp"> بدون موقت</label>
+<button type="button" class="btn btn-blue" id="btntbRun">بروزرسانی</button>
+</div>
+</div>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th>کد</th><th>نام</th><th>بدهکار</th><th>بستانکار</th></tr></thead><tbody id="tbBody"></tbody></table></div>
+</div></div>
+
 <div class="panel" id="p-cal"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
 <h2>تقویم شمسی</h2><div id="fullCal"></div></div></div>
 <div class="panel" id="p-notes"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
@@ -617,23 +623,28 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 <div class="block"><button type="button" class="hd">فهرست</button><div class="sub">
 <button type="button" data-panel="p-list-v">فهرست اسناد</button>
 <button type="button" data-panel="p-diff">اسناد دارای مغایرت</button>
+<button type="button" data-panel="p-kol">حساب‌های کل</button>
 <button type="button" data-panel="p-moin">حساب‌های معین</button>
 <button type="button" data-panel="p-detail">تفصیل‌ها</button>
 </div></div>
 <div class="block"><button type="button" class="hd">گزارش</button><div class="sub">
-<button type="button" data-panel="p-fiscal">سال مالی</button>
-<button type="button" data-panel="p-diff">اسناد دارای مغایرت</button>
-<button type="button" data-panel="p-ledger">مرور حساب</button>
-<button type="button" data-panel="p-pl">سود و زیان</button>
 <button type="button" data-panel="p-bs">ترازنامه</button>
+<button type="button" data-panel="p-pl">سود و زیان</button>
+<button type="button" data-panel="p-cogs">قیمت تمام‌شده فروش</button>
+<button type="button" data-panel="p-ledger">مرور حساب</button>
 <button type="button" data-panel="p-turn">گردش حساب‌ها</button>
+<button type="button" data-panel="p-rep-j">دفتر روزنامه</button>
+<button type="button" data-panel="p-gl">دفتر کل</button>
+<button type="button" data-panel="p-sl">دفتر معین</button>
+<button type="button" data-panel="p-dl">دفتر تفصیلی</button>
+<button type="button" data-panel="p-legal">دفاتر قانونی</button>
 <button type="button" data-panel="p-groups">گروه حساب‌ها</button>
 <button type="button" data-panel="p-kol">حساب‌های کل</button>
 <button type="button" data-panel="p-moin">حساب‌های معین</button>
 <button type="button" data-panel="p-detail">تفصیل‌ها</button>
 <button type="button" data-panel="p-contrary">خلاف ماهیت</button>
-<button type="button" data-panel="p-legal">دفاتر قانونی</button>
-<button type="button" data-panel="p-rep-j">روزنامه</button>
+<button type="button" data-panel="p-diff">اسناد مغایرت</button>
+<button type="button" data-panel="p-fiscal">سال مالی</button>
 <button type="button" data-panel="p-rep-tb">تراز آزمایشی</button>
 </div></div>
 <div class="block"><button type="button" class="hd">امکانات</button><div class="sub">
@@ -658,7 +669,7 @@ input,select,textarea{width:100%;padding:6px;border-radius:8px;border:1px solid 
 
 <script>
 (function(){
-var MOD="accounting",KEY="smart_accounting_v9";
+var MOD="accounting",KEY="smart_accounting_v10";
 var FA=["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"],JM=["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"],JW=["ش","ی","د","س","چ","پ","ج"];
 var DEFAULT_GROUPS=[{code:"1",title:"دارایی‌های جاری",nature:"بدهکار"},{code:"2",title:"دارایی‌های غیرجاری",nature:"بدهکار"},{code:"3",title:"حقوق صاحبان سهام",nature:"بستانکار"},{code:"4",title:"بدهی‌های جاری",nature:"بستانکار"},{code:"5",title:"بدهی‌های غیرجاری",nature:"بستانکار"},{code:"6",title:"درآمدها",nature:"بستانکار"},{code:"7",title:"هزینه‌ها",nature:"بدهکار"}];
 var SEED=[
@@ -666,10 +677,7 @@ var SEED=[
 {code:"11",name:"موجودی نقد و بانک",level:1,group:"دارایی‌های جاری",nature:"بدهکار"},
 {code:"11010",name:"صندوق",level:2,group:"دارایی‌های جاری",nature:"بدهکار",parent:"11"},
 {code:"11011",name:"صندوق ارزی",level:2,group:"دارایی‌های جاری",nature:"بدهکار",parent:"11"},
-{code:"11012",name:"تنخواه‌گردان‌های ریالی",level:2,group:"دارایی‌های جاری",nature:"بدهکار",parent:"11"},
-{code:"11013",name:"تنخواه‌گردان‌های ارزی",level:2,group:"دارایی‌های جاری",nature:"بدهکار",parent:"11"},
 {code:"11014",name:"موجودی بانک‌های ریالی",level:2,group:"دارایی‌های جاری",nature:"بدهکار",parent:"11"},
-{code:"11015",name:"موجودی بانک‌های ارزی",level:2,group:"دارایی‌های جاری",nature:"بدهکار",parent:"11"},
 {code:"12",name:"حساب‌های دریافتنی",level:1,group:"دارایی‌های جاری",nature:"بدهکار"},
 {code:"4",name:"بدهی‌های جاری",level:0,group:"بدهی‌های جاری",nature:"بستانکار"},
 {code:"41",name:"حساب‌های پرداختنی",level:1,group:"بدهی‌های جاری",nature:"بستانکار"},
@@ -678,21 +686,15 @@ var SEED=[
 {code:"6",name:"درآمدها",level:0,group:"درآمدها",nature:"بستانکار",kind:"pl"},
 {code:"61",name:"فروش",level:1,group:"درآمدها",nature:"بستانکار",kind:"pl"},
 {code:"7",name:"هزینه‌ها",level:0,group:"هزینه‌ها",nature:"بدهکار",kind:"pl"},
-{code:"71",name:"هزینه عمومی",level:1,group:"هزینه‌ها",nature:"بدهکار",kind:"pl"}
+{code:"71",name:"هزینه عمومی",level:1,group:"هزینه‌ها",nature:"بدهکار",kind:"pl"},
+{code:"72",name:"بهای تمام‌شده کالای فروش‌رفته",level:1,group:"هزینه‌ها",nature:"بدهکار",kind:"pl",cogs:true}
 ];
 var DETAIL_SEED=[
 {name:"استهلاک انباشته نرم‌افزار",accCode:"1741",group:"سایر",subsys:"بیمه طرف قرارداد"},
 {name:"استهلاک انباشته لوازم آزمایشگاهی",accCode:"1740",group:"سایر",subsys:"هزینه بیمه"},
-{name:"استهلاک انباشته اثاثیه و منصوبات",accCode:"1739",group:"سایر",subsys:"موجودی فروخته شده"},
-{name:"استهلاک انباشته وسائط نقلیه",accCode:"1738",group:"سایر",subsys:"تراز اعتبار"},
-{name:"استهلاک انباشته ابزارآلات و قالب‌ها",accCode:"1737",group:"سایر",subsys:"موجودی در راه"},
-{name:"استهلاک انباشته ماشین‌آلات و تجهیزات تولید",accCode:"1736",group:"سایر",subsys:"گمرک"},
-{name:"استهلاک انباشته تاسیسات",accCode:"1735",group:"سایر",subsys:"بهای تمام شده کالای تولید شده"},
-{name:"استهلاک انباشته ساختمان‌ها",accCode:"1734",group:"سایر",subsys:"کالای در حال ساخت"},
 {name:"کنترل دارایی‌ها - انبار",accCode:"1733",group:"سایر",subsys:"سرمایه"},
 {name:"کنترل دارایی‌ها - تنخواه",accCode:"1732",group:"سایر",subsys:"سربار"}
 ];
-var ledLevel="group",ledStack=[];
 function toFa(n){return String(n).replace(/\d/g,function(d){return FA[+d];});}
 function toEn(s){return String(s).replace(/[۰-۹]/g,function(d){return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);}).replace(/,/g,"");}
 function g2j(gy,gm,gd){var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];var gy2=(gm>2)?(gy+1):gy;var days=355666+365*gy+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+g_d_m[gm-1];var jy=-1595+33*Math.floor(days/12053);days%=12053;jy+=4*Math.floor(days/1461);days%=1461;if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}var jm=(days<186)?1+Math.floor(days/31):7+Math.floor((days-186)/30);var jd=1+((days<186)?(days%31):((days-186)%30));return{jy:jy,jm:jm,jd:jd};}
@@ -716,7 +718,6 @@ function parseAmountInput(s){return parseInt(toEn(String(s)).replace(/[^\d\-]/g,
 function faAmt(n){return toFa(formatAmount(n));}
 function todayJ(){var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());return fmtJ(j.jy,j.jm,j.jd);}
 window.printPanel=function(id){var el=document.getElementById(id);if(!el)return;var sw=el.querySelector(".sheet-wrap");var w=window.open("","_blank");w.document.write("<html dir=rtl><body style='font-family:Tahoma;font-size:11px'><h2>"+(el.querySelector("h2")||{}).textContent+"</h2>"+(sw?sw.innerHTML:"")+"<script>print()<\/script></body></html>");};
-window.excelTable=function(bodyId,name){var t=document.getElementById(bodyId);if(!t)return;var a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+(t.closest("table")||t).innerText],{type:"text/csv"}));a.download=name;a.click();};
 
 function attachJDate(input){if(!input||input._j)return;input._j=true;
 var wrap=input.parentNode;if(!wrap.classList.contains("date-wrap")){var d=document.createElement("div");d.className="date-wrap";wrap.insertBefore(d,input);d.appendChild(input);wrap=d;}
@@ -738,7 +739,7 @@ var html='<div class="jcal" style="position:static;width:100%;max-width:320px"><
 JW.forEach(function(x){html+='<span>'+x+'</span>';});html+='</div><div class="jcal-d">';
 var dim=jML(vy,vm),fg=j2g(vy,vm,1),st=(new Date(fg.gy,fg.gm-1,fg.gd).getDay()+1)%7;
 for(var i=0;i<st;i++)html+='<button type="button" style="visibility:hidden"></button>';
-for(var d=1;d<=dim;d++){var g=j2g(vy,vm,d);html+='<button type="button" data-d="'+d+'"><span class="jd">'+toFa(d)+'</span><span class="gd">'+g.gy+'/'+g.gm+'/'+g.gd+'</span></button>';}
+for(var d=1;d<=dim;d++){var g=j2g(vy,vm,d);html+='<button type="button"><span class="jd">'+toFa(d)+'</span><span class="gd">'+g.gy+'/'+g.gm+'/'+g.gd+'</span></button>';}
 html+='</div></div>';box.innerHTML=html;
 document.getElementById("fcPm").onclick=function(){box._m--;if(box._m<1){box._m=12;box._y--;}renderFullCal();};
 document.getElementById("fcNm").onclick=function(){box._m++;if(box._m>12){box._m=1;box._y++;}renderFullCal();};
@@ -750,10 +751,10 @@ document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on")
 document.querySelectorAll(".side .sub button[data-panel]").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-panel")===id);});
 var map={
 "p-cal":renderFullCal,"p-coding":renderCodes,"p-struct":renderStruct,"p-fiscal":renderFY,
-"p-diff":renderDiff,"p-ledger":runLedger,"p-pl":runPL,"p-bs":runBS,"p-groups":runGroups,"p-kol":runKol,
-"p-moin":runMoin,"p-detail":runDetail,"p-contrary":runContrary,"p-list-v":renderLists,
-"p-rep-j":renderReports,"p-rep-tb":renderReports,"p-pl-close":renderPLClose,
-"p-persons":renderPersons,"p-treasury":renderTreasury,"p-lock":renderLocks,"p-users":renderUsers
+"p-diff":renderDiff,"p-list-v":renderListV,"p-ledger":runLedger,"p-pl":runPL,"p-bs":runBS,"p-cogs":runCogs,
+"p-groups":runGroups,"p-kol":runKol,"p-moin":runMoin,"p-detail":runDetail,"p-contrary":runContrary,
+"p-rep-j":runJournal,"p-gl":function(){},"p-sl":function(){},"p-dl":function(){},"p-rep-tb":runTB,
+"p-pl-close":renderPLClose,"p-persons":renderPersons,"p-treasury":renderTreasury,"p-lock":renderLocks,"p-users":renderUsers
 };
 if(map[id])map[id]();
 if(id==="p-voucher")refreshNo("vNo");
@@ -774,6 +775,7 @@ var f=(a.users||[]).find(function(x){return x.user===u&&x.pass===p;});if(!f){toa
 function nextNo(){var db=loadDB();var next=db.nextNo||1;(db.vouchers||[]).forEach(function(v){var n=parseInt(toEn(String(v.no)),10)||0;if(n+1>next)next=n+1;});return next;}
 function refreshNo(id){var el=document.getElementById(id);if(el)el.value=String(nextNo());}
 function getGroups(){var db=loadDB();if(!(db.groups&&db.groups.length)){db.groups=JSON.parse(JSON.stringify(DEFAULT_GROUPS));saveDB(db);}return db.groups;}
+function voucherSums(v){var d=0,c=0;(v.lines||[]).forEach(function(l){d+=l.debit||0;c+=l.credit||0;});return{d:d,c:c,diff:d-c,bal:d-c};}
 
 function getTurnovers(opts){opts=opts||{};var acc={};
 (loadDB().vouchers||[]).forEach(function(v){
@@ -781,9 +783,6 @@ if(v.status==="void")return;
 if(opts.noTemp&&v.status==="temp")return;
 if(opts.noOpen&&v.type==="افتتاحیه")return;
 if(opts.noClose&&v.type==="اختتامیه")return;
-if(opts.vType&&v.type!==opts.vType)return;
-if(opts.noFrom&&parseInt(toEn(String(v.no)),10)<opts.noFrom)return;
-if(opts.noTo&&parseInt(toEn(String(v.no)),10)>opts.noTo)return;
 if(opts.fromDate&&toEn(v.date||"")<toEn(opts.fromDate))return;
 if(opts.toDate&&toEn(v.date||"")>toEn(opts.toDate))return;
 (v.lines||[]).forEach(function(l){
@@ -791,67 +790,130 @@ if(opts.code&&l.code!==opts.code&&l.code.indexOf(opts.code)!==0)return;
 if(!acc[l.code])acc[l.code]={code:l.code,name:l.name||l.code,debit:0,credit:0};
 acc[l.code].debit+=l.debit||0;acc[l.code].credit+=l.credit||0;
 });});return acc;}
-function levelKey(code,level){code=String(code||"");if(level==="group")return code.charAt(0)||code;if(level==="kol")return code.length>=2?code.slice(0,2):code;if(level==="moin")return code.length>=4?code.slice(0,Math.min(5,code.length)):code;return code;}
-function buildNameMap(){var m={};(loadDB().codes||[]).forEach(function(c){m[c.code]=c.name;});getGroups().forEach(function(g){m[g.code]=g.title;});return m;}
-function aggregateByLevel(acc,level){var nameMap=buildNameMap();var map={};
-Object.keys(acc).forEach(function(code){var k=levelKey(code,level);if(!map[k])map[k]={code:k,name:nameMap[k]||nameMap[code]||k,debit:0,credit:0};
-map[k].debit+=acc[code].debit;map[k].credit+=acc[code].credit;});return map;}
-function optsFrom(pfx){var el=function(id){return document.getElementById(pfx+id);};
+
+function optsFrom(pfx){var el=function(s){return document.getElementById(pfx+s);};
 return{noTemp:el("NoTemp")&&el("NoTemp").checked,noOpen:el("NoOpen")&&el("NoOpen").checked,noClose:el("NoClose")&&el("NoClose").checked,
-vType:(el("VType")||{}).value||"",noFrom:parseInt(toEn((el("NoFrom")||{}).value||""),10)||0,noTo:parseInt(toEn((el("NoTo")||{}).value||""),10)||0};}
-function renderAgg(bodyId,emptyId,sumIds,acc,level,filterBal,search){
-var map=aggregateByLevel(acc,level);var rows=Object.keys(map).sort().map(function(k){return map[k];});
-if(search){var q=search.toLowerCase();rows=rows.filter(function(r){return (r.code+" "+r.name).toLowerCase().indexOf(q)>=0;});}
-if(filterBal==="debit")rows=rows.filter(function(r){return r.debit-r.credit>0;});
-if(filterBal==="credit")rows=rows.filter(function(r){return r.credit-r.debit>0;});
+fromDate:(el("From")||{}).value||"",toDate:(el("To")||{}).value||""};}
+
+/* ===== فهرست اسناد با دکمه‌های موقت / قطعی / تراز ===== */
+function renderListV(){
+var q=(document.getElementById("listSearch").value||"").toLowerCase();
+var list=(loadDB().vouchers||[]).filter(function(v){return v.status!=="void";})
+.filter(function(v){return !q||(v.no+" "+(v.desc||"")+" "+(v.date||"")).toLowerCase().indexOf(q)>=0;});
+document.getElementById("listVEmpty").style.display=list.length?"none":"";
+document.getElementById("listVBody").innerHTML=list.map(function(v,i){
+var s=voucherSums(v);
+var isTemp=(v.status||"temp")==="temp";
+var isPerm=v.status==="perm";
+var isBal=s.diff===0;
+var tempBtn=isTemp?'<button type="button" class="btn-sm btn-green" data-act="temp" data-id="'+esc(v.id)+'">موقت</button>':'<button type="button" class="btn-sm btn-g" data-act="temp" data-id="'+esc(v.id)+'">موقت</button>';
+var permBtn=isPerm?'<button type="button" class="btn-sm btn-green" data-act="perm" data-id="'+esc(v.id)+'">قطعی</button>':'<button type="button" class="btn-sm btn-g" data-act="perm" data-id="'+esc(v.id)+'">قطعی</button>';
+var balBtn=isBal?'<button type="button" class="btn-sm btn-green" data-act="bal" data-id="'+esc(v.id)+'">تراز</button>':'<button type="button" class="btn-sm btn-red" data-act="bal" data-id="'+esc(v.id)+'">سند تراز نیست</button>';
+return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td>'+esc(v.no)+'</td><td>'+esc(v.date)+'</td><td>'+esc(v.desc||v.type||"")+'</td><td>'+formatAmount(s.d)+'</td><td>'+formatAmount(s.c)+'</td><td>'+formatAmount(Math.abs(s.diff))+'</td><td><div class="status-btns">'+tempBtn+permBtn+balBtn+'</div></td></tr>';
+}).join("");
+document.getElementById("listVBody").querySelectorAll("[data-act]").forEach(function(btn){
+btn.onclick=function(){
+var act=btn.getAttribute("data-act"),id=btn.getAttribute("data-id");
+var db=loadDB();var v=(db.vouchers||[]).find(function(x){return x.id===id;});if(!v)return;
+if(act==="temp"){v.status="temp";toast("وضعیت: موقت");}
+if(act==="perm"){var s=voucherSums(v);if(s.diff!==0){toast("سند تراز نیست — نمی‌توان قطعی کرد","err");return;}v.status="perm";toast("وضعیت: قطعی");}
+if(act==="bal"){var s2=voucherSums(v);if(s2.diff===0)toast("سند تراز است");else toast("اختلاف: "+formatAmount(Math.abs(s2.diff)),"err");}
+saveDB(db);renderListV();renderAll();
+};
+});
+}
+document.getElementById("btnListRefresh").onclick=renderListV;
+document.getElementById("listSearch").oninput=renderListV;
+
+function runLedger(){var acc=getTurnovers(optsFrom("led"));var rows=Object.keys(acc).sort().map(function(k){return acc[k];});
 var sd=0,sc=0,bd=0,bc=0;
-document.getElementById(bodyId).innerHTML=rows.map(function(r,i){var bal=r.debit-r.credit;var md=bal>0?bal:0,mc=bal<0?-bal:0;sd+=r.debit;sc+=r.credit;bd+=md;bc+=mc;
+document.getElementById("ledBody").innerHTML=rows.map(function(r,i){var bal=r.debit-r.credit;var md=bal>0?bal:0,mc=bal<0?-bal:0;sd+=r.debit;sc+=r.credit;bd+=md;bc+=mc;
 return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td>'+esc(r.code)+'</td><td>'+esc(r.name)+'</td><td>'+formatAmount(r.debit)+'</td><td>'+formatAmount(r.credit)+'</td><td>'+formatAmount(md)+'</td><td>'+formatAmount(mc)+'</td></tr>';}).join("");
-var empty=document.getElementById(emptyId);if(empty)empty.style.display=rows.length?"none":"";
-if(sumIds)[sd,sc,bd,bc].forEach(function(v,i){var e=document.getElementById(sumIds[i]);if(e)e.textContent=faAmt(v);});
-return{sd:sd,sc:sc,bd:bd,bc:bc,rows:rows};}
+["ledSumD","ledSumC","ledBalD","ledBalC"].forEach(function(id,i){document.getElementById(id).textContent=faAmt([sd,sc,bd,bc][i]);});}
+document.getElementById("btnledRun").onclick=runLedger;
 
-function runLedger(){var acc=getTurnovers(optsFrom("led"));renderAgg("ledBody","ledEmpty",["ledSumD","ledSumC","ledBalD","ledBalC"],acc,ledLevel,(document.getElementById("ledBalType")||{}).value,(document.getElementById("ledSearch")||{}).value);}
-var btnLed=document.getElementById("btnledRun");if(btnLed)btnLed.onclick=runLedger;
-var ledSearch=document.getElementById("ledSearch");if(ledSearch)ledSearch.oninput=runLedger;
-document.querySelectorAll("#ledLevels button").forEach(function(b){b.onclick=function(){var lv=b.getAttribute("data-lv");if(lv==="back"){if(ledStack.length)ledLevel=ledStack.pop();}else{ledStack.push(ledLevel);ledLevel=lv;}
-document.querySelectorAll("#ledLevels button").forEach(function(x){x.classList.toggle("on",x.getAttribute("data-lv")===ledLevel);});runLedger();};});
+function runBS(){var acc=getTurnovers(optsFrom("bs"));var rows=Object.keys(acc).filter(function(c){return "12345".indexOf(c.charAt(0))>=0;}).sort().map(function(k){return acc[k];});
+var bd=0,bc=0;
+document.getElementById("bsBody").innerHTML=rows.map(function(r,i){var bal=r.debit-r.credit;var md=bal>0?bal:0,mc=bal<0?-bal:0;bd+=md;bc+=mc;
+return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td>'+esc(r.code)+'</td><td>'+esc(r.name)+'</td><td>'+formatAmount(md)+'</td><td>'+formatAmount(mc)+'</td></tr>';}).join("");
+document.getElementById("bsBalD").textContent=faAmt(bd);document.getElementById("bsBalC").textContent=faAmt(bc);}
+document.getElementById("btnbsRun").onclick=runBS;
 
-function runPL(){var all=getTurnovers(optsFrom("pl"));var pl={};Object.keys(all).forEach(function(c){if(c.charAt(0)==="6"||c.charAt(0)==="7")pl[c]=all[c];});
-var r=renderAgg("plBody","plEmpty",["plSumD","plSumC","plBalD","plBalC"],pl,"group",(document.getElementById("plBalType")||{}).value,"");
-var net=r.sc-r.sd;var el=document.getElementById("plRem");if(el)el.textContent=faAmt(Math.abs(net))+(net>=0?" (سود)":" (زیان)");}
-var btnPl=document.getElementById("btnplRun");if(btnPl)btnPl.onclick=runPL;
+function runPL(){var acc=getTurnovers(optsFrom("pl"));var rows=Object.keys(acc).filter(function(c){return c.charAt(0)==="6"||c.charAt(0)==="7";}).sort().map(function(k){return acc[k];});
+var sd=0,sc=0;
+document.getElementById("plBody").innerHTML=rows.map(function(r,i){sd+=r.debit;sc+=r.credit;var bal=r.debit-r.credit;
+return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td>'+esc(r.code)+'</td><td>'+esc(r.name)+'</td><td>'+formatAmount(r.debit)+'</td><td>'+formatAmount(r.credit)+'</td><td>'+formatAmount(Math.abs(bal))+'</td></tr>';}).join("");
+document.getElementById("plSumD").textContent=faAmt(sd);document.getElementById("plSumC").textContent=faAmt(sc);
+var net=sc-sd;document.getElementById("plRem").textContent=faAmt(Math.abs(net))+(net>=0?" (سود)":" (زیان)");}
+document.getElementById("btnplRun").onclick=runPL;
 
-function runBS(){var all=getTurnovers(optsFrom("bs"));var bs={};Object.keys(all).forEach(function(c){var ch=c.charAt(0);if("12345".indexOf(ch)>=0)bs[c]=all[c];});
-renderAgg("bsBody","bsEmpty",["bsAstD","bsAstC","bsAstBD","bsAstBC"],bs,"group",(document.getElementById("bsBalType")||{}).value,"");
-var ast={},liab={};Object.keys(bs).forEach(function(c){if(c.charAt(0)==="1"||c.charAt(0)==="2")ast[c]=bs[c];else liab[c]=bs[c];});
-function sumObj(o){var d=0,c=0,bd=0,bc=0;Object.keys(o).forEach(function(k){d+=o[k].debit;c+=o[k].credit;var b=o[k].debit-o[k].credit;if(b>0)bd+=b;else bc+=-b;});return[d,c,bd,bc];}
-var sa=sumObj(ast),sl=sumObj(liab);
-["bsAstD","bsAstC","bsAstBD","bsAstBC"].forEach(function(id,i){var e=document.getElementById(id);if(e)e.textContent=faAmt(sa[i]);});
-["bsLiabD","bsLiabC","bsLiabBD","bsLiabBC"].forEach(function(id,i){var e=document.getElementById(id);if(e)e.textContent=faAmt(sl[i]);});}
-var btnBs=document.getElementById("btnbsRun");if(btnBs)btnBs.onclick=runBS;
+function runCogs(){var beg=parseAmountInput(document.getElementById("cogsBeg").value);
+var purch=parseAmountInput(document.getElementById("cogsPurch").value);
+var end=parseAmountInput(document.getElementById("cogsEnd").value);
+/* also try from accounts marked cogs */
+var acc=getTurnovers(optsFrom("cogs"));
+Object.keys(acc).forEach(function(c){var code=(loadDB().codes||[]).find(function(x){return x.code===c;});
+if(code&&code.cogs)purch+=acc[c].debit;});
+var available=beg+purch;var cogs=available-end;
+document.getElementById("cogsBody").innerHTML=
+'<tr><td>موجودی اول دوره</td><td>'+formatAmount(beg)+'</td></tr>'+
+'<tr><td>+ خرید طی دوره</td><td>'+formatAmount(purch)+'</td></tr>'+
+'<tr><td>= کالای آماده فروش</td><td>'+formatAmount(available)+'</td></tr>'+
+'<tr><td>− موجودی پایان دوره</td><td>'+formatAmount(end)+'</td></tr>'+
+'<tr style="font-weight:800;color:#7dd3fc"><td>= قیمت تمام‌شده کالای فروش‌رفته</td><td>'+formatAmount(cogs)+'</td></tr>';}
+document.getElementById("btncogsRun").onclick=runCogs;
+document.getElementById("btnCogsCalc").onclick=runCogs;
 
-function runTurn(){var code=document.getElementById("turnCode").value.trim();if(!code){document.getElementById("turnBody").innerHTML="";document.getElementById("turnEmpty").style.display="";return;}
-var fromD=document.getElementById("turnFrom").value,toD=document.getElementById("turnTo").value,vType=document.getElementById("turnVType").value;
+function runTurn(){var code=document.getElementById("turnCode").value.trim();if(!code)return;
+var fromD=document.getElementById("turnFrom").value,toD=document.getElementById("turnTo").value;
 var lines=[],bal=0;
-(loadDB().vouchers||[]).slice().reverse().forEach(function(v){
-if(v.status==="void")return;if(vType&&v.type!==vType)return;
+(loadDB().vouchers||[]).slice().reverse().forEach(function(v){if(v.status==="void")return;
 if(fromD&&toEn(v.date||"")<toEn(fromD))return;if(toD&&toEn(v.date||"")>toEn(toD))return;
 (v.lines||[]).forEach(function(l){if(l.code!==code&&l.code.indexOf(code)!==0)return;
-bal+=(l.debit||0)-(l.credit||0);lines.push({no:v.no,date:v.date,type:v.type,desc:l.desc||v.desc||"",debit:l.debit||0,credit:l.credit||0,bal:bal});});});
-var sd=0,sc=0;lines.forEach(function(l){sd+=l.debit;sc+=l.credit;});
-document.getElementById("turnBody").innerHTML=lines.map(function(l,i){return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td>'+esc(l.no)+'</td><td>'+esc(l.date)+'</td><td>'+esc(l.type)+'</td><td>'+esc(l.desc)+'</td><td>'+formatAmount(l.debit)+'</td><td>'+formatAmount(l.credit)+'</td><td>'+formatAmount(l.bal)+'</td></tr>';}).join("");
-document.getElementById("turnEmpty").style.display=lines.length?"none":"";
-document.getElementById("turnSumD").textContent=faAmt(sd);document.getElementById("turnSumC").textContent=faAmt(sc);document.getElementById("turnSumBal").textContent=faAmt(bal);}
+bal+=(l.debit||0)-(l.credit||0);lines.push({no:v.no,date:v.date,desc:l.desc||v.desc||"",debit:l.debit||0,credit:l.credit||0,bal:bal});});});
+document.getElementById("turnBody").innerHTML=lines.map(function(l,i){return '<tr><td>'+toFa(i+1)+'</td><td>'+esc(l.no)+'</td><td>'+esc(l.date)+'</td><td>'+esc(l.desc)+'</td><td>'+formatAmount(l.debit)+'</td><td>'+formatAmount(l.credit)+'</td><td>'+formatAmount(l.bal)+'</td></tr>';}).join("");}
 document.getElementById("btnTurnRun").onclick=runTurn;
 document.getElementById("btnTurnPick").onclick=function(){openCodePicker(function(c){document.getElementById("turnCode").value=c.code;});};
 
-function runGroups(){var groups=getGroups();var acc=getTurnovers({});var q=(document.getElementById("grpSearch").value||"").toLowerCase();
-document.getElementById("grpBody").innerHTML=groups.filter(function(g){return !q||(g.code+" "+g.title).toLowerCase().indexOf(q)>=0;}).map(function(g,i){
-var gd=0,gc=0;Object.keys(acc).forEach(function(c){if(c.charAt(0)===String(g.code).charAt(0)){gd+=acc[c].debit;gc+=acc[c].credit;}});
-var bal=gd-gc;return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td>'+esc(g.code)+'</td><td>'+esc(g.title)+'</td><td>'+esc(g.nature||"")+'</td><td>'+formatAmount(gd)+'</td><td>'+formatAmount(gc)+'</td><td>'+formatAmount(bal>0?bal:0)+'</td><td>'+formatAmount(bal<0?-bal:0)+'</td></tr>';}).join("");}
+/* دفتر روزنامه */
+function runJournal(){var opts=optsFrom("jnl");var lines=[];var sd=0,sc=0;
+(loadDB().vouchers||[]).slice().reverse().forEach(function(v){
+if(v.status==="void")return;if(opts.noTemp&&v.status==="temp")return;
+if(opts.noOpen&&v.type==="افتتاحیه")return;if(opts.noClose&&v.type==="اختتامیه")return;
+if(opts.fromDate&&toEn(v.date||"")<toEn(opts.fromDate))return;if(opts.toDate&&toEn(v.date||"")>toEn(opts.toDate))return;
+(v.lines||[]).forEach(function(l){sd+=l.debit||0;sc+=l.credit||0;
+lines.push({no:v.no,date:v.date,desc:l.desc||v.desc||"",code:l.code,debit:l.debit||0,credit:l.credit||0});});});
+document.getElementById("jnlBody").innerHTML=lines.map(function(l,i){return '<tr><td>'+toFa(i+1)+'</td><td>'+esc(l.no)+'</td><td>'+esc(l.date)+'</td><td>'+esc(l.desc)+'</td><td>'+esc(l.code)+'</td><td>'+formatAmount(l.debit)+'</td><td>'+formatAmount(l.credit)+'</td></tr>';}).join("");
+document.getElementById("jnlSumD").textContent=faAmt(sd);document.getElementById("jnlSumC").textContent=faAmt(sc);}
+document.getElementById("btnjnlRun").onclick=runJournal;
+
+/* دفتر کل / معین / تفصیلی - مشترک */
+function runBook(codeId,fromId,toId,bodyId,sumIds){
+var code=document.getElementById(codeId).value.trim();if(!code){toast("کد حساب را وارد کنید","err");return;}
+var fromD=document.getElementById(fromId).value,toD=document.getElementById(toId).value;
+var lines=[],bal=0;
+(loadDB().vouchers||[]).slice().reverse().forEach(function(v){if(v.status==="void")return;
+if(fromD&&toEn(v.date||"")<toEn(fromD))return;if(toD&&toEn(v.date||"")>toEn(toD))return;
+(v.lines||[]).forEach(function(l){
+if(l.code!==code&&l.code.indexOf(code)!==0)return;
+bal+=(l.debit||0)-(l.credit||0);
+lines.push({no:v.no,date:v.date,desc:l.desc||v.desc||"",debit:l.debit||0,credit:l.credit||0,bal:bal});
+});});
+var sd=0,sc=0;lines.forEach(function(l){sd+=l.debit;sc+=l.credit;});
+document.getElementById(bodyId).innerHTML=lines.map(function(l,i){return '<tr><td>'+toFa(i+1)+'</td><td>'+esc(l.no)+'</td><td>'+esc(l.date)+'</td><td>'+esc(l.desc)+'</td><td>'+formatAmount(l.debit)+'</td><td>'+formatAmount(l.credit)+'</td><td>'+formatAmount(l.bal)+'</td></tr>';}).join("");
+document.getElementById(sumIds[0]).textContent=faAmt(sd);document.getElementById(sumIds[1]).textContent=faAmt(sc);document.getElementById(sumIds[2]).textContent=faAmt(bal);}
+document.getElementById("btnGlRun").onclick=function(){runBook("glCode","glFrom","glTo","glBody",["glSumD","glSumC","glSumBal"]);};
+document.getElementById("btnSlRun").onclick=function(){runBook("slCode","slFrom","slTo","slBody",["slSumD","slSumC","slSumBal"]);};
+document.getElementById("btnDlRun").onclick=function(){runBook("dlCode","dlFrom","dlTo","dlBody",["dlSumD","dlSumC","dlSumBal"]);};
+document.getElementById("btnGlPick").onclick=function(){openCodePicker(function(c){document.getElementById("glCode").value=c.code;});};
+document.getElementById("btnSlPick").onclick=function(){openCodePicker(function(c){document.getElementById("slCode").value=c.code;});};
+
+function runTB(){var acc=getTurnovers(optsFrom("tb"));
+document.getElementById("tbBody").innerHTML=Object.keys(acc).sort().map(function(c){return '<tr><td>'+esc(c)+'</td><td>'+esc(acc[c].name)+'</td><td>'+formatAmount(acc[c].debit)+'</td><td>'+formatAmount(acc[c].credit)+'</td></tr>';}).join("");}
+document.getElementById("btntbRun").onclick=runTB;
+
+function runGroups(){document.getElementById("grpBody").innerHTML=getGroups().map(function(g,i){return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td>'+esc(g.code)+'</td><td>'+esc(g.title)+'</td><td>'+esc(g.nature||"")+'</td></tr>';}).join("");}
 document.getElementById("btnGrpRefresh").onclick=runGroups;
-document.getElementById("grpSearch").oninput=runGroups;
 document.getElementById("btnGrpNew").onclick=function(){document.getElementById("grpForm").classList.add("open");};
 document.getElementById("btnGrpCancel").onclick=function(){document.getElementById("grpForm").classList.remove("open");};
 document.getElementById("btnGrpSave").onclick=function(){var code=document.getElementById("grpCode").value.trim(),title=document.getElementById("grpTitle").value.trim();if(!code||!title){toast("کد و عنوان","err");return;}
@@ -859,173 +921,108 @@ var db=loadDB();db.groups=db.groups||[];db.groups.push({code:code,title:title,na
 
 function runKol(){var acc=getTurnovers({});var codes=(loadDB().codes||[]).filter(function(c){return +c.level===1;});
 var q=(document.getElementById("kolSearch").value||"").toLowerCase();
-document.getElementById("kolBody").innerHTML=codes.filter(function(c){return !q||(c.code+" "+c.name).toLowerCase().indexOf(q)>=0;}).map(function(c,i){
-var a=acc[c.code]||{debit:0,credit:0};var bal=a.debit-a.credit;
-return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td>'+esc(c.code)+'</td><td>'+esc(c.name)+'</td><td>'+esc(c.group||"")+'</td><td>'+esc(c.nature||"")+'</td><td>'+formatAmount(a.debit)+'</td><td>'+formatAmount(a.credit)+'</td><td>'+formatAmount(bal>0?bal:0)+'</td><td>'+formatAmount(bal<0?-bal:0)+'</td></tr>';}).join("");}
+var list=codes.filter(function(c){return !q||(c.code+" "+c.name).toLowerCase().indexOf(q)>=0;});
+document.getElementById("kolEmpty").style.display=list.length?"none":"";
+document.getElementById("kolBody").innerHTML=list.map(function(c,i){var a=acc[c.code]||{debit:0,credit:0};var bal=a.debit-a.credit;
+return '<tr><td><input type="checkbox"></td><td>⋯</td><td>'+toFa(i+1)+'</td><td>'+esc(c.code)+'</td><td>'+esc(c.name)+'</td><td>'+esc(c.group||"")+'</td><td>'+esc(c.nature||"")+'</td><td>'+formatAmount(a.debit)+'</td><td>'+formatAmount(a.credit)+'</td><td>'+formatAmount(bal>0?bal:0)+'</td><td>'+formatAmount(bal<0?-bal:0)+'</td></tr>';}).join("");}
 document.getElementById("btnKolRefresh").onclick=runKol;
 document.getElementById("kolSearch").oninput=runKol;
 
-/* ===== حساب‌های معین ===== */
 function runMoin(){var codes=(loadDB().codes||[]).filter(function(c){return +c.level===2;});
 var q=(document.getElementById("moinSearch").value||"").toLowerCase();
-var list=codes.filter(function(c){return !q||(c.code+" "+c.name+" "+(c.group||"")).toLowerCase().indexOf(q)>=0;});
-document.getElementById("moinEmpty").style.display=list.length?"none":"";
-document.getElementById("moinBody").innerHTML=list.map(function(c,i){
-return '<tr><td><input type="checkbox"></td><td><button type="button" class="btn btn-g" style="padding:2px 5px;font-size:.62rem" data-mdel="'+esc(c.code)+'">⋯</button></td><td>'+toFa(i+1)+'</td><td>'+esc(c.code)+'</td><td>'+esc(c.group||"")+'</td><td>'+esc(c.parent||"")+'</td><td><a>'+esc(c.name)+'</a></td><td>'+esc(c.nature||"")+'</td><td>'+esc(c.type||"")+'</td><td>'+esc(c.track||"")+'</td><td>'+esc(c.note||"ندارد")+'</td></tr>';
-}).join("");
-document.getElementById("moinBody").querySelectorAll("[data-mdel]").forEach(function(b){b.onclick=function(){if(!confirm("حذف؟"))return;var db=loadDB();db.codes=(db.codes||[]).filter(function(c){return c.code!==b.getAttribute("data-mdel");});saveDB(db);runMoin();};});}
+document.getElementById("moinBody").innerHTML=codes.filter(function(c){return !q||(c.code+" "+c.name).toLowerCase().indexOf(q)>=0;}).map(function(c,i){
+return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td>'+esc(c.code)+'</td><td>'+esc(c.group||"")+'</td><td>'+esc(c.parent||"")+'</td><td><a>'+esc(c.name)+'</a></td><td>'+esc(c.nature||"")+'</td><td>'+esc(c.note||"ندارد")+'</td></tr>';}).join("");}
 document.getElementById("btnMoinRefresh").onclick=runMoin;
 document.getElementById("moinSearch").oninput=runMoin;
 document.getElementById("btnMoinNew").onclick=function(){document.getElementById("moinForm").classList.add("open");};
 document.getElementById("btnMoinCancel").onclick=function(){document.getElementById("moinForm").classList.remove("open");};
-document.getElementById("btnMoinSave").onclick=function(){var code=document.getElementById("moinCode").value.trim(),name=document.getElementById("moinName").value.trim();
-if(!code||!name){toast("کد و نام لازم است","err");return;}
-var db=loadDB();db.codes=db.codes||[];
-var row={code:code,name:name,level:2,group:document.getElementById("moinGroup").value,parent:document.getElementById("moinKol").value.trim(),nature:document.getElementById("moinNature").value,type:document.getElementById("moinType").value,track:document.getElementById("moinTrack").value,note:document.getElementById("moinNote").value};
-var idx=db.codes.findIndex(function(c){return c.code===code;});if(idx>=0)db.codes[idx]=row;else db.codes.push(row);
-saveDB(db);document.getElementById("moinForm").classList.remove("open");runMoin();toast("ثبت شد");};
+document.getElementById("btnMoinSave").onclick=function(){var code=document.getElementById("moinCode").value.trim(),name=document.getElementById("moinName").value.trim();if(!code||!name){toast("کد و نام","err");return;}
+var db=loadDB();db.codes=db.codes||[];db.codes.push({code:code,name:name,level:2,group:document.getElementById("moinGroup").value,parent:document.getElementById("moinKol").value,nature:document.getElementById("moinNature").value,note:document.getElementById("moinNote").value});
+saveDB(db);document.getElementById("moinForm").classList.remove("open");runMoin();toast("ثبت");};
 
-/* ===== تفصیل‌ها ===== */
 function runDetail(){var list=loadDB().details||[];var q=(document.getElementById("detSearch").value||"").toLowerCase();
-list=list.filter(function(d){return !q||(d.name+" "+(d.accCode||"")+" "+(d.group||"")).toLowerCase().indexOf(q)>=0;});
-document.getElementById("detEmpty").style.display=list.length?"none":"";
-document.getElementById("detBody").innerHTML=list.map(function(d,i){
-return '<tr><td><input type="checkbox"></td><td><button type="button" class="btn btn-g" style="padding:2px 5px;font-size:.62rem" data-ddel="'+esc(d.id)+'">⋯</button></td><td>'+toFa(i+1)+'</td><td style="color:#38bdf8">'+esc(String(d.sid||d.id))+'</td><td>'+esc(d.name)+'</td><td>'+esc(d.accCode||"")+'</td><td>'+esc(d.group||"")+'</td><td>'+esc(d.subsys||"")+'</td><td>'+esc(d.tag||"ندارد")+'</td><td>'+esc(d.note||"ندارد")+'</td><td>'+esc(d.user||"")+'</td></tr>';
-}).join("");
-document.getElementById("detBody").querySelectorAll("[data-ddel]").forEach(function(b){b.onclick=function(){if(!confirm("حذف؟"))return;var db=loadDB();db.details=(db.details||[]).filter(function(d){return d.id!==b.getAttribute("data-ddel");});saveDB(db);runDetail();};});}
+document.getElementById("detBody").innerHTML=list.filter(function(d){return !q||(d.name+" "+(d.accCode||"")).toLowerCase().indexOf(q)>=0;}).map(function(d,i){
+return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td style="color:#38bdf8">'+esc(String(d.sid||""))+'</td><td>'+esc(d.name)+'</td><td>'+esc(d.accCode||"")+'</td><td>'+esc(d.group||"")+'</td><td>'+esc(d.subsys||"")+'</td><td>'+esc(d.user||"")+'</td></tr>';}).join("");}
 document.getElementById("btnDetRefresh").onclick=runDetail;
 document.getElementById("detSearch").oninput=runDetail;
 document.getElementById("btnDetNew").onclick=function(){document.getElementById("detForm").classList.add("open");};
 document.getElementById("btnDetCancel").onclick=function(){document.getElementById("detForm").classList.remove("open");};
-document.getElementById("btnDetSave").onclick=function(){var name=document.getElementById("detName").value.trim();if(!name){toast("نام لازم است","err");return;}
+document.getElementById("btnDetSave").onclick=function(){var name=document.getElementById("detName").value.trim();if(!name){toast("نام","err");return;}
 var db=loadDB();db.details=db.details||[];db.nextDetId=(db.nextDetId||3727080)+1;
-db.details.unshift({id:uid(),sid:db.nextDetId,name:name,accCode:document.getElementById("detAccCode").value.trim(),group:document.getElementById("detGroup").value,subsys:document.getElementById("detSubsys").value.trim(),tag:document.getElementById("detTag").value.trim(),note:document.getElementById("detNote").value.trim(),user:userName()});
-saveDB(db);document.getElementById("detForm").classList.remove("open");runDetail();toast("ثبت شد");};
+db.details.unshift({id:uid(),sid:db.nextDetId,name:name,accCode:document.getElementById("detAccCode").value,group:document.getElementById("detGroup").value,subsys:document.getElementById("detSubsys").value,note:document.getElementById("detNote").value,user:userName()});
+saveDB(db);document.getElementById("detForm").classList.remove("open");runDetail();toast("ثبت");};
 
-/* ===== خلاف ماهیت ===== */
-function runContrary(){var acc=getTurnovers({});var codes=(loadDB().codes||[]).filter(function(c){return +c.level===2;});
-var q=(document.getElementById("ctrSearch").value||"").toLowerCase();
-var rows=[];
-codes.forEach(function(c){
-var a=acc[c.code]||{debit:0,credit:0};var bal=a.debit-a.credit;
-var nature=c.nature||"بدهکار";
-var contrary=false;
-if(nature==="بدهکار"&&bal<0)contrary=true;
-if(nature==="بستانکار"&&bal>0)contrary=true;
-if(!contrary)return;
-if(q&&(c.code+" "+c.name).toLowerCase().indexOf(q)<0)return;
-rows.push({code:c.code,name:c.name,nature:nature,debit:a.debit,credit:a.credit,bal:bal,counter:c.counter||""});
-});
+function runContrary(){var acc=getTurnovers({});var codes=(loadDB().codes||[]).filter(function(c){return +c.level===2;});var rows=[];
+codes.forEach(function(c){var a=acc[c.code]||{debit:0,credit:0};var bal=a.debit-a.credit;var nature=c.nature||"بدهکار";
+var contrary=(nature==="بدهکار"&&bal<0)||(nature==="بستانکار"&&bal>0);if(!contrary)return;
+rows.push({code:c.code,name:c.name,nature:nature,debit:a.debit,credit:a.credit,bal:bal});});
 document.getElementById("ctrEmpty").style.display=rows.length?"none":"";
-document.getElementById("ctrBody").innerHTML=rows.map(function(r,i){
-return '<tr><td><input type="checkbox" class="ctr-chk" data-code="'+esc(r.code)+'"></td><td>'+toFa(i+1)+'</td><td>'+esc(r.code)+' — '+esc(r.name)+'</td><td>—</td><td>'+esc(r.nature)+'</td><td>'+formatAmount(r.debit)+'</td><td>'+formatAmount(r.credit)+'</td><td>'+formatAmount(Math.abs(r.bal))+'</td><td><input class="ctr-counter" data-code="'+esc(r.code)+'" placeholder="کد معین مقابل" style="min-width:100px"></td></tr>';
-}).join("");}
+document.getElementById("ctrBody").innerHTML=rows.map(function(r,i){return '<tr><td><input type="checkbox" class="ctr-chk" data-code="'+esc(r.code)+'"></td><td>'+toFa(i+1)+'</td><td>'+esc(r.code)+' — '+esc(r.name)+'</td><td>'+esc(r.nature)+'</td><td>'+formatAmount(r.debit)+'</td><td>'+formatAmount(r.credit)+'</td><td>'+formatAmount(Math.abs(r.bal))+'</td><td><input class="ctr-counter" data-code="'+esc(r.code)+'" placeholder="کد مقابل"></td></tr>';}).join("");}
 document.getElementById("btnCtrRefresh").onclick=runContrary;
-document.getElementById("ctrSearch").oninput=runContrary;
-document.getElementById("btnCtrAdjust").onclick=function(){
-var checked=document.querySelectorAll(".ctr-chk:checked");
-if(!checked.length){toast("ردیفی انتخاب نشده","err");return;}
-var lines=[];var ok=0;
-checked.forEach(function(chk){
-var code=chk.getAttribute("data-code");
-var counterEl=document.querySelector('.ctr-counter[data-code="'+code+'"]');
-var counter=counterEl?counterEl.value.trim():"";
-if(!counter){toast("برای "+code+" معین مقابل تعیین نشده","err");return;}
-var a=getTurnovers({})[code]||{debit:0,credit:0,name:code};var bal=a.debit-a.credit;
-if(bal===0)return;
-if(bal>0){lines.push({code:code,name:a.name||code,desc:"تعدیل ماهیت",debit:0,credit:bal});lines.push({code:counter,name:counter,desc:"تعدیل ماهیت",debit:bal,credit:0});}
-else{lines.push({code:code,name:a.name||code,desc:"تعدیل ماهیت",debit:-bal,credit:0});lines.push({code:counter,name:counter,desc:"تعدیل ماهیت",debit:0,credit:-bal});}
-ok++;
-});
-if(!lines.length){toast("سندی صادر نشد","err");return;}
-var db=loadDB();var no=nextNo();
-db.vouchers=db.vouchers||[];db.vouchers.unshift({id:uid(),no:String(no),date:document.getElementById("ctrDate").value||todayJ(),type:"اصلاحی",desc:"سند تعدیل ماهیت",lines:lines,status:"temp",user:userName()});
-db.nextNo=no+1;saveDB(db);toast("سند تعدیل "+no+" صادر شد");runContrary();renderAll();};
+document.getElementById("btnCtrAdjust").onclick=function(){var checked=document.querySelectorAll(".ctr-chk:checked");if(!checked.length){toast("انتخاب کنید","err");return;}
+var lines=[];checked.forEach(function(chk){var code=chk.getAttribute("data-code");var counterEl=document.querySelector('.ctr-counter[data-code="'+code+'"]');var counter=counterEl?counterEl.value.trim():"";
+if(!counter){toast("معین مقابل برای "+code,"err");return;}
+var a=getTurnovers({})[code]||{debit:0,credit:0,name:code};var bal=a.debit-a.credit;if(!bal)return;
+if(bal>0){lines.push({code:code,name:a.name,desc:"تعدیل",debit:0,credit:bal});lines.push({code:counter,name:counter,desc:"تعدیل",debit:bal,credit:0});}
+else{lines.push({code:code,name:a.name,desc:"تعدیل",debit:-bal,credit:0});lines.push({code:counter,name:counter,desc:"تعدیل",debit:0,credit:-bal});}});
+if(!lines.length)return;var db=loadDB();var no=nextNo();db.vouchers.unshift({id:uid(),no:String(no),date:todayJ(),type:"اصلاحی",desc:"تعدیل ماهیت",lines:lines,status:"temp",user:userName()});db.nextNo=no+1;saveDB(db);toast("سند "+no);runContrary();};
 
-/* ===== دفاتر قانونی ===== */
-function runLegal(){var type=document.getElementById("legType").value;
-var fromD=document.getElementById("legFrom").value,toD=document.getElementById("legTo").value;
-var kol=document.getElementById("legKol").value.trim();
-var lines=[],bal=0;
-(loadDB().vouchers||[]).slice().reverse().forEach(function(v){
-if(v.status==="void")return;
-if(fromD&&toEn(v.date||"")<toEn(fromD))return;
-if(toD&&toEn(v.date||"")>toEn(toD))return;
-(v.lines||[]).forEach(function(l){
-if(kol){
-if(type==="kol"&&l.code.indexOf(kol)!==0&&l.code!==kol)return;
-if(type!=="kol"&&l.code!==kol&&l.code.indexOf(kol)!==0)return;
-}
-bal+=(l.debit||0)-(l.credit||0);
-lines.push({no:v.no,date:v.date,code:l.code,name:l.name,desc:l.desc||v.desc||"",debit:l.debit||0,credit:l.credit||0,bal:bal});
-});});
-var sd=0,sc=0;lines.forEach(function(l){sd+=l.debit;sc+=l.credit;});
-document.getElementById("legBody").innerHTML=lines.map(function(l,i){return '<tr><td>'+toFa(i+1)+'</td><td>'+esc(l.no)+'</td><td>'+esc(l.date)+'</td><td>'+esc(l.code)+'</td><td>'+esc(l.name)+'</td><td>'+esc(l.desc)+'</td><td>'+formatAmount(l.debit)+'</td><td>'+formatAmount(l.credit)+'</td><td>'+formatAmount(l.bal)+'</td></tr>';}).join("");
-document.getElementById("legEmpty").style.display=lines.length?"none":"";
-document.getElementById("legSumD").textContent=faAmt(sd);document.getElementById("legSumC").textContent=faAmt(sc);document.getElementById("legSumBal").textContent=faAmt(bal);}
+function runLegal(){var fromD=document.getElementById("legFrom").value,toD=document.getElementById("legTo").value,kol=document.getElementById("legKol").value.trim();
+var lines=[];
+(loadDB().vouchers||[]).slice().reverse().forEach(function(v){if(v.status==="void")return;
+if(fromD&&toEn(v.date||"")<toEn(fromD))return;if(toD&&toEn(v.date||"")>toEn(toD))return;
+(v.lines||[]).forEach(function(l){if(kol&&l.code!==kol&&l.code.indexOf(kol)!==0)return;
+lines.push({no:v.no,date:v.date,desc:l.desc||v.desc||"",debit:l.debit||0,credit:l.credit||0});});});
+document.getElementById("legBody").innerHTML=lines.map(function(l,i){return '<tr><td>'+toFa(i+1)+'</td><td>'+esc(l.no)+'</td><td>'+esc(l.date)+'</td><td>'+esc(l.desc)+'</td><td>'+formatAmount(l.debit)+'</td><td>'+formatAmount(l.credit)+'</td></tr>';}).join("");}
 document.getElementById("btnLegRun").onclick=runLegal;
 document.getElementById("btnLegPick").onclick=function(){openCodePicker(function(c){document.getElementById("legKol").value=c.code;});};
 
-/* fiscal, struct, coding, ops */
-function renderFY(){var list=loadDB().fiscalYears||[];var q=(document.getElementById("fySearch").value||"").toLowerCase();
-list=list.filter(function(f){return !q||(f.name+" "+(f.user||"")).toLowerCase().indexOf(q)>=0;});
-document.getElementById("fyBody").innerHTML=list.map(function(f,i){return '<tr><td><input type="checkbox"></td><td>⋯</td><td>'+toFa(i+1)+'</td><td style="color:#38bdf8">'+esc(String(f.sid||""))+'</td><td>'+esc(f.name)+'</td><td>'+esc(f.start)+'</td><td>'+esc(f.end)+'</td><td>'+esc(f.user||"")+'</td></tr>';}).join("");}
-document.getElementById("fySearch").oninput=renderFY;
+function renderFY(){var list=loadDB().fiscalYears||[];document.getElementById("fyBody").innerHTML=list.map(function(f,i){return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td style="color:#38bdf8">'+esc(String(f.sid||""))+'</td><td>'+esc(f.name)+'</td><td>'+esc(f.start)+'</td><td>'+esc(f.end)+'</td><td>'+esc(f.user||"")+'</td></tr>';}).join("");}
 document.getElementById("btnFyNew").onclick=function(){document.getElementById("fyForm").classList.add("open");};
 document.getElementById("btnFyCancel").onclick=function(){document.getElementById("fyForm").classList.remove("open");};
-document.getElementById("btnFySave").onclick=function(){var name=document.getElementById("fyName").value.trim(),start=document.getElementById("fyStart").value,end=document.getElementById("fyEnd").value;
-if(!name||!start||!end){toast("نام و تاریخ‌ها","err");return;}
+document.getElementById("btnFySave").onclick=function(){var name=document.getElementById("fyName").value.trim(),start=document.getElementById("fyStart").value,end=document.getElementById("fyEnd").value;if(!name||!start||!end){toast("نام و تاریخ","err");return;}
 var db=loadDB();db.fiscalYears=db.fiscalYears||[];db.nextFyId=(db.nextFyId||1000)+1;
-db.fiscalYears.unshift({id:uid(),sid:db.nextFyId,name:name,start:start,end:end,current:document.getElementById("fyCurrent").checked,user:userName()});
-saveDB(db);document.getElementById("fyForm").classList.remove("open");renderFY();toast("ثبت");};
+db.fiscalYears.unshift({id:uid(),sid:db.nextFyId,name:name,start:start,end:end,current:document.getElementById("fyCurrent").checked,user:userName()});saveDB(db);document.getElementById("fyForm").classList.remove("open");renderFY();toast("ثبت");};
 
-function renderStruct(){document.getElementById("structList").innerHTML=getGroups().map(function(g){return '<div class="list-item">'+esc(g.code)+' — '+esc(g.title)+' ('+esc(g.nature||'')+')</div>';}).join("");}
+function renderStruct(){document.getElementById("structList").innerHTML=getGroups().map(function(g){return '<div class="list-item">'+esc(g.code)+' — '+esc(g.title)+'</div>';}).join("");}
 document.getElementById("btnSaveGroup").onclick=function(){var code=document.getElementById("sgCode").value.trim(),title=document.getElementById("sgTitle").value.trim();if(!code||!title){toast("کد و عنوان","err");return;}
 var db=loadDB();db.groups=db.groups||[];db.groups.push({code:code,title:title,nature:document.getElementById("sgNature").value});saveDB(db);renderStruct();toast("ثبت");};
 document.getElementById("btnSeedGroups").onclick=function(){var db=loadDB();db.groups=JSON.parse(JSON.stringify(DEFAULT_GROUPS));saveDB(db);renderStruct();toast("استاندارد");};
-
-function renderCodes(){document.getElementById("codeList").innerHTML=(loadDB().codes||[]).map(function(c){return '<div class="list-item">'+esc(c.code)+' — '+esc(c.name)+' <span style="color:#64748b">[سطح '+esc(String(c.level))+']</span></div>';}).join("")||'<p class="empty">—</p>';}
+function renderCodes(){document.getElementById("codeList").innerHTML=(loadDB().codes||[]).map(function(c){return '<div class="list-item">'+esc(c.code)+' — '+esc(c.name)+' [سطح '+c.level+']</div>';}).join("")||'<p class="empty">—</p>';}
 document.getElementById("btnSaveCode").onclick=function(){var code=document.getElementById("cCode").value.trim(),name=document.getElementById("cName").value.trim();if(!code||!name){toast("کد و نام","err");return;}
-var db=loadDB();db.codes=db.codes||[];var g=document.getElementById("cGroup").value;
-var row={code:code,name:name,level:+document.getElementById("cLevel").value,group:g,nature:document.getElementById("cNature").value,parent:document.getElementById("cParent").value.trim()};
-if(g==="درآمدها"||g==="هزینه‌ها")row.kind="pl";
-var idx=db.codes.findIndex(function(x){return x.code===code;});if(idx>=0)db.codes[idx]=row;else db.codes.push(row);saveDB(db);renderCodes();toast("ذخیره");};
+var db=loadDB();db.codes=db.codes||[];db.codes.push({code:code,name:name,level:+document.getElementById("cLevel").value,group:document.getElementById("cGroup").value,nature:document.getElementById("cNature").value,parent:document.getElementById("cParent").value});saveDB(db);renderCodes();toast("ذخیره");};
 document.getElementById("btnSeedCodes").onclick=function(){var db=loadDB();db.codes=JSON.parse(JSON.stringify(SEED));db.groups=JSON.parse(JSON.stringify(DEFAULT_GROUPS));
-if(!(db.details&&db.details.length)){db.details=DETAIL_SEED.map(function(d,i){return{id:uid(),sid:3727089-i,name:d.name,accCode:d.accCode,group:d.group,subsys:d.subsys,tag:"ندارد",note:"ندارد",user:userName()};});}
-saveDB(db);renderCodes();toast("استاندارد + تفصیل نمونه");};
+if(!(db.details&&db.details.length))db.details=DETAIL_SEED.map(function(d,i){return{id:uid(),sid:3727089-i,name:d.name,accCode:d.accCode,group:d.group,subsys:d.subsys,user:userName()};});
+saveDB(db);renderCodes();toast("استاندارد");};
 
-function renderPLClose(){var codes=(loadDB().codes||[]).filter(function(c){return c.kind==="pl";});
-var acc=getTurnovers({});
-document.getElementById("plCloseList").innerHTML=codes.map(function(c){var a=acc[c.code]||{debit:0,credit:0};return '<div class="list-item"><label class="chk"><input type="checkbox" class="plc-chk" data-code="'+esc(c.code)+'" checked> '+esc(c.code)+' '+esc(c.name)+' — مانده: '+formatAmount(Math.abs(a.debit-a.credit))+'</label></div>';}).join("")||'<p class="empty">—</p>';}
+function renderPLClose(){var codes=(loadDB().codes||[]).filter(function(c){return c.kind==="pl";});var acc=getTurnovers({});
+document.getElementById("plCloseList").innerHTML=codes.map(function(c){var a=acc[c.code]||{debit:0,credit:0};return '<div class="list-item"><label class="chk"><input type="checkbox" class="plc-chk" data-code="'+esc(c.code)+'" checked> '+esc(c.code)+' '+esc(c.name)+' — '+formatAmount(Math.abs(a.debit-a.credit))+'</label></div>';}).join("")||'<p class="empty">—</p>';}
 document.getElementById("btnIssuePL").onclick=function(){var checked=[].map.call(document.querySelectorAll(".plc-chk:checked"),function(c){return c.getAttribute("data-code");});
-if(!checked.length){toast("انتخاب کنید","err");return;}
-var acc=getTurnovers({});var lines=[],net=0;
+if(!checked.length){toast("انتخاب کنید","err");return;}var acc=getTurnovers({});var lines=[],net=0;
 checked.forEach(function(code){var a=acc[code]||{debit:0,credit:0,name:code};var bal=a.debit-a.credit;if(!bal)return;
 if(bal>0){lines.push({code:code,name:a.name,desc:"بستن",debit:0,credit:bal});net+=bal;}else{lines.push({code:code,name:a.name,desc:"بستن",debit:-bal,credit:0});net+=bal;}});
 if(!lines.length){toast("مانده‌ای نیست","err");return;}
 if(net>0)lines.push({code:"31",name:"سرمایه",desc:"بستن",debit:net,credit:0});else if(net<0)lines.push({code:"31",name:"سرمایه",desc:"بستن",debit:0,credit:-net});
-var db=loadDB();var no=nextNo();db.vouchers.unshift({id:uid(),no:String(no),date:document.getElementById("plcDate").value,type:"بستن حساب‌های موقت",desc:document.getElementById("plcDesc").value||"بستن",lines:lines,status:"perm",user:userName()});db.nextNo=no+1;saveDB(db);toast("سند "+no);renderPLClose();renderAll();};
+var db=loadDB();var no=nextNo();db.vouchers.unshift({id:uid(),no:String(no),date:document.getElementById("plcDate").value,type:"بستن حساب‌های موقت",desc:document.getElementById("plcDesc").value||"بستن",lines:lines,status:"perm",user:userName()});db.nextNo=no+1;saveDB(db);toast("سند "+no);renderPLClose();};
 
 document.getElementById("btnRenumber").onclick=function(){var db=loadDB();var fromD=document.getElementById("rnFrom").value,toD=document.getElementById("rnTo").value;
 var fromN=parseInt(toEn(document.getElementById("rnFromNo").value),10)||0,toN=parseInt(toEn(document.getElementById("rnToNo").value),10)||999999;
 var list=(db.vouchers||[]).filter(function(v){if(v.status==="void")return false;var n=parseInt(toEn(String(v.no)),10)||0;var ok=n>=fromN&&n<=toN;if(fromD)ok=ok&&toEn(v.date||"")>=toEn(fromD);if(toD)ok=ok&&toEn(v.date||"")<=toEn(toD);return ok;});
-list.sort(function(a,b){return toEn(a.date||"")<toEn(b.date||"")?-1:1;});
-list.forEach(function(v,i){v.no=String(i+1);});if((db.nextNo||1)<=list.length)db.nextNo=list.length+1;saveDB(db);
-document.getElementById("rnResult").innerHTML='<div class="list-item">'+toFa(list.length)+' سند شماره‌گذاری شد</div>';toast("انجام شد");};
+list.sort(function(a,b){return toEn(a.date||"")<toEn(b.date||"")?-1:1;});list.forEach(function(v,i){v.no=String(i+1);});if((db.nextNo||1)<=list.length)db.nextNo=list.length+1;saveDB(db);
+document.getElementById("rnResult").innerHTML='<div class="list-item">'+toFa(list.length)+' سند</div>';toast("انجام شد");};
 document.getElementById("btnTemp2Perm").onclick=function(){var db=loadDB();var fromD=document.getElementById("tpFrom").value,toD=document.getElementById("tpTo").value;
 var fromN=parseInt(toEn(document.getElementById("tpFromNo").value),10)||0,toN=parseInt(toEn(document.getElementById("tpToNo").value),10)||999999;var cnt=0;
 (db.vouchers||[]).forEach(function(v){if((v.status||"temp")!=="temp")return;var n=parseInt(toEn(String(v.no)),10)||0;if(n<fromN||n>toN)return;
 if(fromD&&toEn(v.date||"")<toEn(fromD))return;if(toD&&toEn(v.date||"")>toEn(toD))return;v.status="perm";cnt++;});
-saveDB(db);document.getElementById("tpResult").innerHTML='<div class="list-item">'+toFa(cnt)+' سند دائم شد</div>';toast(cnt+" سند");};
+saveDB(db);document.getElementById("tpResult").innerHTML='<div class="list-item">'+toFa(cnt)+' سند دائم</div>';toast(cnt+" سند");};
 
-function renderPersons(){document.getElementById("personList").innerHTML=(loadDB().persons||[]).map(function(p){return '<div class="list-item">'+esc(p.name||'')+' — '+esc(p.biz||'')+'</div>';}).join("")||'<p class="empty">—</p>';}
+function renderPersons(){document.getElementById("personList").innerHTML=(loadDB().persons||[]).map(function(p){return '<div class="list-item">'+esc(p.name||'')+'</div>';}).join("")||'<p class="empty">—</p>';}
 document.getElementById("btnPersonSave").onclick=function(){var db=loadDB();db.persons=db.persons||[];db.persons.unshift({name:document.getElementById("pName").value,biz:document.getElementById("pBiz").value});saveDB(db);renderPersons();toast("ثبت");};
 function renderTreasury(){document.getElementById("treasList").innerHTML=(loadDB().treasury||[]).map(function(t){return '<div class="list-item">['+esc(t.type)+'] '+esc(t.name)+'</div>';}).join("")||'<p class="empty">—</p>';}
 document.getElementById("btnTreasSave").onclick=function(){var name=document.getElementById("tName").value.trim();if(!name){toast("نام","err");return;}var db=loadDB();db.treasury=db.treasury||[];db.treasury.unshift({type:document.getElementById("tType").value,name:name});saveDB(db);renderTreasury();toast("ثبت");};
 function renderLocks(){document.getElementById("lkList").innerHTML=(loadDB().locks||[]).map(function(L){return '<div class="list-item">'+(L.unlocked?"باز":"قفل")+' '+esc(L.from)+' تا '+esc(L.to)+'</div>';}).join("")||'<p class="empty">—</p>';}
-document.getElementById("btnLock").onclick=function(){var from=document.getElementById("lkFrom").value,to=document.getElementById("lkTo").value;if(!from||!to){toast("تاریخ","err");return;}
-var db=loadDB();db.locks=db.locks||[];db.locks.unshift({from:from,to:to,unlocked:false});saveDB(db);renderLocks();toast("قفل شد");};
-document.getElementById("btnUnlock").onclick=function(){var db=loadDB();var L=(db.locks||[]).find(function(x){return !x.unlocked;});if(!L){toast("قفلی نیست");return;}L.unlocked=true;saveDB(db);renderLocks();toast("باز شد");};
+document.getElementById("btnLock").onclick=function(){var from=document.getElementById("lkFrom").value,to=document.getElementById("lkTo").value;if(!from||!to){toast("تاریخ","err");return;}var db=loadDB();db.locks=db.locks||[];db.locks.unshift({from:from,to:to,unlocked:false});saveDB(db);renderLocks();toast("قفل");};
+document.getElementById("btnUnlock").onclick=function(){var db=loadDB();var L=(db.locks||[]).find(function(x){return !x.unlocked;});if(!L){toast("قفلی نیست");return;}L.unlocked=true;saveDB(db);renderLocks();toast("باز");};
 document.getElementById("btnCopyVoucher").onclick=function(){var no=document.getElementById("cpNo").value.trim();var src=(loadDB().vouchers||[]).find(function(v){return String(v.no)===String(no)&&v.status!=="void";});
 if(!src){toast("یافت نشد","err");return;}var db=loadDB();var newNo=nextNo();db.vouchers.unshift({id:uid(),no:String(newNo),date:document.getElementById("cpDate").value||todayJ(),type:src.type,desc:(src.desc||"")+" (کپی)",lines:JSON.parse(JSON.stringify(src.lines||[])),status:"temp",user:userName()});db.nextNo=newNo+1;saveDB(db);
 document.getElementById("cpResult").innerHTML='<div class="list-item">'+esc(src.no)+' → '+toFa(newNo)+'</div>';toast("کپی "+newNo);};
@@ -1035,17 +1032,16 @@ var fromN=parseInt(toEn(document.getElementById("vdFromNo").value),10)||0,toN=pa
 if(fromD&&toEn(v.date||"")<toEn(fromD))return;if(toD&&toEn(v.date||"")>toEn(toD))return;v.status="void";cnt++;});
 saveDB(db);document.getElementById("vdResult").innerHTML='<div class="list-item">'+toFa(cnt)+' سند</div>';toast(cnt+" ابطال");};
 
-function voucherSums(v){var d=0,c=0;(v.lines||[]).forEach(function(l){d+=l.debit||0;c+=l.credit||0;});return{d:d,c:c,diff:d-c};}
 function renderDiff(){var q=(document.getElementById("diffSearch").value||"").toLowerCase();
 var list=(loadDB().vouchers||[]).filter(function(v){if(v.status==="void")return false;var s=voucherSums(v);return s.diff!==0||v.status==="temp";}).filter(function(v){return !q||(v.no+" "+(v.desc||"")).toLowerCase().indexOf(q)>=0;});
 document.getElementById("diffEmpty").style.display=list.length?"none":"";
-document.getElementById("diffBody").innerHTML=list.map(function(v,i){var s=voucherSums(v);return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td>'+esc(v.no)+'</td><td>'+esc(v.type)+'</td><td>'+esc(v.date)+'</td><td>'+formatAmount(s.d)+'</td><td>'+formatAmount(s.c)+'</td><td>'+(s.diff!==0?"ناتراز":"موقت")+'</td><td>'+esc(v.user||"—")+'</td></tr>';}).join("");}
+document.getElementById("diffBody").innerHTML=list.map(function(v,i){var s=voucherSums(v);return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td>'+esc(v.no)+'</td><td>'+esc(v.type)+'</td><td>'+esc(v.date)+'</td><td>'+formatAmount(s.d)+'</td><td>'+formatAmount(s.c)+'</td><td>'+(s.diff!==0?"ناتراز":"موقت")+'</td></tr>';}).join("");}
 document.getElementById("diffSearch").oninput=renderDiff;
 document.getElementById("btnDiffRefresh").onclick=renderDiff;
-document.getElementById("btnSaveRecon").onclick=function(){var db=loadDB();db.recons=db.recons||[];db.recons.unshift({book:parseAmountInput(document.getElementById("rcBook").value),bank:parseAmountInput(document.getElementById("rcBankBal").value),date:document.getElementById("rcDate").value});saveDB(db);toast("ثبت مغایرت");
-var book=parseAmountInput(document.getElementById("rcBook").value)-parseAmountInput(document.getElementById("rcChecks").value)+parseAmountInput(document.getElementById("rcDeps").value);
+document.getElementById("btnSaveRecon").onclick=function(){var book=parseAmountInput(document.getElementById("rcBook").value)-parseAmountInput(document.getElementById("rcChecks").value)+parseAmountInput(document.getElementById("rcDeps").value);
 var bank=parseAmountInput(document.getElementById("rcBankBal").value);var el=document.getElementById("rcMatch");
-el.textContent=book===bank?"✓ بدون مغایرت":"مغایرت: "+formatAmount(Math.abs(book-bank));el.className="bal "+(book===bank?"ok":"bad");};
+el.textContent=book===bank?"✓ بدون مغایرت":"مغایرت: "+formatAmount(Math.abs(book-bank));el.className="bal "+(book===bank?"ok":"bad");
+var db=loadDB();db.recons=db.recons||[];db.recons.unshift({book:book,bank:bank,date:document.getElementById("rcDate").value});saveDB(db);toast("ثبت");};
 
 function makeRow(tbodyId,prefix,data){data=data||{};var tbody=document.getElementById(tbodyId);if(!tbody)return;var tr=document.createElement("tr");
 tr.innerHTML='<td class="rn"></td><td><div class="code-wrap"><input class="lc" value="'+(data.code||"")+'"><button type="button" class="code-btn">📋</button></div></td><td><input class="ln" value="'+(data.name||"")+'" readonly></td><td><input class="ld" value="'+(data.desc||"")+'"></td><td><input class="ldb amount" value="'+(data.debit?formatAmount(data.debit):"")+'"></td><td><input class="lcr amount" value="'+(data.credit?formatAmount(data.credit):"")+'"></td><td><button type="button" class="btn btn-b" style="padding:2px 5px;margin:0">×</button></td>';
@@ -1084,15 +1080,6 @@ if(bal>0)makeRow("clBody","cl",{code:code,name:a.name,desc:"مانده",debit:ba
 ensureRows("clBody","cl");toast("محاسبه شد");};
 document.getElementById("btnPrint").onclick=function(){printPanel("p-voucher");};
 
-function renderLists(){document.getElementById("listV").innerHTML=(loadDB().vouchers||[]).map(function(v){return '<div class="list-item">'+esc(v.no)+' — '+esc(v.type)+' — '+esc(v.date)+'</div>';}).join("")||'<p class="empty">—</p>';}
-function renderReports(){var vs=(loadDB().vouchers||[]).filter(function(v){return v.status!=="void";});
-var jh="<table class='data-table'><thead><tr><th>شماره</th><th>کد</th><th>بدهکار</th><th>بستانکار</th></tr></thead><tbody>";
-vs.forEach(function(v){(v.lines||[]).forEach(function(l){jh+="<tr><td>"+esc(v.no)+"</td><td>"+esc(l.code)+"</td><td>"+formatAmount(l.debit||0)+"</td><td>"+formatAmount(l.credit||0)+"</td></tr>";});});
-document.getElementById("repJ").innerHTML=vs.length?jh+"</tbody></table>":'<p class="empty">—</p>';
-var acc=getTurnovers({});var tb="<table class='data-table'><thead><tr><th>کد</th><th>نام</th><th>بدهکار</th><th>بستانکار</th></tr></thead><tbody>";
-Object.keys(acc).sort().forEach(function(c){tb+="<tr><td>"+esc(c)+"</td><td>"+esc(acc[c].name)+"</td><td>"+formatAmount(acc[c].debit)+"</td><td>"+formatAmount(acc[c].credit)+"</td></tr>";});
-document.getElementById("repTB").innerHTML=Object.keys(acc).length?tb+"</tbody></table>":'<p class="empty">—</p>';}
-
 var notesKey="smart_mod_notes_"+MOD,remsKey="smart_mod_rem_"+MOD,cartKey="smart_cartable_v1";
 function renderNotes(){document.getElementById("notesList").innerHTML=(loadJSON(notesKey,[])).map(function(x){return '<div class="list-item">'+esc(x.text)+'</div>';}).join("")||'<p class="empty">—</p>';}
 function renderRems(){document.getElementById("remsList").innerHTML=(loadJSON(remsKey,[])).map(function(x){return '<div class="list-item">'+esc(x.text)+'</div>';}).join("")||'<p class="empty">—</p>';}
@@ -1104,8 +1091,8 @@ function updateAlerts(){document.getElementById("aNotes").textContent=String((lo
 function renderUsers(){document.getElementById("usersList").innerHTML=(getAuth().users||[]).map(function(u){return '<div class="list-item">'+esc(u.user)+'</div>';}).join("");}
 document.getElementById("btnAddUser").onclick=function(){var u=document.getElementById("nuUser").value.trim(),p=document.getElementById("nuPass").value;if(!u||!p){toast("یوزر و رمز","err");return;}var a=getAuth();a.users.push({user:u,pass:p,name:u});saveAuth(a);toast("ایجاد");renderUsers();};
 function renderDash(){var db=loadDB();
-document.getElementById("kpi").innerHTML='<div class="box"><div class="n">'+(db.vouchers||[]).length+'</div><div class="l">اسناد</div></div><div class="box"><div class="n">'+(db.codes||[]).filter(function(c){return +c.level===2;}).length+'</div><div class="l">معین</div></div><div class="box"><div class="n">'+(db.details||[]).length+'</div><div class="l">تفصیل</div></div><div class="box"><div class="n">'+(db.groups||[]).length+'</div><div class="l">گروه</div></div>';
-document.getElementById("dashMeta").textContent="سند بعدی: "+nextNo()+" | فرم‌های ثبت و گزارش کامل";updateAlerts();}
+document.getElementById("kpi").innerHTML='<div class="box"><div class="n">'+(db.vouchers||[]).length+'</div><div class="l">اسناد</div></div><div class="box"><div class="n">'+(db.codes||[]).filter(function(c){return +c.level===1;}).length+'</div><div class="l">کل</div></div><div class="box"><div class="n">'+(db.codes||[]).filter(function(c){return +c.level===2;}).length+'</div><div class="l">معین</div></div><div class="box"><div class="n">'+(db.details||[]).length+'</div><div class="l">تفصیل</div></div>';
+document.getElementById("dashMeta").textContent="سند بعدی: "+nextNo();updateAlerts();}
 function renderAll(){document.getElementById("activeUser").textContent="کاربر فعال: "+userName();renderDash();renderNotes();renderRems();renderCart();}
 document.getElementById("btnExit").onclick=function(){location.href="index.html";};
 function dl(n){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({data:loadDB()},null,2)],{type:"application/json"}));a.download=n;a.click();toast("دانلود");}
@@ -1124,18 +1111,18 @@ ensureLogin(function(){document.querySelectorAll(".jdate").forEach(attachJDate);
 var db=loadDB();
 if(!(db.codes&&db.codes.length))db.codes=JSON.parse(JSON.stringify(SEED));
 if(!(db.groups&&db.groups.length))db.groups=JSON.parse(JSON.stringify(DEFAULT_GROUPS));
-if(!(db.details&&db.details.length)){db.details=DETAIL_SEED.map(function(d,i){return{id:uid(),sid:3727089-i,name:d.name,accCode:d.accCode,group:d.group,subsys:d.subsys,tag:"ندارد",note:"ندارد",user:"nader alemi"};});db.nextDetId=3727089;}
+if(!(db.details&&db.details.length)){db.details=DETAIL_SEED.map(function(d,i){return{id:uid(),sid:3727089-i,name:d.name,accCode:d.accCode,group:d.group,subsys:d.subsys,user:"nader alemi"};});db.nextDetId=3727089;}
 if(!db.nextNo)db.nextNo=1;
 if(!(db.fiscalYears&&db.fiscalYears.length)){var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());
 db.fiscalYears=[{id:uid(),sid:16548,name:String(j.jy),start:fmtJ(j.jy,1,1),end:fmtJ(j.jy,12,jML(j.jy,12)),current:true,user:userName()}];db.nextFyId=16548;}
 saveDB(db);
 makeRow("vBody","v",{});makeRow("vBody","v",{});
 var t=todayJ();
-["vDate","opDate","clDate","rcDate","plcDate","rnFrom","rnTo","tpFrom","tpTo","cpDate","lkFrom","lkTo","vdFrom","vdTo","turnFrom","turnTo","fyStart","fyEnd","ctrDate","legFrom","legTo","remDate"].forEach(function(id){var el=document.getElementById(id);if(el&&!el.value)el.value=t;});
+["vDate","opDate","clDate","rcDate","plcDate","rnFrom","rnTo","tpFrom","tpTo","cpDate","lkFrom","lkTo","vdFrom","vdTo","turnFrom","turnTo","fyStart","fyEnd","legFrom","legTo","glFrom","glTo","slFrom","slTo","dlFrom","dlTo","ledFrom","ledTo","bsFrom","bsTo","plFrom","plTo","cogsFrom","cogsTo","jnlFrom","jnlTo","tbFrom","tbTo","remDate"].forEach(function(id){var el=document.getElementById(id);if(el&&!el.value)el.value=t;});
 var j=g2j(new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate());
-["ledFyFrom","ledFyTo","plFyFrom","plFyTo","bsFyFrom","bsFyTo","ctrFyFrom","ctrFyTo","legFyFrom","legFyTo"].forEach(function(id){var el=document.getElementById(id);if(el&&!el.value)el.value=String(j.jy);});
+["ledFyFrom","ledFyTo","plFyFrom","plFyTo","bsFyFrom","bsFyTo","cogsFyFrom","cogsFyTo","jnlFyFrom","jnlFyTo","tbFyFrom","tbFyTo"].forEach(function(id){var el=document.getElementById(id);if(el&&!el.value)el.value=String(j.jy);});
 refreshNo("vNo");renderAll();showPanel("p-dash");
-console.log("[accounting] panels:",document.querySelectorAll(".panel").length,"features loaded");
+console.log("[accounting v10] panels:",document.querySelectorAll(".panel").length);
 });
 })();
 </script>
