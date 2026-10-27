@@ -4,9 +4,75 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>خرید</title>
-<link rel="stylesheet" href="module-kit.css">
 <style>
-/* استایل اختصاصی ماژول در صورت نیاز */
+:root{--bg:#0b1220;--panel:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#0ea5e9;--ok:#22c55e;--bad:#ef4444}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100dvh;display:flex;flex-direction:column}
+.header{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#020617;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px}.brand .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:grid;place-items:center;font-size:15px}
+.brand b{font-size:.85rem}
+.nav{display:flex;align-items:center;gap:3px;flex:1;justify-content:center;flex-wrap:wrap}
+.nav-item{position:relative}
+.nav-item>.nb{background:#1e293b;border:1px solid var(--line);color:#cbd5e1;border-radius:999px;padding:7px 11px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit}
+.nav-item:hover>.nb,.nb.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.nav-item .dd{display:none;position:absolute;top:calc(100% + 4px);right:0;min-width:200px;background:#1e293b;border:1px solid var(--line);border-radius:12px;padding:6px;z-index:120;box-shadow:0 12px 28px rgba(0,0,0,.5)}
+.nav-item:hover .dd{display:block}
+.nav-item .dd button{display:block;width:100%;text-align:right;background:transparent;border:none;color:var(--txt);padding:8px 11px;border-radius:8px;font-size:.72rem;cursor:pointer;font-family:inherit}
+.nav-item .dd button:hover{background:rgba(14,165,233,.25)}
+.mic{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:#7f1d1d;color:#fff;cursor:pointer}.mic.on{background:#166534}
+.exit-top{background:#dc2626;color:#fff;border:none;border-radius:999px;padding:7px 12px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit}
+.clock{display:flex;flex-direction:column;gap:1px;background:#1e293b;border:1px solid #475569;border-radius:10px;padding:5px 9px;min-width:110px;margin-inline-start:auto}
+.clock div{font-size:11px;font-weight:700;line-height:1.35}
+.clock .j{color:#7dd3fc}.clock .g{color:#94a3b8;direction:ltr;unicode-bidi:isolate;font-size:10px}
+.clock .c{color:#86efac}.clock .u{color:#fde68a;font-size:10px}
+.body-row{display:flex;flex:1;min-height:0;flex-direction:row;direction:ltr}
+.main{flex:1;padding:12px;overflow:auto;min-width:0;direction:rtl}
+.side{width:280px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--line);padding:8px;display:flex;flex-direction:column;overflow:auto;direction:rtl}
+@media(max-width:960px){.side{display:none}}
+.side .block{margin-bottom:6px;border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden}
+.side .block>.hd{width:100%;text-align:right;padding:9px 11px;background:#020617;border:none;color:#7dd3fc;font-weight:800;font-size:.78rem;cursor:pointer;font-family:inherit}
+.side .block:hover>.hd{background:rgba(14,165,233,.22)}
+.side .sub{display:none;padding:5px}.side .block:hover .sub{display:block}
+.side .sub button{display:block;width:100%;text-align:right;background:transparent;border:none;color:#cbd5e1;padding:7px 9px;font-size:.72rem;cursor:pointer;font-family:inherit;border-radius:8px}
+.side .sub button:hover,.side .sub button.on{background:rgba(14,165,233,.2);color:#fff}
+.alerts{margin-top:auto;padding-top:6px;border-top:1px solid var(--line)}
+.alert{display:flex;justify-content:space-between;width:100%;padding:7px 9px;margin-bottom:4px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:.68rem;font-weight:700;cursor:pointer;font-family:inherit}
+.alert .n{background:var(--pri);color:#fff;border-radius:999px;padding:1px 6px;font-size:.62rem}
+.panel{display:none!important}.panel.on{display:block!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;position:relative}
+.card h2{font-size:.88rem;color:#7dd3fc;margin-bottom:8px}.card.has-exit h2{padding-left:80px}
+.btn-form-exit{position:absolute;top:10px;left:10px;background:#334155;color:#e2e8f0;border:none;border-radius:8px;padding:5px 10px;font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit}
+label{display:block;font-size:.68rem;color:var(--muted);margin:5px 0 2px}
+input,select,textarea{width:100%;padding:7px;border-radius:9px;border:1px solid var(--line);background:#020617;color:var(--txt);font-family:inherit;font-size:12.5px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+@media(max-width:700px){.row,.row3{grid-template-columns:1fr}}
+.btn{border:none;border-radius:9px;padding:7px 12px;font-weight:700;font-size:.72rem;cursor:pointer;font-family:inherit;margin:2px}
+.btn-p{background:var(--pri);color:#fff}.btn-g{background:#334155;color:#e2e8f0}.btn-b{background:#7f1d1d;color:#fecaca}.btn-ok{background:#166534;color:#bbf7d0}
+.kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:7px;margin-bottom:10px}
+.kpi .box{background:#0f172a;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.kpi .n{font-size:1.05rem;font-weight:800;color:#7dd3fc}.kpi .l{font-size:.6rem;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:.7rem}
+th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{color:#7dd3fc;font-size:.62rem}
+.empty{color:var(--muted);font-size:.78rem;text-align:center;padding:16px}
+.toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:9px 12px;border-radius:12px;font-weight:700;opacity:0;z-index:200;transition:.15s;font-size:.8rem}
+.toast.show{opacity:1}.toast.err{background:var(--bad)}
+.list-box{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:5px;margin:7px 0;background:#0f172a}
+.list-item{padding:7px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:8px;font-size:.74rem}
+.list-item.sel{background:rgba(14,165,233,.2);border:1px solid #0ea5e9}
+.login-mask{position:fixed;inset:0;background:rgba(2,6,23,.95);z-index:300;display:flex;align-items:center;justify-content:center}
+.login-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;width:min(320px,92vw)}
+.date-wrap{position:relative}
+.jcal{position:absolute;z-index:90;right:0;top:calc(100%+4px);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;width:290px;max-width:calc(100vw - 24px);overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.5)}
+.jcal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:4px}
+.jcal-h button{width:26px;height:26px;border-radius:6px;border:1px solid var(--line);background:#0f172a;color:#fff;cursor:pointer}
+.jcal-h .ttl{font-size:.78rem;font-weight:800;color:#7dd3fc;flex:1;text-align:center}
+.jcal-w,.jcal-d{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+.jcal-w span{text-align:center;font-size:.52rem;color:var(--muted)}
+.jcal-d button{border:none;background:transparent;color:#fff;border-radius:6px;padding:2px;cursor:pointer;font-family:inherit;min-height:34px;width:100%}
+.jcal-d button .jd{display:block;font-size:.7rem;font-weight:700}.jcal-d button .gd{display:block;font-size:.4rem;color:var(--muted)}
+.split{display:grid;grid-template-columns:1fr 1.05fr;gap:10px}@media(max-width:900px){.split{grid-template-columns:1fr}}
+.form-actions{margin-top:8px}
 </style>
 </head>
 <body>
@@ -17,159 +83,316 @@
     <div class="nav-item"><button type="button" class="nb on" data-panel="p-dash">داشبورد</button>
       <div class="dd"><button type="button" data-panel="p-dash">نمای کلی</button></div></div>
     <div class="nav-item"><button type="button" class="nb">ثبت</button>
-      <div class="dd">
-        <!-- __REGISTER_ITEMS__ -->
-        <button type="button" data-panel="p-form1">فرم اصلی</button>
-      </div></div>
+      <div class="dd"><button type="button" data-panel="p-po">سفارش خرید</button><button type="button" data-panel="p-prec">رسید خرید</button><button type="button" data-panel="p-pret">برگشت از خرید</button></div></div>
     <div class="nav-item"><button type="button" class="nb">فهرست</button>
-      <div class="dd">
-        <button type="button" data-panel="p-list">فهرست رکوردها</button>
-      </div></div>
+      <div class="dd"><button type="button" data-panel="p-list-0">فهرست سفارش‌ها</button><button type="button" data-panel="p-list-1">فهرست رسیدها</button><button type="button" data-panel="p-list-2">فهرست برگشتی</button></div></div>
     <div class="nav-item"><button type="button" class="nb">گزارش</button>
-      <div class="dd">
-        <button type="button" data-panel="p-rep">گزارش خلاصه</button>
-      </div></div>
+      <div class="dd"><button type="button" data-panel="p-rep-0">گزارش خرید دوره‌ای</button><button type="button" data-panel="p-rep-1">خرید به تفکیک تأمین‌کننده</button></div></div>
     <div class="nav-item"><button type="button" class="nb">امکانات</button>
       <div class="dd">
         <button type="button" data-panel="p-cal">تقویم شمسی</button>
         <button type="button" data-panel="p-notes">یادداشت</button>
         <button type="button" data-panel="p-rems">یادآوری</button>
         <button type="button" data-panel="p-cartable">کارتابل</button>
-        <button type="button" data-panel="p-office">آفیس (ورد/اکسل/پاورپوینت)</button>
       </div></div>
     <div class="nav-item"><button type="button" class="nb">تنظیمات</button>
       <div class="dd">
-        <button type="button" data-panel="p-users">کاربران</button>
-        <button type="button" data-panel="p-backup">پشتیبان / بازیابی</button>
+        <button type="button" data-panel="p-backup">پشتیبان و بازیابی</button>
+        <button type="button" data-panel="p-users">ایجاد کاربر جدید</button>
       </div></div>
     <button type="button" class="exit-top" id="btnExit">خروج</button>
   </nav>
-  <div class="clock">
-    <div class="j" id="dtJ">—</div>
-    <div class="g" id="dtG">—</div>
-    <div class="c" id="dtC">—</div>
-    <div class="u" id="activeUser">کاربر فعال: —</div>
-  </div>
+  <div class="clock"><div class="j" id="dtJ">—</div><div class="g" id="dtG">—</div><div class="c" id="dtC">—</div><div class="u" id="activeUser">کاربر فعال: —</div></div>
 </header>
-
 <div class="body-row">
-  <main class="main">
-    <div class="panel on" id="p-dash">
-      <div class="kpi" id="kpi"></div>
-      <div class="card"><h2>داشبورد خرید</h2><p class="empty">آمار یادداشت، یادآوری، کارتابل و فعالیت‌های ماژول</p></div>
+<main class="main">
+  <div class="panel on" id="p-dash"><div class="kpi" id="kpi"></div><div class="card"><h2>داشبورد خرید</h2><p class="empty" id="dashMeta">—</p></div></div>
+  
+  <div class="panel" id="p-po"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>سفارش خرید</h2>
+    <div class="row"><div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div><div><label>تأمین‌کننده</label><input data-f="تأمین‌کننده" class=""></div></div><div class="row"><div><label>کالا</label><input data-f="کالا" class=""></div><div><label>تعداد</label><input data-f="تعداد" class=""></div></div><div class="row"><div><label>فی تقریبی</label><input data-f="فی تقریبی" class="amount"></div><div><label>تاریخ نیاز</label><input data-f="تاریخ نیاز" class="jdate"></div></div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-p btn-save-form" data-store="po" data-title="سفارش خرید">ثبت</button>
+      <button type="button" class="btn btn-ok btn-save-form-new" data-store="po" data-title="سفارش خرید">ثبت و جدید</button>
     </div>
-    <div class="panel" id="p-form1"><div class="card has-exit">
-      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-      <h2>فرم اصلی</h2>
-      <label>تاریخ</label><input class="jdate" data-jdate>
-      <label>شرح</label><input id="fDesc">
-      <button type="button" class="btn btn-p">ذخیره</button>
-    </div></div>
-    <div class="panel" id="p-list"><div class="card has-exit">
-      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-      <h2>فهرست</h2><div class="empty">—</div>
-    </div></div>
-    <div class="panel" id="p-rep"><div class="card has-exit">
-      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-      <h2>گزارش</h2><div class="empty">—</div>
-    </div></div>
-    <div class="panel" id="p-cal"><div class="card has-exit">
-      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-      <h2>تقویم شمسی</h2>
-      <div id="fullCal"></div>
-      <p class="empty" style="margin-top:8px">با کلیک روی هر روز می‌توانید یادآوری ثبت کنید</p>
-    </div></div>
-    <div class="panel" id="p-notes"><div class="card has-exit">
-      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-      <h2>یادداشت</h2><textarea id="noteText" rows="3"></textarea>
-      <div class="list-box" id="notesList"></div>
-      <button type="button" class="btn btn-p" id="btnNoteSave">ذخیره</button>
-      <button type="button" class="btn btn-b" id="btnNoteDel">حذف</button>
-    </div></div>
-    <div class="panel" id="p-rems"><div class="card has-exit">
-      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-      <h2>یادآوری</h2>
-      <div class="row"><input id="remText" placeholder="متن"><input id="remDate" class="jdate" data-jdate></div>
-      <button type="button" class="btn btn-p" id="btnRemAdd">افزودن</button>
-      <div class="list-box" id="remsList"></div>
-      <button type="button" class="btn btn-g" id="btnRemProg">در حال انجام</button>
-      <button type="button" class="btn btn-ok" id="btnRemDone">انجام شد</button>
-      <button type="button" class="btn btn-p" id="btnRemSave">ذخیره</button>
-    </div></div>
-    <div class="panel" id="p-cartable"><div class="card has-exit">
-      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-      <h2>کارتابل</h2>
-      <div class="row"><input id="cartTo" placeholder="گیرنده"><input id="cartMsg" placeholder="پیام"></div>
-      <input type="file" id="cartFile">
-      <button type="button" class="btn btn-p" id="btnCartSend">ارسال</button>
-      <div class="list-box" id="cartList"></div>
-      <button type="button" class="btn btn-g">در حال انجام</button>
-      <button type="button" class="btn btn-ok">انجام شد</button>
-      <button type="button" class="btn btn-p">ذخیره</button>
-      <button type="button" class="btn btn-b">حذف</button>
-    </div></div>
-    <div class="panel" id="p-office"><div class="card has-exit">
-      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-      <h2>آفیس</h2>
-      <button type="button" class="btn btn-p" id="dlWord">ورد</button>
-      <button type="button" class="btn btn-p" id="dlExcel">اکسل</button>
-      <button type="button" class="btn btn-p" id="dlPpt">پاورپوینت</button>
-    </div></div>
-    <div class="panel" id="p-users"><div class="card has-exit">
-      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-      <h2>کاربران (فقط Admin)</h2>
-      <div class="row"><input id="nuUser" placeholder="یوزر"><input id="nuPass" type="password" placeholder="رمز"><input id="nuName" placeholder="نام"></div>
-      <button type="button" class="btn btn-p">ایجاد کاربر</button>
-    </div></div>
-    <div class="panel" id="p-backup"><div class="card has-exit">
-      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-      <h2>پشتیبان / بازیابی</h2>
-      <button type="button" class="btn btn-p">دانلود محلی</button>
-      <button type="button" class="btn btn-g">بازیابی محلی</button>
-      <p class="empty" style="margin-top:8px">ذخیره ابری (گوگل درایو) — در صورت اتصال</p>
-    </div></div>
-  </main>
-
-  <aside class="side">
-    <div class="block"><button type="button" class="hd">داشبورد</button>
-      <div class="sub"><button type="button" data-panel="p-dash">نمای کلی</button></div></div>
-    <div class="block"><button type="button" class="hd">ثبت</button>
-      <div class="sub"><button type="button" data-panel="p-form1">فرم اصلی</button></div></div>
-    <div class="block"><button type="button" class="hd">فهرست</button>
-      <div class="sub"><button type="button" data-panel="p-list">فهرست رکوردها</button></div></div>
-    <div class="block"><button type="button" class="hd">گزارش</button>
-      <div class="sub"><button type="button" data-panel="p-rep">گزارش خلاصه</button></div></div>
-    <div class="block"><button type="button" class="hd">امکانات</button>
-      <div class="sub">
-        <button type="button" data-panel="p-cal">تقویم شمسی</button>
-        <button type="button" data-panel="p-notes">یادداشت</button>
-        <button type="button" data-panel="p-rems">یادآوری</button>
-        <button type="button" data-panel="p-cartable">کارتابل</button>
-        <button type="button" data-panel="p-office">آفیس</button>
-      </div></div>
-    <div class="block"><button type="button" class="hd">تنظیمات</button>
-      <div class="sub">
-        <button type="button" data-panel="p-users">کاربران</button>
-        <button type="button" data-panel="p-backup">پشتیبان / بازیابی</button>
-      </div></div>
-    <div class="alerts">
-      <button type="button" class="alert" data-panel="p-notes"><span>یادداشت باز</span><span class="n" id="aNotes">0</span></button>
-      <button type="button" class="alert" data-panel="p-rems"><span>یادآوری باز</span><span class="n" id="aRems">0</span></button>
-      <button type="button" class="alert" data-panel="p-cartable"><span>کارتابل</span><span class="n" id="aCart">0</span></button>
+  </div></div>
+  <div class="panel" id="p-prec"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>رسید خرید</h2>
+    <div class="row"><div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div><div><label>سفارش مرجع</label><input data-f="سفارش مرجع" class=""></div></div><div class="row"><div><label>تأمین‌کننده</label><input data-f="تأمین‌کننده" class=""></div><div><label>کالا</label><input data-f="کالا" class=""></div></div><div class="row"><div><label>تعداد</label><input data-f="تعداد" class=""></div><div><label>فی</label><input data-f="فی" class="amount"></div></div><div><label>جمع</label><input data-f="جمع" class=""></div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-p btn-save-form" data-store="prec" data-title="رسید خرید">ثبت</button>
+      <button type="button" class="btn btn-ok btn-save-form-new" data-store="prec" data-title="رسید خرید">ثبت و جدید</button>
     </div>
-  </aside>
+  </div></div>
+  <div class="panel" id="p-pret"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>برگشت از خرید</h2>
+    <div class="row"><div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div><div><label>رسید مرجع</label><input data-f="رسید مرجع" class=""></div></div><div class="row"><div><label>مبلغ</label><input data-f="مبلغ" class="amount"></div><div><label>شرح</label><input data-f="شرح" class=""></div></div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-p btn-save-form" data-store="pret" data-title="برگشت از خرید">ثبت</button>
+      <button type="button" class="btn btn-ok btn-save-form-new" data-store="pret" data-title="برگشت از خرید">ثبت و جدید</button>
+    </div>
+  </div></div>
+  
+  <div class="panel" id="p-list-0"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>فهرست سفارش‌ها</h2>
+    <input class="list-search" data-store="po" placeholder="جستجو...">
+    <div class="list-box data-list" data-store="po"></div>
+    <button type="button" class="btn btn-b btn-del-sel" data-store="po">حذف انتخاب‌شده</button>
+  </div></div>
+  <div class="panel" id="p-list-1"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>فهرست رسیدها</h2>
+    <input class="list-search" data-store="prec" placeholder="جستجو...">
+    <div class="list-box data-list" data-store="prec"></div>
+    <button type="button" class="btn btn-b btn-del-sel" data-store="prec">حذف انتخاب‌شده</button>
+  </div></div>
+  <div class="panel" id="p-list-2"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>فهرست برگشتی</h2>
+    <input class="list-search" data-store="pret" placeholder="جستجو...">
+    <div class="list-box data-list" data-store="pret"></div>
+    <button type="button" class="btn btn-b btn-del-sel" data-store="pret">حذف انتخاب‌شده</button>
+  </div></div>
+  
+  <div class="panel" id="p-rep-0"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>گزارش خرید دوره‌ای</h2>
+    <div class="data-report" data-store="po" data-title="گزارش خرید دوره‌ای"></div>
+  </div></div>
+  <div class="panel" id="p-rep-1"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>خرید به تفکیک تأمین‌کننده</h2>
+    <div class="data-report" data-store="po" data-title="خرید به تفکیک تأمین‌کننده"></div>
+  </div></div>
+  <div class="panel" id="p-cal"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>تقویم شمسی</h2><div id="fullCal"></div>
+    <p class="empty" style="margin-top:8px">با کلیک روی روز، یادآوری ثبت کنید</p>
+  </div></div>
+  <div class="panel" id="p-notes"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>یادداشت</h2><textarea id="noteText" rows="3"></textarea>
+    <div class="list-box" id="notesList"></div>
+    <button type="button" class="btn btn-p" id="btnNoteSave">ذخیره</button>
+    <button type="button" class="btn btn-b" id="btnNoteDel">حذف</button>
+  </div></div>
+  <div class="panel" id="p-rems"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>یادآوری</h2>
+    <div class="row"><input id="remText" placeholder="متن"><input id="remDate" class="jdate"></div>
+    <button type="button" class="btn btn-p" id="btnRemAdd">افزودن</button>
+    <div class="list-box" id="remsList"></div>
+  </div></div>
+  <div class="panel" id="p-cartable"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>کارتابل</h2>
+    <div class="row"><input id="cartTo" placeholder="گیرنده"><input id="cartMsg" placeholder="پیام"></div>
+    <button type="button" class="btn btn-p" id="btnCartSend">ارسال</button>
+    <div class="list-box" id="cartList"></div>
+  </div></div>
+  <div class="panel" id="p-users"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>ایجاد کاربر جدید</h2>
+    <div class="row3">
+      <div><label>نام کاربری</label><input id="nuUser"></div>
+      <div><label>رمز عبور</label><input id="nuPass" type="password"></div>
+      <div><label>نام نمایشی</label><input id="nuName"></div>
+    </div>
+    <label>نقش</label><select id="nuRole"><option value="user">کاربر</option><option value="admin">مدیر ماژول (Admin)</option></select>
+    <div class="form-actions">
+      <button type="button" class="btn btn-p" id="btnAddUser">ایجاد کاربر</button>
+    </div>
+    <div class="list-box" id="usersList" style="margin-top:10px"></div>
+  </div></div>
+  <div class="panel" id="p-backup"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>پشتیبان و بازیابی</h2>
+    <h3 style="color:#7dd3fc;font-size:.8rem;margin:8px 0">محلی (دستگاه)</h3>
+    <button type="button" class="btn btn-p" id="btnBackupLocal">دانلود پشتیبان محلی</button>
+    <button type="button" class="btn btn-g" id="btnRestoreLocal">بازیابی از فایل محلی</button>
+    <input type="file" id="restoreFile" accept="application/json" hidden>
+    <h3 style="color:#7dd3fc;font-size:.8rem;margin:14px 0 8px">گوگل درایو</h3>
+    <p class="empty" style="text-align:right;padding:6px 0">خروجی JSON برای آپلود دستی در گوگل درایو، یا بازیابی از فایلی که از درایو دانلود کرده‌اید.</p>
+    <button type="button" class="btn btn-ok" id="btnBackupGdrive">پشتیبان‌گیری برای گوگل درایو (دانلود JSON)</button>
+    <button type="button" class="btn btn-g" id="btnRestoreGdrive">بازیابی از فایل گوگل درایو</button>
+    <input type="file" id="restoreGdriveFile" accept="application/json" hidden>
+    <p class="empty" style="text-align:right;margin-top:8px;font-size:.7rem">نکته: در محیط مرورگر بدون سرور، اتصال مستقیم OAuth به گوگل درایو محدود است؛ فایل را در درایو آپلود/دانلود کنید.</p>
+  </div></div>
+</main>
+<aside class="side">
+  <div class="block"><button type="button" class="hd">داشبورد</button><div class="sub"><button type="button" data-panel="p-dash">نمای کلی</button></div></div>
+  <div class="block"><button type="button" class="hd">ثبت</button><div class="sub"><button type="button" data-panel="p-po">سفارش خرید</button><button type="button" data-panel="p-prec">رسید خرید</button><button type="button" data-panel="p-pret">برگشت از خرید</button></div></div>
+  <div class="block"><button type="button" class="hd">فهرست</button><div class="sub"><button type="button" data-panel="p-list-0">فهرست سفارش‌ها</button><button type="button" data-panel="p-list-1">فهرست رسیدها</button><button type="button" data-panel="p-list-2">فهرست برگشتی</button></div></div>
+  <div class="block"><button type="button" class="hd">گزارش</button><div class="sub"><button type="button" data-panel="p-rep-0">گزارش خرید دوره‌ای</button><button type="button" data-panel="p-rep-1">خرید به تفکیک تأمین‌کننده</button></div></div>
+  <div class="block"><button type="button" class="hd">امکانات</button><div class="sub">
+    <button type="button" data-panel="p-cal">تقویم شمسی</button>
+    <button type="button" data-panel="p-notes">یادداشت</button>
+    <button type="button" data-panel="p-rems">یادآوری</button>
+    <button type="button" data-panel="p-cartable">کارتابل</button>
+  </div></div>
+  <div class="block"><button type="button" class="hd">تنظیمات</button><div class="sub">
+    <button type="button" data-panel="p-backup">پشتیبان و بازیابی</button>
+    <button type="button" data-panel="p-users">ایجاد کاربر جدید</button>
+  </div></div>
+  <div class="alerts">
+    <button type="button" class="alert" data-panel="p-notes"><span>یادداشت</span><span class="n" id="aNotes">0</span></button>
+    <button type="button" class="alert" data-panel="p-rems"><span>یادآوری</span><span class="n" id="aRems">0</span></button>
+    <button type="button" class="alert" data-panel="p-cartable"><span>کارتابل</span><span class="n" id="aCart">0</span></button>
+  </div>
+</aside>
 </div>
 <div class="toast" id="toast"></div>
-<script src="module-kit.js"></script>
 <script>
 (function(){
-  ModuleKit.init({defaultPanel:"p-dash",suiteUrl:"index.html"});
-  ModuleKit.onCalDayClick=function(val){
-    var rem=document.getElementById("remDate");
-    if(rem)rem.value=val;
-    ModuleKit.showPanel("p-rems");
-  };
-  document.getElementById("activeUser").textContent="کاربر فعال: مهمان";
+var MOD="purchase", KEY="smart_mod_"+MOD+"_v1";
+var FA=["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"],JM=["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"],JW=["ش","ی","د","س","چ","پ","ج"];
+function toFa(n){return String(n).replace(/\d/g,function(d){return FA[+d];});}
+function toEn(s){return String(s).replace(/[۰-۹]/g,function(d){return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);}).replace(/,/g,"");}
+function g2j(gy,gm,gd){var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];var gy2=(gm>2)?(gy+1):gy;var days=355666+365*gy+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+g_d_m[gm-1];var jy=-1595+33*Math.floor(days/12053);days%=12053;jy+=4*Math.floor(days/1461);days%=1461;if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}var jm=(days<186)?1+Math.floor(days/31):7+Math.floor((days-186)/30);var jd=1+((days<186)?(days%31):((days-186)%30));return{jy:jy,jm:jm,jd:jd};}
+function j2g(jy,jm,jd){var jy2=jy-979,jm2=jm-1,jd2=jd-1;var days=365*jy2+Math.floor(jy2/33)*8+Math.floor(((jy2%33)+3)/4);for(var i=0;i<jm2;++i)days+=(i<6?31:30);days+=jd2;var gy=1600+400*Math.floor(days/146097);days%=146097;var leap=true;if(days>=36525){days--;gy+=100*Math.floor(days/36524);days%=36524;if(days>=365)leap=false;else days++;}gy+=4*Math.floor(days/1461);days%=1461;if(days>=366){leap=false;days--;gy+=Math.floor(days/365);days=days%365;}var gd=days+1,sal_a=[0,31,(leap?29:28),31,30,31,30,31,31,30,31,30,31],gm;for(gm=1;gm<=12&&gd>sal_a[gm];gm++)gd-=sal_a[gm];return{gy:gy,gm:gm,gd:gd};}
+function jML(jy,jm){if(jm<=6)return 31;if(jm<=11)return 30;var a=j2g(jy,12,30);var b=g2j(a.gy,a.gm,a.gd);return(b.jy===jy&&b.jm===12&&b.jd===30)?30:29;}
+function fmtJ(jy,jm,jd){return toFa(jy)+"/"+toFa(String(jm).padStart(2,"0"))+"/"+toFa(String(jd).padStart(2,"0"));}
+function tickClock(){var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());
+document.getElementById("dtJ").textContent=fmtJ(j.jy,j.jm,j.jd);
+document.getElementById("dtG").textContent=n.getFullYear()+"/"+String(n.getMonth()+1).padStart(2,"0")+"/"+String(n.getDate()).padStart(2,"0");
+document.getElementById("dtC").textContent=toFa(String(n.getHours()).padStart(2,"0"))+":"+toFa(String(n.getMinutes()).padStart(2,"0"))+":"+toFa(String(n.getSeconds()).padStart(2,"0"));}
+tickClock();setInterval(tickClock,1000);
+function toast(m,t){var el=document.getElementById("toast");el.textContent=m;el.className="toast show"+(t==="err"?" err":"");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("show");},2200);}
+function loadJSON(k,d){try{return JSON.parse(localStorage.getItem(k)||"null")||d;}catch(e){return d;}}
+function saveJSON(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function loadDB(){return loadJSON(KEY,{stores:{}});}
+function saveDB(d){saveJSON(KEY,d);}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+function showPanel(id){if(!id)return;var el=document.getElementById(id);if(!el)return;
+document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});el.classList.add("on");
+document.querySelectorAll(".side .sub button[data-panel]").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-panel")===id);});
+if(id==="p-cal")renderFullCal();
+if(id==="p-users")renderUsers();
+document.querySelectorAll(".data-list").forEach(renderListBox);
+document.querySelectorAll(".data-report").forEach(renderReport);
+}
+document.addEventListener("click",function(e){var t=e.target.closest("[data-panel]");if(t&&t.getAttribute("data-panel")){e.preventDefault();showPanel(t.getAttribute("data-panel"));}});
+
+function attachJDate(input){if(!input||input._j)return;input._j=true;
+var wrap=input.parentNode;if(!wrap.classList.contains("date-wrap")){var d=document.createElement("div");d.className="date-wrap";wrap.insertBefore(d,input);d.appendChild(input);wrap=d;}
+var pop,vy,vm;function close(){if(pop){pop.remove();pop=null;}document.removeEventListener("click",out);}
+function out(e){if(pop&&!pop.contains(e.target)&&e.target!==input)close();}
+function open(){close();var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());var m=toEn(input.value||"").match(/^(\d{4})[\/\-](\d{1,2})/);vy=m?+m[1]:j.jy;vm=m?+m[2]:j.jm;pop=document.createElement("div");pop.className="jcal";wrap.appendChild(pop);render();setTimeout(function(){document.addEventListener("click",out);},0);}
+function render(){if(!pop)return;pop.innerHTML="";var h=document.createElement("div");h.className="jcal-h";h.innerHTML='<button type="button" data-a="py">«</button><button type="button" data-a="pm">‹</button><span class="ttl">'+JM[vm-1]+' '+toFa(vy)+'</span><button type="button" data-a="nm">›</button><button type="button" data-a="ny">»</button>';
+var w=document.createElement("div");w.className="jcal-w";JW.forEach(function(x){var s=document.createElement("span");s.textContent=x;w.appendChild(s);});
+var days=document.createElement("div");days.className="jcal-d";var dim=jML(vy,vm),fg=j2g(vy,vm,1),st=(new Date(fg.gy,fg.gm-1,fg.gd).getDay()+1)%7;
+for(var i=0;i<st;i++){var em=document.createElement("button");em.type="button";em.disabled=true;em.style.visibility="hidden";days.appendChild(em);}
+for(var d=1;d<=dim;d++){(function(day){var g=j2g(vy,vm,day);var b=document.createElement("button");b.type="button";b.innerHTML='<span class="jd">'+toFa(day)+'</span><span class="gd">'+g.gy+'/'+String(g.gm).padStart(2,"0")+'/'+String(g.gd).padStart(2,"0")+'</span>';
+b.onclick=function(ev){ev.stopPropagation();input.value=fmtJ(vy,vm,day);close();};days.appendChild(b);})(d);}
+pop.appendChild(h);pop.appendChild(w);pop.appendChild(days);
+h.querySelectorAll("button").forEach(function(b){b.onclick=function(ev){ev.stopPropagation();var a=b.getAttribute("data-a");if(a==="pm"){vm--;if(vm<1){vm=12;vy--;}}if(a==="nm"){vm++;if(vm>12){vm=1;vy++;}}if(a==="py")vy--;if(a==="ny")vy++;render();};});}
+input.addEventListener("click",open);input.addEventListener("focus",open);}
+
+function renderFullCal(){var box=document.getElementById("fullCal");if(!box)return;var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());
+var vy=box._y||j.jy,vm=box._m||j.jm;box._y=vy;box._m=vm;
+var html='<div class="jcal" style="position:static;width:100%;max-width:340px"><div class="jcal-h"><button type="button" id="fcPy">«</button><button type="button" id="fcPm">‹</button><span class="ttl">'+JM[vm-1]+' '+toFa(vy)+'</span><button type="button" id="fcNm">›</button><button type="button" id="fcNy">»</button></div><div class="jcal-w">';
+JW.forEach(function(x){html+='<span>'+x+'</span>';});html+='</div><div class="jcal-d">';
+var dim=jML(vy,vm),fg=j2g(vy,vm,1),st=(new Date(fg.gy,fg.gm-1,fg.gd).getDay()+1)%7;
+for(var i=0;i<st;i++)html+='<button type="button" style="visibility:hidden"></button>';
+for(var d=1;d<=dim;d++){var g=j2g(vy,vm,d);html+='<button type="button" data-d="'+d+'"><span class="jd">'+toFa(d)+'</span><span class="gd">'+g.gy+'/'+g.gm+'/'+g.gd+'</span></button>';}
+html+='</div></div>';box.innerHTML=html;
+document.getElementById("fcPm").onclick=function(){box._m--;if(box._m<1){box._m=12;box._y--;}renderFullCal();};
+document.getElementById("fcNm").onclick=function(){box._m++;if(box._m>12){box._m=1;box._y++;}renderFullCal();};
+document.getElementById("fcPy").onclick=function(){box._y--;renderFullCal();};
+document.getElementById("fcNy").onclick=function(){box._y++;renderFullCal();};
+box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){document.getElementById("remDate").value=fmtJ(box._y,box._m,+b.getAttribute("data-d"));showPanel("p-rems");};});}
+
+function getAuth(){return loadJSON("smart_users_"+MOD,{users:[{user:"admin",pass:"admin",name:"مدیر",role:"admin"}],session:null});}
+function saveAuth(a){saveJSON("smart_users_"+MOD,a);}
+function userName(){var a=getAuth();return(a.session&&(a.session.name||a.session.user))||"مهمان";}
+function ensureLogin(cb){var a=getAuth();if(a.session&&a.session.user){cb();return;}
+var m=document.createElement("div");m.className="login-mask";
+m.innerHTML='<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود — خرید</h2><label>نام کاربری</label><input id="lgU"><label>رمز</label><input id="lgP" type="password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty" style="margin-top:8px">admin / admin</p></div>';
+document.body.appendChild(m);document.getElementById("lgGo").onclick=function(){var u=document.getElementById("lgU").value.trim(),p=document.getElementById("lgP").value;
+var f=(a.users||[]).find(function(x){return x.user===u&&x.pass===p;});if(!f){toast("اشتباه","err");return;}a.session={user:f.user,name:f.name||f.user,role:f.role||"user"};saveAuth(a);m.remove();cb();};}
+
+function saveForm(store,andNew,btn){var card=btn.closest(".card");var data={id:uid(),at:new Date().toISOString()};
+card.querySelectorAll("[data-f]").forEach(function(inp){data[inp.getAttribute("data-f")]=inp.value;});
+var db=loadDB();db.stores=db.stores||{};db.stores[store]=db.stores[store]||[];db.stores[store].unshift(data);saveDB(db);
+toast("ثبت شد");if(andNew)card.querySelectorAll("[data-f]").forEach(function(inp){inp.value="";});renderDash();document.querySelectorAll(".data-list").forEach(renderListBox);}
+document.querySelectorAll(".btn-save-form").forEach(function(b){b.onclick=function(){saveForm(b.getAttribute("data-store"),false,b);};});
+document.querySelectorAll(".btn-save-form-new").forEach(function(b){b.onclick=function(){saveForm(b.getAttribute("data-store"),true,b);};});
+
+var selId={};
+function renderListBox(box){var store=box.getAttribute("data-store");var db=loadDB();var items=(db.stores&&db.stores[store])||[];
+var q="";var search=box.parentElement.querySelector(".list-search");if(search)q=(search.value||"").toLowerCase();
+var filtered=items.filter(function(x){if(!q)return true;return JSON.stringify(x).toLowerCase().indexOf(q)>=0;});
+if(!filtered.length){box.innerHTML='<p class="empty">داده‌ای نیست</p>';return;}
+var keys=Object.keys(filtered[0]).filter(function(k){return k!=="id"&&k!=="at";}).slice(0,5);
+var html='<table><thead><tr><th>#</th>';keys.forEach(function(k){html+='<th>'+esc(k)+'</th>';});html+='</tr></thead><tbody>';
+filtered.forEach(function(row,i){html+='<tr data-id="'+row.id+'" style="cursor:pointer'+(selId[store]===row.id?';background:rgba(14,165,233,.15)':'')+'"><td>'+toFa(i+1)+'</td>';
+keys.forEach(function(k){html+='<td>'+esc(row[k])+'</td>';});html+='</tr>';});
+html+='</tbody></table>';box.innerHTML=html;
+box.querySelectorAll("tr[data-id]").forEach(function(tr){tr.onclick=function(){selId[store]=tr.getAttribute("data-id");renderListBox(box);};});}
+document.querySelectorAll(".list-search").forEach(function(inp){inp.oninput=function(){var box=inp.parentElement.querySelector(".data-list");if(box)renderListBox(box);};});
+document.querySelectorAll(".btn-del-sel").forEach(function(b){b.onclick=function(){var store=b.getAttribute("data-store");if(!selId[store]){toast("انتخاب کنید","err");return;}
+var db=loadDB();db.stores=db.stores||{};db.stores[store]=(db.stores[store]||[]).filter(function(x){return x.id!==selId[store];});saveDB(db);selId[store]=null;document.querySelectorAll('.data-list[data-store="'+store+'"]').forEach(renderListBox);renderDash();toast("حذف شد");};});
+
+function renderReport(el){var store=el.getAttribute("data-store");var title=el.getAttribute("data-title")||"گزارش";
+var items=(loadDB().stores&&loadDB().stores[store])||[];
+if(!items.length){el.innerHTML='<p class="empty">داده‌ای برای گزارش نیست</p>';return;}
+var keys=Object.keys(items[0]).filter(function(k){return k!=="id"&&k!=="at";});
+var html='<p style="margin-bottom:8px;color:#94a3b8">'+esc(title)+' — تعداد: '+toFa(items.length)+'</p><table><thead><tr>';
+keys.forEach(function(k){html+='<th>'+esc(k)+'</th>';});html+='</tr></thead><tbody>';
+items.slice(0,100).forEach(function(row){html+='<tr>';keys.forEach(function(k){html+='<td>'+esc(row[k])+'</td>';});html+='</tr>';});
+html+='</tbody></table>';el.innerHTML=html;}
+
+function renderDash(){var db=loadDB();var stores=db.stores||{};var total=0;Object.keys(stores).forEach(function(k){total+=(stores[k]||[]).length;});
+var html='<div class="box"><div class="n">'+toFa(total)+'</div><div class="l">کل رکوردها</div></div>';
+Object.keys(stores).slice(0,6).forEach(function(k){html+='<div class="box"><div class="n">'+toFa((stores[k]||[]).length)+'</div><div class="l">'+esc(k)+'</div></div>';});
+document.getElementById("kpi").innerHTML=html;
+document.getElementById("dashMeta").textContent="ماژول خرید · کاربر: "+userName();
+updateAlerts();}
+
+var notesKey="smart_mod_notes_"+MOD,remsKey="smart_mod_rem_"+MOD,cartKey="smart_cartable_v1";var selNote=-1;
+function renderNotes(){var n=loadJSON(notesKey,[]);document.getElementById("notesList").innerHTML=n.map(function(x,i){return '<div class="list-item" data-i="'+i+'">'+esc(x.text)+'</div>';}).join("")||'<p class="empty">—</p>';
+document.getElementById("notesList").querySelectorAll("[data-i]").forEach(function(el){el.onclick=function(){selNote=+el.getAttribute("data-i");document.getElementById("noteText").value=loadJSON(notesKey,[])[selNote].text||"";};});}
+function renderRems(){var n=loadJSON(remsKey,[]);document.getElementById("remsList").innerHTML=n.map(function(x){return '<div class="list-item">'+esc(x.text)+' — '+esc(x.date||'')+'</div>';}).join("")||'<p class="empty">—</p>';}
+document.getElementById("btnNoteSave").onclick=function(){var t=document.getElementById("noteText").value.trim();if(!t)return;var n=loadJSON(notesKey,[]);if(selNote>=0&&n[selNote])n[selNote].text=t;else n.unshift({text:t});saveJSON(notesKey,n);selNote=-1;document.getElementById("noteText").value="";renderNotes();updateAlerts();};
+document.getElementById("btnNoteDel").onclick=function(){if(selNote<0)return;var n=loadJSON(notesKey,[]);n.splice(selNote,1);saveJSON(notesKey,n);selNote=-1;renderNotes();updateAlerts();};
+document.getElementById("btnRemAdd").onclick=function(){var t=document.getElementById("remText").value.trim(),d=document.getElementById("remDate").value;if(!t)return;var n=loadJSON(remsKey,[]);n.unshift({text:t,date:d,status:"new"});saveJSON(remsKey,n);renderRems();updateAlerts();};
+document.getElementById("btnCartSend").onclick=function(){var c=loadJSON(cartKey,{items:[]});c.items=c.items||[];c.items.unshift({from:userName()+"@"+MOD,to:document.getElementById("cartTo").value,msg:document.getElementById("cartMsg").value,status:"new"});saveJSON(cartKey,c);renderCart();updateAlerts();toast("ارسال");};
+function renderCart(){var all=loadJSON(cartKey,{items:[]}).items||[];document.getElementById("cartList").innerHTML=all.map(function(x){return '<div class="list-item">'+esc(x.msg)+'</div>';}).join("")||'<p class="empty">خالی</p>';}
+function updateAlerts(){document.getElementById("aNotes").textContent=String((loadJSON(notesKey,[])).length);document.getElementById("aRems").textContent=String((loadJSON(remsKey,[])).filter(function(x){return x.status!=="done";}).length);document.getElementById("aCart").textContent=String((loadJSON(cartKey,{items:[]}).items||[]).length);}
+
+function renderUsers(){var a=getAuth();document.getElementById("usersList").innerHTML=(a.users||[]).map(function(u){return '<div class="list-item"><b>'+esc(u.user)+'</b> — '+esc(u.name||'')+' ('+esc(u.role||'user')+')</div>';}).join("");}
+document.getElementById("btnAddUser").onclick=function(){var u=document.getElementById("nuUser").value.trim(),p=document.getElementById("nuPass").value,n=document.getElementById("nuName").value.trim();
+if(!u||!p){toast("یوزر و رمز لازم است","err");return;}var a=getAuth();a.users=a.users||[];if(a.users.some(function(x){return x.user===u;})){toast("تکراری","err");return;}
+a.users.push({user:u,pass:p,name:n||u,role:document.getElementById("nuRole").value});saveAuth(a);toast("کاربر ایجاد شد");document.getElementById("nuUser").value="";document.getElementById("nuPass").value="";document.getElementById("nuName").value="";renderUsers();};
+
+function downloadBackup(name){var payload={module:MOD,title:"خرید",data:loadDB(),notes:loadJSON(notesKey,[]),rems:loadJSON(remsKey,[]),users:getAuth().users,at:new Date().toISOString()};
+var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}));a.download=name;a.click();toast("دانلود شد");}
+document.getElementById("btnBackupLocal").onclick=function(){downloadBackup(MOD+"-backup.json");};
+document.getElementById("btnBackupGdrive").onclick=function(){downloadBackup(MOD+"-gdrive-backup.json");toast("فایل را در گوگل درایو آپلود کنید");};
+function doRestore(file){if(!file)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(d.data)saveDB(d.data);if(d.notes)saveJSON(notesKey,d.notes);if(d.rems)saveJSON(remsKey,d.rems);if(d.users){var a=getAuth();a.users=d.users;saveAuth(a);}renderDash();renderNotes();renderRems();toast("بازیابی شد");}catch(e){toast("فایل نامعتبر","err");}};r.readAsText(file);}
+document.getElementById("btnRestoreLocal").onclick=function(){document.getElementById("restoreFile").click();};
+document.getElementById("restoreFile").onchange=function(e){doRestore(e.target.files[0]);};
+document.getElementById("btnRestoreGdrive").onclick=function(){document.getElementById("restoreGdriveFile").click();};
+document.getElementById("restoreGdriveFile").onchange=function(e){doRestore(e.target.files[0]);};
+
+document.getElementById("btnExit").onclick=function(){location.href="index.html";};
+(function(){var btn=document.getElementById("btnMic");var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return;
+var rec=new SR(),on=false;rec.lang="fa-IR";rec.continuous=true;rec.interimResults=false;
+rec.onresult=function(ev){for(var i=ev.resultIndex;i<ev.results.length;i++)if(ev.results[i].isFinal){var a=document.activeElement;if(a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA")){var t=ev.results[i][0].transcript;var s=a.selectionStart||0,e2=a.selectionEnd||0;a.value=a.value.slice(0,s)+t+a.value.slice(e2);a.dispatchEvent(new Event("input",{bubbles:true}));}}};
+rec.onend=function(){if(on)try{rec.start();}catch(e){};};
+btn.onclick=function(){if(on){on=false;try{rec.stop();}catch(e){}btn.classList.remove("on");}else{on=true;try{rec.start();}catch(e){}btn.classList.add("on");}};})();
+
+ensureLogin(function(){
+  document.querySelectorAll(".jdate").forEach(attachJDate);
+  document.getElementById("activeUser").textContent="کاربر فعال: "+userName();
+  renderDash();renderNotes();renderRems();renderCart();
+  showPanel("p-dash");
+});
 })();
 </script>
 </body>

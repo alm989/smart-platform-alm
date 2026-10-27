@@ -4,123 +4,94 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1220">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="سامانه هوشمند یکپارچه">
 <link rel="manifest" href="manifest-suite.json">
 <title>سامانه هوشمند یکپارچه مالی و اداری</title>
 <style>
-:root{--bg:#0b1220;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#0ea5e9;--sky:#38bdf8}
+:root{--bg:#0b1220;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#0ea5e9}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:linear-gradient(160deg,#0b1220 0%,#0f172a 50%,#1e3a5f 100%);color:var(--txt);min-height:100dvh;padding:16px}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:linear-gradient(160deg,#0b1220,#0f172a 50%,#1e3a5f);color:var(--txt);min-height:100dvh;padding:16px}
 .wrap{max-width:1100px;margin:0 auto}
-.hero{text-align:center;padding:28px 16px 20px}
-.hero .logo{width:64px;height:64px;margin:0 auto 12px;border-radius:18px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:grid;place-items:center;font-size:28px;box-shadow:0 12px 32px rgba(14,165,233,.35)}
-.hero h1{font-size:1.35rem;color:#f8fafc;margin-bottom:6px;line-height:1.5}
-.hero p{color:var(--muted);font-size:.85rem}
-.search{max-width:420px;margin:0 auto 22px}
-.search input{width:100%;padding:12px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(15,23,42,.85);color:var(--txt);font-family:inherit;font-size:.9rem}
-.section{margin-bottom:22px}
-.section h2{font-size:.95rem;color:#7dd3fc;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(125,211,252,.25);display:flex;align-items:center;gap:8px}
-.section h2 span{font-size:.7rem;color:var(--muted);font-weight:400}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.mod{display:block;text-decoration:none;color:inherit;background:rgba(30,41,59,.9);border:1px solid var(--line);border-radius:14px;padding:14px 12px;text-align:center;transition:.15s;cursor:pointer}
-.mod:hover{border-color:var(--pri);transform:translateY(-2px);box-shadow:0 8px 20px rgba(14,165,233,.2)}
-.mod .ic{font-size:1.6rem;margin-bottom:6px}
-.mod .nm{font-size:.78rem;font-weight:700;color:#e2e8f0}
-.mod .ds{font-size:.62rem;color:var(--muted);margin-top:3px}
-.footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
-.login-bar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px}
-.login-bar button{background:#334155;color:#e2e8f0;border:none;border-radius:10px;padding:8px 14px;font-family:inherit;font-size:.75rem;cursor:pointer}
-.clock{text-align:center;color:#86efac;font-size:.8rem;margin-bottom:12px}
+.hero{text-align:center;padding:24px 12px 16px}
+.hero .logo{width:60px;height:60px;margin:0 auto 10px;border-radius:16px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:grid;place-items:center;font-size:26px}
+.hero h1{font-size:1.25rem;margin-bottom:6px}.hero p{color:var(--muted);font-size:.82rem}
+.search{max-width:400px;margin:0 auto 18px}
+.search input{width:100%;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(15,23,42,.9);color:var(--txt);font-family:inherit}
+.section{margin-bottom:18px}
+.section h2{font-size:.9rem;color:#7dd3fc;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid rgba(125,211,252,.25)}
+.section h2 span{font-size:.68rem;color:var(--muted);font-weight:400}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}
+.mod{display:block;text-decoration:none;color:inherit;background:rgba(30,41,59,.92);border:1px solid var(--line);border-radius:14px;padding:12px 10px;text-align:center;transition:.15s}
+.mod:hover{border-color:var(--pri);transform:translateY(-2px);box-shadow:0 8px 18px rgba(14,165,233,.2)}
+.mod .ic{font-size:1.5rem;margin-bottom:5px}.mod .nm{font-size:.75rem;font-weight:700}
+.mod .ds{font-size:.6rem;color:var(--muted);margin-top:2px}
+.clock{text-align:center;color:#86efac;font-size:.78rem;margin-bottom:10px}
+.footer{text-align:center;padding:16px;color:var(--muted);font-size:.68rem}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="login-bar"><button type="button" id="btnClearCache">پاک‌سازی کش</button></div>
-  <div class="hero">
-    <div class="logo">🏛️</div>
+  <div class="hero"><div class="logo">🏛️</div>
     <h1>سامانه هوشمند یکپارچه مالی و اداری</h1>
-    <p>مدیریت مالی، اداری، منابع انسانی و عملیات در یک بستر واحد</p>
+    <p>مدیریت مالی، اداری، منابع انسانی و عملیات</p>
   </div>
   <div class="clock" id="clock">—</div>
   <div class="search"><input id="q" placeholder="جستجوی ماژول..."></div>
 
-  <div class="section" data-sec="core">
-    <h2>هسته و مدیریت <span>· کنترل سامانه</span></h2>
-    <div class="grid">
-      <a class="mod" href="ceo.html" data-n="مدیرعامل"><div class="ic">👔</div><div class="nm">مدیرعامل</div><div class="ds">گزارش‌ها و مجوزها</div></a>
-      <a class="mod" href="manager.html" data-n="مدیریت"><div class="ic">📋</div><div class="nm">مدیریت</div><div class="ds">مدیریت سازمانی</div></a>
-      <a class="mod" href="sysadmin.html" data-n="مدیریت نرم‌افزار"><div class="ic">⚙️</div><div class="nm">مدیریت نرم‌افزار</div><div class="ds">کاربران و دسترسی</div></a>
-      <a class="mod" href="controller.html" data-n="کنترلر"><div class="ic">🎛️</div><div class="nm">کنترلر</div><div class="ds">کنترل و موتور تغییرات</div></a>
-      <a class="mod" href="brain.html" data-n="مغز متفکر"><div class="ic">🧠</div><div class="nm">مغز متفکر</div><div class="ds">هوش و رصد یکپارچه</div></a>
-    </div>
-  </div>
+  <div class="section"><h2>هسته و مدیریت <span>· کنترل سامانه</span></h2><div class="grid">
+    <a class="mod" href="ceo.html" data-n="مدیرعامل"><div class="ic">👔</div><div class="nm">مدیرعامل</div><div class="ds">مجوز و گزارش</div></a>
+    <a class="mod" href="manager.html" data-n="مدیریت"><div class="ic">📋</div><div class="nm">مدیریت</div><div class="ds">وظایف سازمانی</div></a>
+    <a class="mod" href="sysadmin.html" data-n="مدیریت نرم‌افزار"><div class="ic">⚙️</div><div class="nm">مدیریت نرم‌افزار</div><div class="ds">کاربران و دسترسی</div></a>
+    <a class="mod" href="controller.html" data-n="کنترلر"><div class="ic">🎛️</div><div class="nm">کنترلر</div><div class="ds">موتور تغییرات</div></a>
+    <a class="mod" href="brain.html" data-n="مغز متفکر"><div class="ic">🧠</div><div class="nm">مغز متفکر</div><div class="ds">رصد یکپارچه</div></a>
+  </div></div>
 
-  <div class="section" data-sec="finance">
-    <h2>مالی و حسابداری <span>· اسناد و گزارش‌ها</span></h2>
-    <div class="grid">
-      <a class="mod" href="accounting.html" data-n="حسابداری"><div class="ic">📒</div><div class="nm">حسابداری</div><div class="ds">سند، کدینگ، گزارش</div></a>
-      <a class="mod" href="bank.html" data-n="نقد و بانک"><div class="ic">🏦</div><div class="nm">نقد و بانک</div><div class="ds">دریافت، پرداخت، مغایرت</div></a>
-      <a class="mod" href="cashbox.html" data-n="صندوق"><div class="ic">💵</div><div class="nm">صندوق</div><div class="ds">نقد، چک، اوراق</div></a>
-      <a class="mod" href="pettycash.html" data-n="تنخواه"><div class="ic">🧾</div><div class="nm">تنخواه</div><div class="ds">تنخواه‌گردان هوشمند</div></a>
-      <a class="mod" href="tax.html" data-n="مالیات"><div class="ic">📊</div><div class="nm">مالیات و کنترل بودجه</div><div class="ds">مالیات و بودجه</div></a>
-      <a class="mod" href="budget.html" data-n="بودجه"><div class="ic">📈</div><div class="nm">بودجه و کنترل</div><div class="ds">برنامه‌ریزی مالی</div></a>
-      <a class="mod" href="audit.html" data-n="حسابرسی"><div class="ic">🔍</div><div class="nm">حسابرسی</div><div class="ds">ممیزی و کنترل داخلی</div></a>
-      <a class="mod" href="fixedassets.html" data-n="دارایی ثابت"><div class="ic">🏢</div><div class="nm">دارایی ثابت</div><div class="ds">استهلاک و کدینگ</div></a>
-    </div>
-  </div>
+  <div class="section"><h2>مالی و حسابداری</h2><div class="grid">
+    <a class="mod" href="accounting.html" data-n="حسابداری"><div class="ic">📒</div><div class="nm">حسابداری</div><div class="ds">سند و گزارش</div></a>
+    <a class="mod" href="bank.html" data-n="نقد و بانک"><div class="ic">🏦</div><div class="nm">نقد و بانک</div><div class="ds">دریافت پرداخت مغایرت</div></a>
+    <a class="mod" href="cashbox.html" data-n="صندوق"><div class="ic">💵</div><div class="nm">صندوق</div><div class="ds">نقد چک اوراق</div></a>
+    <a class="mod" href="pettycash.html" data-n="تنخواه"><div class="ic">🧾</div><div class="nm">تنخواه</div><div class="ds">تنخواه‌گردان</div></a>
+    <a class="mod" href="tax.html" data-n="مالیات"><div class="ic">📊</div><div class="nm">مالیات و بودجه</div><div class="ds">مالیات کنترل</div></a>
+    <a class="mod" href="budget.html" data-n="بودجه"><div class="ic">📈</div><div class="nm">بودجه و کنترل</div><div class="ds">برنامه‌ریزی</div></a>
+    <a class="mod" href="audit.html" data-n="حسابرسی"><div class="ic">🔍</div><div class="nm">حسابرسی</div><div class="ds">ممیزی</div></a>
+    <a class="mod" href="fixedassets.html" data-n="دارایی ثابت"><div class="ic">🏢</div><div class="nm">دارایی ثابت</div><div class="ds">استهلاک</div></a>
+  </div></div>
 
-  <div class="section" data-sec="ops">
-    <h2>عملیات و بازرگانی <span>· خرید، فروش، انبار</span></h2>
-    <div class="grid">
-      <a class="mod" href="sales.html" data-n="فروش"><div class="ic">🛒</div><div class="nm">فروش</div><div class="ds">فاکتور و گزارش فروش</div></a>
-      <a class="mod" href="purchase.html" data-n="خرید"><div class="ic">🛍️</div><div class="nm">خرید</div><div class="ds">سفارش و رسید خرید</div></a>
-      <a class="mod" href="warehouse.html" data-n="انبار"><div class="ic">📦</div><div class="nm">انبار</div><div class="ds">رسید، حواله، کاردکس</div></a>
-      <a class="mod" href="customers.html" data-n="مشتریان"><div class="ic">👥</div><div class="nm">مشتریان</div><div class="ds">CRM و پیگیری</div></a>
-      <a class="mod" href="production.html" data-n="تولید"><div class="ic">🏭</div><div class="nm">تولید و بهای تمام‌شده</div><div class="ds">تولید و هزینه</div></a>
-      <a class="mod" href="contracts.html" data-n="قراردادها"><div class="ic">📝</div><div class="nm">قراردادها</div><div class="ds">مدیریت قرارداد</div></a>
-      <a class="mod" href="projects.html" data-n="پروژه"><div class="ic">📌</div><div class="nm">مدیریت پروژه</div><div class="ds">پروژه‌ها و پیشرفت</div></a>
-      <a class="mod" href="fleet.html" data-n="ناوگان"><div class="ic">🚚</div><div class="nm">ناوگان و حمل‌ونقل</div><div class="ds">ناوگان و لجستیک</div></a>
-    </div>
-  </div>
+  <div class="section"><h2>عملیات و بازرگانی</h2><div class="grid">
+    <a class="mod" href="sales.html" data-n="فروش"><div class="ic">🛒</div><div class="nm">فروش</div><div class="ds">فاکتور</div></a>
+    <a class="mod" href="purchase.html" data-n="خرید"><div class="ic">🛍️</div><div class="nm">خرید</div><div class="ds">سفارش رسید</div></a>
+    <a class="mod" href="warehouse.html" data-n="انبار"><div class="ic">📦</div><div class="nm">انبار</div><div class="ds">رسید حواله</div></a>
+    <a class="mod" href="customers.html" data-n="مشتریان"><div class="ic">👥</div><div class="nm">مشتریان</div><div class="ds">CRM</div></a>
+    <a class="mod" href="production.html" data-n="تولید"><div class="ic">🏭</div><div class="nm">تولید</div><div class="ds">بهای تمام‌شده</div></a>
+    <a class="mod" href="contracts.html" data-n="قراردادها"><div class="ic">📝</div><div class="nm">قراردادها</div><div class="ds">مدیریت قرارداد</div></a>
+    <a class="mod" href="projects.html" data-n="پروژه"><div class="ic">📌</div><div class="nm">مدیریت پروژه</div><div class="ds">پیشرفت</div></a>
+    <a class="mod" href="fleet.html" data-n="ناوگان"><div class="ic">🚚</div><div class="nm">ناوگان</div><div class="ds">حمل‌ونقل</div></a>
+  </div></div>
 
-  <div class="section" data-sec="hr">
-    <h2>منابع انسانی <span>· پرسنلی و حقوق</span></h2>
-    <div class="grid">
-      <a class="mod" href="personnel.html" data-n="پرسنلی"><div class="ic">👤</div><div class="nm">پرسنلی</div><div class="ds">پرونده و حضور</div></a>
-      <a class="mod" href="payroll.html" data-n="حقوق"><div class="ic">💰</div><div class="nm">حقوق و دستمزد</div><div class="ds">محاسبه و لیست</div></a>
-    </div>
-  </div>
+  <div class="section"><h2>منابع انسانی</h2><div class="grid">
+    <a class="mod" href="personnel.html" data-n="پرسنلی"><div class="ic">👤</div><div class="nm">پرسنلی</div><div class="ds">پرونده حضور</div></a>
+    <a class="mod" href="payroll.html" data-n="حقوق"><div class="ic">💰</div><div class="nm">حقوق و دستمزد</div><div class="ds">محاسبه لیست</div></a>
+  </div></div>
 
-  <div class="section" data-sec="admin">
-    <h2>اداری و دبیرخانه <span>· مکاتبات و بایگانی</span></h2>
-    <div class="grid">
-      <a class="mod" href="correspondence.html" data-n="نامه‌نگاری"><div class="ic">✉️</div><div class="nm">نامه‌نگاری</div><div class="ds">نامه و پیگیری</div></a>
-      <a class="mod" href="secretariat.html" data-n="دبیرخانه"><div class="ic">🗂️</div><div class="nm">دبیرخانه</div><div class="ds">ثبت و ارجاع</div></a>
-      <a class="mod" href="archive.html" data-n="بایگانی"><div class="ic">📁</div><div class="nm">بایگانی</div><div class="ds">آرشیو اسناد</div></a>
-      <a class="mod" href="secretary.html" data-n="منشی"><div class="ic">🗓️</div><div class="nm">منشی هوشمند</div><div class="ds">جلسه، یادآوری، برنامه</div></a>
-      <a class="mod" href="assistant.html" data-n="دستیار"><div class="ic">🤖</div><div class="nm">دستیار هوشمند</div><div class="ds">کنترل مجموعه</div></a>
-    </div>
-  </div>
+  <div class="section"><h2>اداری و دبیرخانه</h2><div class="grid">
+    <a class="mod" href="correspondence.html" data-n="نامه‌نگاری"><div class="ic">✉️</div><div class="nm">نامه‌نگاری</div><div class="ds">نامه پیگیری</div></a>
+    <a class="mod" href="secretariat.html" data-n="دبیرخانه"><div class="ic">🗂️</div><div class="nm">دبیرخانه</div><div class="ds">ثبت ارجاع</div></a>
+    <a class="mod" href="archive.html" data-n="بایگانی"><div class="ic">📁</div><div class="nm">بایگانی</div><div class="ds">آرشیو</div></a>
+    <a class="mod" href="secretary.html" data-n="منشی"><div class="ic">🗓️</div><div class="nm">منشی هوشمند</div><div class="ds">جلسه یادآوری</div></a>
+    <a class="mod" href="assistant.html" data-n="دستیار"><div class="ic">🤖</div><div class="nm">دستیار هوشمند</div><div class="ds">کنترل مجموعه</div></a>
+  </div></div>
 
-  <div class="section" data-sec="legal">
-    <h2>حقوقی و روابط عمومی <span>· مشاوره و رسانه</span></h2>
-    <div class="grid">
-      <a class="mod" href="lawyer.html" data-n="وکیل"><div class="ic">⚖️</div><div class="nm">وکیل هوشمند</div><div class="ds">مشاوره و دادخواست</div></a>
-      <a class="mod" href="pr.html" data-n="روابط عمومی"><div class="ic">📢</div><div class="nm">روابط عمومی و رسانه</div><div class="ds">وب و شبکه‌های اجتماعی</div></a>
-    </div>
-  </div>
+  <div class="section"><h2>حقوقی و روابط عمومی</h2><div class="grid">
+    <a class="mod" href="lawyer.html" data-n="وکیل"><div class="ic">⚖️</div><div class="nm">وکیل هوشمند</div><div class="ds">پرونده قضایی</div></a>
+    <a class="mod" href="pr.html" data-n="روابط عمومی"><div class="ic">📢</div><div class="nm">روابط عمومی</div><div class="ds">رسانه</div></a>
+  </div></div>
 
-  <div class="section" data-sec="enterprise">
-    <h2>سازمانی و چندشرکتی <span>· ساختار کلان</span></h2>
-    <div class="grid">
-      <a class="mod" href="multicompany.html" data-n="چندشرکتی"><div class="ic">🏛️</div><div class="nm">چند شرکتی</div><div class="ds">هلدینگ و شرکت‌ها</div></a>
-      <a class="mod" href="chat.html" data-n="چت"><div class="ic">💬</div><div class="nm">چت سازمانی</div><div class="ds">پیام متنی داخلی</div></a>
-      <a class="mod" href="meeting.html" data-n="متینگ"><div class="ic">🎥</div><div class="nm">متینگ تصویری</div><div class="ds">جلسه آنلاین</div></a>
-    </div>
-  </div>
+  <div class="section"><h2>سازمانی</h2><div class="grid">
+    <a class="mod" href="multicompany.html" data-n="چندشرکتی"><div class="ic">🏛️</div><div class="nm">چند شرکتی</div><div class="ds">هلدینگ</div></a>
+    <a class="mod" href="chat.html" data-n="چت"><div class="ic">💬</div><div class="nm">چت سازمانی</div><div class="ds">پیام داخلی</div></a>
+    <a class="mod" href="meeting.html" data-n="متینگ"><div class="ic">🎥</div><div class="nm">متینگ تصویری</div><div class="ds">جلسه آنلاین</div></a>
+  </div></div>
 
-  <div class="footer">سامانه هوشمند یکپارچه مالی و اداری · نسخه محلی PWA · داده روی دستگاه شما</div>
+  <div class="footer">سامانه هوشمند یکپارچه مالی و اداری · همه ماژول‌ها</div>
 </div>
 <script>
 (function(){
@@ -128,24 +99,11 @@ var FA=["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"];
 function toFa(n){return String(n).replace(/\d/g,function(d){return FA[+d];});}
 function g2j(gy,gm,gd){var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];var gy2=(gm>2)?(gy+1):gy;var days=355666+365*gy+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+g_d_m[gm-1];var jy=-1595+33*Math.floor(days/12053);days%=12053;jy+=4*Math.floor(days/1461);days%=1461;if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}var jm=(days<186)?1+Math.floor(days/31):7+Math.floor((days-186)/30);var jd=1+((days<186)?(days%31):((days-186)%30));return{jy:jy,jm:jm,jd:jd};}
 function tick(){var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());
-document.getElementById("clock").textContent=toFa(j.jy)+"/"+toFa(String(j.jm).padStart(2,"0"))+"/"+toFa(String(j.jd).padStart(2,"0"))+"  ·  "+toFa(String(n.getHours()).padStart(2,"0"))+":"+toFa(String(n.getMinutes()).padStart(2,"0"));}
+document.getElementById("clock").textContent=toFa(j.jy)+"/"+toFa(String(j.jm).padStart(2,"0"))+"/"+toFa(String(j.jd).padStart(2,"0"))+" · "+toFa(String(n.getHours()).padStart(2,"0"))+":"+toFa(String(n.getMinutes()).padStart(2,"0"));}
 tick();setInterval(tick,1000);
-document.getElementById("q").oninput=function(){
-  var q=this.value.trim().toLowerCase();
-  document.querySelectorAll(".mod").forEach(function(m){
-    var n=(m.getAttribute("data-n")||"")+m.textContent;
-    m.style.display=!q||n.toLowerCase().indexOf(q)>=0?"":"none";
-  });
-  document.querySelectorAll(".section").forEach(function(s){
-    var any=false;s.querySelectorAll(".mod").forEach(function(m){if(m.style.display!=="none")any=true;});
-    s.style.display=any?"":"none";
-  });
-};
-document.getElementById("btnClearCache").onclick=function(){
-  if(navigator.serviceWorker)navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister();});});
-  if(window.caches)caches.keys().then(function(k){k.forEach(function(x){caches.delete(x);});});
-  alert("کش پاک شد — صفحه را یک‌بار سخت‌رفرش کنید (Ctrl+F5)");
-};
+document.getElementById("q").oninput=function(){var q=this.value.trim().toLowerCase();
+document.querySelectorAll(".mod").forEach(function(m){var n=(m.getAttribute("data-n")||"")+m.textContent;m.style.display=!q||n.toLowerCase().indexOf(q)>=0?"":"none";});
+document.querySelectorAll(".section").forEach(function(s){var any=false;s.querySelectorAll(".mod").forEach(function(m){if(m.style.display!=="none")any=true;});s.style.display=any?"":"none";});};
 })();
 </script>
 </body>
