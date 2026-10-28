@@ -1969,5 +1969,77 @@ lines.push({no:v.no,date:v.date,desc:l.desc||v.desc||"",debit:l.debit||0,credit:
 document.getElementById("legBody").innerHTML=lines.map(function(l,i){return '<tr><td>'+toFa(i+1)+'</td><td>'+esc(l.no)+'</td><td>'+esc(l.date)+'</td><td>'+esc(l.desc)+'</td><td>'+formatAmount(l.debit)+'</td><td>'+formatAmount(l.credit)+'</td></tr>';}).join("");}
 
 (function(){var b=document.getElementById("btncogsRun");if(b)b.onclick=runCogs;var c=document.getElementById("btnCogsCalc");if(c)c.onclick=runCogs;var cr=document.getElementById("btnCtrRefresh");if(cr)cr.onclick=runContrary;var ca=document.getElementById("btnCtrAdjust");if(ca)ca.onclick=function(){toast("برای تعدیل، از فرم حساب‌های خلاف ماهیت استفاده کنید.","err");};var lr=document.getElementById("btnLegRun");if(lr)lr.onclick=runLegal;var lp=document.getElementById("btnLegPick");if(lp)lp.onclick=function(){if(typeof openCodePicker==="function")openCodePicker(function(c){document.getElementById("legKol").value=c.code;});};})();</script>
+<script id="backup-restore-reliable-fix">
+(function(){
+  'use strict';
+  function el(id){return document.getElementById(id);}
+  function say(msg){
+    var local=el('logLocal'), drive=el('logGdrive');
+    var target=(/درایو|Drive|گوگل/i.test(msg)?drive:local);
+    if(target) target.textContent=msg;
+    if(typeof window.toast==='function'){try{window.toast(msg);}catch(e){}}
+  }
+  function getDB(){
+    if(typeof window.loadDB==='function') return window.loadDB();
+    var raw=localStorage.getItem('smart_accounting_v4');
+    if(!raw) throw new Error('مخزن اطلاعات حسابداری پیدا نشد.');
+    return JSON.parse(raw);
+  }
+  function validateDB(db){
+    if(!db || typeof db!=='object' || Array.isArray(db)) throw new Error('ساختار فایل پشتیبان معتبر نیست.');
+    if(!Object.keys(db).length) throw new Error('فایل پشتیبان خالی است؛ اطلاعات فعلی تغییر نکرد.');
+    return db;
+  }
+  function makeBackup(){
+    var db=validateDB(getDB());
+    return {app:'smart-accounting', formatVersion:1, createdAt:new Date().toISOString(), data:db};
+  }
+  function download(name,drive){
+    try{
+      var pack=makeBackup();
+      var blob=new Blob([JSON.stringify(pack,null,2)],{type:'application/json;charset=utf-8'});
+      var url=URL.createObjectURL(blob), a=document.createElement('a');
+      a.href=url; a.download=name; a.style.display='none'; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){URL.revokeObjectURL(url);},1500);
+      say(drive?'فایل پشتیبان آماده شد. اکنون آن را به‌صورت دستی در Google Drive بارگذاری کنید.':'فایل پشتیبان دانلود شد. آن را در محل امن نگهداری کنید.');
+    }catch(err){say('خطا در تهیه پشتیبان: '+(err.message||err));}
+  }
+  function restoreFile(file,drive){
+    if(!file) return;
+    var reader=new FileReader();
+    reader.onerror=function(){say('خطا در خواندن فایل پشتیبان.');};
+    reader.onload=function(){
+      try{
+        var parsed=JSON.parse(reader.result);
+        var data=(parsed && parsed.data && typeof parsed.data==='object')?parsed.data:parsed;
+        validateDB(data);
+        if(!confirm('هشدار: بازیابی، اطلاعات فعلی این مرورگر را جایگزین می‌کند. قبل از ادامه از اطلاعات فعلی پشتیبان بگیرید. ادامه می‌دهید؟')){say('بازیابی لغو شد؛ اطلاعات تغییر نکرد.');return;}
+        if(typeof window.saveDB==='function') window.saveDB(data);
+        else localStorage.setItem('smart_accounting_v4',JSON.stringify(data));
+        if(typeof window.renderAll==='function') window.renderAll();
+        say(drive?'بازیابی از فایل انتخاب‌شده با موفقیت انجام شد.':'بازیابی محلی با موفقیت انجام شد.');
+        var info=el('bkInfo'); if(info) info.textContent='آخرین بازیابی: '+new Date().toLocaleString();
+      }catch(err){say('بازیابی انجام نشد: '+(err.message||'فایل نامعتبر است.'));}
+    };
+    reader.readAsText(file);
+  }
+  function bind(buttonId,inputId,filename,drive){
+    var b=el(buttonId), f=el(inputId);
+    if(b) b.onclick=function(){ if(buttonId==='btnBkGdrive' || buttonId==='btnBackupGdrive') download(filename,true); else if(buttonId==='btnBkLocal' || buttonId==='btnBackupLocal') download(filename,false); else if(f) f.click(); };
+    if(f) f.onchange=function(ev){var file=ev.target.files&&ev.target.files[0]; if(file) restoreFile(file,drive); ev.target.value='';};
+  }
+  // Bind the actual IDs used by this page. Earlier code used IDs that do not exist here.
+  bind('btnBkLocal','restoreFileLocal','accounting-backup.json',false);
+  bind('btnRsLocal','restoreFileLocal','accounting-backup.json',false);
+  bind('btnBkGdrive','restoreFileGdrive','accounting-gdrive-backup.json',true);
+  bind('btnRsGdrive','restoreFileGdrive','accounting-gdrive-backup.json',true);
+  // Legacy buttons, if present, are also wired to the same safe workflow.
+  bind('btnBackupLocal','restoreFile','accounting-backup.json',false);
+  bind('btnBackupGdrive','restoreFile','accounting-gdrive-backup.json',true);
+  bind('btnRestoreLocal','restoreFile','accounting-backup.json',false);
+  var info=el('bkInfo');
+  if(info){try{var db=getDB();info.textContent='مخزن محلی آماده است؛ کلید اصلی: smart_accounting_v4؛ برای اطمینان از داشتن نسخه پشتیبان، فایل را دانلود کنید.';}catch(e){info.textContent='مخزن اطلاعات هنوز قابل خواندن نیست: '+e.message;}}
+})();
+</script>
 </body>
 </html>
