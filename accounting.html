@@ -157,7 +157,10 @@ main.main > .panel { width:100%; box-sizing:border-box; }
 @media(max-width:700px){.acct-search-pop .asp-controls{grid-template-columns:1fr}.acct-search-pop{max-height:65vh}}
 
 </style>
-</head>
+<style>
+/* Voucher footer search */
+.voucher-search-wrap{position:relative;display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:240px;max-width:460px;flex:1}.voucher-search-wrap input{width:100%;min-width:210px;box-sizing:border-box;padding:9px 11px;border:1px solid #64748b;border-radius:9px;background:#0f172a;color:#f8fafc;font:inherit}.voucher-search-help,.voucher-search-results{width:100%;box-sizing:border-box;border:1px solid #475569;border-radius:9px;background:#111827;color:#f8fafc;padding:9px;line-height:1.8;font-size:12px}.voucher-search-help{display:none}.voucher-search-wrap.open .voucher-search-help{display:block}.voucher-search-results{display:none;max-height:230px;overflow:auto}.voucher-search-results.show{display:block}.voucher-search-results button{display:block;width:100%;text-align:right;white-space:normal;background:#1e293b;color:#f8fafc;border:1px solid #475569;border-radius:7px;padding:8px;margin:4px 0;font:inherit;cursor:pointer}.voucher-search-results button:hover{background:#334155}
+</style></head>
 <body>
 <header class="header">
 <div class="brand"><div class="logo">📒</div><b>حسابداری</b></div>
@@ -1202,7 +1205,21 @@ html+='<tr><td>(+) واریزی ثبت‌نشده</td><td>'+document.getElementB
 html+='<tr><td>(−) چک وصول‌نشده</td><td>'+document.getElementById("rcOutChecks").value+'</td><td>(−) کارمزد</td><td>'+document.getElementById("rcBankFee").value+'</td></tr>';
 html+='<tr><td>مانده تعدیل‌شده</td><td><b>'+document.getElementById("rcBookAdj").textContent+'</b></td><td>مانده تعدیل‌شده</td><td><b>'+document.getElementById("rcBankAdj").textContent+'</b></td></tr></table>';
 html+='<p style="margin-top:16px">'+document.getElementById("rcMatch").textContent+'</p>';
-html+='<script>setTimeout(function(){print()},300)<\/script></body></html>';
+html+='<script>setTimeout(function(){print()},300)<\/script>
+<script id="voucher-footer-search-v2">
+(function(){'use strict';function id(x){return document.getElementById(x)}
+function n(v){return String(v==null?'':v).toLowerCase().replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٬,\s]/g,'')}
+function fa(v){return String(v==null?'':v).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[+d])}
+function db(){try{return typeof loadDB==='function'?loadDB():{vouchers:[]}}catch(e){return {vouchers:[]}}}
+function list(){return (db().vouchers||[]).filter(v=>v&&v.status!=='void').slice().sort((a,b)=>(parseInt(n(a.no),10)||0)-(parseInt(n(b.no),10)||0))}
+function amount(x){return typeof formatAmount==='function'?formatAmount(x||0):String(x||0)}
+function matches(v,q){if(!q)return false;var parts=[v.no,v.desc,v.type,v.date];(v.lines||[]).forEach(l=>parts.push(l.code,l.name,l.desc,l.debit,amount(l.debit),l.credit,amount(l.credit)));return parts.some(x=>n(x).includes(q))}
+function load(v){if(typeof window.__accountingLoadVoucher==='function'){window.__accountingLoadVoucher(v);return}var body=id('vBody');if(!body)return;id('vNo').value=String(v.no||'');id('vDate').value=v.date||'';id('vType').value=v.type||'عمومی';id('vDesc').value=v.desc||'';if(id('vStatus'))id('vStatus').value=v.status||'perm';body.innerHTML='';(v.lines||[]).forEach(l=>{if(typeof makeLineRow==='function'){var tr=makeLineRow('vBody',{},function(){try{updateSheetBal('vBody','ftDebit','ftCredit','vBal')}catch(e){}});tr.querySelector('.lc').value=l.code||'';tr.querySelector('.ln').value=l.name||'';tr.querySelector('.ld').value=l.desc||'';tr.querySelector('.ldb').value=l.debit?amount(l.debit):'';tr.querySelector('.lcr').value=l.credit?amount(l.credit):''}});if(typeof makeLineRow==='function'){makeLineRow('vBody',{},function(){});makeLineRow('vBody',{},function(){})}window.__accountingViewingVoucherId=v.id||('no:'+v.no);var b=id('btnSaveVoucher');if(b)b.textContent='ذخیره تغییرات سند';try{updateSheetBal('vBody','ftDebit','ftCredit','vBal')}catch(e){}}
+function install(){var actions=id('btnPrint')&&id('btnPrint').parentElement;if(!actions||id('voucherFooterSearch'))return;var wrap=document.createElement('div');wrap.className='voucher-search-wrap';wrap.innerHTML='<input id="voucherFooterSearch" type="search" autocomplete="off" placeholder="جستجوی سند…" aria-label="جستجوی اسناد"><div class="voucher-search-help">راهنما: شماره سند، شرح سند، کد حساب یا مبلغ بدهکار/بستانکار را وارد کنید. ارقام فارسی و انگلیسی پذیرفته می‌شوند. از فهرست نتایج روی سند دلخواه کلیک کنید. برای پیمایش سندها، ابتدا روی شماره سند کلیک کنید؛ سپس از ↑ / PgUp برای سند قبلی و ↓ / PgDn برای سند بعدی استفاده کنید.</div><div class="voucher-search-results" id="voucherSearchResults"></div>';actions.insertBefore(wrap,id('btnPrint'));var input=id('voucherFooterSearch'),results=id('voucherSearchResults');function render(){var q=n(input.value);results.innerHTML='';if(!q){results.classList.remove('show');return}var found=list().filter(v=>matches(v,q)).slice(0,40);if(!found.length){results.textContent='سندی با این عبارت پیدا نشد. عبارت یا مبلغ دیگری را امتحان کنید.';results.classList.add('show');return}found.forEach(v=>{var b=document.createElement('button');b.type='button';b.textContent='سند '+fa(v.no)+' | '+(v.date||'بدون تاریخ')+' | '+(v.desc||v.type||'بدون شرح');b.addEventListener('click',function(){load(v);input.value='';results.classList.remove('show');wrap.classList.remove('open')});results.appendChild(b)});results.classList.add('show')}input.addEventListener('focus',()=>wrap.classList.add('open'));input.addEventListener('click',()=>wrap.classList.add('open'));input.addEventListener('input',render);input.addEventListener('keydown',e=>{if(e.key==='Escape'){input.value='';results.classList.remove('show');wrap.classList.remove('open');input.blur()}else if(e.key==='Enter'){var first=results.querySelector('button');if(first){e.preventDefault();first.click()}}});document.addEventListener('click',e=>{if(!wrap.contains(e.target))wrap.classList.remove('open')});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();})();
+</script>
+
+</body></html>';
 var w=window.open("","_blank");w.document.write(html);};
 
 function renderReconList(){var list=loadDB().recons||[],q=(document.getElementById('reconListSearch')?.value||'').trim().toLocaleLowerCase();var filtered=list.filter(function(r){return [r.date,r.bankName,r.bank,r.stmtNo,r.from,r.to,r.desc].join(' ').toLocaleLowerCase().indexOf(q)>=0;});var sum=document.getElementById('reconListSummary');if(sum)sum.textContent='تعداد صورت‌ها: '+filtered.length+' از '+list.length+' | وضعیت: '+filtered.filter(function(r){return r.matched;}).length+' مغایرت تطبیق‌یافته';var host=document.getElementById('listRecon');if(!host)return;host.innerHTML=filtered.length?'<table><thead><tr><th>ردیف</th><th>تاریخ</th><th>بانک / حساب</th><th>شماره صورت</th><th>از تاریخ</th><th>تا تاریخ</th><th>مانده دفتر</th><th>وضعیت</th><th>شرح</th></tr></thead><tbody>'+filtered.map(function(r,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(r.date||'—')+'</td><td>'+esc(r.bankName||r.bank||'—')+'</td><td>'+esc(r.stmtNo||'—')+'</td><td>'+esc(r.from||'—')+'</td><td>'+esc(r.to||'—')+'</td><td>'+formatAmount(r.bookBal||0)+'</td><td><span class="'+(r.matched?'ok':'')+'">'+(r.matched?'تطبیق‌شده':'دارای مغایرت')+'</span></td><td>'+esc(r.desc||'—')+'</td></tr>';}).join('')+'</tbody></table>':'<p class="empty">صورت مغایرتی برای نمایش وجود ندارد یا نتیجه‌ای با این جستجو پیدا نشد.</p>';}
@@ -2085,6 +2102,7 @@ document.getElementById("legBody").innerHTML=lines.map(function(l,i){return '<tr
     var next;if(idx<0)next=step<0?all.length-1:0;else next=Math.max(0,Math.min(all.length-1,idx+step));
     loadVoucherIntoForm(all[next]);
   }
+  window.__accountingLoadVoucher=function(v){loadVoucherIntoForm(v);};
   function install(){
     if(!byId('p-voucher'))return;
     ensurePop();
@@ -2093,8 +2111,6 @@ document.getElementById("legBody").innerHTML=lines.map(function(l,i){return '<tr
     if(actions&&!byId('btnVoucherNewRepair'))actions.insertBefore(newBtn,byId('btnSaveVoucher'));
     newBtn.addEventListener('click',newVoucher);
     var save=byId('btnSaveVoucher');if(save){originalSave=save.onclick;save.onclick=saveCurrentVoucher;}
-    document.addEventListener('focusin',function(e){var t=e.target;if(!t||!byId('p-voucher').contains(t))return;var kind=fieldFor(t);if(['no','desc','code','debit','credit'].indexOf(kind)>=0&&(t.id==='vNo'||t.id==='vDesc'||t.classList.contains('lc')||t.classList.contains('ldb')||t.classList.contains('lcr')))showPop(t,kind);});
-    document.addEventListener('mouseover',function(e){var t=e.target;if(!t||!byId('p-voucher').contains(t))return;if(t.id==='vNo'||t.id==='vDesc'||(t.classList&&(['lc','ldb','lcr'].some(function(c){return t.classList.contains(c);})))){if(pop&&pop.hidden)showPop(t,fieldFor(t));}});
     document.addEventListener('keydown',function(e){var t=e.target;if(!t||t.id!=='vNo')return;
       if(e.key==='PageUp'||e.key==='ArrowUp'){e.preventDefault();navVoucher(-1);}
       else if(e.key==='PageDown'||e.key==='ArrowDown'){e.preventDefault();navVoucher(1);}
