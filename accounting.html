@@ -136,6 +136,26 @@ main.main > .panel { width:100%; box-sizing:border-box; }
 .office-btn{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 10px;border-radius:14px;border:1px solid var(--line);background:#0f172a;cursor:pointer;color:var(--txt);font-family:inherit;font-weight:700;font-size:.78rem}
 .office-btn:hover{border-color:#0ea5e9;background:#1e293b}
 .office-btn .ico{font-size:32px}
+
+/* Accounting search, navigation and table alignment repair */
+.acct-search-pop{position:fixed;z-index:99999;width:min(520px,calc(100vw - 24px));max-height:min(70vh,560px);overflow:auto;background:#0f172a;color:#e2e8f0;border:1px solid #38bdf8;border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.55);padding:12px;direction:rtl;font-family:Tahoma,"Segoe UI",sans-serif}
+.acct-search-pop[hidden]{display:none!important}
+.acct-search-pop .asp-title{font-weight:800;color:#7dd3fc;margin-bottom:6px}
+.acct-search-pop .asp-hint{font-size:12px;line-height:1.8;color:#cbd5e1;margin-bottom:8px}
+.acct-search-pop .asp-controls{display:grid;grid-template-columns:130px 1fr;gap:7px;margin-bottom:8px}
+.acct-search-pop input,.acct-search-pop select{min-width:0;width:100%;padding:9px;border-radius:8px;border:1px solid #475569;background:#020617;color:#f8fafc;font:inherit}
+.acct-search-pop .asp-result{display:block;width:100%;text-align:right;background:#172338;color:#e2e8f0;border:1px solid #334155;border-radius:8px;padding:8px;margin:5px 0;cursor:pointer;font:inherit}
+.acct-search-pop .asp-result:hover,.acct-search-pop .asp-result:focus{background:#1e3a5f;border-color:#38bdf8}
+.acct-search-pop .asp-empty{padding:10px;color:#fbbf24;font-size:13px}
+.acct-search-pop .asp-close{float:left;border:0;border-radius:7px;background:#334155;color:#fff;padding:4px 9px;cursor:pointer}
+#p-bs .sheet-wrap,#p-pl .sheet-wrap,#p-kol .sheet-wrap,#p-rep-bs .sheet-wrap,#p-rep-pl .sheet-wrap{width:100%;max-width:100%;overflow-x:auto;}
+#p-bs .data-table,#p-pl .data-table,#p-kol .data-table,#p-rep-bs .data-table,#p-rep-pl .data-table{width:100%;min-width:850px;table-layout:auto;border-collapse:collapse;direction:rtl;}
+#p-bs .data-table th,#p-bs .data-table td,#p-pl .data-table th,#p-pl .data-table td,#p-kol .data-table th,#p-kol .data-table td,#p-rep-bs .data-table th,#p-rep-bs .data-table td,#p-rep-pl .data-table th,#p-rep-pl .data-table td{box-sizing:border-box;text-align:right;vertical-align:middle;padding:8px 9px;white-space:nowrap;}
+#p-bs .data-table thead th,#p-pl .data-table thead th,#p-kol .data-table thead th,#p-rep-bs .data-table thead th,#p-rep-pl .data-table thead th{position:sticky;top:0;z-index:2;}
+#p-bs .data-table tfoot td,#p-pl .data-table tfoot td{font-weight:800;}
+#p-pl #plRem{margin-top:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#0f172a;font-weight:800;}
+@media(max-width:700px){.acct-search-pop .asp-controls{grid-template-columns:1fr}.acct-search-pop{max-height:65vh}}
+
 </style>
 </head>
 <body>
@@ -735,8 +755,8 @@ main.main > .panel { width:100%; box-sizing:border-box; }
 <button class="btn btn-blue" id="btnplRun" type="button">بروزرسانی</button>
 </div>
 </div>
-<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>توضیحات</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده</th></tr></thead>
-<tbody id="plBody"></tbody><tfoot><tr><td colspan="4">نتیجه</td><td id="plSumD">۰</td><td id="plSumC">۰</td><td id="plRem">۰</td></tr></tfoot></table></div>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>توضیحات</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده بدهکار</th><th>مانده بستانکار</th></tr></thead>
+<tbody id="plBody"></tbody><tfoot><tr><td colspan="4">جمع</td><td id="plSumD">۰</td><td id="plSumC">۰</td><td id="plBalD">۰</td><td id="plBalC">۰</td></tr></tfoot></table><div id="plRem">نتیجه سود و زیان: —</div></div>
 </div></div><div class="panel" id="p-bs"><div class="card has-exit"><button class="btn-form-exit" data-panel="p-dash" type="button">خروج</button>
 <h2>ترازنامه</h2>
 <div class="filter-box">
@@ -753,8 +773,8 @@ main.main > .panel { width:100%; box-sizing:border-box; }
 <button class="btn btn-blue" id="btnbsRun" type="button">بروزرسانی</button>
 </div>
 </div>
-<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>توضیحات</th><th>مانده بدهکار</th><th>مانده بستانکار</th></tr></thead>
-<tbody id="bsBody"></tbody><tfoot><tr><td colspan="4">جمع</td><td id="bsBalD">۰</td><td id="bsBalC">۰</td></tr></tfoot></table></div>
+<div class="sheet-wrap"><table class="data-table"><thead><tr><th></th><th>ردیف</th><th>کد</th><th>توضیحات</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده بدهکار</th><th>مانده بستانکار</th></tr></thead>
+<tbody id="bsBody"></tbody><tfoot><tr><td colspan="4">جمع</td><td id="bsSumD">۰</td><td id="bsSumC">۰</td><td id="bsBalD">۰</td><td id="bsBalC">۰</td></tr></tfoot></table></div>
 </div></div><div class="panel" id="p-turn"><div class="card has-exit"><button class="btn-form-exit" data-panel="p-dash" type="button">خروج</button>
 <h2>گردش حساب‌ها</h2>
 <div class="filter-box">
@@ -1949,5 +1969,174 @@ lines.push({no:v.no,date:v.date,desc:l.desc||v.desc||"",debit:l.debit||0,credit:
 document.getElementById("legBody").innerHTML=lines.map(function(l,i){return '<tr><td>'+toFa(i+1)+'</td><td>'+esc(l.no)+'</td><td>'+esc(l.date)+'</td><td>'+esc(l.desc)+'</td><td>'+formatAmount(l.debit)+'</td><td>'+formatAmount(l.credit)+'</td></tr>';}).join("");}
 
 (function(){var b=document.getElementById("btncogsRun");if(b)b.onclick=runCogs;var c=document.getElementById("btnCogsCalc");if(c)c.onclick=runCogs;var cr=document.getElementById("btnCtrRefresh");if(cr)cr.onclick=runContrary;var ca=document.getElementById("btnCtrAdjust");if(ca)ca.onclick=function(){toast("برای تعدیل، از فرم حساب‌های خلاف ماهیت استفاده کنید.","err");};var lr=document.getElementById("btnLegRun");if(lr)lr.onclick=runLegal;var lp=document.getElementById("btnLegPick");if(lp)lp.onclick=function(){if(typeof openCodePicker==="function")openCodePicker(function(c){document.getElementById("legKol").value=c.code;});};})();</script>
+<script id="accounting-search-navigation-repair">
+(function(){
+  'use strict';
+  var pop=null, activeField='no', activeTarget=null, viewingId=null, originalSave=null;
+  function byId(id){return document.getElementById(id);}
+  function norm(v){
+    var s=String(v==null?'':v).replace(/[۰-۹]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d);});
+    return s.replace(/[٬,\s]/g,'').toLowerCase();
+  }
+  function fa(v){return String(v==null?'':v).replace(/\d/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[+d];});}
+  function dbRead(){try{return typeof loadDB==='function'?loadDB():{vouchers:[]};}catch(e){return {vouchers:[]};}}
+  function vouchers(){return (dbRead().vouchers||[]).filter(function(v){return v&&v.status!=='void';}).slice().sort(function(a,b){return (parseInt(norm(a.no),10)||0)-(parseInt(norm(b.no),10)||0);});}
+  function fieldFor(el){
+    if(!el)return 'no';
+    if(el.id==='vNo')return 'no';
+    if(el.id==='vDesc')return 'desc';
+    if(el.classList&&el.classList.contains('lc'))return 'code';
+    if(el.classList&&el.classList.contains('ldb'))return 'debit';
+    if(el.classList&&el.classList.contains('lcr'))return 'credit';
+    return 'no';
+  }
+  var labels={no:'شماره سند',desc:'شرح سند',code:'کد حساب',debit:'مبلغ بدهکار',credit:'مبلغ بستانکار'};
+  function ensurePop(){
+    if(pop)return pop;
+    pop=document.createElement('div');pop.className='acct-search-pop';pop.hidden=true;pop.setAttribute('role','dialog');pop.setAttribute('aria-label','جستجوی اسناد حسابداری');
+    pop.innerHTML='<button type="button" class="asp-close">بستن ×</button><div class="asp-title">جستجوی سند حسابداری</div><div class="asp-hint">فیلد موردنظر را انتخاب کنید و عبارت جستجو را در کادر زیر وارد کنید. برای پیمایش سریع اسناد، روی شماره سند قرار بگیرید و از PgUp / PgDn یا ↑ / ↓ استفاده کنید.</div><div class="asp-controls"><select class="asp-kind" aria-label="نوع جستجو"><option value="no">شماره سند</option><option value="desc">شرح سند</option><option value="code">کد حساب</option><option value="debit">مبلغ بدهکار</option><option value="credit">مبلغ بستانکار</option></select><input class="asp-query" type="search" placeholder="عبارت جستجو را وارد کنید…" autocomplete="off"/></div><div class="asp-count"></div><div class="asp-results"></div>';
+    document.body.appendChild(pop);
+    pop.querySelector('.asp-close').addEventListener('click',hidePop);
+    pop.querySelector('.asp-kind').addEventListener('change',function(){activeField=this.value;renderResults();});
+    pop.querySelector('.asp-query').addEventListener('input',renderResults);
+    pop.addEventListener('mousedown',function(e){e.stopPropagation();});
+    return pop;
+  }
+  function placePop(target){
+    if(!pop)return;
+    var r=(target&&target.getBoundingClientRect)?target.getBoundingClientRect():{left:12,bottom:80,right:300,top:40};
+    var width=Math.min(520,window.innerWidth-24);var left=Math.max(12,Math.min(r.left,window.innerWidth-width-12));
+    var top=r.bottom+6;if(top+260>window.innerHeight)top=Math.max(12,r.top-Math.min(360,window.innerHeight-24));
+    pop.style.width=width+'px';pop.style.left=left+'px';pop.style.top=top+'px';
+  }
+  function showPop(target,kind){
+    if(!byId('p-voucher'))return;
+    activeTarget=target||byId('vNo');activeField=kind||fieldFor(activeTarget)||'no';
+    ensurePop();pop.querySelector('.asp-kind').value=activeField;
+    pop.querySelector('.asp-query').value='';
+    pop.hidden=false;placePop(activeTarget);renderResults();
+  }
+  function hidePop(){if(pop)pop.hidden=true;}
+  function matchVoucher(v,kind,q){
+    if(!q)return true;var lines=v.lines||[];
+    if(kind==='no')return norm(v.no).indexOf(q)>=0;
+    if(kind==='desc')return norm(v.desc).indexOf(q)>=0||lines.some(function(l){return norm(l.desc).indexOf(q)>=0;});
+    if(kind==='code')return lines.some(function(l){return norm(l.code).indexOf(q)>=0;});
+    if(kind==='debit')return lines.some(function(l){return norm(l.debit).indexOf(q)>=0||norm((typeof formatAmount==='function'?formatAmount(l.debit||0):l.debit)).indexOf(q)>=0;});
+    if(kind==='credit')return lines.some(function(l){return norm(l.credit).indexOf(q)>=0||norm((typeof formatAmount==='function'?formatAmount(l.credit||0):l.credit)).indexOf(q)>=0;});
+    return false;
+  }
+  function renderResults(){
+    if(!pop||pop.hidden)return;
+    var kind=pop.querySelector('.asp-kind').value,q=norm(pop.querySelector('.asp-query').value),all=vouchers();
+    var found=all.filter(function(v){return matchVoucher(v,kind,q);}).slice(0,50),host=pop.querySelector('.asp-results');host.innerHTML='';
+    pop.querySelector('.asp-count').textContent='نتیجه: '+fa(found.length)+(found.length===50?' مورد نخست':' سند');
+    if(!found.length){var e=document.createElement('div');e.className='asp-empty';e.textContent='سندی مطابق جستجو یافت نشد. عبارت دیگری وارد کنید یا نوع جستجو را تغییر دهید.';host.appendChild(e);return;}
+    found.forEach(function(v){var b=document.createElement('button');b.type='button';b.className='asp-result';var lineText=(v.lines||[]).filter(function(l){return (kind==='code'&&norm(l.code).indexOf(q)>=0)||(kind==='debit'&&norm(l.debit).indexOf(q)>=0)||(kind==='credit'&&norm(l.credit).indexOf(q)>=0);}).slice(0,2).map(function(l){return (l.code||'')+' '+(l.name||'')+' | بدهکار '+(typeof formatAmount==='function'?formatAmount(l.debit||0):(l.debit||0))+' | بستانکار '+(typeof formatAmount==='function'?formatAmount(l.credit||0):(l.credit||0));}).join(' ؛ ');
+      b.textContent='سند '+fa(v.no)+' — '+(v.date||'بدون تاریخ')+' — '+(v.desc||v.type||'بدون شرح')+' — '+(v.status==='temp'?'موقت':'دائم')+(lineText?'\n'+lineText:'');
+      b.addEventListener('click',function(){loadVoucherIntoForm(v);hidePop();});host.appendChild(b);
+    });
+  }
+  function lineChanged(){try{if(typeof updateSheetBal==='function')updateSheetBal('vBody','ftDebit','ftCredit','vBal');}catch(e){}}
+  function loadVoucherIntoForm(v){
+    if(!v)return;
+    var body=byId('vBody');if(!body)return;
+    byId('vNo').value=String(v.no==null?'':v.no);byId('vDate').value=v.date||'';byId('vType').value=v.type||'عمومی';byId('vDesc').value=v.desc||'';
+    if(byId('vStatus'))byId('vStatus').value=v.status||'perm';
+    if(byId('ftDescInput'))byId('ftDescInput').value=v.footerDesc||'';
+    body.innerHTML='';
+    var ls=v.lines||[];
+    if(typeof makeLineRow==='function'){
+      ls.forEach(function(l){var tr=makeLineRow('vBody',{},lineChanged);tr.querySelector('.lc').value=l.code||'';tr.querySelector('.ln').value=l.name||'';tr.querySelector('.ld').value=l.desc||'';tr.querySelector('.ldb').value=(l.debit&&typeof formatAmount==='function')?formatAmount(l.debit):(l.debit||'');tr.querySelector('.lcr').value=(l.credit&&typeof formatAmount==='function')?formatAmount(l.credit):(l.credit||'');});
+      makeLineRow('vBody',{},lineChanged);
+      makeLineRow('vBody',{},lineChanged);
+    }else{
+      body.innerHTML='';
+    }
+    viewingId=v.id||('no:'+String(v.no));window.__accountingViewingVoucherId=viewingId;
+    var save=byId('btnSaveVoucher');if(save)save.textContent='ذخیره تغییرات سند';
+    lineChanged();
+    var hint=pop&&pop.querySelector('.asp-hint');if(hint)hint.textContent='سند '+fa(v.no)+' بارگذاری شد. تغییرات را با «ذخیره تغییرات سند» ثبت کنید؛ برای سند تازه از «سند جدید» استفاده کنید.';
+  }
+  function newVoucher(){
+    viewingId=null;window.__accountingViewingVoucherId=null;
+    if(byId('vNo'))byId('vNo').value=typeof nextNo==='function'?String(nextNo()):'';
+    if(byId('vDate'))byId('vDate').value='';if(byId('vDesc'))byId('vDesc').value='';if(byId('vType'))byId('vType').value='عمومی';if(byId('vStatus'))byId('vStatus').value='temp';if(byId('ftDescInput'))byId('ftDescInput').value='';
+    var body=byId('vBody');if(body){body.innerHTML='';if(typeof makeLineRow==='function'){makeLineRow('vBody',{},lineChanged);makeLineRow('vBody',{},lineChanged);}}
+    var save=byId('btnSaveVoucher');if(save)save.textContent='ثبت سند';lineChanged();hidePop();
+  }
+  function saveCurrentVoucher(){
+    var db=dbRead(),id=viewingId;if(!id){if(originalSave)originalSave.call(byId('btnSaveVoucher'));return;}
+    var v=(db.vouchers||[]).find(function(x){return (x.id&&x.id===id)||String(x.no)===String(byId('vNo').value);});
+    if(!v){alert('سند قبلی پیدا نشد؛ برای جلوگیری از ثبت تکراری، سند جدید بسازید.');newVoucher();return;}
+    if(typeof isLockedDate==='function'&&isLockedDate(byId('vDate').value)){if(typeof toast==='function')toast('دوره قفل است','err');return;}
+    var lines=typeof collectLines==='function'?collectLines('vBody'):[];
+    if(!lines.length){if(typeof toast==='function')toast('حداقل یک ردیف حساب لازم است','err');return;}
+    var sum=typeof sumLines==='function'?sumLines(lines):{debit:0,credit:1};
+    if(sum.debit!==sum.credit){if(typeof toast==='function')toast('سند تراز نیست','err');return;}
+    v.date=byId('vDate').value;v.type=byId('vType').value;v.desc=byId('vDesc').value;v.status=byId('vStatus').value;v.lines=lines;v.footerDesc=byId('ftDescInput')?byId('ftDescInput').value:'';v.updatedAt=new Date().toISOString();
+    if(typeof saveDB==='function')saveDB(db);
+    if(typeof toast==='function')toast('تغییرات سند '+v.no+' ذخیره شد');
+    try{if(typeof renderReports==='function')renderReports();if(typeof runBS==='function')runBS();if(typeof runPL==='function')runPL();if(typeof runKol==='function')runKol();if(typeof renderAll==='function')renderAll();}catch(e){}
+  }
+  function navVoucher(step){
+    var all=vouchers();if(!all.length){if(typeof toast==='function')toast('هنوز سندی برای پیمایش وجود ندارد','err');return;}
+    var cur=String(byId('vNo')&&byId('vNo').value||'');var idx=all.findIndex(function(v){return String(v.no)===cur;});
+    var next;if(idx<0)next=step<0?all.length-1:0;else next=Math.max(0,Math.min(all.length-1,idx+step));
+    loadVoucherIntoForm(all[next]);
+  }
+  function install(){
+    if(!byId('p-voucher'))return;
+    ensurePop();
+    var newBtn=document.createElement('button');newBtn.type='button';newBtn.className='btn btn-g';newBtn.id='btnVoucherNewRepair';newBtn.textContent='＋ سند جدید';
+    var actions=byId('btnSaveVoucher')&&byId('btnSaveVoucher').parentElement;
+    if(actions&&!byId('btnVoucherNewRepair'))actions.insertBefore(newBtn,byId('btnSaveVoucher'));
+    newBtn.addEventListener('click',newVoucher);
+    var save=byId('btnSaveVoucher');if(save){originalSave=save.onclick;save.onclick=saveCurrentVoucher;}
+    document.addEventListener('focusin',function(e){var t=e.target;if(!t||!byId('p-voucher').contains(t))return;var kind=fieldFor(t);if(['no','desc','code','debit','credit'].indexOf(kind)>=0&&(t.id==='vNo'||t.id==='vDesc'||t.classList.contains('lc')||t.classList.contains('ldb')||t.classList.contains('lcr')))showPop(t,kind);});
+    document.addEventListener('mouseover',function(e){var t=e.target;if(!t||!byId('p-voucher').contains(t))return;if(t.id==='vNo'||t.id==='vDesc'||(t.classList&&(['lc','ldb','lcr'].some(function(c){return t.classList.contains(c);})))){if(pop&&pop.hidden)showPop(t,fieldFor(t));}});
+    document.addEventListener('keydown',function(e){var t=e.target;if(!t||t.id!=='vNo')return;
+      if(e.key==='PageUp'||e.key==='ArrowUp'){e.preventDefault();navVoucher(-1);}
+      else if(e.key==='PageDown'||e.key==='ArrowDown'){e.preventDefault();navVoucher(1);}
+      else if(e.key==='Escape')hidePop();
+    });
+    document.addEventListener('mousedown',function(e){if(pop&&!pop.hidden&&!pop.contains(e.target)&&e.target!==activeTarget)hidePop();});
+    window.addEventListener('resize',function(){if(pop&&!pop.hidden)placePop(activeTarget);});
+    window.addEventListener('scroll',function(){if(pop&&!pop.hidden)placePop(activeTarget);},true);
+    // Use the corrected renderers and rebind controls whose old handlers captured broken renderers.
+    window.runPL=function(){
+      var all=typeof getTurnovers==='function'?getTurnovers(typeof optsFrom==='function'?optsFrom('pl'):{}):{};var pl={};
+      Object.keys(all).forEach(function(c){if(c.charAt(0)==='6'||c.charAt(0)==='7')pl[c]=all[c];});
+      var bal=byId('plBalType')?byId('plBalType').value:'';var q=byId('plSearch')?byId('plSearch').value:'';
+      if(typeof renderAgg==='function'){var r=renderAgg('plBody','plEmpty',['plSumD','plSumC','plBalD','plBalC'],pl,window.plLevel||'group',bal,q);if(byId('plRem'))byId('plRem').textContent=fa(Math.abs(r.sc-r.sd))+(r.sc-r.sd>=0?' (سود)':' (زیان)');}
+    };
+    window.runBS=function(){
+      var all=typeof getTurnovers==='function'?getTurnovers(typeof optsFrom==='function'?optsFrom('bs'):{}):{};var bs={};
+      Object.keys(all).forEach(function(c){var ch=c.charAt(0);if(ch==='1'||ch==='2'||ch==='3'||ch==='4'||ch==='5')bs[c]=all[c];});
+      if(typeof renderAgg==='function')renderAgg('bsBody','bsEmpty',['bsSumD','bsSumC','bsBalD','bsBalC'],bs,window.bsLevel||'group',byId('bsBalType')?byId('bsBalType').value:'',byId('bsSearch')?byId('bsSearch').value:'');
+    };
+    var priorRenderReports=window.renderReports;
+    function renderCompactReport(hostId,kind){
+      var host=byId(hostId);if(!host||typeof getTurnovers!=='function')return;
+      var all=getTurnovers({}), codes=(dbRead().codes||[]), names={};codes.forEach(function(c){names[String(c.code)]=c.name||c.code;});
+      var rows=Object.keys(all).sort().filter(function(code){var ch=String(code).charAt(0);return kind==='bs'?['1','2','3','4','5'].indexOf(ch)>=0:['6','7'].indexOf(ch)>=0;}).map(function(code){var a=all[code],bal=(a.debit||0)-(a.credit||0);return {code:code,name:names[code]||a.name||code,debit:a.debit||0,credit:a.credit||0,bd:bal>0?bal:0,bc:bal<0?-bal:0};});
+      var sums={debit:0,credit:0,bd:0,bc:0};rows.forEach(function(r){sums.debit+=r.debit;sums.credit+=r.credit;sums.bd+=r.bd;sums.bc+=r.bc;});
+      var amount=function(n){return typeof formatAmount==='function'?formatAmount(n):String(n);};
+      var html='<div class="sheet-wrap"><table class="data-table"><thead><tr><th>کد حساب</th><th>نام حساب</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده بدهکار</th><th>مانده بستانکار</th></tr></thead><tbody>';
+      html+=rows.map(function(r){return '<tr><td>'+String(r.code).replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</td><td>'+String(r.name).replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</td><td>'+amount(r.debit)+'</td><td>'+amount(r.credit)+'</td><td>'+amount(r.bd)+'</td><td>'+amount(r.bc)+'</td></tr>';}).join('');
+      html+='</tbody><tfoot><tr><td colspan="2">جمع</td><td>'+amount(sums.debit)+'</td><td>'+amount(sums.credit)+'</td><td>'+amount(sums.bd)+'</td><td>'+amount(sums.bc)+'</td></tr></tfoot></table></div>';
+      if(!rows.length)html='<p class="empty">برای این گزارش سندی ثبت نشده است.</p>';
+      host.innerHTML=html;
+    }
+    window.renderReports=function(){try{if(typeof priorRenderReports==='function')priorRenderReports();}catch(e){}renderCompactReport('repBS','bs');renderCompactReport('repPL','pl');};
+    try{window.renderReports();}catch(e){}
+    if(byId('btnplRun'))byId('btnplRun').onclick=function(){window.runPL();};if(byId('plSearch'))byId('plSearch').oninput=function(){window.runPL();};
+    if(byId('btnbsRun'))byId('btnbsRun').onclick=function(){window.runBS();};if(byId('bsSearch'))byId('bsSearch').oninput=function(){window.runBS();};
+    document.querySelectorAll('#plLevels button').forEach(function(b){b.onclick=function(){var lv=b.getAttribute('data-lv');if(lv==='back'){if(window.plStack&&window.plStack.length)window.plLevel=window.plStack.pop();}else{if(!window.plStack)window.plStack=[];window.plStack.push(window.plLevel||'group');window.plLevel=lv;}document.querySelectorAll('#plLevels button').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-lv')===window.plLevel);});window.runPL();};});
+    document.querySelectorAll('#bsLevels button').forEach(function(b){b.onclick=function(){var lv=b.getAttribute('data-lv');if(lv==='back'){if(window.bsStack&&window.bsStack.length)window.bsLevel=window.bsStack.pop();}else{if(!window.bsStack)window.bsStack=[];window.bsStack.push(window.bsLevel||'group');window.bsLevel=lv;}document.querySelectorAll('#bsLevels button').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-lv')===window.bsLevel);});window.runBS();};});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
+</script>
 </body>
 </html>
