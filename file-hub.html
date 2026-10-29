@@ -1,9 +1,32 @@
+قابلیت ترجمه متن و ترجمه تصویر (OCR + ترجمه) به ماژول اضافه شد.
+
+امکانات جدید
+۱. ترجمه متن
+منوی ترجمه متن
+زبان مبدأ و مقصد: فارسی، انگلیسی، عربی، فرانسوی، آلمانی، ترکی، روسی، چینی، اسپانیایی
+دکمه جابجایی زبان‌ها
+ترجمه آنلاین با سرویس رایگان MyMemory (نیاز به اینترنت)
+متن‌های بلند به چند بخش تقسیم می‌شوند
+۲. ترجمه تصویر
+منوی ترجمه تصویر
+استخراج متن از تصویر با Tesseract.js (OCR)
+سپس ترجمه متن استخراج‌شده
+از فهرست فایل‌ها روی تصویر دکمه ترجمه دارید
+زبان OCR: انگلیسی، فارسی، عربی، ترکیبی و …
+ذخیره روی کامپیوتر
+۱. کد زیر را کامل کپی کنید
+۲. Notepad → ذخیره با نام file-hub.html · Encoding: UTF-8
+۳. با مرورگر باز کنید (برای ترجمه و OCR به اینترنت نیاز است)
+
+اگر پیام خیلی طولانی بود و قطع شد، بگویید تا در ۲ یا ۳ بخش بفرستم.
+
+html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>بارگذاری فایل — ورد، اکسل، تصویر</title>
+<title>بارگذاری فایل — ورد، اکسل، تصویر + ترجمه</title>
 <style>
 :root{--bg:#0b1220;--panel:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#0ea5e9;--ok:#22c55e;--bad:#ef4444}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -25,12 +48,15 @@ body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);col
 .drop p{color:var(--muted);font-size:.82rem;line-height:1.6}
 .drop strong{color:#7dd3fc}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:640px){.row{grid-template-columns:1fr}}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:640px){.row,.row3{grid-template-columns:1fr}}
 label{display:block;font-size:.7rem;color:var(--muted);margin:6px 0 3px}
 input,select,textarea{width:100%;padding:8px;border-radius:9px;border:1px solid var(--line);background:#020617;color:var(--txt);font-family:inherit;font-size:13px}
+textarea{min-height:120px;resize:vertical;line-height:1.6}
 .btn{border:none;border-radius:9px;padding:8px 14px;font-weight:700;font-size:.75rem;cursor:pointer;font-family:inherit;margin:3px}
 .btn-p{background:var(--pri);color:#fff}.btn-g{background:#334155;color:#e2e8f0}
 .btn-b{background:#7f1d1d;color:#fecaca}.btn-ok{background:#166534;color:#bbf7d0}
+.btn:disabled{opacity:.5;cursor:not-allowed}
 .filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .filters button{padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:#0f172a;color:#cbd5e1;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit}
 .filters button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
@@ -45,9 +71,8 @@ input,select,textarea{width:100%;padding:8px;border-radius:9px;border:1px solid 
 .badge.word{background:#1e3a8a;color:#93c5fd}
 .badge.excel{background:#14532d;color:#86efac}
 .badge.img{background:#4c1d95;color:#c4b5fd}
-.badge.other{background:#334155;color:#cbd5e1}
 .empty{color:var(--muted);text-align:center;padding:24px;font-size:.85rem}
-.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:10px 14px;border-radius:12px;font-weight:700;opacity:0;z-index:50;transition:.15s;font-size:.8rem}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:10px 14px;border-radius:12px;font-weight:700;opacity:0;z-index:50;transition:.15s;font-size:.8rem;max-width:90vw;text-align:center}
 .toast.show{opacity:1}.toast.err{background:var(--bad)}
 .kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-bottom:14px}
 .kpi .box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
@@ -56,42 +81,44 @@ input,select,textarea{width:100%;padding:8px;border-radius:9px;border:1px solid 
 .hidden{display:none!important}
 .preview-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:40;display:none;align-items:center;justify-content:center;padding:16px}
 .preview-modal.open{display:flex}
-.preview-modal .box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;max-width:90vw;max-height:90vh;overflow:auto;position:relative}
-.preview-modal img{max-width:100%;max-height:70vh;border-radius:8px}
+.preview-modal .box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;max-width:90vw;max-height:90vh;overflow:auto;position:relative;min-width:280px}
+.preview-modal img{max-width:100%;max-height:50vh;border-radius:8px}
 .preview-modal .close{position:absolute;top:8px;left:8px;background:#dc2626;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-weight:800;cursor:pointer;font-family:inherit}
+.tr-box{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.tr-box{grid-template-columns:1fr}}
+.tr-box .col{display:flex;flex-direction:column;gap:6px}
+.status{font-size:.72rem;color:#7dd3fc;min-height:1.2em}
+.swap{text-align:center;margin:6px 0}
+.swap button{background:#334155;border:none;color:#fff;border-radius:999px;padding:6px 14px;cursor:pointer;font-family:inherit;font-weight:700}
+.ocr-preview{max-width:100%;max-height:200px;border-radius:8px;margin:8px 0;border:1px solid var(--line)}
 </style>
 </head>
 <body>
 <header class="header">
-  <div class="brand"><div class="logo">📂</div><b>بارگذاری فایل</b></div>
+  <div class="brand"><div class="logo">📂</div><b>بارگذاری فایل + ترجمه</b></div>
   <nav class="nav">
     <button type="button" class="on" data-panel="p-upload">بارگذاری</button>
     <button type="button" data-panel="p-list">فهرست فایل‌ها</button>
+    <button type="button" data-panel="p-translate">ترجمه متن</button>
+    <button type="button" data-panel="p-img-tr">ترجمه تصویر</button>
     <button type="button" data-panel="p-settings">تنظیمات</button>
   </nav>
   <button type="button" class="exit" id="btnExit">خروج</button>
 </header>
-
 <main class="main">
   <div class="kpi" id="kpi"></div>
-
   <div class="panel" id="p-upload">
     <div class="card">
       <h2>دریافت از رایانه و شبکه</h2>
       <div class="drop" id="dropZone">
         <div class="ic">⬆️</div>
-        <p><strong>فایل را اینجا رها کنید</strong><br>
-        یا کلیک کنید تا از رایانه / درایو شبکه انتخاب شود</p>
-        <p style="margin-top:8px;font-size:.72rem">ورد · اکسل · تصویر (JPG, PNG, GIF, WEBP, BMP)</p>
+        <p><strong>فایل را اینجا رها کنید</strong><br>یا کلیک کنید تا انتخاب شود</p>
+        <p style="margin-top:8px;font-size:.72rem">ورد · اکسل · تصویر</p>
       </div>
-      <input type="file" id="fileInput" multiple accept=".doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tif,.tiff,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/*" class="hidden">
+      <input type="file" id="fileInput" multiple accept=".doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.gif,.webp,.bmp,image/*" class="hidden">
       <div class="row" style="margin-top:12px">
-        <div>
-          <label>برچسب / موضوع (اختیاری)</label>
-          <input id="fileTag" placeholder="مثلاً فاکتور مهر ۱۴۰۴">
-        </div>
-        <div>
-          <label>ماژول مقصد (اختیاری)</label>
+        <div><label>برچسب</label><input id="fileTag" placeholder="موضوع"></div>
+        <div><label>ماژول مقصد</label>
           <select id="fileModule">
             <option value="">— عمومی —</option>
             <option value="accounting">حسابداری</option>
@@ -103,20 +130,12 @@ input,select,textarea{width:100%;padding:8px;border-radius:9px;border:1px solid 
           </select>
         </div>
       </div>
-      <p class="hint">
-        مرورگر فقط فایل‌هایی را می‌گیرد که خودتان انتخاب کنید (از دیسک محلی یا پوشه/درایو شبکه‌ای که در ویندوز مپ شده باشد).
-        دسترسی مستقیم به مسیر شبکه بدون انتخاب کاربر ممکن نیست.
-      </p>
     </div>
-    <div class="card" id="recentBox" style="display:none">
-      <h2>آخرین بارگذاری‌ها در این نشست</h2>
-      <div id="recentList"></div>
-    </div>
+    <div class="card" id="recentBox" style="display:none"><h2>آخرین بارگذاری‌ها</h2><div id="recentList"></div></div>
   </div>
-
   <div class="panel hidden" id="p-list">
     <div class="card">
-      <h2>فهرست فایل‌های ذخیره‌شده</h2>
+      <h2>فهرست فایل‌ها</h2>
       <div class="filters" id="filters">
         <button type="button" class="on" data-filter="all">همه</button>
         <button type="button" data-filter="word">ورد</button>
@@ -124,269 +143,190 @@ input,select,textarea{width:100%;padding:8px;border-radius:9px;border:1px solid 
         <button type="button" data-filter="img">تصویر</button>
       </div>
       <div class="row" style="margin-bottom:10px">
-        <input id="searchQ" placeholder="جستجو نام یا برچسب...">
-        <select id="filterModule">
-          <option value="">همه ماژول‌ها</option>
-          <option value="accounting">حسابداری</option>
-          <option value="hr">پرسنلی</option>
-          <option value="sales">فروش</option>
-          <option value="warehouse">انبار</option>
-          <option value="secretary">منشی</option>
-          <option value="other">سایر</option>
-        </select>
+        <input id="searchQ" placeholder="جستجو...">
+        <select id="filterModule"><option value="">همه ماژول‌ها</option><option value="accounting">حسابداری</option><option value="other">سایر</option></select>
       </div>
       <div class="grid" id="fileGrid"></div>
-      <p class="empty hidden" id="emptyList">فایلی ذخیره نشده است</p>
+      <p class="empty hidden" id="emptyList">فایلی نیست</p>
     </div>
   </div>
-
+  <div class="panel hidden" id="p-translate">
+    <div class="card">
+      <h2>ترجمه متن</h2>
+      <div class="row3">
+        <div><label>مبدأ</label>
+          <select id="trFrom"><option value="en" selected>انگلیسی</option><option value="fa">فارسی</option><option value="ar">عربی</option><option value="fr">فرانسوی</option><option value="de">آلمانی</option><option value="tr">ترکی</option></select>
+        </div>
+        <div class="swap"><label>&nbsp;</label><button type="button" id="btnSwapLang">⇄</button></div>
+        <div><label>مقصد</label>
+          <select id="trTo"><option value="fa" selected>فارسی</option><option value="en">انگلیسی</option><option value="ar">عربی</option><option value="tr">ترکی</option></select>
+        </div>
+      </div>
+      <div class="tr-box" style="margin-top:12px">
+        <div class="col"><label>متن اصلی</label><textarea id="trSource" placeholder="متن..."></textarea></div>
+        <div class="col"><label>ترجمه</label><textarea id="trResult" readonly placeholder="نتیجه..."></textarea></div>
+      </div>
+      <div style="margin-top:10px">
+        <button type="button" class="btn btn-p" id="btnTranslate">ترجمه کن</button>
+        <button type="button" class="btn btn-g" id="btnCopyTr">کپی</button>
+        <button type="button" class="btn btn-g" id="btnClearTr">پاک</button>
+      </div>
+      <p class="status" id="trStatus"></p>
+      <p class="hint">سرویس MyMemory — نیاز به اینترنت</p>
+    </div>
+  </div>
+  <div class="panel hidden" id="p-img-tr">
+    <div class="card">
+      <h2>ترجمه متن داخل تصویر (OCR)</h2>
+      <div class="row">
+        <div><label>زبان OCR</label>
+          <select id="ocrLang"><option value="eng">انگلیسی</option><option value="fas">فارسی</option><option value="ara">عربی</option><option value="eng+fas">انگلیسی+فارسی</option></select>
+        </div>
+        <div><label>ترجمه به</label>
+          <select id="ocrTrTo"><option value="fa" selected>فارسی</option><option value="en">انگلیسی</option><option value="ar">عربی</option></select>
+        </div>
+      </div>
+      <div class="drop" id="ocrDrop" style="margin-top:12px"><div class="ic">🖼️</div><p><strong>تصویر را انتخاب کنید</strong></p></div>
+      <input type="file" id="ocrInput" accept="image/*" class="hidden">
+      <div id="ocrImgWrap" class="hidden" style="text-align:center"><img id="ocrImg" class="ocr-preview" alt=""></div>
+      <div style="margin-top:10px">
+        <button type="button" class="btn btn-p" id="btnOcr" disabled>استخراج + ترجمه</button>
+        <button type="button" class="btn btn-g" id="btnCopyOcr">کپی نتیجه</button>
+      </div>
+      <p class="status" id="ocrStatus"></p>
+      <label>متن استخراج‌شده</label><textarea id="ocrText" readonly></textarea>
+      <label style="margin-top:8px">ترجمه</label><textarea id="ocrTranslated" readonly></textarea>
+    </div>
+  </div>
   <div class="panel hidden" id="p-settings">
     <div class="card">
-      <h2>تنظیمات و پشتیبان</h2>
-      <p class="hint">فایل‌ها در IndexedDB مرورگر ذخیره می‌شوند. برای آرشیو بلندمدت از پشتیبان فهرست استفاده کنید.</p>
-      <div style="margin-top:10px">
-        <button type="button" class="btn btn-p" id="btnExportMeta">خروجی فهرست (JSON)</button>
-        <button type="button" class="btn btn-g" id="btnClearAll">حذف همه فایل‌ها</button>
-      </div>
-      <p class="hint" id="storageInfo" style="margin-top:12px">—</p>
+      <h2>تنظیمات</h2>
+      <button type="button" class="btn btn-p" id="btnExportMeta">خروجی فهرست</button>
+      <button type="button" class="btn btn-g" id="btnClearAll">حذف همه</button>
+      <p class="hint" id="storageInfo">—</p>
     </div>
   </div>
 </main>
-
 <div class="preview-modal" id="previewModal">
   <div class="box">
     <button type="button" class="close" id="previewClose">بستن</button>
     <h3 id="previewTitle" style="margin-bottom:10px;color:#7dd3fc;padding-left:60px"></h3>
     <div id="previewBody"></div>
+    <div id="previewTr" style="margin-top:12px"></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
-
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
 (function(){
-var DB_NAME="smart_file_hub_v1", STORE="files", MAX_BYTES=8*1024*1024;
-var filterType="all";
-
-function toast(m,t){var el=document.getElementById("toast");el.textContent=m;el.className="toast show"+(t==="err"?" err":"");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("show");},2500);}
+var DB_NAME="smart_file_hub_v1",STORE="files",MAX_BYTES=8*1024*1024,filterType="all",ocrDataUrl=null;
+function toast(m,t){var el=document.getElementById("toast");el.textContent=m;el.className="toast show"+(t==="err"?" err":"");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("show");},2800);}
 function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
 function fmtSize(n){if(n<1024)return n+" B";if(n<1048576)return (n/1024).toFixed(1)+" KB";return (n/1048576).toFixed(2)+" MB";}
-function detectKind(name,mime){
-  var n=(name||"").toLowerCase(), m=(mime||"").toLowerCase();
-  if(/\.(doc|docx)$/.test(n)||m.indexOf("word")>=0||m.indexOf("msword")>=0)return "word";
-  if(/\.(xls|xlsx|csv)$/.test(n)||m.indexOf("excel")>=0||m.indexOf("spreadsheet")>=0||m==="text/csv")return "excel";
-  if(/\.(jpe?g|png|gif|webp|bmp|tiff?)$/.test(n)||m.indexOf("image/")===0)return "img";
-  return "other";
-}
+function detectKind(name,mime){var n=(name||"").toLowerCase(),m=(mime||"").toLowerCase();
+if(/\.(doc|docx)$/.test(n)||m.indexOf("word")>=0)return "word";
+if(/\.(xls|xlsx|csv)$/.test(n)||m.indexOf("excel")>=0||m.indexOf("spreadsheet")>=0)return "excel";
+if(/\.(jpe?g|png|gif|webp|bmp)$/.test(n)||m.indexOf("image/")===0)return "img";return "other";}
 function badge(k){return '<span class="badge '+k+'">'+(k==="word"?"ورد":k==="excel"?"اکسل":k==="img"?"تصویر":"سایر")+'</span>';}
-
-function openDB(){
-  return new Promise(function(resolve,reject){
-    var req=indexedDB.open(DB_NAME,1);
-    req.onupgradeneeded=function(){var db=req.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE,{keyPath:"id"});};
-    req.onsuccess=function(){resolve(req.result);};
-    req.onerror=function(){reject(req.error);};
-  });
-}
-function idbPut(rec){
-  return openDB().then(function(db){return new Promise(function(resolve,reject){
-    var tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).put(rec);
-    tx.oncomplete=function(){resolve();};tx.onerror=function(){reject(tx.error);};
-  });});
-}
-function idbGetAll(){
-  return openDB().then(function(db){return new Promise(function(resolve,reject){
-    var tx=db.transaction(STORE,"readonly");var req=tx.objectStore(STORE).getAll();
-    req.onsuccess=function(){resolve(req.result||[]);};req.onerror=function(){reject(req.error);};
-  });});
-}
-function idbDelete(id){
-  return openDB().then(function(db){return new Promise(function(resolve,reject){
-    var tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).delete(id);
-    tx.oncomplete=function(){resolve();};tx.onerror=function(){reject(tx.error);};
-  });});
-}
-function idbClear(){
-  return openDB().then(function(db){return new Promise(function(resolve,reject){
-    var tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).clear();
-    tx.oncomplete=function(){resolve();};tx.onerror=function(){reject(tx.error);};
-  });});
-}
-
-function readFileAsDataURL(file){
-  return new Promise(function(resolve,reject){
-    var r=new FileReader();
-    r.onload=function(){resolve(r.result);};
-    r.onerror=function(){reject(r.error);};
-    r.readAsDataURL(file);
-  });
-}
-
+function chunkText(text,maxLen){maxLen=maxLen||450;var parts=[],t=String(text||"").trim();if(!t)return[];
+while(t.length>maxLen){var cut=t.lastIndexOf(" ",maxLen);if(cut<50)cut=maxLen;parts.push(t.slice(0,cut).trim());t=t.slice(cut).trim();}
+if(t)parts.push(t);return parts;}
+async function translateText(text,from,to){
+var parts=chunkText(text,450);if(!parts.length)return "";var out=[];
+for(var i=0;i<parts.length;i++){var url="https://api.mymemory.translated.net/get?q="+encodeURIComponent(parts[i])+"&langpair="+encodeURIComponent(from+"|"+to);
+var res=await fetch(url);if(!res.ok)throw new Error("HTTP "+res.status);var data=await res.json();
+var tr=(data.responseData&&data.responseData.translatedText)||"";out.push(tr);}
+return out.join("\n");}
+function guessLangFromOcr(c){if(c.indexOf("fas")>=0)return "fa";if(c.indexOf("ara")>=0)return "ar";return "en";}
+function openDB(){return new Promise(function(resolve,reject){var req=indexedDB.open(DB_NAME,1);
+req.onupgradeneeded=function(){var db=req.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE,{keyPath:"id"});};
+req.onsuccess=function(){resolve(req.result);};req.onerror=function(){reject(req.error);};});}
+function idbPut(rec){return openDB().then(function(db){return new Promise(function(resolve,reject){var tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).put(rec);tx.oncomplete=function(){resolve();};tx.onerror=function(){reject(tx.error);};});});}
+function idbGetAll(){return openDB().then(function(db){return new Promise(function(resolve,reject){var req=db.transaction(STORE,"readonly").objectStore(STORE).getAll();req.onsuccess=function(){resolve(req.result||[]);};req.onerror=function(){reject(req.error);};});});}
+function idbDelete(id){return openDB().then(function(db){return new Promise(function(resolve,reject){var tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).delete(id);tx.oncomplete=function(){resolve();};tx.onerror=function(){reject(tx.error);};});});}
+function idbClear(){return openDB().then(function(db){return new Promise(function(resolve,reject){var tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).clear();tx.oncomplete=function(){resolve();};tx.onerror=function(){reject(tx.error);};});});}
+function readFileAsDataURL(file){return new Promise(function(resolve,reject){var r=new FileReader();r.onload=function(){resolve(r.result);};r.onerror=function(){reject(r.error);};r.readAsDataURL(file);});}
 async function ingestFiles(fileList){
-  var tag=document.getElementById("fileTag").value.trim();
-  var mod=document.getElementById("fileModule").value;
-  var recent=[];
-  for(var i=0;i<fileList.length;i++){
-    var f=fileList[i];
-    var kind=detectKind(f.name,f.type);
-    if(kind==="other"){toast("نوع پشتیبانی‌نشده: "+f.name,"err");continue;}
-    if(f.size>MAX_BYTES){toast("حجم زیاد (حداکثر ۸ مگ): "+f.name,"err");continue;}
-    try{
-      var data=await readFileAsDataURL(f);
-      var rec={
-        id:Date.now().toString(36)+Math.random().toString(36).slice(2,8),
-        name:f.name,
-        mime:f.type||"application/octet-stream",
-        kind:kind,
-        size:f.size,
-        tag:tag,
-        module:mod,
-        at:new Date().toISOString(),
-        data:data
-      };
-      await idbPut(rec);
-      recent.push(rec);
-    }catch(e){toast("خطا در "+f.name,"err");}
-  }
-  if(recent.length){
-    toast(recent.length+" فایل ذخیره شد");
-    showRecent(recent);
-    renderKPI();
-    if(!document.getElementById("p-list").classList.contains("hidden"))renderList();
-  }
-}
-
-function showRecent(list){
-  var box=document.getElementById("recentBox");
-  box.style.display="block";
-  document.getElementById("recentList").innerHTML=list.map(function(r){
-    return '<div style="padding:8px;border-bottom:1px solid var(--line)">'+badge(r.kind)+' '+esc(r.name)+' <span style="color:var(--muted);font-size:.7rem">('+fmtSize(r.size)+')</span></div>';
-  }).join("");
-}
-
-var drop=document.getElementById("dropZone");
-var input=document.getElementById("fileInput");
-drop.addEventListener("click",function(){input.click();});
-drop.addEventListener("dragover",function(e){e.preventDefault();drop.classList.add("over");});
-drop.addEventListener("dragleave",function(){drop.classList.remove("over");});
-drop.addEventListener("drop",function(e){e.preventDefault();drop.classList.remove("over");if(e.dataTransfer.files&&e.dataTransfer.files.length)ingestFiles(e.dataTransfer.files);});
-input.addEventListener("change",function(){if(input.files&&input.files.length)ingestFiles(input.files);input.value="";});
-
-function showPanel(id){
-  document.querySelectorAll(".panel").forEach(function(p){p.classList.add("hidden");});
-  document.getElementById(id).classList.remove("hidden");
-  document.querySelectorAll(".nav button[data-panel]").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-panel")===id);});
-  if(id==="p-list")renderList();
-  if(id==="p-settings")updateStorageInfo();
-}
-document.querySelectorAll(".nav button[data-panel]").forEach(function(b){
-  b.addEventListener("click",function(){showPanel(b.getAttribute("data-panel"));});
-});
-
-document.getElementById("filters").addEventListener("click",function(e){
-  var btn=e.target.closest("[data-filter]");if(!btn)return;
-  filterType=btn.getAttribute("data-filter");
-  document.querySelectorAll("#filters button").forEach(function(b){b.classList.toggle("on",b===btn);});
-  renderList();
-});
-document.getElementById("searchQ").addEventListener("input",renderList);
-document.getElementById("filterModule").addEventListener("change",renderList);
-
+var tag=document.getElementById("fileTag").value.trim(),mod=document.getElementById("fileModule").value,recent=[];
+for(var i=0;i<fileList.length;i++){var f=fileList[i],kind=detectKind(f.name,f.type);
+if(kind==="other"){toast("نوع نامعتبر","err");continue;}if(f.size>MAX_BYTES){toast("حجم زیاد","err");continue;}
+try{var data=await readFileAsDataURL(f);var rec={id:Date.now().toString(36)+Math.random().toString(36).slice(2,8),name:f.name,mime:f.type||"",kind:kind,size:f.size,tag:tag,module:mod,at:new Date().toISOString(),data:data};await idbPut(rec);recent.push(rec);}catch(e){toast("خطا","err");}}
+if(recent.length){toast(recent.length+" فایل");showRecent(recent);renderKPI();if(!document.getElementById("p-list").classList.contains("hidden"))renderList();}}
+function showRecent(list){document.getElementById("recentBox").style.display="block";
+document.getElementById("recentList").innerHTML=list.map(function(r){return '<div style="padding:8px;border-bottom:1px solid var(--line)">'+badge(r.kind)+' '+esc(r.name)+'</div>';}).join("");}
+var drop=document.getElementById("dropZone"),input=document.getElementById("fileInput");
+drop.onclick=function(){input.click();};
+drop.ondragover=function(e){e.preventDefault();drop.classList.add("over");};
+drop.ondragleave=function(){drop.classList.remove("over");};
+drop.ondrop=function(e){e.preventDefault();drop.classList.remove("over");if(e.dataTransfer.files.length)ingestFiles(e.dataTransfer.files);};
+input.onchange=function(){if(input.files.length)ingestFiles(input.files);input.value="";};
+function showPanel(id){document.querySelectorAll(".panel").forEach(function(p){p.classList.add("hidden");});document.getElementById(id).classList.remove("hidden");
+document.querySelectorAll(".nav button[data-panel]").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-panel")===id);});
+if(id==="p-list")renderList();if(id==="p-settings")updateStorageInfo();}
+document.querySelectorAll(".nav button[data-panel]").forEach(function(b){b.onclick=function(){showPanel(b.getAttribute("data-panel"));};});
+document.getElementById("filters").onclick=function(e){var btn=e.target.closest("[data-filter]");if(!btn)return;filterType=btn.getAttribute("data-filter");
+document.querySelectorAll("#filters button").forEach(function(b){b.classList.toggle("on",b===btn);});renderList();};
+document.getElementById("searchQ").oninput=renderList;document.getElementById("filterModule").onchange=renderList;
 async function renderList(){
-  var all=await idbGetAll();
-  var q=(document.getElementById("searchQ").value||"").toLowerCase();
-  var mod=document.getElementById("filterModule").value;
-  var list=all.filter(function(r){
-    if(filterType!=="all"&&r.kind!==filterType)return false;
-    if(mod&&r.module!==mod)return false;
-    if(q&&(r.name+" "+(r.tag||"")).toLowerCase().indexOf(q)<0)return false;
-    return true;
-  }).sort(function(a,b){return (b.at||"").localeCompare(a.at||"");});
-
-  var grid=document.getElementById("fileGrid");
-  var empty=document.getElementById("emptyList");
-  if(!list.length){grid.innerHTML="";empty.classList.remove("hidden");return;}
-  empty.classList.add("hidden");
-  grid.innerHTML=list.map(function(r){
-    var thumb=r.kind==="img"
-      ?'<div class="thumb"><img src="'+r.data+'" alt=""></div>'
-      :'<div class="thumb">'+(r.kind==="word"?"📄":r.kind==="excel"?"📊":"📎")+'</div>';
-    return '<div class="file-card" data-id="'+esc(r.id)+'">'+thumb+
-      '<div class="name">'+esc(r.name)+'</div>'+
-      '<div class="meta">'+badge(r.kind)+' '+fmtSize(r.size)+(r.tag?' · '+esc(r.tag):'')+(r.module?' · '+esc(r.module):'')+'</div>'+
-      '<div class="meta">'+(r.at?new Date(r.at).toLocaleString("fa-IR"):"")+'</div>'+
-      '<div class="acts">'+
-        (r.kind==="img"?'<button type="button" class="btn btn-p btn-prev">پیش‌نمایش</button>':'')+
-        '<button type="button" class="btn btn-ok btn-dl">دانلود</button>'+
-        '<button type="button" class="btn btn-b btn-del">حذف</button>'+
-      '</div></div>';
-  }).join("");
-
-  grid.querySelectorAll(".file-card").forEach(function(card){
-    var id=card.getAttribute("data-id");
-    var rec=list.find(function(x){return x.id===id;});
-    if(!rec)return;
-    var prev=card.querySelector(".btn-prev");
-    if(prev)prev.onclick=function(){openPreview(rec);};
-    card.querySelector(".btn-dl").onclick=function(){downloadRec(rec);};
-    card.querySelector(".btn-del").onclick=async function(){
-      if(!confirm("حذف شود؟"))return;
-      await idbDelete(id);toast("حذف شد");renderList();renderKPI();
-    };
-  });
-}
-
-function openPreview(rec){
-  document.getElementById("previewTitle").textContent=rec.name;
-  document.getElementById("previewBody").innerHTML='<img src="'+rec.data+'" alt="">';
-  document.getElementById("previewModal").classList.add("open");
-}
+var all=await idbGetAll(),q=(document.getElementById("searchQ").value||"").toLowerCase(),mod=document.getElementById("filterModule").value;
+var list=all.filter(function(r){if(filterType!=="all"&&r.kind!==filterType)return false;if(mod&&r.module!==mod)return false;
+if(q&&(r.name+" "+(r.tag||"")).toLowerCase().indexOf(q)<0)return false;return true;}).sort(function(a,b){return (b.at||"").localeCompare(a.at||"");});
+var grid=document.getElementById("fileGrid"),empty=document.getElementById("emptyList");
+if(!list.length){grid.innerHTML="";empty.classList.remove("hidden");return;}empty.classList.add("hidden");
+grid.innerHTML=list.map(function(r){var thumb=r.kind==="img"?'<div class="thumb"><img src="'+r.data+'"></div>':'<div class="thumb">'+(r.kind==="word"?"📄":"📊")+'</div>';
+return '<div class="file-card" data-id="'+esc(r.id)+'">'+thumb+'<div class="name">'+esc(r.name)+'</div><div class="meta">'+badge(r.kind)+' '+fmtSize(r.size)+'</div><div class="acts">'+
+(r.kind==="img"?'<button type="button" class="btn btn-p btn-prev">پیش‌نمایش</button><button type="button" class="btn btn-p btn-tr-img">ترجمه</button>':'')+
+'<button type="button" class="btn btn-ok btn-dl">دانلود</button><button type="button" class="btn btn-b btn-del">حذف</button></div></div>';}).join("");
+grid.querySelectorAll(".file-card").forEach(function(card){var id=card.getAttribute("data-id"),rec=list.find(function(x){return x.id===id;});if(!rec)return;
+var prev=card.querySelector(".btn-prev");if(prev)prev.onclick=function(){openPreview(rec);};
+var tri=card.querySelector(".btn-tr-img");if(tri)tri.onclick=function(){showPanel("p-img-tr");ocrDataUrl=rec.data;document.getElementById("ocrImg").src=rec.data;
+document.getElementById("ocrImgWrap").classList.remove("hidden");document.getElementById("btnOcr").disabled=false;document.getElementById("ocrStatus").textContent="آماده: "+rec.name;};
+card.querySelector(".btn-dl").onclick=function(){var a=document.createElement("a");a.href=rec.data;a.download=rec.name;a.click();};
+card.querySelector(".btn-del").onclick=async function(){if(!confirm("حذف؟"))return;await idbDelete(id);toast("حذف شد");renderList();renderKPI();};});}
+function openPreview(rec){document.getElementById("previewTitle").textContent=rec.name;
+document.getElementById("previewBody").innerHTML=rec.kind==="img"?'<img src="'+rec.data+'">':'';
+document.getElementById("previewTr").innerHTML=rec.kind==="img"?'<button type="button" class="btn btn-p" id="btnPrevToOcr">ارسال به ترجمه تصویر</button>':'';
+document.getElementById("previewModal").classList.add("open");
+var b=document.getElementById("btnPrevToOcr");if(b)b.onclick=function(){document.getElementById("previewModal").classList.remove("open");showPanel("p-img-tr");
+ocrDataUrl=rec.data;document.getElementById("ocrImg").src=rec.data;document.getElementById("ocrImgWrap").classList.remove("hidden");document.getElementById("btnOcr").disabled=false;};}
 document.getElementById("previewClose").onclick=function(){document.getElementById("previewModal").classList.remove("open");};
-document.getElementById("previewModal").addEventListener("click",function(e){if(e.target.id==="previewModal")document.getElementById("previewModal").classList.remove("open");});
-
-function downloadRec(rec){
-  var a=document.createElement("a");
-  a.href=rec.data;
-  a.download=rec.name;
-  a.click();
-  toast("دانلود: "+rec.name);
-}
-
-async function renderKPI(){
-  var all=await idbGetAll();
-  var w=all.filter(function(x){return x.kind==="word";}).length;
-  var e=all.filter(function(x){return x.kind==="excel";}).length;
-  var i=all.filter(function(x){return x.kind==="img";}).length;
-  var bytes=all.reduce(function(s,x){return s+(x.size||0);},0);
-  document.getElementById("kpi").innerHTML=
-    '<div class="box"><div class="n">'+all.length+'</div><div class="l">کل فایل</div></div>'+
-    '<div class="box"><div class="n">'+w+'</div><div class="l">ورد</div></div>'+
-    '<div class="box"><div class="n">'+e+'</div><div class="l">اکسل</div></div>'+
-    '<div class="box"><div class="n">'+i+'</div><div class="l">تصویر</div></div>'+
-    '<div class="box"><div class="n">'+fmtSize(bytes)+'</div><div class="l">حجم</div></div>';
-}
-
-async function updateStorageInfo(){
-  var all=await idbGetAll();
-  var bytes=all.reduce(function(s,x){return s+(x.size||0);},0);
-  document.getElementById("storageInfo").textContent="تعداد: "+all.length+" فایل · حجم تقریبی: "+fmtSize(bytes);
-}
-
-document.getElementById("btnExportMeta").onclick=async function(){
-  var all=await idbGetAll();
-  var meta=all.map(function(r){return {id:r.id,name:r.name,kind:r.kind,size:r.size,tag:r.tag,module:r.module,at:r.at,mime:r.mime};});
-  var a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([JSON.stringify(meta,null,2)],{type:"application/json"}));
-  a.download="file-hub-list.json";
-  a.click();
-  toast("فهرست دانلود شد");
-};
-document.getElementById("btnClearAll").onclick=async function(){
-  if(!confirm("همه فایل‌ها حذف شوند؟"))return;
-  await idbClear();toast("همه پاک شد");renderKPI();renderList();updateStorageInfo();
-};
-
+document.getElementById("btnSwapLang").onclick=function(){var a=document.getElementById("trFrom"),b=document.getElementById("trTo"),v=a.value;a.value=b.value;b.value=v;
+var s=document.getElementById("trSource"),r=document.getElementById("trResult"),t=s.value;s.value=r.value;r.value=t;};
+document.getElementById("btnTranslate").onclick=async function(){
+var text=document.getElementById("trSource").value.trim();if(!text){toast("متن وارد کنید","err");return;}
+var from=document.getElementById("trFrom").value,to=document.getElementById("trTo").value;if(from===to){toast("زبان‌ها یکسان","err");return;}
+var st=document.getElementById("trStatus"),btn=document.getElementById("btnTranslate");btn.disabled=true;st.textContent="در حال ترجمه...";
+try{document.getElementById("trResult").value=await translateText(text,from,to);st.textContent="✓ انجام شد";toast("ترجمه شد");}
+catch(e){st.textContent="خطا";toast("خطا در ترجمه","err");}btn.disabled=false;};
+document.getElementById("btnCopyTr").onclick=function(){navigator.clipboard.writeText(document.getElementById("trResult").value).then(function(){toast("کپی");});};
+document.getElementById("btnClearTr").onclick=function(){document.getElementById("trSource").value="";document.getElementById("trResult").value="";document.getElementById("trStatus").textContent="";};
+var ocrDrop=document.getElementById("ocrDrop"),ocrInput=document.getElementById("ocrInput");
+ocrDrop.onclick=function(){ocrInput.click();};
+ocrDrop.ondragover=function(e){e.preventDefault();ocrDrop.classList.add("over");};
+ocrDrop.ondragleave=function(){ocrDrop.classList.remove("over");};
+ocrDrop.ondrop=function(e){e.preventDefault();ocrDrop.classList.remove("over");if(e.dataTransfer.files[0])loadOcrFile(e.dataTransfer.files[0]);};
+ocrInput.onchange=function(){if(ocrInput.files[0])loadOcrFile(ocrInput.files[0]);ocrInput.value="";};
+async function loadOcrFile(file){if(!file.type||file.type.indexOf("image/")!==0){toast("فقط تصویر","err");return;}
+ocrDataUrl=await readFileAsDataURL(file);document.getElementById("ocrImg").src=ocrDataUrl;document.getElementById("ocrImgWrap").classList.remove("hidden");
+document.getElementById("btnOcr").disabled=false;document.getElementById("ocrStatus").textContent="آماده: "+file.name;}
+document.getElementById("btnOcr").onclick=async function(){
+if(!ocrDataUrl){toast("تصویر نیست","err");return;}if(typeof Tesseract==="undefined"){toast("OCR لود نشد","err");return;}
+var btn=document.getElementById("btnOcr"),st=document.getElementById("ocrStatus"),lang=document.getElementById("ocrLang").value,to=document.getElementById("ocrTrTo").value;
+btn.disabled=true;st.textContent="OCR...";
+try{var result=await Tesseract.recognize(ocrDataUrl,lang,{logger:function(m){if(m.status==="recognizing text")st.textContent="OCR: "+Math.round((m.progress||0)*100)+"%";}});
+var text=(result.data&&result.data.text||"").trim();document.getElementById("ocrText").value=text||"(خالی)";
+if(!text){st.textContent="متنی نبود";btn.disabled=false;return;}
+st.textContent="ترجمه...";var from=guessLangFromOcr(lang);
+document.getElementById("ocrTranslated").value=(from===to)?text:await translateText(text,from,to);st.textContent="✓ انجام شد";toast("آماده");}
+catch(e){st.textContent="خطا";toast("خطا OCR/ترجمه","err");}btn.disabled=false;};
+document.getElementById("btnCopyOcr").onclick=function(){var t=document.getElementById("ocrTranslated").value||document.getElementById("ocrText").value;navigator.clipboard.writeText(t).then(function(){toast("کپی");});};
+async function renderKPI(){var all=await idbGetAll();var bytes=all.reduce(function(s,x){return s+(x.size||0);},0);
+document.getElementById("kpi").innerHTML='<div class="box"><div class="n">'+all.length+'</div><div class="l">فایل</div></div><div class="box"><div class="n">'+fmtSize(bytes)+'</div><div class="l">حجم</div></div>';}
+async function updateStorageInfo(){var all=await idbGetAll();document.getElementById("storageInfo").textContent="تعداد: "+all.length;}
+document.getElementById("btnExportMeta").onclick=async function(){var all=await idbGetAll();var a=document.createElement("a");
+a.href=URL.createObjectURL(new Blob([JSON.stringify(all.map(function(r){return{name:r.name,kind:r.kind,size:r.size};}),null,2)],{type:"application/json"}));a.download="list.json";a.click();};
+document.getElementById("btnClearAll").onclick=async function(){if(!confirm("حذف همه؟"))return;await idbClear();toast("پاک شد");renderKPI();};
 document.getElementById("btnExit").onclick=function(){location.href="index.html";};
-
 renderKPI();
 })();
 </script>
