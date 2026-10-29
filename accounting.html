@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html dir="rtl" lang="fa">
 <head>
 <meta charset="utf-8"/>
@@ -154,7 +155,25 @@ main.main > .panel { width:100%; box-sizing:border-box; }
 #p-bs .data-table tfoot td,#p-pl .data-table tfoot td{font-weight:800;}
 #p-pl #plRem{margin-top:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#0f172a;font-weight:800;}
 @media(max-width:700px){.acct-search-pop .asp-controls{grid-template-columns:1fr}.acct-search-pop{max-height:65vh}}
+
 </style>
+
+<style id="cartable-fix-css">
+#p-cartable .cartable-summary{margin:10px 0;padding:9px 12px;border:1px solid #334155;border-radius:10px;color:#bae6fd;background:#0f172a}
+#p-cartable .cart-file-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;margin:8px 0;border:1px solid #334155;border-radius:12px;background:#1e293b}
+#p-cartable .cart-file-meta{min-width:180px;flex:1;overflow-wrap:anywhere}
+#p-cartable .cart-file-actions{display:flex;gap:6px;flex-wrap:wrap}
+#p-cartable .cart-file-actions button{font-size:12px;padding:6px 9px}
+.dash-extras{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:12px}
+.dash-extra{border:1px solid #334155;border-radius:10px;padding:12px;background:#111c2e}
+.dash-extra b{display:block;font-size:23px;color:#67e8f9;margin-bottom:4px}
+.cartable-dock{position:fixed;z-index:9000;right:12px;bottom:12px;display:flex;align-items:center;gap:8px;padding:8px 12px;background:#172338;border:1px solid #475569;border-radius:12px;box-shadow:0 4px 20px #0005;color:#e2e8f0;cursor:pointer;font:inherit}
+.cartable-dock .count{background:#06b6d4;color:#00111a;border-radius:99px;padding:2px 8px;font-weight:700}
+.cartable-toast{position:fixed;z-index:10001;top:16px;left:50%;transform:translateX(-50%);width:min(390px,calc(100vw - 32px));padding:12px 16px;border-radius:12px;background:#0f2638;border:1px solid #38bdf8;color:#e0f2fe;box-shadow:0 8px 30px #0008;font:inherit;text-align:right}
+.cartable-toast button{margin-right:8px}
+@media(max-width:600px){.cartable-dock{right:8px;bottom:8px}.cart-file-row{align-items:flex-start}}
+</style>
+
 </head>
 <body>
 <header class="header">
@@ -203,16 +222,8 @@ main.main > .panel { width:100%; box-sizing:border-box; }
 <div class="clock"><div class="j" id="dtJ">—</div><div class="g" id="dtG">—</div><div class="c" id="dtC">—</div><div class="u" id="activeUser">کاربر فعال: —</div></div>
 </header>
 <div class="body-row"><main class="main">
-<div class="panel on" id="p-dash">
-  <div class="card" style="margin:12px;padding:12px;border:1px solid #334155;border-radius:12px;background:#1e293b">
-    <h2 style="font-size:.95rem;color:#7dd3fc;margin-bottom:8px">کارتابل ورودی از Suite</h2>
-    <div id="suiteCartableBox">—</div>
-    <button type="button" id="btnRefreshCartable" style="margin-top:8px;padding:8px 14px;border:none;border-radius:9px;background:#0ea5e9;color:#fff;font-weight:700;cursor:pointer;font-family:inherit">بروزرسانی کارتابل</button>
-  </div>
-   <div class="kpi" id="kpi"></div>
-  <div class="card"><h2>داشبورد حسابداری</h2><p class="empty" id="dashMeta">—</p></div>
-</div>
-<div class="panel" id="p-voucher">
+<div class="panel on" id="p-dash"><div class="kpi" id="kpi"></div><div class="card"><h2>داشبورد حسابداری</h2><p class="empty" id="dashMeta">—</p><div id="dashExtras" class="dash-extras" aria-live="polite"></div></div></div>
+<div class="panel" id="p-voucher"><div class="card has-exit">
 <button class="btn-form-exit" data-panel="p-dash" type="button">خروج</button>
 <h2>سند حسابداری</h2>
 <div class="row4">
@@ -343,6 +354,11 @@ main.main > .panel { width:100%; box-sizing:border-box; }
 <div class="panel" id="p-list-recon"><div class="card has-exit list-screen"> <button class="btn-form-exit" data-panel="p-dash" type="button">خروج</button> <h2>فهرست صورت‌های مغایرت بانکی</h2><div class="list-tools"><input aria-label="جستجو در مغایرت‌های بانکی" id="reconListSearch" placeholder="جستجو بر اساس بانک، تاریخ یا شماره صورت..." type="search"/><button class="btn btn-g" id="reconListRefresh" type="button">به‌روزرسانی</button><button class="btn btn-g" id="reconListExport" type="button">خروجی CSV</button></div><div class="list-summary" id="reconListSummary"></div><div class="list-table-wrap" id="listRecon"></div></div></div>
 <div class="panel" id="p-coding"><div class="card has-exit"><button class="btn-form-exit" data-panel="p-dash" type="button">خروج</button>
 <h2>کدینگ حساب‌ها</h2>
+<div class="card" style="margin:10px 0;border:1px solid #0ea5e9;background:#0b2236">
+<p style="margin-bottom:8px">کدینگ نمونه متناسب با ساختار رایج حسابداری ایران و ۵۰ سند آزمایشی متوازن. این الگو استاندارد اجباری واحدی برای همه کسب‌وکارها نیست؛ پیش از استفاده عملی باید با فعالیت و الزامات مالیاتی/گزارشگری مؤسسه تطبیق داده شود.</p>
+<button class="btn btn-p" id="btnLoadIranChart50" type="button">بارگذاری کدینگ نمونه و ۵۰ سند آزمایشی</button>
+<span id="iranSeedStatus" style="margin-right:8px"></span>
+</div>
 <div class="split"><div>
 <div class="row"><div><label>کد</label><input id="cCode"/></div><div><label>نام</label><input id="cName"/></div></div>
 <div class="row"><div><label>سطح</label><select id="cLevel"><option value="1">کل</option><option value="2">معین</option><option value="3">تفصیلی</option><option value="4">تفصیلی شناور</option></select></div>
@@ -540,8 +556,10 @@ main.main > .panel { width:100%; box-sizing:border-box; }
 <h2>یادآوری</h2><div class="row"><input id="remText"/><input class="jdate" id="remDate"/></div>
 <button class="btn btn-p" id="btnRemAdd" type="button">افزودن</button><div class="list-box" id="remsList"></div></div></div>
 <div class="panel" id="p-cartable"><div class="card has-exit"><button class="btn-form-exit" data-panel="p-dash" type="button">خروج</button>
-<h2>کارتابل</h2><div class="row"><input id="cartTo"/><input id="cartMsg"/></div>
-<button class="btn btn-p" id="btnCartSend" type="button">ارسال</button><div class="list-box" id="cartList"></div></div></div>
+<h2>کارتابل حسابداری</h2><p class="note-box">ارسال و دریافت فایل در همین مرورگر ذخیره می‌شود. برای انتقال به دستگاه یا کاربر دیگر، فایل را دانلود یا از مسیر اتصال موجود استفاده کنید.</p>
+<div class="row"><div><label for="cartTo">گیرنده</label><input id="cartTo" placeholder="نام کاربر یا واحد گیرنده"/></div><div><label for="cartMsg">توضیحات</label><input id="cartMsg" placeholder="موضوع یا توضیح فایل"/></div></div>
+<div class="row"><div><label for="cartFile">انتخاب فایل برای ارسال</label><input id="cartFile" type="file"/></div><div style="display:flex;align-items:end;gap:8px;flex-wrap:wrap"><button class="btn btn-p" id="btnCartSend" type="button">ارسال پیام / فایل</button><button class="btn btn-g" id="btnCartRefresh" type="button">به‌روزرسانی</button></div></div>
+<div class="cartable-summary" id="cartSummary" aria-live="polite"></div><div class="list-box" id="cartList"></div></div></div>
 <div class="panel" id="p-users"><div class="card has-exit"><button class="btn-form-exit" data-panel="p-dash" type="button">خروج</button>
 <h2>کاربران و دسترسی‌ها</h2>
 <!-- فقط کاربر عادی -->
@@ -996,10 +1014,10 @@ var dim=jML(vy,vm),fg=j2g(vy,vm,1),st=(new Date(fg.gy,fg.gm-1,fg.gd).getDay()+1)
 for(var i=0;i<st;i++)html+='<button type="button" style="visibility:hidden"></button>';
 for(var d=1;d<=dim;d++){var g=j2g(vy,vm,d);html+='<button type="button" data-d="'+d+'"><span class="jd">'+toFa(d)+'</span><span class="gd">'+g.gy+'/'+g.gm+'/'+g.gd+'</span></button>';}
 html+='</div></div>';box.innerHTML=html;
-document.getElementById("fcPm").onclick=function(){box._m--;if(box._m<1){box._m=12;box._y--;}renderFullCal();};
-document.getElementById("fcNm").onclick=function(){box._m++;if(box._m>12){box._m=1;box._y++;}renderFullCal();};
-document.getElementById("fcPy").onclick=function(){box._y--;renderFullCal();};
-document.getElementById("fcNy").onclick=function(){box._y++;renderFullCal();};
+if(document.getElementById("fcPm"))document.getElementById("fcPm").onclick=function(){box._m--;if(box._m<1){box._m=12;box._y--;}renderFullCal();};
+if(document.getElementById("fcNm"))document.getElementById("fcNm").onclick=function(){box._m++;if(box._m>12){box._m=1;box._y++;}renderFullCal();};
+if(document.getElementById("fcPy"))document.getElementById("fcPy").onclick=function(){box._y--;renderFullCal();};
+if(document.getElementById("fcNy"))document.getElementById("fcNy").onclick=function(){box._y++;renderFullCal();};
 box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){document.getElementById("remDate").value=fmtJ(box._y,box._m,+b.getAttribute("data-d"));showPanel("p-rems");};});}
 
 function isLockedDate(dateStr){var db=loadDB();var d=toEn(dateStr||"");return (db.locks||[]).some(function(L){if(L.unlocked)return false;return d>=toEn(L.from||"")&&d<=toEn(L.to||"");});}
@@ -1034,7 +1052,7 @@ function userName(){var a=getAuth();return(a.session&&(a.session.name||a.session
 function ensureLogin(cb){var a=getAuth();if(a.session&&a.session.user){cb();return;}
 var m=document.createElement("div");m.className="login-mask";
 m.innerHTML='<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود</h2><label>نام کاربری</label><input id="lgU"><label>رمز</label><input id="lgP" type="password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty">admin / admin</p></div>';
-document.body.appendChild(m);document.getElementById("lgGo").onclick=function(){var u=document.getElementById("lgU").value.trim(),p=document.getElementById("lgP").value;
+document.body.appendChild(m);if(document.getElementById("lgGo"))document.getElementById("lgGo").onclick=function(){var u=document.getElementById("lgU").value.trim(),p=document.getElementById("lgP").value;
 var f=(a.users||[]).find(function(x){return x.user===u&&x.pass===p;});if(!f){toast("اشتباه","err");return;}a.session={user:f.user,name:f.name||f.user,role:f.role||"user"};saveAuth(a);m.remove();cb();};}
 
 function nextNo(){var db=loadDB();var next=db.nextNo||1;if(db.vouchers&&db.vouchers.length){var max=0;db.vouchers.forEach(function(v){var n=parseInt(toEn(String(v.no)),10)||0;if(n>max)max=n;});if(max+1>next)next=max+1;}return next;}
@@ -1366,10 +1384,10 @@ function renderLists(){var db=loadDB();var vouchers=db.vouchers||[];var host=doc
 function renderReports(){var vs=(loadDB().vouchers||[]).filter(function(v){return v.status!=="void";});
 var jh='<table><thead><tr><th>شماره</th><th>کد</th><th>بدهکار</th><th>بستانکار</th></tr></thead><tbody>';
 vs.forEach(function(v){(v.lines||[]).forEach(function(l){jh+='<tr><td>'+esc(v.no)+'</td><td>'+esc(l.code)+'</td><td>'+formatAmount(l.debit||0)+'</td><td>'+formatAmount(l.credit||0)+'</td></tr>';});});
-document.getElementById("repJ").innerHTML=vs.length?jh+'</tbody></table>':'<p class="empty">—</p>';
+if(document.getElementById("repJ"))document.getElementById("repJ").innerHTML=vs.length?jh+'</tbody></table>':'<p class="empty">—</p>';
 var acc={};vs.forEach(function(v){(v.lines||[]).forEach(function(l){if(!acc[l.code])acc[l.code]={name:l.name,debit:0,credit:0};acc[l.code].debit+=l.debit||0;acc[l.code].credit+=l.credit||0;});});
 var tb='<table><thead><tr><th>کد</th><th>نام</th><th>بدهکار</th><th>بستانکار</th></tr></thead><tbody>';Object.keys(acc).sort().forEach(function(c){tb+='<tr><td>'+esc(c)+'</td><td>'+esc(acc[c].name)+'</td><td>'+formatAmount(acc[c].debit)+'</td><td>'+formatAmount(acc[c].credit)+'</td></tr>';});
-document.getElementById("repTB").innerHTML=Object.keys(acc).length?tb+'</tbody></table>':'<p class="empty">—</p>';
+if(document.getElementById("repTB"))document.getElementById("repTB").innerHTML=Object.keys(acc).length?tb+'</tbody></table>':'<p class="empty">—</p>';
 document.getElementById("repPL").innerHTML='<p class="empty">از بستن سود و زیانی استفاده کنید</p>';}
 function renderQueue(){document.getElementById("queueBox").innerHTML=((loadQ().items||[]).filter(function(x){return !x.posted;})).map(function(x){return '<div class="list-item">'+esc(x.type)+'</div>';}).join("")||'<p class="empty">خالی</p>';}
 
@@ -1381,17 +1399,17 @@ document.getElementById("btnRemAdd").onclick=function(){var t=document.getElemen
 document.getElementById("btnCartSend").onclick=function(){var c=loadJSON(cartKey,{items:[]});c.items=c.items||[];c.items.unshift({msg:document.getElementById("cartMsg").value});saveJSON(cartKey,c);renderCart();updateAlerts();toast("ارسال");};
 function renderCart(){document.getElementById("cartList").innerHTML=(loadJSON(cartKey,{items:[]}).items||[]).map(function(x){return '<div class="list-item">'+esc(x.msg)+'</div>';}).join("")||'<p class="empty">خالی</p>';}
 function updateAlerts(){document.getElementById("aNotes").textContent=String((loadJSON(notesKey,[])).length);document.getElementById("aRems").textContent=String((loadJSON(remsKey,[])).length);document.getElementById("aCart").textContent=String((loadJSON(cartKey,{items:[]}).items||[]).length);}
-function renderUsers(){document.getElementById("usersList").innerHTML=(getAuth().users||[]).map(function(u){return '<div class="list-item">'+esc(u.user)+'</div>';}).join("");}
+function renderUsers(){if(document.getElementById("usersList"))document.getElementById("usersList").innerHTML=(getAuth().users||[]).map(function(u){return '<div class="list-item">'+esc(u.user)+'</div>';}).join("");}
 document.getElementById("btnAddUser").onclick=function(){var u=document.getElementById("nuUser").value.trim(),p=document.getElementById("nuPass").value;if(!u||!p){toast("یوزر و رمز","err");return;}var a=getAuth();a.users.push({user:u,pass:p,name:u});saveAuth(a);toast("ایجاد");renderUsers();};
 function renderDash(){var db=loadDB();document.getElementById("kpi").innerHTML='<div class="box"><div class="n">'+(db.vouchers||[]).filter(function(v){return v.status!=="void";}).length+'</div><div class="l">اسناد</div></div><div class="box"><div class="n">'+(db.recons||[]).length+'</div><div class="l">مغایرت</div></div><div class="box"><div class="n">'+(db.codes||[]).length+'</div><div class="l">حساب‌ها</div></div>';
 document.getElementById("dashMeta").textContent="سال: "+(db.fiscalYear?toFa(db.fiscalYear):"—")+" · سند بعدی: "+nextNo();updateAlerts();}
 function renderAll(){document.getElementById("activeUser").textContent="کاربر فعال: "+userName();renderDash();renderNotes();renderRems();renderCart();}
 document.getElementById("btnExit").onclick=function(){location.href="index.html";};
 function dl(name){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({data:loadDB()},null,2)],{type:"application/json"}));a.download=name;a.click();toast("دانلود");}
-document.getElementById("btnBackupLocal").onclick=function(){dl("accounting-backup.json");};
-document.getElementById("btnBackupGdrive").onclick=function(){dl("accounting-gdrive.json");};
-document.getElementById("btnRestoreLocal").onclick=function(){document.getElementById("restoreFile").click();};
-document.getElementById("restoreFile").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(d.data)saveDB(d.data);renderAll();toast("بازیابی");}catch(err){toast("نامعتبر","err");}};r.readAsText(f);};
+if(document.getElementById("btnBackupLocal"))document.getElementById("btnBackupLocal").onclick=function(){dl("accounting-backup.json");};
+if(document.getElementById("btnBackupGdrive"))document.getElementById("btnBackupGdrive").onclick=function(){dl("accounting-gdrive.json");};
+if(document.getElementById("btnRestoreLocal"))document.getElementById("btnRestoreLocal").onclick=function(){document.getElementById("restoreFile").click();};
+if(document.getElementById("restoreFile"))document.getElementById("restoreFile").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(d.data)saveDB(d.data);renderAll();toast("بازیابی");}catch(err){toast("نامعتبر","err");}};r.readAsText(f);};
 
 (function(){var btn=document.getElementById("btnMic");var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return;
 var rec=new SR(),on=false;rec.lang="fa-IR";rec.continuous=true;rec.interimResults=false;
@@ -1410,7 +1428,7 @@ refreshVoucherNo();renderAll();showPanel("p-dash");});
 </script>
 <script>
 (function(){
-var MOD="accounting",KEY="smart_accounting_v8";
+var MOD="accounting",KEY="smart_accounting_v4";
 var FA=["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"],JM=["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"],JW=["ش","ی","د","س","چ","پ","ج"];
 var DEFAULT_GROUPS=[{code:"1",title:"دارایی‌های جاری",nature:"بدهکار"},{code:"2",title:"دارایی‌های غیرجاری",nature:"بدهکار"},{code:"3",title:"حقوق صاحبان سهام",nature:"بستانکار"},{code:"4",title:"بدهی‌های جاری",nature:"بستانکار"},{code:"5",title:"بدهی‌های غیرجاری",nature:"بستانکار"},{code:"6",title:"درآمدها",nature:"بستانکار"},{code:"7",title:"هزینه‌ها",nature:"بدهکار"}];
 var SEED=[{code:"1",name:"دارایی‌های جاری",level:0,group:"دارایی‌های جاری"},{code:"11",name:"موجودی نقد و بانک",level:1,group:"دارایی‌های جاری"},{code:"1101",name:"صندوق",level:2,group:"دارایی‌های جاری"},{code:"1103",name:"بانک‌ها",level:2,group:"دارایی‌های جاری"},{code:"12",name:"حساب‌های دریافتنی",level:1,group:"دارایی‌های جاری"},{code:"2",name:"دارایی‌های غیرجاری",level:0,group:"دارایی‌های غیرجاری"},{code:"21",name:"دارایی‌های ثابت",level:1,group:"دارایی‌های غیرجاری"},{code:"3",name:"حقوق صاحبان سهام",level:0,group:"حقوق صاحبان سهام"},{code:"31",name:"سرمایه",level:1,group:"حقوق صاحبان سهام"},{code:"4",name:"بدهی‌های جاری",level:0,group:"بدهی‌های جاری"},{code:"41",name:"حساب‌های پرداختنی",level:1,group:"بدهی‌های جاری"},{code:"5",name:"بدهی‌های غیرجاری",level:0,group:"بدهی‌های غیرجاری"},{code:"6",name:"درآمدها",level:0,group:"درآمدها",kind:"pl"},{code:"61",name:"فروش",level:1,group:"درآمدها",kind:"pl"},{code:"7",name:"هزینه‌ها",level:0,group:"هزینه‌ها",kind:"pl"},{code:"71",name:"هزینه عمومی",level:1,group:"هزینه‌ها",kind:"pl"}];
@@ -1463,10 +1481,10 @@ var dim=jML(vy,vm),fg=j2g(vy,vm,1),st=(new Date(fg.gy,fg.gm-1,fg.gd).getDay()+1)
 for(var i=0;i<st;i++)html+='<button type="button" style="visibility:hidden"></button>';
 for(var d=1;d<=dim;d++){var g=j2g(vy,vm,d);html+='<button type="button" data-d="'+d+'"><span class="jd">'+toFa(d)+'</span><span class="gd">'+g.gy+'/'+g.gm+'/'+g.gd+'</span></button>';}
 html+='</div></div>';box.innerHTML=html;
-document.getElementById("fcPm").onclick=function(){box._m--;if(box._m<1){box._m=12;box._y--;}renderFullCal();};
-document.getElementById("fcNm").onclick=function(){box._m++;if(box._m>12){box._m=1;box._y++;}renderFullCal();};
-document.getElementById("fcPy").onclick=function(){box._y--;renderFullCal();};
-document.getElementById("fcNy").onclick=function(){box._y++;renderFullCal();};}
+if(document.getElementById("fcPm"))document.getElementById("fcPm").onclick=function(){box._m--;if(box._m<1){box._m=12;box._y--;}renderFullCal();};
+if(document.getElementById("fcNm"))document.getElementById("fcNm").onclick=function(){box._m++;if(box._m>12){box._m=1;box._y++;}renderFullCal();};
+if(document.getElementById("fcPy"))document.getElementById("fcPy").onclick=function(){box._y--;renderFullCal();};
+if(document.getElementById("fcNy"))document.getElementById("fcNy").onclick=function(){box._y++;renderFullCal();};}
 
 function showPanel(id){if(!id)return;var el=document.getElementById(id);if(!el)return;document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on');});el.classList.add('on');var mainArea=document.querySelector('main.main');if(mainArea){mainArea.scrollTop=0;mainArea.scrollLeft=0;}window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;document.querySelectorAll('.side .sub button[data-panel]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-panel')===id);});document.querySelectorAll('.nav-item .dd button[data-panel]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-panel')===id);});if(id==='p-cal')renderFullCal();if(id==='p-coding'){if(typeof fillGroupSelect==='function')fillGroupSelect();if(typeof renderTree==='function')renderTree();if(typeof renderCodes==='function')renderCodes();}if(id==='p-struct')renderStruct();if(id==='p-pl-close')renderPLClose();if(id==='p-fiscal')renderFY();if(id==='p-lock')renderLocks();if(id==='p-persons')renderPersons();if(id==='p-treasury')renderTreasury();if(id==='p-close-tr'){fillYears();renderCloseOps();}if(id==='p-list-v'||id==='p-list-c')renderLists();if(id==='p-list-c')renderAccountList();if(id==='p-list-recon')renderReconList();if(id==='p-diff')renderDiff();if(id==='p-ledger')runLedger();if(id==='p-pl')runPL();if(id==='p-bs')runBS();if(id==='p-groups')runGroups();if(id==='p-kol'){fillKolGroups();runKol();}if(id.indexOf('p-rep')===0)renderReports();if(id==='p-queue')renderQueue();if(id==='p-voucher'){if(typeof refreshVoucherNo==='function')refreshVoucherNo();if(typeof refreshNo==='function')refreshNo('vNo');}if(id==='p-open'){if(typeof refreshOpenNo==='function')refreshOpenNo();if(typeof refreshNo==='function')refreshNo('opNo');if(typeof ensureOpRows==='function')ensureOpRows();if(typeof ensureRows==='function')ensureRows('opBody','op');}if(id==='p-close'){if(typeof refreshCloseNo==='function')refreshCloseNo();if(typeof refreshNo==='function')refreshNo('clNo');if(typeof ensureClRows==='function')ensureClRows();if(typeof ensureRows==='function')ensureRows('clBody','cl');}if(id==='p-recon'){fillBankSelect();updateReconCalc();}if(id==='p-turn'){if(typeof runTurn==='function')runTurn();}if(id==='p-users')renderUsers();}
 document.addEventListener("click",function(e){var t=e.target.closest("[data-panel]");if(t&&t.getAttribute("data-panel")){e.preventDefault();showPanel(t.getAttribute("data-panel"));}});
@@ -1477,7 +1495,7 @@ function userName(){var a=getAuth();return(a.session&&(a.session.name||a.session
 function ensureLogin(cb){var a=getAuth();if(a.session&&a.session.user){cb();return;}
 var m=document.createElement("div");m.className="login-mask";
 m.innerHTML='<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود</h2><label>نام کاربری</label><input id="lgU"><label>رمز</label><input id="lgP" type="password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty">admin / admin</p></div>';
-document.body.appendChild(m);document.getElementById("lgGo").onclick=function(){var u=document.getElementById("lgU").value.trim(),p=document.getElementById("lgP").value;
+document.body.appendChild(m);if(document.getElementById("lgGo"))document.getElementById("lgGo").onclick=function(){var u=document.getElementById("lgU").value.trim(),p=document.getElementById("lgP").value;
 var f=(a.users||[]).find(function(x){return x.user===u&&x.pass===p;});if(!f){toast("اشتباه","err");return;}a.session={user:f.user,name:f.name||f.user};saveAuth(a);m.remove();cb();};}
 
 function nextNo(){var db=loadDB();var next=db.nextNo||1;(db.vouchers||[]).forEach(function(v){var n=parseInt(toEn(String(v.no)),10)||0;if(n+1>next)next=n+1;});return next;}
@@ -1536,7 +1554,7 @@ var g=document.getElementById("ledGroup").value.trim();var kol=document.getEleme
 if(g||kol){var f={};Object.keys(acc).forEach(function(c){if(g&&c.indexOf(g)!==0)return;if(kol&&c.indexOf(kol)!==0)return;f[c]=acc[c];});acc=f;}
 renderAgg("ledBody","ledEmpty",["ledSumD","ledSumC","ledBalD","ledBalC"],acc,ledLevel,document.getElementById("ledBalType").value,document.getElementById("ledSearch").value);}
 document.getElementById("btnledRun").onclick=runLedger;
-document.getElementById("ledSearch").oninput=runLedger;
+if(document.getElementById("ledSearch"))document.getElementById("ledSearch").oninput=runLedger;
 document.querySelectorAll("#ledLevels button").forEach(function(b){b.onclick=function(){var lv=b.getAttribute("data-lv");if(lv==="back"){if(ledStack.length)ledLevel=ledStack.pop();}else{ledStack.push(ledLevel);ledLevel=lv;}
 document.querySelectorAll("#ledLevels button").forEach(function(x){x.classList.toggle("on",x.getAttribute("data-lv")===ledLevel);});runLedger();};});
 
@@ -1545,7 +1563,7 @@ Object.keys(all).forEach(function(c){if(c.charAt(0)==="6"||c.charAt(0)==="7")pl[
 var r=renderAgg("plBody","plEmpty",["plSumD","plSumC","plBalD","plBalC"],pl,plLevel,document.getElementById("plBalType").value,document.getElementById("plSearch").value);
 var net=r.sc-r.sd;document.getElementById("plRem").textContent=faAmt(Math.abs(net))+(net>=0?" (سود)":" (زیان)");}
 document.getElementById("btnplRun").onclick=runPL;
-document.getElementById("plSearch").oninput=runPL;
+if(document.getElementById("plSearch"))document.getElementById("plSearch").oninput=runPL;
 document.querySelectorAll("#plLevels button").forEach(function(b){b.onclick=function(){var lv=b.getAttribute("data-lv");if(lv==="back"){if(plStack.length)plLevel=plStack.pop();}else{plStack.push(plLevel);plLevel=lv;}
 document.querySelectorAll("#plLevels button").forEach(function(x){x.classList.toggle("on",x.getAttribute("data-lv")===plLevel);});runPL();};});
 
@@ -1559,19 +1577,19 @@ Object.keys(bs).forEach(function(c){var ch=c.charAt(0);if(ch==="1"||ch==="2")ast
 var sa=0,sca=0,bda=0,bca=0,sl=0,scl=0,bdl=0,bcl=0;
 Object.keys(ast).forEach(function(c){sa+=ast[c].debit;sca+=ast[c].credit;var b=ast[c].debit-ast[c].credit;if(b>0)bda+=b;else bca+=-b;});
 Object.keys(liab).forEach(function(c){sl+=liab[c].debit;scl+=liab[c].credit;var b=liab[c].debit-liab[c].credit;if(b>0)bdl+=b;else bcl+=-b;});
-document.getElementById("bsAstD").textContent=faAmt(sa);document.getElementById("bsAstC").textContent=faAmt(sca);
-document.getElementById("bsAstBD").textContent=faAmt(bda);document.getElementById("bsAstBC").textContent=faAmt(bca);
-document.getElementById("bsLiabD").textContent=faAmt(sl);document.getElementById("bsLiabC").textContent=faAmt(scl);
-document.getElementById("bsLiabBD").textContent=faAmt(bdl);document.getElementById("bsLiabBC").textContent=faAmt(bcl);}
+if(document.getElementById("bsAstD"))document.getElementById("bsAstD").textContent=faAmt(sa);if(document.getElementById("bsAstC"))document.getElementById("bsAstC").textContent=faAmt(sca);
+if(document.getElementById("bsAstBD"))document.getElementById("bsAstBD").textContent=faAmt(bda);if(document.getElementById("bsAstBC"))document.getElementById("bsAstBC").textContent=faAmt(bca);
+if(document.getElementById("bsLiabD"))document.getElementById("bsLiabD").textContent=faAmt(sl);if(document.getElementById("bsLiabC"))document.getElementById("bsLiabC").textContent=faAmt(scl);
+if(document.getElementById("bsLiabBD"))document.getElementById("bsLiabBD").textContent=faAmt(bdl);if(document.getElementById("bsLiabBC"))document.getElementById("bsLiabBC").textContent=faAmt(bcl);}
 document.getElementById("btnbsRun").onclick=runBS;
-document.getElementById("btnBsRefresh").onclick=runBS;
-document.getElementById("bsSearch").oninput=runBS;
+if(document.getElementById("btnBsRefresh"))document.getElementById("btnBsRefresh").onclick=runBS;
+if(document.getElementById("bsSearch"))document.getElementById("bsSearch").oninput=runBS;
 document.querySelectorAll("#bsLevels button").forEach(function(b){b.onclick=function(){var lv=b.getAttribute("data-lv");if(lv==="back"){if(bsStack.length)bsLevel=bsStack.pop();}else{bsStack.push(bsLevel);bsLevel=lv;}
 document.querySelectorAll("#bsLevels button").forEach(function(x){x.classList.toggle("on",x.getAttribute("data-lv")===bsLevel);});runBS();};});
 
 /* ===== گردش حساب‌ها ===== */
 function runTurn(){var code=document.getElementById("turnCode").value.trim();
-if(!code){document.getElementById("turnBody").innerHTML="";document.getElementById("turnEmpty").style.display="";return;}
+if(!code){document.getElementById("turnBody").innerHTML="";if(document.getElementById("turnEmpty"))document.getElementById("turnEmpty").style.display="";return;}
 var fromD=document.getElementById("turnFrom").value,toD=document.getElementById("turnTo").value;
 var noFrom=parseInt(toEn(document.getElementById("turnNoFrom").value),10)||0;
 var noTo=parseInt(toEn(document.getElementById("turnNoTo").value),10)||0;
@@ -1597,12 +1615,12 @@ lines.push({no:v.no,date:v.date,type:v.type,desc:l.desc||v.desc||"",debit:l.debi
 });});
 var sd=0,sc=0;lines.forEach(function(l){sd+=l.debit;sc+=l.credit;});
 document.getElementById("turnBody").innerHTML=lines.map(function(l,i){return '<tr><td><input type="checkbox"></td><td>'+toFa(i+1)+'</td><td>'+esc(l.no)+'</td><td>'+esc(l.date)+'</td><td>'+esc(l.type)+'</td><td>'+esc(l.desc)+'</td><td>'+formatAmount(l.debit)+'</td><td>'+formatAmount(l.credit)+'</td><td>'+formatAmount(l.bal)+'</td></tr>';}).join("");
-document.getElementById("turnEmpty").style.display=lines.length?"none":"";
-document.getElementById("turnSumD").textContent=faAmt(sd);document.getElementById("turnSumC").textContent=faAmt(sc);
-document.getElementById("turnSumBal").textContent=faAmt(bal);}
+if(document.getElementById("turnEmpty"))document.getElementById("turnEmpty").style.display=lines.length?"none":"";
+if(document.getElementById("turnSumD"))document.getElementById("turnSumD").textContent=faAmt(sd);if(document.getElementById("turnSumC"))document.getElementById("turnSumC").textContent=faAmt(sc);
+if(document.getElementById("turnSumBal"))document.getElementById("turnSumBal").textContent=faAmt(bal);}
 document.getElementById("btnTurnRun").onclick=runTurn;
-document.getElementById("btnTurnRefresh").onclick=runTurn;
-document.getElementById("turnSearch").oninput=runTurn;
+if(document.getElementById("btnTurnRefresh"))document.getElementById("btnTurnRefresh").onclick=runTurn;
+if(document.getElementById("turnSearch"))document.getElementById("turnSearch").oninput=runTurn;
 document.getElementById("btnTurnPick").onclick=function(){openCodePicker(function(c){document.getElementById("turnCode").value=c.code;});};
 
 /* ===== گروه حساب‌ها ===== */
@@ -1616,12 +1634,12 @@ codes.forEach(function(c){if((c.level===1||c.level==="1")&&(c.group===g.title||S
 var bal=gd-gc;var md=bal>0?bal:0,mc=bal<0?-bal:0;sd+=gd;sc+=gc;bd+=md;bc+=mc;cnt+=kcnt;
 return '<tr><td><input type="checkbox"></td><td><button type="button" class="btn btn-g" style="padding:2px 6px;font-size:.65rem" data-gdel="'+esc(g.code)+'">⋯</button></td><td>'+toFa(i+1)+'</td><td>'+esc(g.code)+'</td><td>'+esc(g.title)+'</td><td>'+esc(g.nature||"")+'</td><td>'+toFa(kcnt)+'</td><td>'+formatAmount(gd)+'</td><td>'+formatAmount(gc)+'</td><td>'+formatAmount(md)+'</td><td>'+formatAmount(mc)+'</td></tr>';
 }).join("");
-document.getElementById("grpEmpty").style.display=groups.length?"none":"";
-document.getElementById("grpCnt").textContent=toFa(cnt);document.getElementById("grpSumD").textContent=faAmt(sd);
-document.getElementById("grpSumC").textContent=faAmt(sc);document.getElementById("grpBalD").textContent=faAmt(bd);document.getElementById("grpBalC").textContent=faAmt(bc);
+if(document.getElementById("grpEmpty"))document.getElementById("grpEmpty").style.display=groups.length?"none":"";
+if(document.getElementById("grpCnt"))document.getElementById("grpCnt").textContent=toFa(cnt);if(document.getElementById("grpSumD"))document.getElementById("grpSumD").textContent=faAmt(sd);
+if(document.getElementById("grpSumC"))document.getElementById("grpSumC").textContent=faAmt(sc);if(document.getElementById("grpBalD"))document.getElementById("grpBalD").textContent=faAmt(bd);if(document.getElementById("grpBalC"))document.getElementById("grpBalC").textContent=faAmt(bc);
 document.getElementById("grpBody").querySelectorAll("[data-gdel]").forEach(function(b){b.onclick=function(){if(!confirm("حذف گروه؟"))return;var db=loadDB();db.groups=(db.groups||[]).filter(function(g){return g.code!==b.getAttribute("data-gdel");});saveDB(db);runGroups();};});}
 document.getElementById("btnGrpRefresh").onclick=runGroups;
-document.getElementById("grpSearch").oninput=runGroups;
+if(document.getElementById("grpSearch"))document.getElementById("grpSearch").oninput=runGroups;
 document.getElementById("btnGrpNew").onclick=function(){document.getElementById("grpForm").classList.add("open");};
 document.getElementById("btnGrpCancel").onclick=function(){document.getElementById("grpForm").classList.remove("open");};
 document.getElementById("btnGrpSave").onclick=function(){var code=document.getElementById("grpCode").value.trim(),title=document.getElementById("grpTitle").value.trim();
@@ -1652,28 +1670,28 @@ sd+=a.debit;sc+=a.credit;bd+=md;bc+=mc;
 return '<tr><td><input type="checkbox"></td><td><button type="button" class="btn btn-g" style="padding:2px 6px;font-size:.65rem">⋯</button></td><td>'+toFa(i+1)+'</td><td>'+esc(c.code)+'</td><td>'+esc(c.name)+'</td><td>'+esc(c.group||"")+'</td><td>'+esc(c.nature||"")+'</td><td>'+formatAmount(a.debit)+'</td><td>'+formatAmount(a.credit)+'</td><td>'+formatAmount(md)+'</td><td>'+formatAmount(mc)+'</td></tr>';
 }).filter(Boolean).join("");
 document.getElementById("kolEmpty").style.display=rows.length?"none":"";
-document.getElementById("kolSumD").textContent=faAmt(sd);document.getElementById("kolSumC").textContent=faAmt(sc);
-document.getElementById("kolBalD").textContent=faAmt(bd);document.getElementById("kolBalC").textContent=faAmt(bc);}
-document.getElementById("btnKolRun").onclick=runKol;
+if(document.getElementById("kolSumD"))document.getElementById("kolSumD").textContent=faAmt(sd);if(document.getElementById("kolSumC"))document.getElementById("kolSumC").textContent=faAmt(sc);
+if(document.getElementById("kolBalD"))document.getElementById("kolBalD").textContent=faAmt(bd);if(document.getElementById("kolBalC"))document.getElementById("kolBalC").textContent=faAmt(bc);}
+if(document.getElementById("btnKolRun"))document.getElementById("btnKolRun").onclick=runKol;
 document.getElementById("btnKolRefresh").onclick=runKol;
 document.getElementById("kolSearch").oninput=runKol;
 
 /* fiscal, diff, coding, voucher - compact */
 function renderFY(){var list=loadDB().fiscalYears||[];var q=(document.getElementById("fySearch").value||"").toLowerCase();
 list=list.filter(function(f){return !q||(f.name+" "+(f.user||"")).toLowerCase().indexOf(q)>=0;});
-document.getElementById("fyEmpty").style.display=list.length?"none":"";
-document.getElementById("fyBody").innerHTML=list.map(function(f,i){return '<tr><td><input type="checkbox"></td><td><button type="button" class="btn btn-g" style="padding:2px 6px;font-size:.65rem" data-fydel="'+esc(f.id)+'">⋯</button></td><td>'+toFa(i+1)+'</td><td style="color:#38bdf8">'+esc(String(f.sid||f.id))+'</td><td>'+esc(f.name)+'</td><td>'+esc(f.start)+'</td><td>'+esc(f.end)+'</td><td>'+esc(f.user||'')+'</td></tr>';}).join("");
+if(document.getElementById("fyEmpty"))document.getElementById("fyEmpty").style.display=list.length?"none":"";
+if(document.getElementById("fyBody"))document.getElementById("fyBody").innerHTML=list.map(function(f,i){return '<tr><td><input type="checkbox"></td><td><button type="button" class="btn btn-g" style="padding:2px 6px;font-size:.65rem" data-fydel="'+esc(f.id)+'">⋯</button></td><td>'+toFa(i+1)+'</td><td style="color:#38bdf8">'+esc(String(f.sid||f.id))+'</td><td>'+esc(f.name)+'</td><td>'+esc(f.start)+'</td><td>'+esc(f.end)+'</td><td>'+esc(f.user||'')+'</td></tr>';}).join("");
 document.getElementById("fyBody").querySelectorAll("[data-fydel]").forEach(function(b){b.onclick=function(){if(!confirm("حذف؟"))return;var db=loadDB();db.fiscalYears=(db.fiscalYears||[]).filter(function(x){return x.id!==b.getAttribute("data-fydel");});saveDB(db);renderFY();};});}
-document.getElementById("fySearch").oninput=renderFY;
-document.getElementById("btnFyNew").onclick=function(){document.getElementById("fyForm").classList.add("open");};
-document.getElementById("btnFyCancel").onclick=function(){document.getElementById("fyForm").classList.remove("open");};
-document.getElementById("btnFySave").onclick=function(){var name=document.getElementById("fyName").value.trim(),start=document.getElementById("fyStart").value,end=document.getElementById("fyEnd").value;
+if(document.getElementById("fySearch"))document.getElementById("fySearch").oninput=renderFY;
+if(document.getElementById("btnFyNew"))document.getElementById("btnFyNew").onclick=function(){document.getElementById("fyForm").classList.add("open");};
+if(document.getElementById("btnFyCancel"))document.getElementById("btnFyCancel").onclick=function(){document.getElementById("fyForm").classList.remove("open");};
+if(document.getElementById("btnFySave"))document.getElementById("btnFySave").onclick=function(){var name=document.getElementById("fyName").value.trim(),start=document.getElementById("fyStart").value,end=document.getElementById("fyEnd").value;
 if(!name||!start||!end){toast("نام و تاریخ‌ها","err");return;}
 var db=loadDB();db.fiscalYears=db.fiscalYears||[];db.nextFyId=(db.nextFyId||1000)+1;
 if(document.getElementById("fyCurrent").checked)db.fiscalYears.forEach(function(f){f.current=false;});
 db.fiscalYears.unshift({id:uid(),sid:db.nextFyId,name:name,start:start,end:end,current:document.getElementById("fyCurrent").checked,user:userName()});
 saveDB(db);document.getElementById("fyForm").classList.remove("open");renderFY();toast("ثبت");};
-document.getElementById("btnFyPrint").onclick=function(){printPanel("p-fiscal");};
+if(document.getElementById("btnFyPrint"))document.getElementById("btnFyPrint").onclick=function(){printPanel("p-fiscal");};
 
 function voucherSums(v){var d=0,c=0;(v.lines||[]).forEach(function(l){d+=l.debit||0;c+=l.credit||0;});return{d:d,c:c,diff:d-c};}
 function isDiffVoucher(v){if(v.status==="void")return false;var s=voucherSums(v);return s.diff!==0||v.status==="temp";}
@@ -1686,7 +1704,7 @@ document.getElementById("btnDiffRefresh").onclick=renderDiff;
 document.getElementById("btnDiffPrint").onclick=function(){printPanel("p-diff");};
 document.getElementById("btnDiffExcel").onclick=function(){excelTable("diffBody","diff.csv");};
 
-function renderCodes(){document.getElementById("codeList").innerHTML=(loadDB().codes||[]).map(function(c){return '<div class="list-item">'+esc(c.code)+' — '+esc(c.name)+' <span style="color:#64748b">('+esc(c.group||'')+')</span></div>';}).join("")||'<p class="empty">—</p>';}
+function renderCodes(){if(document.getElementById("codeList"))document.getElementById("codeList").innerHTML=(loadDB().codes||[]).map(function(c){return '<div class="list-item">'+esc(c.code)+' — '+esc(c.name)+' <span style="color:#64748b">('+esc(c.group||'')+')</span></div>';}).join("")||'<p class="empty">—</p>';}
 document.getElementById("btnSaveCode").onclick=function(){var code=document.getElementById("cCode").value.trim(),name=document.getElementById("cName").value.trim();if(!code||!name){toast("کد و نام","err");return;}
 var db=loadDB();db.codes=db.codes||[];var g=document.getElementById("cGroup").value;var row={code:code,name:name,group:g,level:+document.getElementById("cLevel").value};if(g==="درآمدها"||g==="هزینه‌ها")row.kind="pl";
 var idx=db.codes.findIndex(function(x){return x.code===code;});if(idx>=0)db.codes[idx]=row;else db.codes.push(row);saveDB(db);renderCodes();toast("ذخیره");};
@@ -1732,10 +1750,10 @@ function renderLists(){document.getElementById("listV").innerHTML=(loadDB().vouc
 function renderReports(){var vs=(loadDB().vouchers||[]).filter(function(v){return v.status!=="void";});
 var jh="<table class='data-table'><thead><tr><th>شماره</th><th>کد</th><th>بدهکار</th><th>بستانکار</th></tr></thead><tbody>";
 vs.forEach(function(v){(v.lines||[]).forEach(function(l){jh+="<tr><td>"+esc(v.no)+"</td><td>"+esc(l.code)+"</td><td>"+formatAmount(l.debit||0)+"</td><td>"+formatAmount(l.credit||0)+"</td></tr>";});});
-document.getElementById("repJ").innerHTML=vs.length?jh+"</tbody></table>":'<p class="empty">—</p>';
+if(document.getElementById("repJ"))document.getElementById("repJ").innerHTML=vs.length?jh+"</tbody></table>":'<p class="empty">—</p>';
 var acc=getTurnovers({});var tb="<table class='data-table'><thead><tr><th>کد</th><th>نام</th><th>بدهکار</th><th>بستانکار</th></tr></thead><tbody>";
 Object.keys(acc).sort().forEach(function(c){tb+="<tr><td>"+esc(c)+"</td><td>"+esc(acc[c].name)+"</td><td>"+formatAmount(acc[c].debit)+"</td><td>"+formatAmount(acc[c].credit)+"</td></tr>";});
-document.getElementById("repTB").innerHTML=Object.keys(acc).length?tb+"</tbody></table>":'<p class="empty">—</p>';}
+if(document.getElementById("repTB"))document.getElementById("repTB").innerHTML=Object.keys(acc).length?tb+"</tbody></table>":'<p class="empty">—</p>';}
 
 var notesKey="smart_mod_notes_"+MOD,remsKey="smart_mod_rem_"+MOD,cartKey="smart_cartable_v1";
 function renderNotes(){document.getElementById("notesList").innerHTML=(loadJSON(notesKey,[])).map(function(x){return '<div class="list-item">'+esc(x.text)+'</div>';}).join("")||'<p class="empty">—</p>';}
@@ -1745,17 +1763,17 @@ document.getElementById("btnRemAdd").onclick=function(){var t=document.getElemen
 document.getElementById("btnCartSend").onclick=function(){var c=loadJSON(cartKey,{items:[]});c.items=c.items||[];c.items.unshift({msg:document.getElementById("cartMsg").value});saveJSON(cartKey,c);renderCart();updateAlerts();toast("ارسال");};
 function renderCart(){document.getElementById("cartList").innerHTML=(loadJSON(cartKey,{items:[]}).items||[]).map(function(x){return '<div class="list-item">'+esc(x.msg)+'</div>';}).join("")||'<p class="empty">خالی</p>';}
 function updateAlerts(){document.getElementById("aNotes").textContent=String((loadJSON(notesKey,[])).length);document.getElementById("aRems").textContent=String((loadJSON(remsKey,[])).length);document.getElementById("aCart").textContent=String((loadJSON(cartKey,{items:[]}).items||[]).length);}
-function renderUsers(){document.getElementById("usersList").innerHTML=(getAuth().users||[]).map(function(u){return '<div class="list-item">'+esc(u.user)+'</div>';}).join("");}
+function renderUsers(){if(document.getElementById("usersList"))document.getElementById("usersList").innerHTML=(getAuth().users||[]).map(function(u){return '<div class="list-item">'+esc(u.user)+'</div>';}).join("");}
 document.getElementById("btnAddUser").onclick=function(){var u=document.getElementById("nuUser").value.trim(),p=document.getElementById("nuPass").value;if(!u||!p){toast("یوزر و رمز","err");return;}var a=getAuth();a.users.push({user:u,pass:p,name:u});saveAuth(a);toast("ایجاد");renderUsers();};
 function renderDash(){var db=loadDB();document.getElementById("kpi").innerHTML='<div class="box"><div class="n">'+(db.vouchers||[]).length+'</div><div class="l">اسناد</div></div><div class="box"><div class="n">'+(db.fiscalYears||[]).length+'</div><div class="l">سال مالی</div></div><div class="box"><div class="n">'+(db.codes||[]).length+'</div><div class="l">حساب‌ها</div></div><div class="box"><div class="n">'+(db.groups||[]).length+'</div><div class="l">گروه‌ها</div></div>';
 document.getElementById("dashMeta").textContent="سند بعدی: "+nextNo();updateAlerts();}
 function renderAll(){document.getElementById("activeUser").textContent="کاربر فعال: "+userName();renderDash();renderNotes();renderRems();renderCart();}
 document.getElementById("btnExit").onclick=function(){location.href="index.html";};
 function dl(n){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({data:loadDB()},null,2)],{type:"application/json"}));a.download=n;a.click();toast("دانلود");}
-document.getElementById("btnBackupLocal").onclick=function(){dl("accounting-backup.json");};
-document.getElementById("btnBackupGdrive").onclick=function(){dl("accounting-gdrive.json");};
-document.getElementById("btnRestoreLocal").onclick=function(){document.getElementById("restoreFile").click();};
-document.getElementById("restoreFile").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(d.data)saveDB(d.data);renderAll();toast("بازیابی");}catch(err){toast("نامعتبر","err");}};r.readAsText(f);};
+if(document.getElementById("btnBackupLocal"))document.getElementById("btnBackupLocal").onclick=function(){dl("accounting-backup.json");};
+if(document.getElementById("btnBackupGdrive"))document.getElementById("btnBackupGdrive").onclick=function(){dl("accounting-gdrive.json");};
+if(document.getElementById("btnRestoreLocal"))document.getElementById("btnRestoreLocal").onclick=function(){document.getElementById("restoreFile").click();};
+if(document.getElementById("restoreFile"))document.getElementById("restoreFile").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(d.data)saveDB(d.data);renderAll();toast("بازیابی");}catch(err){toast("نامعتبر","err");}};r.readAsText(f);};
 
 (function(){var btn=document.getElementById("btnMic");var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return;
 var rec=new SR(),on=false;rec.lang="fa-IR";rec.continuous=true;rec.interimResults=false;
@@ -1975,154 +1993,278 @@ lines.push({no:v.no,date:v.date,desc:l.desc||v.desc||"",debit:l.debit||0,credit:
 document.getElementById("legBody").innerHTML=lines.map(function(l,i){return '<tr><td>'+toFa(i+1)+'</td><td>'+esc(l.no)+'</td><td>'+esc(l.date)+'</td><td>'+esc(l.desc)+'</td><td>'+formatAmount(l.debit)+'</td><td>'+formatAmount(l.credit)+'</td></tr>';}).join("");}
 
 (function(){var b=document.getElementById("btncogsRun");if(b)b.onclick=runCogs;var c=document.getElementById("btnCogsCalc");if(c)c.onclick=runCogs;var cr=document.getElementById("btnCtrRefresh");if(cr)cr.onclick=runContrary;var ca=document.getElementById("btnCtrAdjust");if(ca)ca.onclick=function(){toast("برای تعدیل، از فرم حساب‌های خلاف ماهیت استفاده کنید.","err");};var lr=document.getElementById("btnLegRun");if(lr)lr.onclick=runLegal;var lp=document.getElementById("btnLegPick");if(lp)lp.onclick=function(){if(typeof openCodePicker==="function")openCodePicker(function(c){document.getElementById("legKol").value=c.code;});};})();</script>
-<script id="backup-restore-reliable-fix">
+<script>
+(function(){
+'use strict';
+var STORE='smart_accounting_v4';
+var CHART=[{"code":"11","name":"موجودی نقد و بانک","level":1,"group":"دارایی‌های جاری","nature":"بدهکار","parent":""},{"code":"1101","name":"صندوق","level":2,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"11"},{"code":"110101","name":"صندوق اصلی","level":3,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"1101"},{"code":"110102","name":"تنخواه‌گردان","level":3,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"1101"},{"code":"1102","name":"بانک‌ها","level":2,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"11"},{"code":"110201","name":"بانک جاری ریالی","level":3,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"1102"},{"code":"110202","name":"بانک سپرده کوتاه‌مدت","level":3,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"1102"},{"code":"12","name":"حساب‌ها و اسناد دریافتنی","level":1,"group":"دارایی‌های جاری","nature":"بدهکار","parent":""},{"code":"1201","name":"حساب‌های دریافتنی تجاری","level":2,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"12"},{"code":"120101","name":"مشتریان داخلی","level":3,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"1201"},{"code":"1202","name":"اسناد دریافتنی","level":2,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"12"},{"code":"1203","name":"مالیات بر ارزش افزوده خرید","level":2,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"12"},{"code":"1204","name":"پیش‌پرداخت‌ها","level":2,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"12"},{"code":"120401","name":"پیش‌پرداخت اجاره","level":3,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"1204"},{"code":"120402","name":"پیش‌پرداخت بیمه","level":3,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"1204"},{"code":"13","name":"موجودی مواد و کالا","level":1,"group":"دارایی‌های جاری","nature":"بدهکار","parent":""},{"code":"1301","name":"موجودی کالا","level":2,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"13"},{"code":"130101","name":"کالای آماده فروش","level":3,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"1301"},{"code":"1302","name":"مواد اولیه","level":2,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"13"},{"code":"14","name":"سایر دارایی‌های جاری","level":1,"group":"دارایی‌های جاری","nature":"بدهکار","parent":""},{"code":"1401","name":"علی‌الحساب و مساعده کارکنان","level":2,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"14"},{"code":"1402","name":"سپرده‌ها و ودایع","level":2,"group":"دارایی‌های جاری","nature":"بدهکار","parent":"14"},{"code":"21","name":"دارایی‌های ثابت مشهود","level":1,"group":"دارایی‌های غیرجاری","nature":"بدهکار","parent":""},{"code":"2101","name":"تجهیزات و ماشین‌آلات","level":2,"group":"دارایی‌های غیرجاری","nature":"بدهکار","parent":"21"},{"code":"210101","name":"تجهیزات اداری","level":3,"group":"دارایی‌های غیرجاری","nature":"بدهکار","parent":"2101"},{"code":"2102","name":"وسایل نقلیه","level":2,"group":"دارایی‌های غیرجاری","nature":"بدهکار","parent":"21"},{"code":"2191","name":"استهلاک انباشته دارایی ثابت","level":2,"group":"دارایی‌های غیرجاری","nature":"بستانکار","parent":"21"},{"code":"31","name":"حساب‌ها و اسناد پرداختنی","level":1,"group":"بدهی‌های جاری","nature":"بستانکار","parent":""},{"code":"3101","name":"حساب‌های پرداختنی تجاری","level":2,"group":"بدهی‌های جاری","nature":"بستانکار","parent":"31"},{"code":"310101","name":"تأمین‌کنندگان داخلی","level":3,"group":"بدهی‌های جاری","nature":"بستانکار","parent":"3101"},{"code":"3102","name":"اسناد پرداختنی","level":2,"group":"بدهی‌های جاری","nature":"بستانکار","parent":"31"},{"code":"3103","name":"مالیات و عوارض ارزش افزوده فروش","level":2,"group":"بدهی‌های جاری","nature":"بستانکار","parent":"31"},{"code":"3104","name":"حقوق و دستمزد پرداختنی","level":2,"group":"بدهی‌های جاری","nature":"بستانکار","parent":"31"},{"code":"3105","name":"مالیات حقوق و بیمه پرداختنی","level":2,"group":"بدهی‌های جاری","nature":"بستانکار","parent":"31"},{"code":"3106","name":"پیش‌دریافت از مشتریان","level":2,"group":"بدهی‌های جاری","nature":"بستانکار","parent":"31"},{"code":"32","name":"تسهیلات و بدهی‌های غیرجاری","level":1,"group":"بدهی‌های غیرجاری","nature":"بستانکار","parent":""},{"code":"3201","name":"تسهیلات بلندمدت بانکی","level":2,"group":"بدهی‌های غیرجاری","nature":"بستانکار","parent":"32"},{"code":"41","name":"حقوق صاحبان سرمایه","level":1,"group":"حقوق صاحبان سهام","nature":"بستانکار","parent":""},{"code":"4101","name":"سرمایه","level":2,"group":"حقوق صاحبان سهام","nature":"بستانکار","parent":"41"},{"code":"4102","name":"سود و زیان انباشته","level":2,"group":"حقوق صاحبان سهام","nature":"بستانکار","parent":"41"},{"code":"4103","name":"برداشت مالک","level":2,"group":"حقوق صاحبان سهام","nature":"بدهکار","parent":"41"},{"code":"51","name":"درآمدهای عملیاتی","level":1,"group":"درآمدها","nature":"بستانکار","parent":"","kind":"موقت"},{"code":"5101","name":"فروش کالا","level":2,"group":"درآمدها","nature":"بستانکار","parent":"51","kind":"موقت"},{"code":"5102","name":"برگشت از فروش و تخفیفات","level":2,"group":"درآمدها","nature":"بدهکار","parent":"51","kind":"موقت"},{"code":"5103","name":"درآمد خدمات","level":2,"group":"درآمدها","nature":"بستانکار","parent":"51","kind":"موقت"},{"code":"61","name":"بهای تمام‌شده و هزینه‌های مستقیم","level":1,"group":"بهای تمام‌شده","nature":"بدهکار","parent":"","kind":"موقت"},{"code":"6101","name":"بهای تمام‌شده کالای فروش‌رفته","level":2,"group":"بهای تمام‌شده","nature":"بدهکار","parent":"61","kind":"موقت"},{"code":"6102","name":"برگشت از خرید و تخفیفات","level":2,"group":"بهای تمام‌شده","nature":"بستانکار","parent":"61","kind":"موقت"},{"code":"71","name":"هزینه‌های عملیاتی","level":1,"group":"هزینه‌ها","nature":"بدهکار","parent":"","kind":"موقت"},{"code":"7101","name":"هزینه حقوق و دستمزد","level":2,"group":"هزینه‌ها","nature":"بدهکار","parent":"71","kind":"موقت"},{"code":"7102","name":"هزینه اجاره","level":2,"group":"هزینه‌ها","nature":"بدهکار","parent":"71","kind":"موقت"},{"code":"7103","name":"هزینه آب، برق و گاز","level":2,"group":"هزینه‌ها","nature":"بدهکار","parent":"71","kind":"موقت"},{"code":"7104","name":"هزینه استهلاک","level":2,"group":"هزینه‌ها","nature":"بدهکار","parent":"71","kind":"موقت"},{"code":"7105","name":"هزینه تبلیغات","level":2,"group":"هزینه‌ها","nature":"بدهکار","parent":"71","kind":"موقت"},{"code":"7106","name":"هزینه حمل و نقل","level":2,"group":"هزینه‌ها","nature":"بدهکار","parent":"71","kind":"موقت"},{"code":"7107","name":"کارمزد بانکی","level":2,"group":"هزینه‌ها","nature":"بدهکار","parent":"71","kind":"موقت"},{"code":"7108","name":"هزینه تعمیر و نگهداری","level":2,"group":"هزینه‌ها","nature":"بدهکار","parent":"71","kind":"موقت"},{"code":"7109","name":"هزینه بیمه","level":2,"group":"هزینه‌ها","nature":"بدهکار","parent":"71","kind":"موقت"},{"code":"7110","name":"هزینه ملزومات اداری","level":2,"group":"هزینه‌ها","nature":"بدهکار","parent":"71","kind":"موقت"},{"code":"7111","name":"هزینه مطالبات مشکوک‌الوصول","level":2,"group":"هزینه‌ها","nature":"بدهکار","parent":"71","kind":"موقت"},{"code":"7112","name":"هزینه مالیات و عوارض","level":2,"group":"هزینه‌ها","nature":"بدهکار","parent":"71","kind":"موقت"},{"code":"81","name":"سایر درآمدها و هزینه‌های غیرعملیاتی","level":1,"group":"سایر درآمدها و هزینه‌ها","nature":"فرقی ندارد","parent":"","kind":"موقت"},{"code":"8101","name":"درآمد سود سپرده","level":2,"group":"سایر درآمدها و هزینه‌ها","nature":"بستانکار","parent":"81","kind":"موقت"},{"code":"8102","name":"هزینه مالی تسهیلات","level":2,"group":"سایر درآمدها و هزینه‌ها","nature":"بدهکار","parent":"81","kind":"موقت"},{"code":"91","name":"حساب‌های انتظامی","level":1,"group":"حساب‌های انتظامی","nature":"فرقی ندارد","parent":""},{"code":"9101","name":"حساب انتظامی بدهکار","level":2,"group":"حساب‌های انتظامی","nature":"بدهکار","parent":"91"},{"code":"9102","name":"طرف حساب انتظامی","level":2,"group":"حساب‌های انتظامی","nature":"بستانکار","parent":"91"}];
+var TX=[{"date":"1405/01/01","type":"افتتاحیه","desc":"ثبت مانده افتتاحیه صندوق و بانک","lines":[{"code":"110101","debit":500000000,"credit":0,"desc":"ثبت مانده افتتاحیه صندوق و بانک","name":"صندوق اصلی"},{"code":"110201","debit":1500000000,"credit":0,"desc":"ثبت مانده افتتاحیه صندوق و بانک","name":"بانک جاری ریالی"},{"code":"130101","debit":700000000,"credit":0,"desc":"ثبت مانده افتتاحیه صندوق و بانک","name":"کالای آماده فروش"},{"code":"310101","debit":0,"credit":300000000,"desc":"ثبت مانده افتتاحیه صندوق و بانک","name":"تأمین‌کنندگان داخلی"},{"code":"4101","debit":0,"credit":2400000000,"desc":"ثبت مانده افتتاحیه صندوق و بانک","name":"سرمایه"}]},{"date":"1405/01/02","type":"عمومی","desc":"واریز سرمایه نقدی مالک","lines":[{"code":"110201","debit":300000000,"credit":0,"desc":"واریز سرمایه نقدی مالک","name":"بانک جاری ریالی"},{"code":"4101","debit":0,"credit":300000000,"desc":"واریز سرمایه نقدی مالک","name":"سرمایه"}]},{"date":"1405/01/03","type":"عمومی","desc":"خرید نقدی کالا","lines":[{"code":"130101","debit":80000000,"credit":0,"desc":"خرید نقدی کالا","name":"کالای آماده فروش"},{"code":"110101","debit":0,"credit":80000000,"desc":"خرید نقدی کالا","name":"صندوق اصلی"}]},{"date":"1405/01/04","type":"خرید","desc":"خرید اعتباری کالا از تأمین‌کننده","lines":[{"code":"130101","debit":120000000,"credit":0,"desc":"خرید اعتباری کالا از تأمین‌کننده","name":"کالای آماده فروش"},{"code":"310101","debit":0,"credit":120000000,"desc":"خرید اعتباری کالا از تأمین‌کننده","name":"تأمین‌کنندگان داخلی"}]},{"date":"1405/01/05","type":"خرید","desc":"خرید کالا با مالیات ارزش افزوده نمونه","lines":[{"code":"130101","debit":100000000,"credit":0,"desc":"خرید کالا با مالیات ارزش افزوده نمونه","name":"کالای آماده فروش"},{"code":"1203","debit":10000000,"credit":0,"desc":"خرید کالا با مالیات ارزش افزوده نمونه","name":"مالیات بر ارزش افزوده خرید"},{"code":"310101","debit":0,"credit":110000000,"desc":"خرید کالا با مالیات ارزش افزوده نمونه","name":"تأمین‌کنندگان داخلی"}]},{"date":"1405/01/06","type":"عمومی","desc":"پرداخت بدهی تأمین‌کننده از بانک","lines":[{"code":"310101","debit":70000000,"credit":0,"desc":"پرداخت بدهی تأمین‌کننده از بانک","name":"تأمین‌کنندگان داخلی"},{"code":"110201","debit":0,"credit":70000000,"desc":"پرداخت بدهی تأمین‌کننده از بانک","name":"بانک جاری ریالی"}]},{"date":"1405/01/07","type":"فروش","desc":"فروش نقدی کالا","lines":[{"code":"110101","debit":150000000,"credit":0,"desc":"فروش نقدی کالا","name":"صندوق اصلی"},{"code":"5101","debit":0,"credit":150000000,"desc":"فروش نقدی کالا","name":"فروش کالا"}]},{"date":"1405/01/08","type":"فروش","desc":"فروش اعتباری کالا","lines":[{"code":"120101","debit":220000000,"credit":0,"desc":"فروش اعتباری کالا","name":"مشتریان داخلی"},{"code":"5101","debit":0,"credit":220000000,"desc":"فروش اعتباری کالا","name":"فروش کالا"}]},{"date":"1405/01/09","type":"فروش","desc":"فروش خدمات نقدی","lines":[{"code":"110201","debit":45000000,"credit":0,"desc":"فروش خدمات نقدی","name":"بانک جاری ریالی"},{"code":"5103","debit":0,"credit":45000000,"desc":"فروش خدمات نقدی","name":"درآمد خدمات"}]},{"date":"1405/01/10","type":"عمومی","desc":"ثبت مالیات ارزش افزوده فروش نمونه","lines":[{"code":"120101","debit":11000000,"credit":0,"desc":"ثبت مالیات ارزش افزوده فروش نمونه","name":"مشتریان داخلی"},{"code":"5101","debit":0,"credit":10000000,"desc":"ثبت مالیات ارزش افزوده فروش نمونه","name":"فروش کالا"},{"code":"3103","debit":0,"credit":1000000,"desc":"ثبت مالیات ارزش افزوده فروش نمونه","name":"مالیات و عوارض ارزش افزوده فروش"}]},{"date":"1405/01/11","type":"عمومی","desc":"وصول بخشی از مطالبات مشتری","lines":[{"code":"110201","debit":90000000,"credit":0,"desc":"وصول بخشی از مطالبات مشتری","name":"بانک جاری ریالی"},{"code":"120101","debit":0,"credit":90000000,"desc":"وصول بخشی از مطالبات مشتری","name":"مشتریان داخلی"}]},{"date":"1405/01/12","type":"عمومی","desc":"دریافت پیش‌پرداخت مشتری","lines":[{"code":"110201","debit":50000000,"credit":0,"desc":"دریافت پیش‌پرداخت مشتری","name":"بانک جاری ریالی"},{"code":"3106","debit":0,"credit":50000000,"desc":"دریافت پیش‌پرداخت مشتری","name":"پیش‌دریافت از مشتریان"}]},{"date":"1405/01/13","type":"عمومی","desc":"تحویل خدمت و شناسایی پیش‌دریافت","lines":[{"code":"3106","debit":50000000,"credit":0,"desc":"تحویل خدمت و شناسایی پیش‌دریافت","name":"پیش‌دریافت از مشتریان"},{"code":"5103","debit":0,"credit":50000000,"desc":"تحویل خدمت و شناسایی پیش‌دریافت","name":"درآمد خدمات"}]},{"date":"1405/01/14","type":"عمومی","desc":"پرداخت اجاره جاری","lines":[{"code":"7102","debit":25000000,"credit":0,"desc":"پرداخت اجاره جاری","name":"هزینه اجاره"},{"code":"110201","debit":0,"credit":25000000,"desc":"پرداخت اجاره جاری","name":"بانک جاری ریالی"}]},{"date":"1405/01/15","type":"عمومی","desc":"پرداخت اجاره به‌عنوان پیش‌پرداخت","lines":[{"code":"120401","debit":60000000,"credit":0,"desc":"پرداخت اجاره به‌عنوان پیش‌پرداخت","name":"پیش‌پرداخت اجاره"},{"code":"110201","debit":0,"credit":60000000,"desc":"پرداخت اجاره به‌عنوان پیش‌پرداخت","name":"بانک جاری ریالی"}]},{"date":"1405/01/16","type":"عمومی","desc":"شناسایی سهم ماهانه اجاره پیش‌پرداخت","lines":[{"code":"7102","debit":10000000,"credit":0,"desc":"شناسایی سهم ماهانه اجاره پیش‌پرداخت","name":"هزینه اجاره"},{"code":"120401","debit":0,"credit":10000000,"desc":"شناسایی سهم ماهانه اجاره پیش‌پرداخت","name":"پیش‌پرداخت اجاره"}]},{"date":"1405/01/17","type":"عمومی","desc":"پرداخت هزینه آب و برق","lines":[{"code":"7103","debit":8500000,"credit":0,"desc":"پرداخت هزینه آب و برق","name":"هزینه آب، برق و گاز"},{"code":"110101","debit":0,"credit":8500000,"desc":"پرداخت هزینه آب و برق","name":"صندوق اصلی"}]},{"date":"1405/01/18","type":"عمومی","desc":"پرداخت هزینه تبلیغات","lines":[{"code":"7105","debit":12000000,"credit":0,"desc":"پرداخت هزینه تبلیغات","name":"هزینه تبلیغات"},{"code":"110201","debit":0,"credit":12000000,"desc":"پرداخت هزینه تبلیغات","name":"بانک جاری ریالی"}]},{"date":"1405/01/19","type":"عمومی","desc":"پرداخت هزینه حمل خرید","lines":[{"code":"7106","debit":6500000,"credit":0,"desc":"پرداخت هزینه حمل خرید","name":"هزینه حمل و نقل"},{"code":"110101","debit":0,"credit":6500000,"desc":"پرداخت هزینه حمل خرید","name":"صندوق اصلی"}]},{"date":"1405/01/20","type":"عمومی","desc":"خرید تجهیزات اداری","lines":[{"code":"210101","debit":90000000,"credit":0,"desc":"خرید تجهیزات اداری","name":"تجهیزات اداری"},{"code":"110201","debit":0,"credit":90000000,"desc":"خرید تجهیزات اداری","name":"بانک جاری ریالی"}]},{"date":"1405/01/21","type":"عمومی","desc":"خرید وسیله نقلیه به‌صورت اعتباری","lines":[{"code":"2102","debit":450000000,"credit":0,"desc":"خرید وسیله نقلیه به‌صورت اعتباری","name":"وسایل نقلیه"},{"code":"310101","debit":0,"credit":450000000,"desc":"خرید وسیله نقلیه به‌صورت اعتباری","name":"تأمین‌کنندگان داخلی"}]},{"date":"1405/01/22","type":"عمومی","desc":"ثبت استهلاک ماهانه تجهیزات","lines":[{"code":"7104","debit":7500000,"credit":0,"desc":"ثبت استهلاک ماهانه تجهیزات","name":"هزینه استهلاک"},{"code":"2191","debit":0,"credit":7500000,"desc":"ثبت استهلاک ماهانه تجهیزات","name":"استهلاک انباشته دارایی ثابت"}]},{"date":"1405/01/23","type":"عمومی","desc":"پرداخت حقوق کارکنان","lines":[{"code":"7101","debit":80000000,"credit":0,"desc":"پرداخت حقوق کارکنان","name":"هزینه حقوق و دستمزد"},{"code":"110201","debit":0,"credit":80000000,"desc":"پرداخت حقوق کارکنان","name":"بانک جاری ریالی"}]},{"date":"1405/01/24","type":"عمومی","desc":"شناسایی حقوق پرداختنی","lines":[{"code":"7101","debit":40000000,"credit":0,"desc":"شناسایی حقوق پرداختنی","name":"هزینه حقوق و دستمزد"},{"code":"3104","debit":0,"credit":40000000,"desc":"شناسایی حقوق پرداختنی","name":"حقوق و دستمزد پرداختنی"}]},{"date":"1405/01/25","type":"عمومی","desc":"پرداخت حقوق معوق","lines":[{"code":"3104","debit":40000000,"credit":0,"desc":"پرداخت حقوق معوق","name":"حقوق و دستمزد پرداختنی"},{"code":"110201","debit":0,"credit":40000000,"desc":"پرداخت حقوق معوق","name":"بانک جاری ریالی"}]},{"date":"1405/01/26","type":"عمومی","desc":"ثبت مالیات حقوق و بیمه پرداختنی","lines":[{"code":"7101","debit":15000000,"credit":0,"desc":"ثبت مالیات حقوق و بیمه پرداختنی","name":"هزینه حقوق و دستمزد"},{"code":"3105","debit":0,"credit":15000000,"desc":"ثبت مالیات حقوق و بیمه پرداختنی","name":"مالیات حقوق و بیمه پرداختنی"}]},{"date":"1405/01/27","type":"عمومی","desc":"پرداخت مالیات حقوق و بیمه","lines":[{"code":"3105","debit":15000000,"credit":0,"desc":"پرداخت مالیات حقوق و بیمه","name":"مالیات حقوق و بیمه پرداختنی"},{"code":"110201","debit":0,"credit":15000000,"desc":"پرداخت مالیات حقوق و بیمه","name":"بانک جاری ریالی"}]},{"date":"1405/01/28","type":"عمومی","desc":"دریافت تسهیلات بانکی","lines":[{"code":"110201","debit":500000000,"credit":0,"desc":"دریافت تسهیلات بانکی","name":"بانک جاری ریالی"},{"code":"3201","debit":0,"credit":500000000,"desc":"دریافت تسهیلات بانکی","name":"تسهیلات بلندمدت بانکی"}]},{"date":"1405/01/29","type":"عمومی","desc":"بازپرداخت اصل تسهیلات","lines":[{"code":"3201","debit":50000000,"credit":0,"desc":"بازپرداخت اصل تسهیلات","name":"تسهیلات بلندمدت بانکی"},{"code":"110201","debit":0,"credit":50000000,"desc":"بازپرداخت اصل تسهیلات","name":"بانک جاری ریالی"}]},{"date":"1405/01/30","type":"عمومی","desc":"پرداخت کارمزد بانکی","lines":[{"code":"7107","debit":1200000,"credit":0,"desc":"پرداخت کارمزد بانکی","name":"کارمزد بانکی"},{"code":"110201","debit":0,"credit":1200000,"desc":"پرداخت کارمزد بانکی","name":"بانک جاری ریالی"}]},{"date":"1405/02/01","type":"عمومی","desc":"دریافت سود سپرده بانکی","lines":[{"code":"110201","debit":3000000,"credit":0,"desc":"دریافت سود سپرده بانکی","name":"بانک جاری ریالی"},{"code":"8101","debit":0,"credit":3000000,"desc":"دریافت سود سپرده بانکی","name":"درآمد سود سپرده"}]},{"date":"1405/02/02","type":"عمومی","desc":"پرداخت هزینه تعمیر و نگهداری","lines":[{"code":"7108","debit":4500000,"credit":0,"desc":"پرداخت هزینه تعمیر و نگهداری","name":"هزینه تعمیر و نگهداری"},{"code":"110101","debit":0,"credit":4500000,"desc":"پرداخت هزینه تعمیر و نگهداری","name":"صندوق اصلی"}]},{"date":"1405/02/03","type":"عمومی","desc":"پرداخت حق بیمه و ثبت پیش‌پرداخت","lines":[{"code":"120402","debit":24000000,"credit":0,"desc":"پرداخت حق بیمه و ثبت پیش‌پرداخت","name":"پیش‌پرداخت بیمه"},{"code":"110201","debit":0,"credit":24000000,"desc":"پرداخت حق بیمه و ثبت پیش‌پرداخت","name":"بانک جاری ریالی"}]},{"date":"1405/02/04","type":"عمومی","desc":"شناسایی هزینه بیمه دوره","lines":[{"code":"7109","debit":2000000,"credit":0,"desc":"شناسایی هزینه بیمه دوره","name":"هزینه بیمه"},{"code":"120402","debit":0,"credit":2000000,"desc":"شناسایی هزینه بیمه دوره","name":"پیش‌پرداخت بیمه"}]},{"date":"1405/02/05","type":"عمومی","desc":"خرید ملزومات اداری","lines":[{"code":"7110","debit":3200000,"credit":0,"desc":"خرید ملزومات اداری","name":"هزینه ملزومات اداری"},{"code":"110101","debit":0,"credit":3200000,"desc":"خرید ملزومات اداری","name":"صندوق اصلی"}]},{"date":"1405/02/06","type":"عمومی","desc":"ثبت برگشت از فروش","lines":[{"code":"5102","debit":10000000,"credit":0,"desc":"ثبت برگشت از فروش","name":"برگشت از فروش و تخفیفات"},{"code":"120101","debit":0,"credit":10000000,"desc":"ثبت برگشت از فروش","name":"مشتریان داخلی"}]},{"date":"1405/02/07","type":"عمومی","desc":"ثبت برگشت از خرید","lines":[{"code":"310101","debit":8000000,"credit":0,"desc":"ثبت برگشت از خرید","name":"تأمین‌کنندگان داخلی"},{"code":"6102","debit":0,"credit":8000000,"desc":"ثبت برگشت از خرید","name":"برگشت از خرید و تخفیفات"}]},{"date":"1405/02/08","type":"عمومی","desc":"ثبت بهای تمام‌شده کالای فروش‌رفته","lines":[{"code":"6101","debit":95000000,"credit":0,"desc":"ثبت بهای تمام‌شده کالای فروش‌رفته","name":"بهای تمام‌شده کالای فروش‌رفته"},{"code":"130101","debit":0,"credit":95000000,"desc":"ثبت بهای تمام‌شده کالای فروش‌رفته","name":"کالای آماده فروش"}]},{"date":"1405/02/09","type":"عمومی","desc":"پرداخت مالیات و عوارض","lines":[{"code":"7112","debit":6000000,"credit":0,"desc":"پرداخت مالیات و عوارض","name":"هزینه مالیات و عوارض"},{"code":"110201","debit":0,"credit":6000000,"desc":"پرداخت مالیات و عوارض","name":"بانک جاری ریالی"}]},{"date":"1405/02/10","type":"عمومی","desc":"ثبت برداشت مالک","lines":[{"code":"4103","debit":20000000,"credit":0,"desc":"ثبت برداشت مالک","name":"برداشت مالک"},{"code":"110101","debit":0,"credit":20000000,"desc":"ثبت برداشت مالک","name":"صندوق اصلی"}]},{"date":"1405/02/12","type":"عمومی","desc":"ثبت مطالبات مشکوک‌الوصول","lines":[{"code":"7111","debit":5000000,"credit":0,"desc":"ثبت مطالبات مشکوک‌الوصول","name":"هزینه مطالبات مشکوک‌الوصول"},{"code":"120101","debit":0,"credit":5000000,"desc":"ثبت مطالبات مشکوک‌الوصول","name":"مشتریان داخلی"}]},{"date":"1405/02/13","type":"عمومی","desc":"وصول اسناد دریافتنی","lines":[{"code":"110201","debit":40000000,"credit":0,"desc":"وصول اسناد دریافتنی","name":"بانک جاری ریالی"},{"code":"1202","debit":0,"credit":40000000,"desc":"وصول اسناد دریافتنی","name":"اسناد دریافتنی"}]},{"date":"1405/02/14","type":"عمومی","desc":"صدور سند دریافتنی بابت فروش","lines":[{"code":"1202","debit":60000000,"credit":0,"desc":"صدور سند دریافتنی بابت فروش","name":"اسناد دریافتنی"},{"code":"120101","debit":0,"credit":60000000,"desc":"صدور سند دریافتنی بابت فروش","name":"مشتریان داخلی"}]},{"date":"1405/02/16","type":"عمومی","desc":"ثبت هزینه مالی تسهیلات","lines":[{"code":"8102","debit":9000000,"credit":0,"desc":"ثبت هزینه مالی تسهیلات","name":"هزینه مالی تسهیلات"},{"code":"3101","debit":0,"credit":9000000,"desc":"ثبت هزینه مالی تسهیلات","name":"حساب‌های پرداختنی تجاری"}]},{"date":"1405/02/18","type":"عمومی","desc":"انتقال وجه از صندوق به بانک","lines":[{"code":"110201","debit":25000000,"credit":0,"desc":"انتقال وجه از صندوق به بانک","name":"بانک جاری ریالی"},{"code":"110101","debit":0,"credit":25000000,"desc":"انتقال وجه از صندوق به بانک","name":"صندوق اصلی"}]},{"date":"1405/02/20","type":"عمومی","desc":"ثبت تنخواه‌گردان","lines":[{"code":"110102","debit":20000000,"credit":0,"desc":"ثبت تنخواه‌گردان","name":"تنخواه‌گردان"},{"code":"110101","debit":0,"credit":20000000,"desc":"ثبت تنخواه‌گردان","name":"صندوق اصلی"}]},{"date":"1405/02/21","type":"عمومی","desc":"تسویه هزینه از محل تنخواه","lines":[{"code":"7106","debit":2500000,"credit":0,"desc":"تسویه هزینه از محل تنخواه","name":"هزینه حمل و نقل"},{"code":"110102","debit":0,"credit":2500000,"desc":"تسویه هزینه از محل تنخواه","name":"تنخواه‌گردان"}]},{"date":"1405/02/22","type":"انتظامی","desc":"ثبت ضمانت‌نامه انتظامی","lines":[{"code":"9101","debit":100000000,"credit":0,"desc":"ثبت ضمانت‌نامه انتظامی","name":"حساب انتظامی بدهکار"},{"code":"9102","debit":0,"credit":100000000,"desc":"ثبت ضمانت‌نامه انتظامی","name":"طرف حساب انتظامی"}]},{"date":"1405/02/23","type":"انتظامی","desc":"خاتمه ضمانت‌نامه انتظامی","lines":[{"code":"9102","debit":100000000,"credit":0,"desc":"خاتمه ضمانت‌نامه انتظامی","name":"طرف حساب انتظامی"},{"code":"9101","debit":0,"credit":100000000,"desc":"خاتمه ضمانت‌نامه انتظامی","name":"حساب انتظامی بدهکار"}]},{"date":"1405/02/24","type":"عمومی","desc":"اصلاح طبقه‌بندی هزینه","lines":[{"code":"7108","debit":1500000,"credit":0,"desc":"اصلاح طبقه‌بندی هزینه","name":"هزینه تعمیر و نگهداری"},{"code":"7105","debit":0,"credit":1500000,"desc":"اصلاح طبقه‌بندی هزینه","name":"هزینه تبلیغات"}]}];
+function readDB(){try{return JSON.parse(localStorage.getItem(STORE)||'null')||{};}catch(e){return {};}}
+function writeDB(d){localStorage.setItem(STORE,JSON.stringify(d));}
+function esc(s){var n=document.createElement('span');n.textContent=String(s==null?'':s);return n.innerHTML;}
+function note(msg){var n=document.getElementById('iranSeedStatus');if(n)n.textContent=msg;}
+function load(){var db=readDB();if(!Array.isArray(db.vouchers))db.vouchers=[];if(!Array.isArray(db.codes))db.codes=[];if(!Array.isArray(db.groups))db.groups=[];
+  var byCode={};db.codes.forEach(function(a){byCode[String(a.code)]=a;});
+  CHART.forEach(function(a){if(!byCode[String(a.code)])db.codes.push(a);});
+  var groups=['دارایی‌های جاری','دارایی‌های غیرجاری','بدهی‌های جاری','بدهی‌های غیرجاری','حقوق صاحبان سهام','درآمدها','بهای تمام‌شده','هزینه‌ها','سایر درآمدها و هزینه‌ها','حساب‌های انتظامی'];
+  groups.forEach(function(title,i){if(!db.groups.some(function(g){return g.title===title;}))db.groups.push({code:String(i+1),title:title,nature:({ 'دارایی‌های جاری':'بدهکار','دارایی‌های غیرجاری':'بدهکار','بدهی‌های جاری':'بستانکار','بدهی‌های غیرجاری':'بستانکار','حقوق صاحبان سهام':'بستانکار','درآمدها':'بستانکار','بهای تمام‌شده':'بدهکار','هزینه‌ها':'بدهکار','سایر درآمدها و هزینه‌ها':'فرقی ندارد','حساب‌های انتظامی':'فرقی ندارد'})[title]});});
+  var mark='accounting_iran_chart_50_seed_v1';
+  if(localStorage.getItem(mark)==='done'){note('کدینگ/سند نمونه قبلاً بارگذاری شده است.');return;}
+  var existing= db.vouchers.length;
+  var maxNo=0;db.vouchers.forEach(function(v){var n=parseInt(String(v.no||'').replace(/[^0-9]/g,''),10);if(n>maxNo)maxNo=n;});
+  var next=Math.max(Number(db.nextNo)||1,maxNo+1);
+  TX.forEach(function(t,i){var no=String(next+i);db.vouchers.push({id:'iran-demo-'+(i+1)+'-'+Date.now().toString(36),no:no,date:t.date,type:t.type,desc:t.desc,lines:t.lines,status:'perm',year:'1405',method:'نمونه آزمایشی',demo:true,at:new Date().toISOString()});});
+  db.nextNo=next+TX.length;
+  writeDB(db);localStorage.setItem(mark,'done');
+  note('بارگذاری شد: '+CHART.length+' کد و '+TX.length+' سند آزمایشی. در حال تازه‌سازی…');
+  setTimeout(function(){location.reload();},900);
+}
+var btn=document.getElementById('btnLoadIranChart50');
+if(btn)btn.addEventListener('click',function(){
+  var db=readDB();var already=localStorage.getItem('accounting_iran_chart_50_seed_v1')==='done';
+  if(already){note('این بسته نمونه قبلاً بارگذاری شده است؛ برای جلوگیری از تکرار، دوباره افزوده نشد.');return;}
+  var message='این عملیات کدینگ نمونه را به کدهای موجود اضافه می‌کند و ۵۰ سند آزمایشی را به فهرست فعلی می‌افزاید؛ اطلاعات موجود حذف نمی‌شوند. پیش از ادامه، پشتیبان تهیه کنید. آیا ادامه می‌دهید؟';
+  if(!window.confirm(message))return;
+  try{load();}catch(e){console.error(e);note('بارگذاری ناموفق بود: '+e.message);alert('بارگذاری انجام نشد. ابتدا پشتیبان تهیه کنید.');}
+});
+})();
+</script>
+<script>
+(function(){'use strict';
+var KEY='smart_accounting_v4';
+function db(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){return {};}}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d));}
+function el(id){return document.getElementById(id);}
+function esc(v){var n=document.createElement('span');n.textContent=v==null?'':String(v);return n.innerHTML;}
+function amt(v){v=Math.round(Number(v)||0);return String(v).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function sum(v){var d=0,c=0;(v.lines||[]).forEach(function(l){d+=Number(l.debit)||0;c+=Number(l.credit)||0;});return {d:d,c:c,bal:d-c};}
+function dateValue(v){return String(v||'').replace(/[۰-۹]/g,function(c){return '۰۱۲۳۴۵۶۷۸۹'.indexOf(c);}).replace(/-/g,'/');}
+function vouchers(prefix){var d=db(),list=(d.vouchers||[]).filter(function(v){return v.status!=='void';});
+ var from=el(prefix+'From'),to=el(prefix+'To'),fy1=el(prefix+'FyFrom'),fy2=el(prefix+'FyTo');
+ var noTemp=el(prefix+'NoTemp'),noOpen=el(prefix+'NoOpen'),noClose=el(prefix+'NoClose');
+ return list.filter(function(v){var dt=dateValue(v.date),f=from?dateValue(from.value):'',t=to?dateValue(to.value):'';if(f&&dt<f)return false;if(t&&dt>t)return false;
+  if(fy1&&fy1.value&&String(v.year||'')<String(fy1.value))return false;if(fy2&&fy2.value&&String(v.year||'')>String(fy2.value))return false;
+  if(noTemp&&noTemp.checked&&v.status==='temp')return false;if(noOpen&&noOpen.checked&&v.type==='افتتاحیه')return false;if(noClose&&noClose.checked&&v.type==='اختتامیه')return false;return true;});}
+function accountMap(){var m={};(db().codes||[]).forEach(function(a){m[String(a.code)] = a;});return m;}
+function aggregate(list){var a={};list.forEach(function(v){(v.lines||[]).forEach(function(l){var c=String(l.code||'');if(!a[c])a[c]={code:c,name:l.name||c,debit:0,credit:0};a[c].debit+=Number(l.debit)||0;a[c].credit+=Number(l.credit)||0;});});return a;}
+function renderVoucherList(){var host=el('listVBody');if(!host)return;var q=(el('listSearch')?el('listSearch').value:'').toLowerCase();var list=(db().vouchers||[]).filter(function(v){return !q||(String(v.no)+' '+String(v.date)+' '+String(v.desc||'')).toLowerCase().indexOf(q)>=0;});
+ host.innerHTML=list.map(function(v,i){var s=sum(v);return '<tr><td></td><td>'+ (i+1) +'</td><td>'+esc(v.no)+'</td><td>'+esc(v.date)+'</td><td>'+esc(v.desc||v.type||'')+'</td><td>'+amt(s.d)+'</td><td>'+amt(s.c)+'</td><td>'+amt(s.bal)+'</td><td>'+esc(v.status==='temp'?'موقت':v.status==='void'?'باطل':'دائم')+'</td></tr>';}).join('');
+ if(el('listVEmpty'))el('listVEmpty').style.display=list.length?'none':'';}
+function renderTrial(){var list=vouchers('tb'),agg=aggregate(list),host=el('tbBody');if(!host)return;var keys=Object.keys(agg).sort();host.innerHTML=keys.map(function(k){return '<tr><td>'+esc(k)+'</td><td>'+esc(agg[k].name)+'</td><td>'+amt(agg[k].debit)+'</td><td>'+amt(agg[k].credit)+'</td></tr>';}).join('');}
+function renderJournal(){var list=vouchers('jnl'),host=el('jnlBody');if(!host)return;var rows=[];list.forEach(function(v){(v.lines||[]).forEach(function(l){rows.push('<tr><td>'+rows.length+'</td><td>'+esc(v.no)+'</td><td>'+esc(v.date)+'</td><td>'+esc(v.desc||v.type)+'</td><td>'+esc(l.code)+'</td><td>'+amt(l.debit)+'</td><td>'+amt(l.credit)+'</td></tr>');});});host.innerHTML=rows.join('');if(el('jnlSumD'))el('jnlSumD').textContent=amt(list.reduce(function(a,v){return a+sum(v).d;},0));if(el('jnlSumC'))el('jnlSumC').textContent=amt(list.reduce(function(a,v){return a+sum(v).c;},0));}
+function renderLedger(){var list=vouchers('led'),agg=aggregate(list),host=el('ledBody');if(!host)return;var keys=Object.keys(agg).sort(),sd=0,sc=0,bd=0,bc=0;host.innerHTML=keys.map(function(k){var a=agg[k],bal=a.debit-a.credit;sd+=a.debit;sc+=a.credit;if(bal>=0)bd+=bal;else bc+=-bal;return '<tr><td>'+esc(k)+'</td><td>'+esc(a.name)+'</td><td>'+amt(a.debit)+'</td><td>'+amt(a.credit)+'</td><td>'+amt(Math.max(0,bal))+'</td><td>'+amt(Math.max(0,-bal))+'</td></tr>';}).join('');[['ledSumD',sd],['ledSumC',sc],['ledBalD',bd],['ledBalC',bc]].forEach(function(x){if(el(x[0]))el(x[0]).textContent=amt(x[1]);});}
+function renderPL(){var list=vouchers('pl'),agg=aggregate(list),codes=accountMap(),host=el('plBody');if(!host)return;var rows=[],sd=0,sc=0;Object.keys(agg).sort().forEach(function(k){var a=agg[k],c=codes[k]||{},g=String(c.group||'');if(c.kind!=='موقت'&& !/درآمد|هزینه|بهای تمام‌شده|سایر درآمدها/.test(g))return;sd+=a.debit;sc+=a.credit;var b=a.credit-a.debit;rows.push('<tr><td>'+esc(k)+'</td><td>'+esc(a.name)+'</td><td>'+amt(a.debit)+'</td><td>'+amt(a.credit)+'</td><td>'+amt(Math.abs(b))+'</td><td>'+ (b>=0?'سود/درآمد':'هزینه/زیان')+'</td></tr>');});host.innerHTML=rows.join('');if(el('plSumD'))el('plSumD').textContent=amt(sd);if(el('plSumC'))el('plSumC').textContent=amt(sc);if(el('plRem'))el('plRem').textContent=amt(Math.abs(sc-sd))+(sc>=sd?' (سود خالص نمونه)':' (زیان خالص نمونه)');}
+function renderBS(){var list=vouchers('bs'),agg=aggregate(list),codes=accountMap(),host=el('bsBody');if(!host)return;var rows=[],sd=0,sc=0;Object.keys(agg).sort().forEach(function(k){var a=agg[k],c=codes[k]||{},g=String(c.group||'');if(!/دارایی|بدهی|حقوق صاحبان سهام/.test(g))return;var b=a.debit-a.credit;sd+=Math.max(0,b);sc+=Math.max(0,-b);rows.push('<tr><td>'+esc(k)+'</td><td>'+esc(a.name)+'</td><td>'+amt(Math.max(0,b))+'</td><td>'+amt(Math.max(0,-b))+'</td></tr>');});host.innerHTML=rows.join('');if(el('bsBalD'))el('bsBalD').textContent=amt(sd);if(el('bsBalC'))el('bsBalC').textContent=amt(sc);}
+function renderTurn(){var host=el('turnBody');if(!host)return;var code=el('turnCode')?el('turnCode').value.trim():'';var f=el('turnFrom')?dateValue(el('turnFrom').value):'',t=el('turnTo')?dateValue(el('turnTo').value):'';var rows=[],bal=0;(db().vouchers||[]).filter(function(v){return v.status!=='void';}).sort(function(a,b){return dateValue(a.date).localeCompare(dateValue(b.date))||Number(a.no)-Number(b.no);}).forEach(function(v){var dt=dateValue(v.date);if(f&&dt<f||t&&dt>t)return;(v.lines||[]).forEach(function(l){if(!code||String(l.code)===code){var d=Number(l.debit)||0,c=Number(l.credit)||0;bal+=d-c;rows.push('<tr><td>'+esc(v.no)+'</td><td>'+esc(v.date)+'</td><td>'+esc(v.desc||v.type)+'</td><td>'+amt(d)+'</td><td>'+amt(c)+'</td><td>'+amt(bal)+'</td></tr>');}});});host.innerHTML=rows.join('');}
+function renderGroups(){var host=el('grpBody');if(!host)return;var d=db(),groups=d.groups||[],agg=aggregate((d.vouchers||[]).filter(function(v){return v.status!=='void';}));host.innerHTML=groups.map(function(g){var sd=0,sc=0;(d.codes||[]).filter(function(c){return c.group===g.title;}).forEach(function(c){if(agg[c.code]){sd+=agg[c.code].debit;sc+=agg[c.code].credit;}});return '<tr><td>'+esc(g.code)+'</td><td>'+esc(g.title)+'</td><td>'+esc(g.nature||'')+'</td><td>'+amt(sd)+'</td><td>'+amt(sc)+'</td></tr>';}).join('');}
+function renderKol(){var host=el('kolBody');if(!host)return;var q=(el('kolSearch')?el('kolSearch').value:'').toLowerCase(),d=db(),agg=aggregate((d.vouchers||[]).filter(function(v){return v.status!=='void';}));var rows=(d.codes||[]).filter(function(c){return Number(c.level)===1 && (!q||(String(c.code)+' '+String(c.name)+' '+String(c.group)).toLowerCase().indexOf(q)>=0);});host.innerHTML=rows.map(function(c){var a=agg[c.code]||{debit:0,credit:0},b=a.debit-a.credit;return '<tr><td></td><td></td><td>'+esc(c.code)+'</td><td>'+esc(c.name)+'</td><td>'+esc(c.group||'')+'</td><td>'+esc(c.nature||'')+'</td><td>'+amt(a.debit)+'</td><td>'+amt(a.credit)+'</td><td>'+amt(Math.max(0,b))+'</td><td>'+amt(Math.max(0,-b))+'</td></tr>';}).join('');if(el('kolEmpty'))el('kolEmpty').style.display=rows.length?'none':'';}
+function renderRepPLBS(){var agg=aggregate((db().vouchers||[]).filter(function(v){return v.status!=='void';})),codes=accountMap();['repPL','repBS'].forEach(function(id){var host=el(id);if(!host)return;var isPL=id==='repPL';var rows=Object.keys(agg).sort().filter(function(k){var g=String((codes[k]||{}).group||'');return isPL?/درآمد|هزینه|بهای تمام‌شده|سایر درآمدها/.test(g):/دارایی|بدهی|حقوق صاحبان سهام/.test(g);}).map(function(k){var a=agg[k];return '<tr><td>'+esc(k)+'</td><td>'+esc(a.name)+'</td><td>'+amt(a.debit)+'</td><td>'+amt(a.credit)+'</td></tr>';});host.innerHTML='<table class="data-table"><thead><tr><th>کد</th><th>حساب</th><th>بدهکار</th><th>بستانکار</th></tr></thead><tbody>'+rows.join('')+'</tbody></table>';});}
+function renderAll(){renderVoucherList();renderTrial();renderJournal();renderLedger();renderPL();renderBS();renderTurn();renderGroups();renderKol();renderRepPLBS();}
+function bind(id,fn){var n=el(id);if(n)n.onclick=fn;}
+[['btnListRefresh',renderVoucherList],['btnledRun',renderLedger],['btnplRun',renderPL],['btnbsRun',renderBS],['btnTurnRun',renderTurn],['btntbRun',renderTrial],['btnjnlRun',renderJournal],['btnGrpRefresh',renderGroups],['btnKolRefresh',renderKol]].forEach(function(x){bind(x[0],x[1]);});
+['listSearch','tbFrom','tbTo','tbFyFrom','tbFyTo','ledFrom','ledTo','ledFyFrom','ledFyTo','plFrom','plTo','plFyFrom','plFyTo','bsFrom','bsTo','bsFyFrom','bsFyTo','turnCode','turnFrom','turnTo','kolSearch'].forEach(function(id){var n=el(id);if(n)n.addEventListener('input',function(){var p=n.closest('.panel');if(!p)return;({'p-list-v':renderVoucherList,'p-rep-tb':renderTrial,'p-rep-j':renderJournal,'p-ledger':renderLedger,'p-pl':renderPL,'p-bs':renderBS,'p-turn':renderTurn,'p-groups':renderGroups,'p-kol':renderKol})[p.id]?.();});});
+if(el('btnGrpNew'))el('btnGrpNew').onclick=function(){if(el('grpForm'))el('grpForm').classList.add('open');};
+if(el('btnGrpCancel'))el('btnGrpCancel').onclick=function(){if(el('grpForm'))el('grpForm').classList.remove('open');};
+if(el('btnGrpSave'))el('btnGrpSave').onclick=function(){var code=(el('grpCode').value||'').trim(),title=(el('grpTitle').value||'').trim(),nature=el('grpNature').value;if(!code||!title){alert('کد و عنوان گروه را وارد کنید.');return;}var d=db();d.groups=d.groups||[];var i=d.groups.findIndex(function(g){return String(g.code)===code;});var row={code:code,title:title,nature:nature};if(i>=0)d.groups[i]=row;else d.groups.push(row);save(d);renderGroups();if(el('grpForm'))el('grpForm').classList.remove('open');};
+document.addEventListener('click',function(e){var b=e.target.closest('[data-panel]');if(!b)return;var id=b.getAttribute('data-panel');setTimeout(function(){if(id==='p-list-v')renderVoucherList();if(id==='p-list-c'&&window.renderAccountList)window.renderAccountList();if(id==='p-rep-tb')renderTrial();if(id==='p-rep-j')renderJournal();if(id==='p-ledger')renderLedger();if(id==='p-pl')renderPL();if(id==='p-bs')renderBS();if(id==='p-turn')renderTurn();if(id==='p-groups')renderGroups();if(id==='p-kol')renderKol();if(id==='p-rep-pl'||id==='p-rep-bs')renderRepPLBS();},0);});
+window.addEventListener('storage',renderAll);renderAll();
+})();
+</script>
+<script id="accounting-search-navigation-repair">
 (function(){
   'use strict';
-  function el(id){return document.getElementById(id);}
-  function say(msg){
-    var local=el('logLocal'), drive=el('logGdrive');
-    var target=(/درایو|Drive|گوگل/i.test(msg)?drive:local);
-    if(target) target.textContent=msg;
-    if(typeof window.toast==='function'){try{window.toast(msg);}catch(e){}}
+  var pop=null, activeField='no', activeTarget=null, viewingId=null, originalSave=null;
+  function byId(id){return document.getElementById(id);}
+  function norm(v){
+    var s=String(v==null?'':v).replace(/[۰-۹]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d);});
+    return s.replace(/[٬,\s]/g,'').toLowerCase();
   }
-  function getDB(){
-    if(typeof window.loadDB==='function') return window.loadDB();
-    var raw=localStorage.getItem('smart_accounting_v4');
-    if(!raw) throw new Error('مخزن اطلاعات حسابداری پیدا نشد.');
-    return JSON.parse(raw);
+  function fa(v){return String(v==null?'':v).replace(/\d/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[+d];});}
+  function dbRead(){try{return typeof loadDB==='function'?loadDB():{vouchers:[]};}catch(e){return {vouchers:[]};}}
+  function vouchers(){return (dbRead().vouchers||[]).filter(function(v){return v&&v.status!=='void';}).slice().sort(function(a,b){return (parseInt(norm(a.no),10)||0)-(parseInt(norm(b.no),10)||0);});}
+  function fieldFor(el){
+    if(!el)return 'no';
+    if(el.id==='vNo')return 'no';
+    if(el.id==='vDesc')return 'desc';
+    if(el.classList&&el.classList.contains('lc'))return 'code';
+    if(el.classList&&el.classList.contains('ldb'))return 'debit';
+    if(el.classList&&el.classList.contains('lcr'))return 'credit';
+    return 'no';
   }
-  function validateDB(db){
-    if(!db || typeof db!=='object' || Array.isArray(db)) throw new Error('ساختار فایل پشتیبان معتبر نیست.');
-    if(!Object.keys(db).length) throw new Error('فایل پشتیبان خالی است؛ اطلاعات فعلی تغییر نکرد.');
-    return db;
+  var labels={no:'شماره سند',desc:'شرح سند',code:'کد حساب',debit:'مبلغ بدهکار',credit:'مبلغ بستانکار'};
+  function ensurePop(){
+    if(pop)return pop;
+    pop=document.createElement('div');pop.className='acct-search-pop';pop.hidden=true;pop.setAttribute('role','dialog');pop.setAttribute('aria-label','جستجوی اسناد حسابداری');
+    pop.innerHTML='<button type="button" class="asp-close">بستن ×</button><div class="asp-title">جستجوی سند حسابداری</div><div class="asp-hint">فیلد موردنظر را انتخاب کنید و عبارت جستجو را در کادر زیر وارد کنید. برای پیمایش سریع اسناد، روی شماره سند قرار بگیرید و از PgUp / PgDn یا ↑ / ↓ استفاده کنید.</div><div class="asp-controls"><select class="asp-kind" aria-label="نوع جستجو"><option value="no">شماره سند</option><option value="desc">شرح سند</option><option value="code">کد حساب</option><option value="debit">مبلغ بدهکار</option><option value="credit">مبلغ بستانکار</option></select><input class="asp-query" type="search" placeholder="عبارت جستجو را وارد کنید…" autocomplete="off"/></div><div class="asp-count"></div><div class="asp-results"></div>';
+    document.body.appendChild(pop);
+    pop.querySelector('.asp-close').addEventListener('click',hidePop);
+    pop.querySelector('.asp-kind').addEventListener('change',function(){activeField=this.value;renderResults();});
+    pop.querySelector('.asp-query').addEventListener('input',renderResults);
+    pop.addEventListener('mousedown',function(e){e.stopPropagation();});
+    return pop;
   }
-  function makeBackup(){
-    var db=validateDB(getDB());
-    return {app:'smart-accounting', formatVersion:1, createdAt:new Date().toISOString(), data:db};
+  function placePop(target){
+    if(!pop)return;
+    var r=(target&&target.getBoundingClientRect)?target.getBoundingClientRect():{left:12,bottom:80,right:300,top:40};
+    var width=Math.min(520,window.innerWidth-24);var left=Math.max(12,Math.min(r.left,window.innerWidth-width-12));
+    var top=r.bottom+6;if(top+260>window.innerHeight)top=Math.max(12,r.top-Math.min(360,window.innerHeight-24));
+    pop.style.width=width+'px';pop.style.left=left+'px';pop.style.top=top+'px';
   }
-  function download(name,drive){
-    try{
-      var pack=makeBackup();
-      var blob=new Blob([JSON.stringify(pack,null,2)],{type:'application/json;charset=utf-8'});
-      var url=URL.createObjectURL(blob), a=document.createElement('a');
-      a.href=url; a.download=name; a.style.display='none'; document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(function(){URL.revokeObjectURL(url);},1500);
-      say(drive?'فایل پشتیبان آماده شد. اکنون آن را به‌صورت دستی در Google Drive بارگذاری کنید.':'فایل پشتیبان دانلود شد. آن را در محل امن نگهداری کنید.');
-    }catch(err){say('خطا در تهیه پشتیبان: '+(err.message||err));}
+  function showPop(target,kind){
+    if(!byId('p-voucher'))return;
+    activeTarget=target||byId('vNo');activeField=kind||fieldFor(activeTarget)||'no';
+    ensurePop();pop.querySelector('.asp-kind').value=activeField;
+    pop.querySelector('.asp-query').value='';
+    pop.hidden=false;placePop(activeTarget);renderResults();
   }
-  function restoreFile(file,drive){
-    if(!file) return;
-    var reader=new FileReader();
-    reader.onerror=function(){say('خطا در خواندن فایل پشتیبان.');};
-    reader.onload=function(){
-      try{
-        var parsed=JSON.parse(reader.result);
-        var data=(parsed && parsed.data && typeof parsed.data==='object')?parsed.data:parsed;
-        validateDB(data);
-        if(!confirm('هشدار: بازیابی، اطلاعات فعلی این مرورگر را جایگزین می‌کند. قبل از ادامه از اطلاعات فعلی پشتیبان بگیرید. ادامه می‌دهید؟')){say('بازیابی لغو شد؛ اطلاعات تغییر نکرد.');return;}
-        if(typeof window.saveDB==='function') window.saveDB(data);
-        else localStorage.setItem('smart_accounting_v4',JSON.stringify(data));
-        if(typeof window.renderAll==='function') window.renderAll();
-        say(drive?'بازیابی از فایل انتخاب‌شده با موفقیت انجام شد.':'بازیابی محلی با موفقیت انجام شد.');
-        var info=el('bkInfo'); if(info) info.textContent='آخرین بازیابی: '+new Date().toLocaleString();
-      }catch(err){say('بازیابی انجام نشد: '+(err.message||'فایل نامعتبر است.'));}
-    };
-    reader.readAsText(file);
+  function hidePop(){if(pop)pop.hidden=true;}
+  function matchVoucher(v,kind,q){
+    if(!q)return true;var lines=v.lines||[];
+    if(kind==='no')return norm(v.no).indexOf(q)>=0;
+    if(kind==='desc')return norm(v.desc).indexOf(q)>=0||lines.some(function(l){return norm(l.desc).indexOf(q)>=0;});
+    if(kind==='code')return lines.some(function(l){return norm(l.code).indexOf(q)>=0;});
+    if(kind==='debit')return lines.some(function(l){return norm(l.debit).indexOf(q)>=0||norm((typeof formatAmount==='function'?formatAmount(l.debit||0):l.debit)).indexOf(q)>=0;});
+    if(kind==='credit')return lines.some(function(l){return norm(l.credit).indexOf(q)>=0||norm((typeof formatAmount==='function'?formatAmount(l.credit||0):l.credit)).indexOf(q)>=0;});
+    return false;
   }
-  function bind(buttonId,inputId,filename,drive){
-    var b=el(buttonId), f=el(inputId);
-    if(b) b.onclick=function(){ if(buttonId==='btnBkGdrive' || buttonId==='btnBackupGdrive') download(filename,true); else if(buttonId==='btnBkLocal' || buttonId==='btnBackupLocal') download(filename,false); else if(f) f.click(); };
-    if(f) f.onchange=function(ev){var file=ev.target.files&&ev.target.files[0]; if(file) restoreFile(file,drive); ev.target.value='';};
-  }
-  // Bind the actual IDs used by this page. Earlier code used IDs that do not exist here.
-  bind('btnBkLocal','restoreFileLocal','accounting-backup.json',false);
-  bind('btnRsLocal','restoreFileLocal','accounting-backup.json',false);
-  bind('btnBkGdrive','restoreFileGdrive','accounting-gdrive-backup.json',true);
-  bind('btnRsGdrive','restoreFileGdrive','accounting-gdrive-backup.json',true);
-  // Legacy buttons, if present, are also wired to the same safe workflow.
-  bind('btnBackupLocal','restoreFile','accounting-backup.json',false);
-  bind('btnBackupGdrive','restoreFile','accounting-gdrive-backup.json',true);
-  bind('btnRestoreLocal','restoreFile','accounting-backup.json',false);
-  var info=el('bkInfo');
-  if(info){try{var db=getDB();info.textContent='مخزن محلی آماده است؛ کلید اصلی: smart_accounting_v4؛ برای اطمینان از داشتن نسخه پشتیبان، فایل را دانلود کنید.';}catch(e){info.textContent='مخزن اطلاعات هنوز قابل خواندن نیست: '+e.message;}}
-})();
-  /* ===== کارتابل مشترک Suite ===== */
-var CART_KEY = "suite_cartable_v1";
-var MY_MODULE_CODE = "accounting"; // برای هر ماژول عوض شود
-
-function loadMyCartable() {
-  try {
-    var all = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
-    return all.filter(function (x) {
-      return x.to === MY_MODULE_CODE;
+  function renderResults(){
+    if(!pop||pop.hidden)return;
+    var kind=pop.querySelector('.asp-kind').value,q=norm(pop.querySelector('.asp-query').value),all=vouchers();
+    var found=all.filter(function(v){return matchVoucher(v,kind,q);}).slice(0,50),host=pop.querySelector('.asp-results');host.innerHTML='';
+    pop.querySelector('.asp-count').textContent='نتیجه: '+fa(found.length)+(found.length===50?' مورد نخست':' سند');
+    if(!found.length){var e=document.createElement('div');e.className='asp-empty';e.textContent='سندی مطابق جستجو یافت نشد. عبارت دیگری وارد کنید یا نوع جستجو را تغییر دهید.';host.appendChild(e);return;}
+    found.forEach(function(v){var b=document.createElement('button');b.type='button';b.className='asp-result';var lineText=(v.lines||[]).filter(function(l){return (kind==='code'&&norm(l.code).indexOf(q)>=0)||(kind==='debit'&&norm(l.debit).indexOf(q)>=0)||(kind==='credit'&&norm(l.credit).indexOf(q)>=0);}).slice(0,2).map(function(l){return (l.code||'')+' '+(l.name||'')+' | بدهکار '+(typeof formatAmount==='function'?formatAmount(l.debit||0):(l.debit||0))+' | بستانکار '+(typeof formatAmount==='function'?formatAmount(l.credit||0):(l.credit||0));}).join(' ؛ ');
+      b.textContent='سند '+fa(v.no)+' — '+(v.date||'بدون تاریخ')+' — '+(v.desc||v.type||'بدون شرح')+' — '+(v.status==='temp'?'موقت':'دائم')+(lineText?'\n'+lineText:'');
+      b.addEventListener('click',function(){loadVoucherIntoForm(v);hidePop();});host.appendChild(b);
     });
-  } catch (e) {
-    return [];
   }
-}
-
-function markCartableStatus(id, status) {
-  var all = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
-  all.forEach(function (x) {
-    if (x.id === id) x.status = status;
-  });
-  localStorage.setItem(CART_KEY, JSON.stringify(all));
-}
-
-function renderCartableBox() {
-  var box = document.getElementById("suiteCartableBox");
-  if (!box) return;
-  var items = loadMyCartable().filter(function (x) {
-    return x.status !== "done";
-  });
-  if (!items.length) {
-    box.innerHTML = '<p style="opacity:.7">کارتابل خالی است</p>';
-    return;
+  function lineChanged(){try{if(typeof updateSheetBal==='function')updateSheetBal('vBody','ftDebit','ftCredit','vBal');}catch(e){}}
+  function loadVoucherIntoForm(v){
+    if(!v)return;
+    var body=byId('vBody');if(!body)return;
+    byId('vNo').value=String(v.no==null?'':v.no);byId('vDate').value=v.date||'';byId('vType').value=v.type||'عمومی';byId('vDesc').value=v.desc||'';
+    if(byId('vStatus'))byId('vStatus').value=v.status||'perm';
+    if(byId('ftDescInput'))byId('ftDescInput').value=v.footerDesc||'';
+    body.innerHTML='';
+    var ls=v.lines||[];
+    if(typeof makeLineRow==='function'){
+      ls.forEach(function(l){var tr=makeLineRow('vBody',{},lineChanged);tr.querySelector('.lc').value=l.code||'';tr.querySelector('.ln').value=l.name||'';tr.querySelector('.ld').value=l.desc||'';tr.querySelector('.ldb').value=(l.debit&&typeof formatAmount==='function')?formatAmount(l.debit):(l.debit||'');tr.querySelector('.lcr').value=(l.credit&&typeof formatAmount==='function')?formatAmount(l.credit):(l.credit||'');});
+      makeLineRow('vBody',{},lineChanged);
+      makeLineRow('vBody',{},lineChanged);
+    }else{
+      body.innerHTML='';
+    }
+    viewingId=v.id||('no:'+String(v.no));window.__accountingViewingVoucherId=viewingId;
+    var save=byId('btnSaveVoucher');if(save)save.textContent='ذخیره تغییرات سند';
+    lineChanged();
+    var hint=pop&&pop.querySelector('.asp-hint');if(hint)hint.textContent='سند '+fa(v.no)+' بارگذاری شد. تغییرات را با «ذخیره تغییرات سند» ثبت کنید؛ برای سند تازه از «سند جدید» استفاده کنید.';
   }
-  box.innerHTML = items
-    .map(function (x) {
-      return (
-        '<div style="border:1px solid #334155;border-radius:10px;padding:10px;margin:8px 0">' +
-        "<b>" +
-        (x.title || "بدون عنوان") +
-        "</b><br>" +
-        '<small>از: ' +
-        (x.fromLabel || x.from) +
-        " | " +
-        (x.at || "") +
-        "</small>" +
-        '<pre style="white-space:pre-wrap;font-size:12px;margin-top:8px">' +
-        (x.body || "") +
-        "</pre>" +
-        (x.fileName
-          ? "<div>فایل: " + x.fileName + "</div>"
-          : "") +
-        '<button type="button" data-cid="' +
-        x.id +
-        '" class="btn-cart-done">انجام شد</button>' +
-        "</div>"
-      );
-    })
-    .join("");
-    box.querySelectorAll(".btn-cart-done").forEach(function (btn) {
-    btn.onclick = function () {
-      markCartableStatus(btn.getAttribute("data-cid"), "done");
-      renderCartableBox();
+  function newVoucher(){
+    viewingId=null;window.__accountingViewingVoucherId=null;
+    if(byId('vNo'))byId('vNo').value=typeof nextNo==='function'?String(nextNo()):'';
+    if(byId('vDate'))byId('vDate').value='';if(byId('vDesc'))byId('vDesc').value='';if(byId('vType'))byId('vType').value='عمومی';if(byId('vStatus'))byId('vStatus').value='temp';if(byId('ftDescInput'))byId('ftDescInput').value='';
+    var body=byId('vBody');if(body){body.innerHTML='';if(typeof makeLineRow==='function'){makeLineRow('vBody',{},lineChanged);makeLineRow('vBody',{},lineChanged);}}
+    var save=byId('btnSaveVoucher');if(save)save.textContent='ثبت سند';lineChanged();hidePop();
+  }
+  function saveCurrentVoucher(){
+    var db=dbRead(),id=viewingId;if(!id){if(originalSave)originalSave.call(byId('btnSaveVoucher'));return;}
+    var v=(db.vouchers||[]).find(function(x){return (x.id&&x.id===id)||String(x.no)===String(byId('vNo').value);});
+    if(!v){alert('سند قبلی پیدا نشد؛ برای جلوگیری از ثبت تکراری، سند جدید بسازید.');newVoucher();return;}
+    if(typeof isLockedDate==='function'&&isLockedDate(byId('vDate').value)){if(typeof toast==='function')toast('دوره قفل است','err');return;}
+    var lines=typeof collectLines==='function'?collectLines('vBody'):[];
+    if(!lines.length){if(typeof toast==='function')toast('حداقل یک ردیف حساب لازم است','err');return;}
+    var sum=typeof sumLines==='function'?sumLines(lines):{debit:0,credit:1};
+    if(sum.debit!==sum.credit){if(typeof toast==='function')toast('سند تراز نیست','err');return;}
+    v.date=byId('vDate').value;v.type=byId('vType').value;v.desc=byId('vDesc').value;v.status=byId('vStatus').value;v.lines=lines;v.footerDesc=byId('ftDescInput')?byId('ftDescInput').value:'';v.updatedAt=new Date().toISOString();
+    if(typeof saveDB==='function')saveDB(db);
+    if(typeof toast==='function')toast('تغییرات سند '+v.no+' ذخیره شد');
+    try{if(typeof renderReports==='function')renderReports();if(typeof runBS==='function')runBS();if(typeof runPL==='function')runPL();if(typeof runKol==='function')runKol();if(typeof renderAll==='function')renderAll();}catch(e){}
+  }
+  function navVoucher(step){
+    var all=vouchers();if(!all.length){if(typeof toast==='function')toast('هنوز سندی برای پیمایش وجود ندارد','err');return;}
+    var cur=String(byId('vNo')&&byId('vNo').value||'');var idx=all.findIndex(function(v){return String(v.no)===cur;});
+    var next;if(idx<0)next=step<0?all.length-1:0;else next=Math.max(0,Math.min(all.length-1,idx+step));
+    loadVoucherIntoForm(all[next]);
+  }
+  function install(){
+    if(!byId('p-voucher'))return;
+    ensurePop();
+    var newBtn=document.createElement('button');newBtn.type='button';newBtn.className='btn btn-g';newBtn.id='btnVoucherNewRepair';newBtn.textContent='＋ سند جدید';
+    var actions=byId('btnSaveVoucher')&&byId('btnSaveVoucher').parentElement;
+    if(actions&&!byId('btnVoucherNewRepair'))actions.insertBefore(newBtn,byId('btnSaveVoucher'));
+    newBtn.addEventListener('click',newVoucher);
+    var save=byId('btnSaveVoucher');if(save){originalSave=save.onclick;save.onclick=saveCurrentVoucher;}
+    document.addEventListener('focusin',function(e){var t=e.target;if(!t||!byId('p-voucher').contains(t))return;var kind=fieldFor(t);if(['no','desc','code','debit','credit'].indexOf(kind)>=0&&(t.id==='vNo'||t.id==='vDesc'||t.classList.contains('lc')||t.classList.contains('ldb')||t.classList.contains('lcr')))showPop(t,kind);});
+    document.addEventListener('mouseover',function(e){var t=e.target;if(!t||!byId('p-voucher').contains(t))return;if(t.id==='vNo'||t.id==='vDesc'||(t.classList&&(['lc','ldb','lcr'].some(function(c){return t.classList.contains(c);})))){if(pop&&pop.hidden)showPop(t,fieldFor(t));}});
+    document.addEventListener('keydown',function(e){var t=e.target;if(!t||t.id!=='vNo')return;
+      if(e.key==='PageUp'||e.key==='ArrowUp'){e.preventDefault();navVoucher(-1);}
+      else if(e.key==='PageDown'||e.key==='ArrowDown'){e.preventDefault();navVoucher(1);}
+      else if(e.key==='Escape')hidePop();
+    });
+    document.addEventListener('mousedown',function(e){if(pop&&!pop.hidden&&!pop.contains(e.target)&&e.target!==activeTarget)hidePop();});
+    window.addEventListener('resize',function(){if(pop&&!pop.hidden)placePop(activeTarget);});
+    window.addEventListener('scroll',function(){if(pop&&!pop.hidden)placePop(activeTarget);},true);
+    // Use the corrected renderers and rebind controls whose old handlers captured broken renderers.
+    window.runPL=function(){
+      var all=typeof getTurnovers==='function'?getTurnovers(typeof optsFrom==='function'?optsFrom('pl'):{}):{};var pl={};
+      Object.keys(all).forEach(function(c){if(c.charAt(0)==='6'||c.charAt(0)==='7')pl[c]=all[c];});
+      var bal=byId('plBalType')?byId('plBalType').value:'';var q=byId('plSearch')?byId('plSearch').value:'';
+      if(typeof renderAgg==='function'){var r=renderAgg('plBody','plEmpty',['plSumD','plSumC','plBalD','plBalC'],pl,window.plLevel||'group',bal,q);if(byId('plRem'))byId('plRem').textContent=fa(Math.abs(r.sc-r.sd))+(r.sc-r.sd>=0?' (سود)':' (زیان)');}
     };
-  });
+    window.runBS=function(){
+      var all=typeof getTurnovers==='function'?getTurnovers(typeof optsFrom==='function'?optsFrom('bs'):{}):{};var bs={};
+      Object.keys(all).forEach(function(c){var ch=c.charAt(0);if(ch==='1'||ch==='2'||ch==='3'||ch==='4'||ch==='5')bs[c]=all[c];});
+      if(typeof renderAgg==='function')renderAgg('bsBody','bsEmpty',['bsSumD','bsSumC','bsBalD','bsBalC'],bs,window.bsLevel||'group',byId('bsBalType')?byId('bsBalType').value:'',byId('bsSearch')?byId('bsSearch').value:'');
+    };
+    var priorRenderReports=window.renderReports;
+    function renderCompactReport(hostId,kind){
+      var host=byId(hostId);if(!host||typeof getTurnovers!=='function')return;
+      var all=getTurnovers({}), codes=(dbRead().codes||[]), names={};codes.forEach(function(c){names[String(c.code)]=c.name||c.code;});
+      var rows=Object.keys(all).sort().filter(function(code){var ch=String(code).charAt(0);return kind==='bs'?['1','2','3','4','5'].indexOf(ch)>=0:['6','7'].indexOf(ch)>=0;}).map(function(code){var a=all[code],bal=(a.debit||0)-(a.credit||0);return {code:code,name:names[code]||a.name||code,debit:a.debit||0,credit:a.credit||0,bd:bal>0?bal:0,bc:bal<0?-bal:0};});
+      var sums={debit:0,credit:0,bd:0,bc:0};rows.forEach(function(r){sums.debit+=r.debit;sums.credit+=r.credit;sums.bd+=r.bd;sums.bc+=r.bc;});
+      var amount=function(n){return typeof formatAmount==='function'?formatAmount(n):String(n);};
+      var html='<div class="sheet-wrap"><table class="data-table"><thead><tr><th>کد حساب</th><th>نام حساب</th><th>گردش بدهکار</th><th>گردش بستانکار</th><th>مانده بدهکار</th><th>مانده بستانکار</th></tr></thead><tbody>';
+      html+=rows.map(function(r){return '<tr><td>'+String(r.code).replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</td><td>'+String(r.name).replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</td><td>'+amount(r.debit)+'</td><td>'+amount(r.credit)+'</td><td>'+amount(r.bd)+'</td><td>'+amount(r.bc)+'</td></tr>';}).join('');
+      html+='</tbody><tfoot><tr><td colspan="2">جمع</td><td>'+amount(sums.debit)+'</td><td>'+amount(sums.credit)+'</td><td>'+amount(sums.bd)+'</td><td>'+amount(sums.bc)+'</td></tr></tfoot></table></div>';
+      if(!rows.length)html='<p class="empty">برای این گزارش سندی ثبت نشده است.</p>';
+      host.innerHTML=html;
+    }
+    window.renderReports=function(){try{if(typeof priorRenderReports==='function')priorRenderReports();}catch(e){}renderCompactReport('repBS','bs');renderCompactReport('repPL','pl');};
+    try{window.renderReports();}catch(e){}
+    if(byId('btnplRun'))byId('btnplRun').onclick=function(){window.runPL();};if(byId('plSearch'))byId('plSearch').oninput=function(){window.runPL();};
+    if(byId('btnbsRun'))byId('btnbsRun').onclick=function(){window.runBS();};if(byId('bsSearch'))byId('bsSearch').oninput=function(){window.runBS();};
+    document.querySelectorAll('#plLevels button').forEach(function(b){b.onclick=function(){var lv=b.getAttribute('data-lv');if(lv==='back'){if(window.plStack&&window.plStack.length)window.plLevel=window.plStack.pop();}else{if(!window.plStack)window.plStack=[];window.plStack.push(window.plLevel||'group');window.plLevel=lv;}document.querySelectorAll('#plLevels button').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-lv')===window.plLevel);});window.runPL();};});
+    document.querySelectorAll('#bsLevels button').forEach(function(b){b.onclick=function(){var lv=b.getAttribute('data-lv');if(lv==='back'){if(window.bsStack&&window.bsStack.length)window.bsLevel=window.bsStack.pop();}else{if(!window.bsStack)window.bsStack=[];window.bsStack.push(window.bsLevel||'group');window.bsLevel=lv;}document.querySelectorAll('#bsLevels button').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-lv')===window.bsLevel);});window.runBS();};});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
+</script>
+<script id="cartable-fix-script">
+(function(){'use strict';
+var STORE='smart_cartable_v1', seen='smart_cartable_seen_v1', lastCount=0;
+function read(){try{var x=JSON.parse(localStorage.getItem(STORE)||'{}');if(Array.isArray(x))return {items:x};if(!x||typeof x!=='object')return {items:[]};if(!Array.isArray(x.items))x.items=[];return x}catch(e){return {items:[]}}}
+function save(x){try{localStorage.setItem(STORE,JSON.stringify(x));return true}catch(e){alert('ذخیره فایل ممکن نیست؛ احتمالاً حجم فایل زیاد است. فایل کوچک‌تری انتخاب کنید.');return false}}
+function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function count(){return read().items.filter(function(x){return x&&x.status!=='deleted'&&x.status!=='done'&&x.kind!=='sent';}).length}
+function sound(){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var c=new C(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=660;g.gain.value=.035;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.16);o.onended=function(){c.close()}}catch(e){}}
+function notice(text){var old=document.getElementById('cartableNotice');if(old)old.remove();var d=document.createElement('div');d.id='cartableNotice';d.className='cartable-toast';d.setAttribute('role','status');d.innerHTML='<b>دریافت جدید در کارتابل</b><div style="margin:6px 0">'+esc(text)+'</div><button type="button" id="cartNoticeOpen">باز کردن کارتابل</button><button type="button" id="cartNoticeClose">بستن</button>';document.body.appendChild(d);document.getElementById('cartNoticeOpen').onclick=function(){d.remove();var b=document.querySelector('[data-panel="p-cartable"]');if(b)b.click();};document.getElementById('cartNoticeClose').onclick=function(){d.remove()};sound();setTimeout(function(){if(d.isConnected)d.remove()},9000)}
+function downloadItem(x){if(x.dataUrl){var a=document.createElement('a');a.href=x.dataUrl;a.download=x.fileName||'cartable-file';document.body.appendChild(a);a.click();a.remove()}else if(x.fileName){alert('محتوای این فایل در ذخیره‌سازی محلی موجود نیست؛ از سامانهٔ ارسال اصلی دوباره دریافت کنید.')}}
+function render(){var root=document.getElementById('cartList');if(!root)return;var db=read(),items=db.items.filter(function(x){return x&&x.status!=='deleted'});root.innerHTML=items.map(function(x,i){var incoming=x.kind!=='sent';return '<div class="cart-file-row"><div class="cart-file-meta"><strong>'+esc(x.fileName||x.msg||'پیام کارتابل')+'</strong><div>'+esc(x.msg||'')+'</div><small>'+esc(x.to?'گیرنده: '+x.to:'')+' '+esc(x.createdAt||'')+' '+(incoming?'<span>دریافتی</span>':'<span>ارسالی</span>')+'</small></div><div class="cart-file-actions">'+(x.dataUrl?'<button type="button" data-cart-download="'+i+'">دریافت فایل</button>':'')+(incoming?'<button type="button" data-cart-done="'+i+'">علامت‌گذاری انجام‌شد</button>':'')+'<button type="button" data-cart-delete="'+i+'">حذف</button></div></div>'}).join('')||'<p class="empty">کارتابل خالی است.</p>';
+root.querySelectorAll('[data-cart-download]').forEach(function(b){b.onclick=function(){downloadItem(items[+b.dataset.cartDownload])}});
+root.querySelectorAll('[data-cart-done]').forEach(function(b){b.onclick=function(){var x=items[+b.dataset.cartDone];x.status='done';save(db);renderAllSafe()}});
+root.querySelectorAll('[data-cart-delete]').forEach(function(b){b.onclick=function(){var x=items[+b.dataset.cartDelete];if(!confirm('این مورد از کارتابل حذف شود؟'))return;x.status='deleted';save(db);renderAllSafe()}});
+var sm=document.getElementById('cartSummary');if(sm)sm.textContent='تعداد موارد فعال: '+count()+' | کل موارد: '+items.length;
+var dock=document.getElementById('cartableDock');if(dock)dock.querySelector('.count').textContent=count();
 }
-
-/* اجرای اولیه + دکمه بروزرسانی */
-function initSuiteCartable() {
-  renderCartableBox();
-  var br = document.getElementById("btnRefreshCartable");
-  if (br) br.onclick = function () { renderCartableBox(); };
+function renderAllSafe(){render();updateDashboard();}
+function updateDashboard(){var host=document.getElementById('dashExtras');if(!host)return;var db={};try{db=JSON.parse(localStorage.getItem('smart_accounting_v4')||'{}')||{}}catch(e){};var vs=Array.isArray(db.vouchers)?db.vouchers:[];var active=vs.filter(function(v){return v&&v.status!=='void'});var temp=active.filter(function(v){return v.status==='temp'||v.status==='temporary'||v.status==='draft'}).length;var perm=active.filter(function(v){return v.status==='perm'||v.status==='permanent'||v.status==='posted'||v.status==='final'}).length;var notes=[];var rems=[];try{notes=JSON.parse(localStorage.getItem('smart_mod_notes_accounting')||'[]')||[]}catch(e){}try{rems=JSON.parse(localStorage.getItem('smart_mod_rem_accounting')||'[]')||[]}catch(e){};host.innerHTML=[['فایل‌های کارتابل',count()],['یادداشت‌ها',Array.isArray(notes)?notes.length:0],['یادآوری‌ها',Array.isArray(rems)?rems.length:0],['کل اسناد',active.length],['اسناد قطعی',perm],['اسناد موقت',temp]].map(function(a){return '<div class="dash-extra"><b>'+a[1]+'</b>'+a[0]+'</div>'}).join('')}
+function attach(){if(!document.getElementById('cartableDock')){var d=document.createElement('button');d.id='cartableDock';d.className='cartable-dock';d.type='button';d.innerHTML='<span>کارتابل</span><span class="count">0</span>';d.onclick=function(){var b=document.querySelector('#p-cartable');if(b){document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')});b.classList.add('on');render()}};document.body.appendChild(d)}
+var send=document.getElementById('btnCartSend');if(send&&!send.dataset.cartFix){send.dataset.cartFix='1';send.onclick=async function(){var fileEl=document.getElementById('cartFile'),file=fileEl&&fileEl.files&&fileEl.files[0],to=(document.getElementById('cartTo')||{}).value||'',msg=(document.getElementById('cartMsg')||{}).value||'';if(!file&&!msg.trim()){alert('یک فایل انتخاب کنید یا توضیحی بنویسید.');return}var dataUrl='';if(file){if(file.size>1800000){alert('برای جلوگیری از پرشدن فضای مرورگر، فایل بزرگ‌تر از 1.8 مگابایت را در سامانهٔ اصلی ارسال کنید.');return}dataUrl=await new Promise(function(resolve,reject){var r=new FileReader();r.onload=function(){resolve(r.result)};r.onerror=reject;r.readAsDataURL(file)}).catch(function(){return ''});if(!dataUrl){alert('خواندن فایل ناموفق بود.');return}}var db=read();db.items.unshift({id:'local-'+Date.now()+'-'+Math.random().toString(16).slice(2),kind:'sent',to:to,msg:msg,fileName:file?file.name:'',fileType:file?file.type:'',fileSize:file?file.size:0,dataUrl:dataUrl,createdAt:new Date().toLocaleString('fa-IR'),status:'sent'});if(!save(db))return;if(fileEl)fileEl.value='';document.getElementById('cartMsg').value='';renderAllSafe();alert('مورد در کارتابل این مرورگر ثبت شد. برای ارسال به دستگاه یا سامانهٔ دیگر، اتصال ارسال اصلی لازم است.')};}
+var rf=document.getElementById('btnCartRefresh');if(rf&&!rf.dataset.cartFix){rf.dataset.cartFix='1';rf.onclick=renderAllSafe}
 }
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initSuiteCartable);
-} else {
-  setTimeout(initSuiteCartable, 300);
-}
+function init(){attach();renderAllSafe();var old=0;try{old=+localStorage.getItem(seen)||0}catch(e){}lastCount=count();try{localStorage.setItem(seen,String(lastCount))}catch(e){};window.addEventListener('storage',function(e){if(e.key===STORE){var n=count();if(n>lastCount){var it=read().items.find(function(x){return x&&x.kind!=='sent'&&x.status!=='done'&&x.status!=='deleted'});notice(it&&(it.fileName||it.msg)||'فایل جدید');}lastCount=n;renderAllSafe()}});document.addEventListener('visibilitychange',function(){if(!document.hidden)renderAllSafe()});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
 </script>
 </body>
 </html>
