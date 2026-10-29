@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html dir="rtl" lang="fa">
 <head>
 <meta charset="utf-8"/>
@@ -2040,6 +2039,71 @@ document.getElementById("legBody").innerHTML=lines.map(function(l,i){return '<tr
   var info=el('bkInfo');
   if(info){try{var db=getDB();info.textContent='مخزن محلی آماده است؛ کلید اصلی: smart_accounting_v4؛ برای اطمینان از داشتن نسخه پشتیبان، فایل را دانلود کنید.';}catch(e){info.textContent='مخزن اطلاعات هنوز قابل خواندن نیست: '+e.message;}}
 })();
+  /* ===== کارتابل مشترک Suite ===== */
+var CART_KEY = "suite_cartable_v1";
+var MY_MODULE_CODE = "accounting"; // برای هر ماژول عوض شود
+
+function loadMyCartable() {
+  try {
+    var all = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+    return all.filter(function (x) {
+      return x.to === MY_MODULE_CODE;
+    });
+  } catch (e) {
+    return [];
+  }
+}
+
+function markCartableStatus(id, status) {
+  var all = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+  all.forEach(function (x) {
+    if (x.id === id) x.status = status;
+  });
+  localStorage.setItem(CART_KEY, JSON.stringify(all));
+}
+
+function renderCartableBox() {
+  var box = document.getElementById("suiteCartableBox");
+  if (!box) return;
+  var items = loadMyCartable().filter(function (x) {
+    return x.status !== "done";
+  });
+  if (!items.length) {
+    box.innerHTML = '<p style="opacity:.7">کارتابل خالی است</p>';
+    return;
+  }
+  box.innerHTML = items
+    .map(function (x) {
+      return (
+        '<div style="border:1px solid #334155;border-radius:10px;padding:10px;margin:8px 0">' +
+        "<b>" +
+        (x.title || "بدون عنوان") +
+        "</b><br>" +
+        '<small>از: ' +
+        (x.fromLabel || x.from) +
+        " | " +
+        (x.at || "") +
+        "</small>" +
+        '<pre style="white-space:pre-wrap;font-size:12px;margin-top:8px">' +
+        (x.body || "") +
+        "</pre>" +
+        (x.fileName
+          ? "<div>فایل: " + x.fileName + "</div>"
+          : "") +
+        '<button type="button" data-cid="' +
+        x.id +
+        '" class="btn-cart-done">انجام شد</button>' +
+        "</div>"
+      );
+    })
+    .join("");
+  box.querySelectorAll(".btn-cart-done").forEach(function (btn) {
+    btn.onclick = function () {
+      markCartableStatus(btn.getAttribute("data-cid"), "done");
+      renderCartableBox();
+    };
+  });
+}
 </script>
 </body>
 </html>
