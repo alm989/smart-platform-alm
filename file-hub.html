@@ -251,7 +251,41 @@ var DB_NAME="smart_file_hub_v1",STORE="files",MAX_BYTES=8*1024*1024,filterType="
 var exWorkbook=null,exRows=[],exHeaders=[],exAnalysis=null,exFileMeta={name:"",size:0};
 var lastUploaded=[];
 var CART_KEY="suite_cartable_v1";
-var MOD_LABELS={accounting:"حسابداری",hr:"پرسنلی",payroll:"حقوق و دستمزد",sales:"فروش",warehouse:"انبار",purchase:"خرید",cash:"صندوق",bank:"بانک",petty:"تنخواه",secretary:"منشی",ceo:"مدیرعامل",suite:"سامانه",other:"سایر"};
+var MOD_LABELS={suite:"سامانه",
+  secretary:"منشی هوشمند",
+  assistant:"دستیار هوشمند",
+  accounting:"حسابداری",
+  hr:"پرسنلی",
+  payroll:"حقوق و دستمزد",
+  sales:"فروش",
+  purchase:"خرید",
+  warehouse:"انبار",
+  cash:"صندوق",
+  bank:"بانک",
+  petty:"تنخواه",
+  customers:"مشتریان",
+  fixedassets:"دارایی ثابت",
+  documents:"اسناد",
+  correspondence:"نامه‌نگاری",
+  registry:"دبیرخانه",
+  archive:"بایگانی",
+  tax:"مالیات",
+  budget:"بودجه",
+  production:"تولید",
+  project:"پروژه",
+  contracts:"قراردادها",
+  fleet:"ناوگان",
+  multicompany:"چندشرکتی",
+  audit:"حسابرسی",
+  legal:"وکیل",
+  pr:"روابط عمومی",
+  ceo:"مدیرعامل",
+  manager:"مدیریت",
+  controller:"کنترلر",
+  brain:"مغز متفکر",
+  filehub:"بارگذاری فایل",
+  other:"سایر"
+};
 
 function toast(m,t){var el=document.getElementById("toast");el.textContent=m;el.className="toast show"+(t==="err"?" err":"");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("show");},2800);}
 function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
