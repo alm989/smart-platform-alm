@@ -2311,32 +2311,59 @@ window.addEventListener('storage',renderAll);renderAll();
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
 })();
 </script>
-<script id="cartable-fix-script">
-(function(){'use strict';
-var STORE='smart_cartable_v1', seen='smart_cartable_seen_v1', lastCount=0;
-function read(){try{var x=JSON.parse(localStorage.getItem(STORE)||'{}');if(Array.isArray(x))return {items:x};if(!x||typeof x!=='object')return {items:[]};if(!Array.isArray(x.items))x.items=[];return x}catch(e){return {items:[]}}}
-function save(x){try{localStorage.setItem(STORE,JSON.stringify(x));return true}catch(e){alert('ذخیره فایل ممکن نیست؛ احتمالاً حجم فایل زیاد است. فایل کوچک‌تری انتخاب کنید.');return false}}
+<script id="cartable-fix-script">(function(){'use strict';
+var STORE='smart_cartable_v1', SUITE='suite_cartable_v1', seen='smart_cartable_seen_v1', lastIds={};
+function parse(key){try{var x=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(x))return x;if(x&&Array.isArray(x.items))return x.items;return []}catch(e){return []}}
+function normalize(x,source){
+  return {id:String(x.id||('in-'+Date.now())),_source:source,from:x.from||'',to:x.to||'',msg:x.msg||x.body||x.title||'',fileName:x.fileName||x.name||'',fileType:x.mime||x.fileType||'',fileSize:x.fileSize||x.size||0,dataUrl:x.dataUrl||x.fileData||x.data||'',createdAt:x.createdAt||x.at||'',status:x.status||'new',kind:source==='suite'?'incoming':(x.kind||'sent')};
+}
+function read(){
+  var suite=parse(SUITE).filter(function(x){return x&&String(x.to||'').toLowerCase()==='accounting';}).map(function(x){return normalize(x,'suite')});
+  var local=parse(STORE).map(function(x){return normalize(x,'local')});
+  var seenIds={};var all=[];
+  suite.concat(local).forEach(function(x){var k=x._source+':'+x.id;if(!seenIds[k]){seenIds[k]=1;all.push(x)}});
+  all.sort(function(a,b){return String(b.createdAt).localeCompare(String(a.createdAt))});
+  return {items:all};
+}
+function writeLocal(items){try{var clean=items.filter(function(x){return x._source==='local'}).map(function(x){var y=Object.assign({},x);delete y._source;return y;});localStorage.setItem(STORE,JSON.stringify(clean));return true;}catch(e){alert('ذخیره کارتابل ممکن نیست؛ فضای ذخیره‌سازی مرورگر را بررسی کنید.');return false;}}
+function updateStatus(x,status){
+  if(x._source==='suite'){
+    var all=parse(SUITE);all.forEach(function(a){if(String(a.id)===String(x.id))a.status=status});
+    try{localStorage.setItem(SUITE,JSON.stringify(all));return true}catch(e){alert('تغییر وضعیت فایل در کارتابل مشترک انجام نشد.');return false}
+  }
+  var allLocal=parse(STORE);allLocal.forEach(function(a){if(String(a.id)===String(x.id))a.status=status});
+  try{localStorage.setItem(STORE,JSON.stringify(allLocal));return true}catch(e){alert('ذخیره وضعیت کارتابل ناموفق بود.');return false}
+}
 function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-function count(){return read().items.filter(function(x){return x&&x.status!=='deleted'&&x.status!=='done'&&x.kind!=='sent';}).length}
-function sound(){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var c=new C(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=660;g.gain.value=.035;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.16);o.onended=function(){c.close()}}catch(e){}}
-function notice(text){var old=document.getElementById('cartableNotice');if(old)old.remove();var d=document.createElement('div');d.id='cartableNotice';d.className='cartable-toast';d.setAttribute('role','status');d.innerHTML='<b>دریافت جدید در کارتابل</b><div style="margin:6px 0">'+esc(text)+'</div><button type="button" id="cartNoticeOpen">باز کردن کارتابل</button><button type="button" id="cartNoticeClose">بستن</button>';document.body.appendChild(d);document.getElementById('cartNoticeOpen').onclick=function(){d.remove();var b=document.querySelector('[data-panel="p-cartable"]');if(b)b.click();};document.getElementById('cartNoticeClose').onclick=function(){d.remove()};sound();setTimeout(function(){if(d.isConnected)d.remove()},9000)}
-function downloadItem(x){if(x.dataUrl){var a=document.createElement('a');a.href=x.dataUrl;a.download=x.fileName||'cartable-file';document.body.appendChild(a);a.click();a.remove()}else if(x.fileName){alert('محتوای این فایل در ذخیره‌سازی محلی موجود نیست؛ از سامانهٔ ارسال اصلی دوباره دریافت کنید.')}}
-function render(){var root=document.getElementById('cartList');if(!root)return;var db=read(),items=db.items.filter(function(x){return x&&x.status!=='deleted'});root.innerHTML=items.map(function(x,i){var incoming=x.kind!=='sent';return '<div class="cart-file-row"><div class="cart-file-meta"><strong>'+esc(x.fileName||x.msg||'پیام کارتابل')+'</strong><div>'+esc(x.msg||'')+'</div><small>'+esc(x.to?'گیرنده: '+x.to:'')+' '+esc(x.createdAt||'')+' '+(incoming?'<span>دریافتی</span>':'<span>ارسالی</span>')+'</small></div><div class="cart-file-actions">'+(x.dataUrl?'<button type="button" data-cart-download="'+i+'">دریافت فایل</button>':'')+(incoming?'<button type="button" data-cart-done="'+i+'">علامت‌گذاری انجام‌شد</button>':'')+'<button type="button" data-cart-delete="'+i+'">حذف</button></div></div>'}).join('')||'<p class="empty">کارتابل خالی است.</p>';
-root.querySelectorAll('[data-cart-download]').forEach(function(b){b.onclick=function(){downloadItem(items[+b.dataset.cartDownload])}});
-root.querySelectorAll('[data-cart-done]').forEach(function(b){b.onclick=function(){var x=items[+b.dataset.cartDone];x.status='done';save(db);renderAllSafe()}});
-root.querySelectorAll('[data-cart-delete]').forEach(function(b){b.onclick=function(){var x=items[+b.dataset.cartDelete];if(!confirm('این مورد از کارتابل حذف شود؟'))return;x.status='deleted';save(db);renderAllSafe()}});
-var sm=document.getElementById('cartSummary');if(sm)sm.textContent='تعداد موارد فعال: '+count()+' | کل موارد: '+items.length;
-var dock=document.getElementById('cartableDock');if(dock)dock.querySelector('.count').textContent=count();
+function incomingActive(x){return x&&x.status!=='deleted'&&x.status!=='done'&&x.status!=='read'&&x.kind!=='sent'}
+function count(){return read().items.filter(incomingActive).length}
+function sound(){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var c=new C(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=660;g.gain.value=.025;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.14);o.onended=function(){c.close()}}catch(e){}}
+function notice(text){var old=document.getElementById('cartableNotice');if(old)old.remove();var d=document.createElement('div');d.id='cartableNotice';d.className='cartable-toast';d.setAttribute('role','status');d.innerHTML='<b>فایل جدید به کارتابل حسابداری رسید</b><div style="margin:6px 0">'+esc(text)+'</div><button type="button" id="cartNoticeOpen">باز کردن کارتابل</button><button type="button" id="cartNoticeClose">بستن</button>';document.body.appendChild(d);document.getElementById('cartNoticeOpen').onclick=function(){d.remove();var b=document.querySelector('#p-cartable');if(b){document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')});b.classList.add('on');render()}};document.getElementById('cartNoticeClose').onclick=function(){d.remove()};sound();setTimeout(function(){if(d.isConnected)d.remove()},9000)}
+function downloadItem(x){if(x.dataUrl){var a=document.createElement('a');a.href=x.dataUrl;a.download=x.fileName||'cartable-file';document.body.appendChild(a);a.click();a.remove()}else if(x.fileName){alert('رکورد فایل وجود دارد اما محتوای پیوست خالی است؛ ماژول مبدأ باید fileData را نیز ارسال کند.')}}
+function render(){
+ var root=document.getElementById('cartList');if(!root)return;
+ var items=read().items.filter(function(x){return x&&x.status!=='deleted'});
+ root.innerHTML=items.map(function(x,i){var inc=x._source==='suite';return '<div class="cart-file-row"><div class="cart-file-meta"><strong>'+esc(x.fileName||x.msg||'پیام کارتابل')+'</strong><div>'+esc(x.msg||'')+'</div><small>'+esc(x.from?'فرستنده: '+x.from:'')+' '+esc(x.to?'گیرنده: '+x.to:'')+' '+esc(x.createdAt||'')+' '+(inc?'<span>دریافتی</span>':'<span>ارسالی محلی</span>')+'</small></div><div class="cart-file-actions">'+(x.dataUrl?'<button type="button" data-cart-download="'+i+'">دریافت فایل</button>':'')+(inc&&x.status!=='done'?'<button type="button" data-cart-done="'+i+'">علامت‌گذاری انجام‌شد</button>':'')+'<button type="button" data-cart-delete="'+i+'">حذف</button></div></div>'}).join('')||'<p class="empty">کارتابل خالی است.</p>';
+ root.querySelectorAll('[data-cart-download]').forEach(function(b){b.onclick=function(){downloadItem(items[+b.dataset.cartDownload])}});
+ root.querySelectorAll('[data-cart-done]').forEach(function(b){b.onclick=function(){var x=items[+b.dataset.cartDone];if(updateStatus(x,'done'))renderAllSafe()}});
+ root.querySelectorAll('[data-cart-delete]').forEach(function(b){b.onclick=function(){var x=items[+b.dataset.cartDelete];if(!confirm('این مورد از کارتابل حذف شود؟'))return;if(updateStatus(x,'deleted'))renderAllSafe()}});
+ var sm=document.getElementById('cartSummary');if(sm)sm.textContent='فایل‌های جدید: '+count()+' | کل موارد: '+items.length;
+ var dock=document.getElementById('cartableDock');if(dock){var c=dock.querySelector('.count');if(c)c.textContent=count()}
 }
-function renderAllSafe(){render();updateDashboard();}
 function updateDashboard(){var host=document.getElementById('dashExtras');if(!host)return;var db={};try{db=JSON.parse(localStorage.getItem('smart_accounting_v4')||'{}')||{}}catch(e){};var vs=Array.isArray(db.vouchers)?db.vouchers:[];var active=vs.filter(function(v){return v&&v.status!=='void'});var temp=active.filter(function(v){return v.status==='temp'||v.status==='temporary'||v.status==='draft'}).length;var perm=active.filter(function(v){return v.status==='perm'||v.status==='permanent'||v.status==='posted'||v.status==='final'}).length;var notes=[];var rems=[];try{notes=JSON.parse(localStorage.getItem('smart_mod_notes_accounting')||'[]')||[]}catch(e){}try{rems=JSON.parse(localStorage.getItem('smart_mod_rem_accounting')||'[]')||[]}catch(e){};host.innerHTML=[['فایل‌های کارتابل',count()],['یادداشت‌ها',Array.isArray(notes)?notes.length:0],['یادآوری‌ها',Array.isArray(rems)?rems.length:0],['کل اسناد',active.length],['اسناد قطعی',perm],['اسناد موقت',temp]].map(function(a){return '<div class="dash-extra"><b>'+a[1]+'</b>'+a[0]+'</div>'}).join('')}
-function attach(){if(!document.getElementById('cartableDock')){var d=document.createElement('button');d.id='cartableDock';d.className='cartable-dock';d.type='button';d.innerHTML='<span>کارتابل</span><span class="count">0</span>';d.onclick=function(){var b=document.querySelector('#p-cartable');if(b){document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')});b.classList.add('on');render()}};document.body.appendChild(d)}
-var send=document.getElementById('btnCartSend');if(send&&!send.dataset.cartFix){send.dataset.cartFix='1';send.onclick=async function(){var fileEl=document.getElementById('cartFile'),file=fileEl&&fileEl.files&&fileEl.files[0],to=(document.getElementById('cartTo')||{}).value||'',msg=(document.getElementById('cartMsg')||{}).value||'';if(!file&&!msg.trim()){alert('یک فایل انتخاب کنید یا توضیحی بنویسید.');return}var dataUrl='';if(file){if(file.size>1800000){alert('برای جلوگیری از پرشدن فضای مرورگر، فایل بزرگ‌تر از 1.8 مگابایت را در سامانهٔ اصلی ارسال کنید.');return}dataUrl=await new Promise(function(resolve,reject){var r=new FileReader();r.onload=function(){resolve(r.result)};r.onerror=reject;r.readAsDataURL(file)}).catch(function(){return ''});if(!dataUrl){alert('خواندن فایل ناموفق بود.');return}}var db=read();db.items.unshift({id:'local-'+Date.now()+'-'+Math.random().toString(16).slice(2),kind:'sent',to:to,msg:msg,fileName:file?file.name:'',fileType:file?file.type:'',fileSize:file?file.size:0,dataUrl:dataUrl,createdAt:new Date().toLocaleString('fa-IR'),status:'sent'});if(!save(db))return;if(fileEl)fileEl.value='';document.getElementById('cartMsg').value='';renderAllSafe();alert('مورد در کارتابل این مرورگر ثبت شد. برای ارسال به دستگاه یا سامانهٔ دیگر، اتصال ارسال اصلی لازم است.')};}
-var rf=document.getElementById('btnCartRefresh');if(rf&&!rf.dataset.cartFix){rf.dataset.cartFix='1';rf.onclick=renderAllSafe}
+function renderAllSafe(){render();updateDashboard()}
+function attach(){
+ if(!document.getElementById('cartableDock')){var d=document.createElement('button');d.id='cartableDock';d.className='cartable-dock';d.type='button';d.innerHTML='<span>کارتابل</span><span class="count">0</span>';d.onclick=function(){var b=document.querySelector('#p-cartable');if(b){document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')});b.classList.add('on');render()}};document.body.appendChild(d)}
+ var rf=document.getElementById('btnCartRefresh');if(rf&&!rf.dataset.cartFix){rf.dataset.cartFix='1';rf.onclick=renderAllSafe}
 }
-function init(){attach();renderAllSafe();var old=0;try{old=+localStorage.getItem(seen)||0}catch(e){}lastCount=count();try{localStorage.setItem(seen,String(lastCount))}catch(e){};window.addEventListener('storage',function(e){if(e.key===STORE){var n=count();if(n>lastCount){var it=read().items.find(function(x){return x&&x.kind!=='sent'&&x.status!=='done'&&x.status!=='deleted'});notice(it&&(it.fileName||it.msg)||'فایل جدید');}lastCount=n;renderAllSafe()}});document.addEventListener('visibilitychange',function(){if(!document.hidden)renderAllSafe()});}
+function init(){
+ attach();renderAllSafe();
+ var initial=read().items.filter(incomingActive);initial.forEach(function(x){lastIds[x.id]=1});
+ window.addEventListener('storage',function(e){if(e.key===SUITE||e.key===STORE){var all=read().items.filter(incomingActive);var fresh=all.filter(function(x){return !lastIds[x.id]});fresh.forEach(function(x){lastIds[x.id]=1});if(fresh.length)notice(fresh[0].fileName||fresh[0].msg||'فایل جدید');renderAllSafe()}});
+ document.addEventListener('visibilitychange',function(){if(!document.hidden)renderAllSafe()});
+ window.addEventListener('focus',renderAllSafe);
+}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-})();
-</script>
+})();</script>
 </body>
 </html>
