@@ -161,7 +161,7 @@ main.main > .panel { width:100%; box-sizing:border-box; }
 <div class="brand"><div class="logo">📒</div><b>حسابداری</b></div>
 <nav class="nav">
 <button class="mic" id="btnMic" type="button">🎤</button>
-<div class="nav-item"><button class="nb on" data-panel="p-dash" type="button">داشبورد</button><div class="dd"><button data-panel="p-dash" type="button">نمای کلی</button>
+<div class="nav-item"><button class="nb on" data-panel="p-dash" type="button">داشبورد</button><div class="dd"><button data-panel="p-dash" type="button">نمای کلی</button></div></div>
 <div class="nav-item"><button class="nb" type="button">ثبت</button><div class="dd" id="ddReg">
 <button data-feat="voucher" data-panel="p-voucher" type="button">سند حسابداری</button>
 <button data-feat="open" data-panel="p-open" type="button">سند افتتاحیه</button>
@@ -203,11 +203,15 @@ main.main > .panel { width:100%; box-sizing:border-box; }
 <div class="clock"><div class="j" id="dtJ">—</div><div class="g" id="dtG">—</div><div class="c" id="dtC">—</div><div class="u" id="activeUser">کاربر فعال: —</div></div>
 </header>
 <div class="body-row"><main class="main">
-<div class="panel on" id="p-dash"><div class="card" style="margin:12px;padding:12px;border:1px solid #334155;border-radius:12px;background:#1e293b">
+<div class="panel on" id="p-dash">
+  <div class="card" style="margin:12px;padding:12px;border:1px solid #334155;border-radius:12px;background:#1e293b">
     <h2 style="font-size:.95rem;color:#7dd3fc;margin-bottom:8px">کارتابل ورودی از Suite</h2>
     <div id="suiteCartableBox">—</div>
     <button type="button" id="btnRefreshCartable" style="margin-top:8px;padding:8px 14px;border:none;border-radius:9px;background:#0ea5e9;color:#fff;font-weight:700;cursor:pointer;font-family:inherit">بروزرسانی کارتابل</button>
-  </div></div>
+  </div>
+  <div class="kpi" id="kpi"></div>
+  <div class="card"><h2>داشبورد حسابداری</h2><p class="empty" id="dashMeta">—</p></div>
+</div>
 <div class="kpi" id="kpi"></div><div class="card"><h2>داشبورد حسابداری</h2><p class="empty" id="dashMeta">—</p></div></div>
 <div class="panel" id="p-voucher"><div class="card has-exit">
 <button class="btn-form-exit" data-panel="p-dash" type="button">خروج</button>
@@ -2101,12 +2105,24 @@ function renderCartableBox() {
       );
     })
     .join("");
-  box.querySelectorAll(".btn-cart-done").forEach(function (btn) {
+    box.querySelectorAll(".btn-cart-done").forEach(function (btn) {
     btn.onclick = function () {
       markCartableStatus(btn.getAttribute("data-cid"), "done");
       renderCartableBox();
     };
   });
+}
+
+/* اجرای اولیه + دکمه بروزرسانی */
+function initSuiteCartable() {
+  renderCartableBox();
+  var br = document.getElementById("btnRefreshCartable");
+  if (br) br.onclick = function () { renderCartableBox(); };
+}
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initSuiteCartable);
+} else {
+  setTimeout(initSuiteCartable, 300);
 }
 </script>
 </body>
