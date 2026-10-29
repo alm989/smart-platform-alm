@@ -24,6 +24,7 @@ body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);col
 .drop .ic{font-size:2.2rem;margin-bottom:8px}
 .drop p{color:var(--muted);font-size:.82rem;line-height:1.6}
 .drop strong{color:#7dd3fc}
+.drop-sm{padding:18px 12px}.drop-sm .ic{font-size:1.6rem}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 @media(max-width:640px){.row,.row3{grid-template-columns:1fr}}
@@ -137,8 +138,16 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
   <div class="panel hidden" id="p-translate">
     <div class="card">
       <h2>ترجمه متن</h2>
-      <div class="row3">
-        <div><label>زبان مبدأ</label>
+      <div class="drop drop-sm" id="trDrop">
+        <div class="ic">📄</div>
+        <p><strong>فایل متن را اینجا رها کنید</strong><br>یا کلیک کنید تا از رایانه / درایو شبکه انتخاب شود</p>
+        <p style="margin-top:6px;font-size:.72rem">TXT · CSV · MD · JSON · HTML · XML</p>
+      </div>
+      <input type="file" id="trFileInput" accept=".txt,.csv,.md,.json,.html,.htm,.xml,.log,.rtf,text/plain,text/csv,text/html,application/json" class="hidden">
+      <p class="status" id="trFileName"></p>
+      <div class="row3" style="margin-top:10px">
+        <div>
+          <label>زبان مبدأ</label>
           <select id="trFrom">
             <option value="fa">فارسی</option>
             <option value="en" selected>انگلیسی</option>
@@ -152,7 +161,8 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
           </select>
         </div>
         <div class="swap"><label>&nbsp;</label><button type="button" id="btnSwapLang">⇄ جابجایی</button></div>
-        <div><label>زبان مقصد</label>
+        <div>
+          <label>زبان مقصد</label>
           <select id="trTo">
             <option value="fa" selected>فارسی</option>
             <option value="en">انگلیسی</option>
@@ -167,8 +177,14 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
         </div>
       </div>
       <div class="tr-box" style="margin-top:12px">
-        <div class="col"><label>متن اصلی</label><textarea id="trSource" placeholder="متن را اینجا بنویسید یا بچسبانید..."></textarea></div>
-        <div class="col"><label>ترجمه</label><textarea id="trResult" placeholder="نتیجه ترجمه..." readonly></textarea></div>
+        <div class="col">
+          <label>متن اصلی</label>
+          <textarea id="trSource" placeholder="متن را اینجا بنویسید، بچسبانید یا از فایل بارگذاری کنید..."></textarea>
+        </div>
+        <div class="col">
+          <label>ترجمه</label>
+          <textarea id="trResult" placeholder="نتیجه ترجمه..." readonly></textarea>
+        </div>
       </div>
       <div style="margin-top:10px">
         <button type="button" class="btn btn-p" id="btnTranslate">ترجمه کن</button>
@@ -273,6 +289,7 @@ function idbGetAll(){return openDB().then(function(db){return new Promise(functi
 function idbDelete(id){return openDB().then(function(db){return new Promise(function(resolve,reject){var tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).delete(id);tx.oncomplete=function(){resolve();};tx.onerror=function(){reject(tx.error);};});});}
 function idbClear(){return openDB().then(function(db){return new Promise(function(resolve,reject){var tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).clear();tx.oncomplete=function(){resolve();};tx.onerror=function(){reject(tx.error);};});});}
 function readFileAsDataURL(file){return new Promise(function(resolve,reject){var r=new FileReader();r.onload=function(){resolve(r.result);};r.onerror=function(){reject(r.error);};r.readAsDataURL(file);});}
+function readFileAsText(file){return new Promise(function(resolve,reject){var r=new FileReader();r.onload=function(){resolve(r.result);};r.onerror=function(){reject(r.error);};r.readAsText(file,"UTF-8");});}
 async function ingestFiles(fileList){var tag=document.getElementById("fileTag").value.trim(),mod=document.getElementById("fileModule").value,recent=[];
 for(var i=0;i<fileList.length;i++){var f=fileList[i],kind=detectKind(f.name,f.type);
 if(kind==="other"){toast("نوع پشتیبانی‌نشده: "+f.name,"err");continue;}if(f.size>MAX_BYTES){toast("حجم زیاد: "+f.name,"err");continue;}
@@ -315,6 +332,21 @@ var b=document.getElementById("btnPrevToOcr");if(b)b.onclick=function(){document
 document.getElementById("previewClose").onclick=function(){document.getElementById("previewModal").classList.remove("open");};
 document.getElementById("previewModal").addEventListener("click",function(e){if(e.target.id==="previewModal")document.getElementById("previewModal").classList.remove("open");});
 function downloadRec(rec){var a=document.createElement("a");a.href=rec.data;a.download=rec.name;a.click();toast("دانلود: "+rec.name);}
+var trDrop=document.getElementById("trDrop"),trFileInput=document.getElementById("trFileInput");
+trDrop.addEventListener("click",function(){trFileInput.click();});
+trDrop.addEventListener("dragover",function(e){e.preventDefault();trDrop.classList.add("over");});
+trDrop.addEventListener("dragleave",function(){trDrop.classList.remove("over");});
+trDrop.addEventListener("drop",function(e){e.preventDefault();trDrop.classList.remove("over");if(e.dataTransfer.files&&e.dataTransfer.files[0])loadTextFile(e.dataTransfer.files[0]);});
+trFileInput.addEventListener("change",function(){if(trFileInput.files&&trFileInput.files[0])loadTextFile(trFileInput.files[0]);trFileInput.value="";});
+async function loadTextFile(file){
+var n=(file.name||"").toLowerCase();
+var ok=/\.(txt|csv|md|json|html?|xml|log|rtf)$/.test(n)||(file.type&&file.type.indexOf("text/")===0)||file.type==="application/json";
+if(!ok){toast("فقط فایل متنی (TXT, CSV, MD, JSON, HTML, XML)","err");return;}
+if(file.size>2*1024*1024){toast("حداکثر ۲ مگابایت برای فایل متن","err");return;}
+try{var text=await readFileAsText(file);document.getElementById("trSource").value=text;document.getElementById("trResult").value="";
+document.getElementById("trFileName").textContent="فایل: "+file.name+" ("+fmtSize(file.size)+")";
+document.getElementById("trStatus").textContent="متن از فایل بارگذاری شد";toast("متن بارگذاری شد");}
+catch(e){toast("خطا در خواندن فایل","err");}}
 document.getElementById("btnSwapLang").onclick=function(){var a=document.getElementById("trFrom"),b=document.getElementById("trTo"),tv=a.value;a.value=b.value;b.value=tv;
 var s=document.getElementById("trSource"),r=document.getElementById("trResult"),ts=s.value;s.value=r.value;r.value=ts;};
 document.getElementById("btnTranslate").onclick=async function(){var text=document.getElementById("trSource").value.trim();if(!text){toast("متن وارد کنید","err");return;}
@@ -323,7 +355,7 @@ var st=document.getElementById("trStatus"),btn=document.getElementById("btnTrans
 try{document.getElementById("trResult").value=await translateText(text,from,to);st.textContent="✓ ترجمه انجام شد";toast("ترجمه شد");}
 catch(e){st.textContent="خطا در ترجمه";toast("خطا در ترجمه","err");}btn.disabled=false;};
 document.getElementById("btnCopyTr").onclick=function(){var t=document.getElementById("trResult").value;if(!t)return;navigator.clipboard.writeText(t).then(function(){toast("کپی شد");}).catch(function(){toast("کپی نشد","err");});};
-document.getElementById("btnClearTr").onclick=function(){document.getElementById("trSource").value="";document.getElementById("trResult").value="";document.getElementById("trStatus").textContent="";};
+document.getElementById("btnClearTr").onclick=function(){document.getElementById("trSource").value="";document.getElementById("trResult").value="";document.getElementById("trStatus").textContent="";document.getElementById("trFileName").textContent="";};
 function setOcrImage(dataUrl,name){ocrDataUrl=dataUrl;document.getElementById("ocrImg").src=dataUrl;document.getElementById("ocrImgWrap").classList.remove("hidden");
 document.getElementById("btnOcr").disabled=false;document.getElementById("ocrText").value="";document.getElementById("ocrTranslated").value="";
 document.getElementById("ocrStatus").textContent=name?("آماده: "+name):"آماده";}
