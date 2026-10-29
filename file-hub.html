@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>بارگذاری فایل + ترجمه</title>
+<title>بارگذاری فایل + ترجمه + اکسل</title>
 <style>
 :root{--bg:#0b1220;--panel:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#0ea5e9;--ok:#22c55e;--bad:#ef4444}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -16,7 +16,7 @@ body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);col
 .nav button{background:#1e293b;border:1px solid var(--line);color:#cbd5e1;border-radius:999px;padding:7px 14px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit}
 .nav button.on,.nav button:hover{background:var(--pri);color:#fff;border-color:var(--pri)}
 .exit{background:#dc2626;color:#fff;border:none;border-radius:999px;padding:7px 14px;font-size:.75rem;font-weight:800;cursor:pointer;font-family:inherit}
-.main{flex:1;padding:16px;max-width:960px;margin:0 auto;width:100%}
+.main{flex:1;padding:16px;max-width:980px;margin:0 auto;width:100%}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
 .card h2{font-size:.95rem;color:#7dd3fc;margin-bottom:10px}
 .drop{border:2px dashed #475569;border-radius:14px;padding:28px 16px;text-align:center;background:#0f172a;transition:.15s;cursor:pointer}
@@ -42,13 +42,11 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 .file-card{background:#0f172a;border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px}
 .file-card .thumb{height:100px;border-radius:8px;background:#1e293b;display:grid;place-items:center;overflow:hidden;font-size:2rem}
 .file-card .thumb img{width:100%;height:100%;object-fit:cover}
-.file-card .name{font-size:.78rem;font-weight:700;word-break:break-all;color:#e2e8f0}
+.file-card .name{font-size:.78rem;font-weight:700;word-break:break-all}
 .file-card .meta{font-size:.65rem;color:var(--muted)}
 .file-card .acts{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.62rem;font-weight:800}
-.badge.word{background:#1e3a8a;color:#93c5fd}
-.badge.excel{background:#14532d;color:#86efac}
-.badge.img{background:#4c1d95;color:#c4b5fd}
+.badge.word{background:#1e3a8a;color:#93c5fd}.badge.excel{background:#14532d;color:#86efac}.badge.img{background:#4c1d95;color:#c4b5fd}
 .empty{color:var(--muted);text-align:center;padding:24px;font-size:.85rem}
 .toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:10px 14px;border-radius:12px;font-weight:700;opacity:0;z-index:50;transition:.15s;font-size:.8rem;max-width:90vw;text-align:center}
 .toast.show{opacity:1}.toast.err{background:var(--bad)}
@@ -68,6 +66,15 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
 .swap{text-align:center;margin:6px 0}
 .swap button{background:#334155;border:none;color:#fff;border-radius:999px;padding:6px 14px;cursor:pointer;font-family:inherit;font-weight:700}
 .ocr-preview{max-width:100%;max-height:200px;border-radius:8px;margin:8px 0;border:1px solid var(--line)}
+.tbl-wrap{overflow:auto;max-height:280px;border:1px solid var(--line);border-radius:10px;margin-top:10px}
+table.ex{width:100%;border-collapse:collapse;font-size:.72rem}
+table.ex th,table.ex td{border:1px solid var(--line);padding:6px 8px;text-align:right;white-space:nowrap}
+table.ex th{background:#0f172a;color:#7dd3fc;position:sticky;top:0}
+table.ex tr:nth-child(even){background:#0f172a}
+.report-box{background:#0f172a;border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px;font-size:.8rem;line-height:1.7;white-space:pre-wrap}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:10px}
+.stat-grid .s{background:#0f172a;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+.stat-grid .s .v{font-size:1rem;font-weight:800;color:#86efac}.stat-grid .s .k{font-size:.65rem;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
@@ -78,196 +85,128 @@ textarea{min-height:120px;resize:vertical;line-height:1.6}
     <button type="button" data-panel="p-list">فهرست فایل‌ها</button>
     <button type="button" data-panel="p-translate">ترجمه متن</button>
     <button type="button" data-panel="p-img-tr">ترجمه تصویر</button>
+    <button type="button" data-panel="p-excel">اکسل</button>
     <button type="button" data-panel="p-settings">تنظیمات</button>
   </nav>
   <button type="button" class="exit" id="btnExit">خروج</button>
 </header>
 <main class="main">
-  <div class="kpi" id="kpi"></div>
-  <div class="panel" id="p-upload">
-    <div class="card">
-      <h2>بارگذاری</h2>
-      <div class="drop" id="dropZone">
-        <div class="ic">⬆️</div>
-        <p><strong>فایل را اینجا رها کنید</strong><br>یا کلیک کنید تا از رایانه / درایو شبکه انتخاب شود</p>
-        <p style="margin-top:8px;font-size:.72rem">ورد · اکسل · تصویر</p>
-      </div>
-      <input type="file" id="fileInput" multiple accept=".doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.gif,.webp,.bmp,image/*" class="hidden">
-      <div class="row" style="margin-top:12px">
-        <div><label>برچسب / موضوع</label><input id="fileTag" placeholder="مثلاً فاکتور مهر ۱۴۰۴"></div>
-        <div><label>ماژول مقصد</label>
-          <select id="fileModule">
-            <option value="">— عمومی —</option>
-            <option value="accounting">حسابداری</option>
-            <option value="hr">پرسنلی</option>
-            <option value="sales">فروش</option>
-            <option value="warehouse">انبار</option>
-            <option value="secretary">منشی</option>
-            <option value="other">سایر</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="card" id="recentBox" style="display:none"><h2>آخرین بارگذاری‌ها</h2><div id="recentList"></div></div>
-  </div>
-  <div class="panel hidden" id="p-list">
-    <div class="card">
-      <h2>فهرست فایل‌ها</h2>
-      <div class="filters" id="filters">
-        <button type="button" class="on" data-filter="all">همه</button>
-        <button type="button" data-filter="word">ورد</button>
-        <button type="button" data-filter="excel">اکسل</button>
-        <button type="button" data-filter="img">تصویر</button>
-      </div>
-      <div class="row" style="margin-bottom:10px">
-        <input id="searchQ" placeholder="جستجو نام یا برچسب...">
-        <select id="filterModule">
-          <option value="">همه ماژول‌ها</option>
-          <option value="accounting">حسابداری</option>
-          <option value="hr">پرسنلی</option>
-          <option value="sales">فروش</option>
-          <option value="warehouse">انبار</option>
-          <option value="secretary">منشی</option>
-          <option value="other">سایر</option>
-        </select>
-      </div>
-      <div class="grid" id="fileGrid"></div>
-      <p class="empty hidden" id="emptyList">فایلی ذخیره نشده است</p>
-    </div>
-  </div>
-  <div class="panel hidden" id="p-translate">
-    <div class="card">
-      <h2>ترجمه متن</h2>
-      <div class="drop drop-sm" id="trDrop">
-        <div class="ic">📄</div>
-        <p><strong>فایل متن را اینجا رها کنید</strong><br>یا کلیک کنید تا از رایانه / درایو شبکه انتخاب شود</p>
-        <p style="margin-top:6px;font-size:.72rem">TXT · CSV · MD · JSON · HTML · XML</p>
-      </div>
-      <input type="file" id="trFileInput" accept=".txt,.csv,.md,.json,.html,.htm,.xml,.log,.rtf,text/plain,text/csv,text/html,application/json" class="hidden">
-      <p class="status" id="trFileName"></p>
-      <div class="row3" style="margin-top:10px">
-        <div>
-          <label>زبان مبدأ</label>
-          <select id="trFrom">
-            <option value="fa">فارسی</option>
-            <option value="en" selected>انگلیسی</option>
-            <option value="ar">عربی</option>
-            <option value="fr">فرانسوی</option>
-            <option value="de">آلمانی</option>
-            <option value="tr">ترکی</option>
-            <option value="ru">روسی</option>
-            <option value="zh-CN">چینی</option>
-            <option value="es">اسپانیایی</option>
-          </select>
-        </div>
-        <div class="swap"><label>&nbsp;</label><button type="button" id="btnSwapLang">⇄ جابجایی</button></div>
-        <div>
-          <label>زبان مقصد</label>
-          <select id="trTo">
-            <option value="fa" selected>فارسی</option>
-            <option value="en">انگلیسی</option>
-            <option value="ar">عربی</option>
-            <option value="fr">فرانسوی</option>
-            <option value="de">آلمانی</option>
-            <option value="tr">ترکی</option>
-            <option value="ru">روسی</option>
-            <option value="zh-CN">چینی</option>
-            <option value="es">اسپانیایی</option>
-          </select>
-        </div>
-      </div>
-      <div class="tr-box" style="margin-top:12px">
-        <div class="col">
-          <label>متن اصلی</label>
-          <textarea id="trSource" placeholder="متن را اینجا بنویسید، بچسبانید یا از فایل بارگذاری کنید..."></textarea>
-        </div>
-        <div class="col">
-          <label>ترجمه</label>
-          <textarea id="trResult" placeholder="نتیجه ترجمه..." readonly></textarea>
-        </div>
-      </div>
-      <div style="margin-top:10px">
-        <button type="button" class="btn btn-p" id="btnTranslate">ترجمه کن</button>
-        <button type="button" class="btn btn-g" id="btnCopyTr">کپی ترجمه</button>
-        <button type="button" class="btn btn-g" id="btnClearTr">پاک کردن</button>
-      </div>
-      <p class="status" id="trStatus"></p>
-    </div>
-  </div>
-  <div class="panel hidden" id="p-img-tr">
-    <div class="card">
-      <h2>ترجمه تصویر</h2>
-      <div class="drop" id="ocrDrop">
-        <div class="ic">🖼️</div>
-        <p><strong>تصویر را اینجا رها کنید</strong><br>یا کلیک کنید تا از رایانه / درایو شبکه انتخاب شود</p>
-        <p style="margin-top:8px;font-size:.72rem">JPG · PNG · GIF · WEBP · BMP</p>
-      </div>
-      <input type="file" id="ocrInput" accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tif,.tiff" class="hidden">
-      <div class="row" style="margin-top:12px">
-        <div>
-          <label>زبان متن روی تصویر</label>
-          <select id="ocrLang">
-            <option value="eng">انگلیسی</option>
-            <option value="fas">فارسی</option>
-            <option value="ara">عربی</option>
-            <option value="eng+fas">انگلیسی + فارسی</option>
-            <option value="deu">آلمانی</option>
-            <option value="fra">فرانسوی</option>
-            <option value="tur">ترکی</option>
-          </select>
-        </div>
-        <div>
-          <label>ترجمه به</label>
-          <select id="ocrTrTo">
-            <option value="fa" selected>فارسی</option>
-            <option value="en">انگلیسی</option>
-            <option value="ar">عربی</option>
-            <option value="tr">ترکی</option>
-            <option value="de">آلمانی</option>
-            <option value="fr">فرانسوی</option>
-          </select>
-        </div>
-      </div>
-      <div id="ocrImgWrap" class="hidden" style="text-align:center;margin-top:10px">
-        <img id="ocrImg" class="ocr-preview" alt="">
-      </div>
-      <div style="margin-top:10px">
-        <button type="button" class="btn btn-p" id="btnOcr" disabled>استخراج متن + ترجمه</button>
-        <button type="button" class="btn btn-g" id="btnCopyOcr">کپی نتیجه</button>
-        <button type="button" class="btn btn-g" id="btnClearOcr">پاک کردن</button>
-      </div>
-      <p class="status" id="ocrStatus"></p>
-      <label style="margin-top:10px">متن استخراج‌شده</label>
-      <textarea id="ocrText" readonly placeholder="متن OCR..."></textarea>
-      <label style="margin-top:8px">ترجمه</label>
-      <textarea id="ocrTranslated" readonly placeholder="ترجمه..."></textarea>
-    </div>
-  </div>
-  <div class="panel hidden" id="p-settings">
-    <div class="card">
-      <h2>تنظیمات</h2>
-      <button type="button" class="btn btn-p" id="btnExportMeta">خروجی فهرست (JSON)</button>
-      <button type="button" class="btn btn-g" id="btnClearAll">حذف همه فایل‌ها</button>
-      <p class="status" id="storageInfo" style="margin-top:12px">—</p>
-    </div>
-  </div>
+<div class="kpi" id="kpi"></div>
+<div class="panel" id="p-upload">
+<div class="card"><h2>بارگذاری</h2>
+<div class="drop" id="dropZone"><div class="ic">⬆️</div>
+<p><strong>فایل را اینجا رها کنید</strong><br>یا کلیک کنید تا از رایانه / درایو شبکه انتخاب شود</p>
+<p style="margin-top:8px;font-size:.72rem">ورد · اکسل · تصویر</p></div>
+<input type="file" id="fileInput" multiple accept=".doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.gif,.webp,.bmp,image/*" class="hidden">
+<div class="row" style="margin-top:12px">
+<div><label>برچسب / موضوع</label><input id="fileTag" placeholder="مثلاً فاکتور مهر ۱۴۰۴"></div>
+<div><label>ماژول مقصد</label>
+<select id="fileModule"><option value="">— عمومی —</option><option value="accounting">حسابداری</option><option value="hr">پرسنلی</option><option value="sales">فروش</option><option value="warehouse">انبار</option><option value="secretary">منشی</option><option value="other">سایر</option></select>
+</div></div></div>
+<div class="card" id="recentBox" style="display:none"><h2>آخرین بارگذاری‌ها</h2><div id="recentList"></div></div>
+</div>
+<div class="panel hidden" id="p-list">
+<div class="card"><h2>فهرست فایل‌ها</h2>
+<div class="filters" id="filters">
+<button type="button" class="on" data-filter="all">همه</button>
+<button type="button" data-filter="word">ورد</button>
+<button type="button" data-filter="excel">اکسل</button>
+<button type="button" data-filter="img">تصویر</button>
+</div>
+<div class="row" style="margin-bottom:10px">
+<input id="searchQ" placeholder="جستجو نام یا برچسب...">
+<select id="filterModule"><option value="">همه ماژول‌ها</option><option value="accounting">حسابداری</option><option value="hr">پرسنلی</option><option value="sales">فروش</option><option value="warehouse">انبار</option><option value="secretary">منشی</option><option value="other">سایر</option></select>
+</div>
+<div class="grid" id="fileGrid"></div>
+<p class="empty hidden" id="emptyList">فایلی ذخیره نشده است</p>
+</div></div>
+<div class="panel hidden" id="p-translate">
+<div class="card"><h2>ترجمه متن</h2>
+<div class="drop drop-sm" id="trDrop"><div class="ic">📄</div>
+<p><strong>فایل متن را اینجا رها کنید</strong><br>یا کلیک کنید تا از رایانه / درایو شبکه انتخاب شود</p>
+<p style="margin-top:6px;font-size:.72rem">TXT · CSV · MD · JSON · HTML · XML</p></div>
+<input type="file" id="trFileInput" accept=".txt,.csv,.md,.json,.html,.htm,.xml,.log,.rtf,text/plain,text/csv,text/html,application/json" class="hidden">
+<p class="status" id="trFileName"></p>
+<div class="row3" style="margin-top:10px">
+<div><label>زبان مبدأ</label><select id="trFrom"><option value="fa">فارسی</option><option value="en" selected>انگلیسی</option><option value="ar">عربی</option><option value="fr">فرانسوی</option><option value="de">آلمانی</option><option value="tr">ترکی</option><option value="ru">روسی</option><option value="zh-CN">چینی</option><option value="es">اسپانیایی</option></select></div>
+<div class="swap"><label>&nbsp;</label><button type="button" id="btnSwapLang">⇄ جابجایی</button></div>
+<div><label>زبان مقصد</label><select id="trTo"><option value="fa" selected>فارسی</option><option value="en">انگلیسی</option><option value="ar">عربی</option><option value="fr">فرانسوی</option><option value="de">آلمانی</option><option value="tr">ترکی</option><option value="ru">روسی</option><option value="zh-CN">چینی</option><option value="es">اسپانیایی</option></select></div>
+</div>
+<div class="tr-box" style="margin-top:12px">
+<div class="col"><label>متن اصلی</label><textarea id="trSource" placeholder="متن را اینجا بنویسید، بچسبانید یا از فایل بارگذاری کنید..."></textarea></div>
+<div class="col"><label>ترجمه</label><textarea id="trResult" placeholder="نتیجه ترجمه..." readonly></textarea></div>
+</div>
+<div style="margin-top:10px">
+<button type="button" class="btn btn-p" id="btnTranslate">ترجمه کن</button>
+<button type="button" class="btn btn-g" id="btnCopyTr">کپی ترجمه</button>
+<button type="button" class="btn btn-g" id="btnClearTr">پاک کردن</button>
+</div>
+<p class="status" id="trStatus"></p>
+</div></div>
+<div class="panel hidden" id="p-img-tr">
+<div class="card"><h2>ترجمه تصویر</h2>
+<div class="drop" id="ocrDrop"><div class="ic">🖼️</div>
+<p><strong>تصویر را اینجا رها کنید</strong><br>یا کلیک کنید تا از رایانه / درایو شبکه انتخاب شود</p>
+<p style="margin-top:8px;font-size:.72rem">JPG · PNG · GIF · WEBP · BMP</p></div>
+<input type="file" id="ocrInput" accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tif,.tiff" class="hidden">
+<div class="row" style="margin-top:12px">
+<div><label>زبان متن روی تصویر</label><select id="ocrLang"><option value="eng">انگلیسی</option><option value="fas">فارسی</option><option value="ara">عربی</option><option value="eng+fas">انگلیسی + فارسی</option><option value="deu">آلمانی</option><option value="fra">فرانسوی</option><option value="tur">ترکی</option></select></div>
+<div><label>ترجمه به</label><select id="ocrTrTo"><option value="fa" selected>فارسی</option><option value="en">انگلیسی</option><option value="ar">عربی</option><option value="tr">ترکی</option><option value="de">آلمانی</option><option value="fr">فرانسوی</option></select></div>
+</div>
+<div id="ocrImgWrap" class="hidden" style="text-align:center;margin-top:10px"><img id="ocrImg" class="ocr-preview" alt=""></div>
+<div style="margin-top:10px">
+<button type="button" class="btn btn-p" id="btnOcr" disabled>استخراج متن + ترجمه</button>
+<button type="button" class="btn btn-g" id="btnCopyOcr">کپی نتیجه</button>
+<button type="button" class="btn btn-g" id="btnClearOcr">پاک کردن</button>
+</div>
+<p class="status" id="ocrStatus"></p>
+<label style="margin-top:10px">متن استخراج‌شده</label><textarea id="ocrText" readonly placeholder="متن OCR..."></textarea>
+<label style="margin-top:8px">ترجمه</label><textarea id="ocrTranslated" readonly placeholder="ترجمه..."></textarea>
+</div></div>
+<div class="panel hidden" id="p-excel">
+<div class="card"><h2>اکسل — تحلیل و گزارش</h2>
+<div class="drop" id="exDrop"><div class="ic">📊</div>
+<p><strong>فایل اکسل را اینجا رها کنید</strong><br>یا کلیک کنید تا از رایانه / درایو شبکه انتخاب شود</p>
+<p style="margin-top:8px;font-size:.72rem">XLSX · XLS · CSV</p></div>
+<input type="file" id="exInput" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" class="hidden">
+<p class="status" id="exFileName"></p>
+<div class="row" style="margin-top:8px">
+<div><label>برگه (Sheet)</label><select id="exSheet"></select></div>
+<div><label>عنوان گزارش</label><input id="exReportTitle" value="گزارش مدیریتی و مالی"></div>
+</div>
+<div style="margin-top:10px">
+<button type="button" class="btn btn-p" id="btnExAnalyze" disabled>تجزیه و تحلیل</button>
+<button type="button" class="btn btn-ok" id="btnExExport" disabled>ذخیره گزارش اکسل</button>
+<button type="button" class="btn btn-g" id="btnExClear">پاک کردن</button>
+</div>
+<p class="status" id="exStatus"></p>
+<div id="exStats" class="stat-grid"></div>
+<div id="exReport" class="report-box hidden"></div>
+<div class="tbl-wrap hidden" id="exTableWrap"><table class="ex" id="exTable"></table></div>
+</div></div>
+<div class="panel hidden" id="p-settings">
+<div class="card"><h2>تنظیمات</h2>
+<button type="button" class="btn btn-p" id="btnExportMeta">خروجی فهرست (JSON)</button>
+<button type="button" class="btn btn-g" id="btnClearAll">حذف همه فایل‌ها</button>
+<p class="status" id="storageInfo" style="margin-top:12px">—</p>
+</div></div>
 </main>
 <div class="preview-modal" id="previewModal">
-  <div class="box">
-    <button type="button" class="close" id="previewClose">بستن</button>
-    <h3 id="previewTitle" style="margin-bottom:10px;color:#7dd3fc;padding-left:60px"></h3>
-    <div id="previewBody"></div>
-    <div id="previewTr" style="margin-top:12px"></div>
-  </div>
-</div>
+<div class="box"><button type="button" class="close" id="previewClose">بستن</button>
+<h3 id="previewTitle" style="margin-bottom:10px;color:#7dd3fc;padding-left:60px"></h3>
+<div id="previewBody"></div><div id="previewTr" style="margin-top:12px"></div>
+</div></div>
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 (function(){
 var DB_NAME="smart_file_hub_v1",STORE="files",MAX_BYTES=8*1024*1024,filterType="all",ocrDataUrl=null;
+var exWorkbook=null,exRows=[],exHeaders=[],exAnalysis=null,exFileMeta={name:"",size:0};
 function toast(m,t){var el=document.getElementById("toast");el.textContent=m;el.className="toast show"+(t==="err"?" err":"");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("show");},2800);}
 function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
 function fmtSize(n){if(n<1024)return n+" B";if(n<1048576)return (n/1024).toFixed(1)+" KB";return (n/1048576).toFixed(2)+" MB";}
+function fmtNum(n){if(n==null||isNaN(n))return "—";return Number(n).toLocaleString("fa-IR",{maximumFractionDigits:2});}
 function detectKind(name,mime){var n=(name||"").toLowerCase(),m=(mime||"").toLowerCase();
 if(/\.(doc|docx)$/.test(n)||m.indexOf("word")>=0||m.indexOf("msword")>=0)return "word";
 if(/\.(xls|xlsx|csv)$/.test(n)||m.indexOf("excel")>=0||m.indexOf("spreadsheet")>=0||m==="text/csv")return "excel";
@@ -290,6 +229,7 @@ function idbDelete(id){return openDB().then(function(db){return new Promise(func
 function idbClear(){return openDB().then(function(db){return new Promise(function(resolve,reject){var tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).clear();tx.oncomplete=function(){resolve();};tx.onerror=function(){reject(tx.error);};});});}
 function readFileAsDataURL(file){return new Promise(function(resolve,reject){var r=new FileReader();r.onload=function(){resolve(r.result);};r.onerror=function(){reject(r.error);};r.readAsDataURL(file);});}
 function readFileAsText(file){return new Promise(function(resolve,reject){var r=new FileReader();r.onload=function(){resolve(r.result);};r.onerror=function(){reject(r.error);};r.readAsText(file,"UTF-8");});}
+function readFileAsArrayBuffer(file){return new Promise(function(resolve,reject){var r=new FileReader();r.onload=function(){resolve(r.result);};r.onerror=function(){reject(r.error);};r.readAsArrayBuffer(file);});}
 async function ingestFiles(fileList){var tag=document.getElementById("fileTag").value.trim(),mod=document.getElementById("fileModule").value,recent=[];
 for(var i=0;i<fileList.length;i++){var f=fileList[i],kind=detectKind(f.name,f.type);
 if(kind==="other"){toast("نوع پشتیبانی‌نشده: "+f.name,"err");continue;}if(f.size>MAX_BYTES){toast("حجم زیاد: "+f.name,"err");continue;}
@@ -338,19 +278,16 @@ trDrop.addEventListener("dragover",function(e){e.preventDefault();trDrop.classLi
 trDrop.addEventListener("dragleave",function(){trDrop.classList.remove("over");});
 trDrop.addEventListener("drop",function(e){e.preventDefault();trDrop.classList.remove("over");if(e.dataTransfer.files&&e.dataTransfer.files[0])loadTextFile(e.dataTransfer.files[0]);});
 trFileInput.addEventListener("change",function(){if(trFileInput.files&&trFileInput.files[0])loadTextFile(trFileInput.files[0]);trFileInput.value="";});
-async function loadTextFile(file){
-var n=(file.name||"").toLowerCase();
+async function loadTextFile(file){var n=(file.name||"").toLowerCase();
 var ok=/\.(txt|csv|md|json|html?|xml|log|rtf)$/.test(n)||(file.type&&file.type.indexOf("text/")===0)||file.type==="application/json";
-if(!ok){toast("فقط فایل متنی (TXT, CSV, MD, JSON, HTML, XML)","err");return;}
-if(file.size>2*1024*1024){toast("حداکثر ۲ مگابایت برای فایل متن","err");return;}
+if(!ok){toast("فقط فایل متنی","err");return;}if(file.size>2*1024*1024){toast("حداکثر ۲ مگابایت","err");return;}
 try{var text=await readFileAsText(file);document.getElementById("trSource").value=text;document.getElementById("trResult").value="";
-document.getElementById("trFileName").textContent="فایل: "+file.name+" ("+fmtSize(file.size)+")";
-document.getElementById("trStatus").textContent="متن از فایل بارگذاری شد";toast("متن بارگذاری شد");}
+document.getElementById("trFileName").textContent="فایل: "+file.name+" ("+fmtSize(file.size)+")";document.getElementById("trStatus").textContent="متن از فایل بارگذاری شد";toast("متن بارگذاری شد");}
 catch(e){toast("خطا در خواندن فایل","err");}}
 document.getElementById("btnSwapLang").onclick=function(){var a=document.getElementById("trFrom"),b=document.getElementById("trTo"),tv=a.value;a.value=b.value;b.value=tv;
 var s=document.getElementById("trSource"),r=document.getElementById("trResult"),ts=s.value;s.value=r.value;r.value=ts;};
 document.getElementById("btnTranslate").onclick=async function(){var text=document.getElementById("trSource").value.trim();if(!text){toast("متن وارد کنید","err");return;}
-var from=document.getElementById("trFrom").value,to=document.getElementById("trTo").value;if(from===to){toast("زبان مبدأ و مقصد یکسان است","err");return;}
+var from=document.getElementById("trFrom").value,to=document.getElementById("trTo").value;if(from===to){toast("زبان‌ها یکسان","err");return;}
 var st=document.getElementById("trStatus"),btn=document.getElementById("btnTranslate");btn.disabled=true;st.textContent="در حال ترجمه...";
 try{document.getElementById("trResult").value=await translateText(text,from,to);st.textContent="✓ ترجمه انجام شد";toast("ترجمه شد");}
 catch(e){st.textContent="خطا در ترجمه";toast("خطا در ترجمه","err");}btn.disabled=false;};
@@ -367,19 +304,94 @@ ocrDrop.addEventListener("drop",function(e){e.preventDefault();ocrDrop.classList
 ocrInput.addEventListener("change",function(){if(ocrInput.files&&ocrInput.files[0])loadOcrFile(ocrInput.files[0]);ocrInput.value="";});
 async function loadOcrFile(file){if(!file.type||file.type.indexOf("image/")!==0){var n=(file.name||"").toLowerCase();if(!/\.(jpe?g|png|gif|webp|bmp|tiff?)$/.test(n)){toast("فقط تصویر","err");return;}}
 var data=await readFileAsDataURL(file);setOcrImage(data,file.name);}
-document.getElementById("btnOcr").onclick=async function(){if(!ocrDataUrl){toast("تصویر انتخاب نشده","err");return;}if(typeof Tesseract==="undefined"){toast("کتابخانه OCR لود نشده","err");return;}
+document.getElementById("btnOcr").onclick=async function(){if(!ocrDataUrl){toast("تصویر انتخاب نشده","err");return;}if(typeof Tesseract==="undefined"){toast("OCR لود نشده","err");return;}
 var btn=document.getElementById("btnOcr"),st=document.getElementById("ocrStatus"),lang=document.getElementById("ocrLang").value,to=document.getElementById("ocrTrTo").value;
 btn.disabled=true;st.textContent="در حال استخراج متن...";
 try{var result=await Tesseract.recognize(ocrDataUrl,lang,{logger:function(m){if(m.status==="recognizing text")st.textContent="OCR: "+Math.round((m.progress||0)*100)+"%";}});
 var text=(result&&result.data&&result.data.text||"").trim();document.getElementById("ocrText").value=text||"(متنی یافت نشد)";
-if(!text){st.textContent="متنی در تصویر پیدا نشد";btn.disabled=false;return;}
+if(!text){st.textContent="متنی پیدا نشد";btn.disabled=false;return;}
 st.textContent="در حال ترجمه...";var from=guessLangFromOcr(lang);
 if(from===to){document.getElementById("ocrTranslated").value=text;st.textContent="✓ متن استخراج شد";}
 else{document.getElementById("ocrTranslated").value=await translateText(text,from,to);st.textContent="✓ استخراج و ترجمه انجام شد";}
-toast("آماده شد");}catch(e){st.textContent="خطا";toast("خطا در OCR یا ترجمه","err");}btn.disabled=false;};
+toast("آماده شد");}catch(e){st.textContent="خطا";toast("خطا OCR/ترجمه","err");}btn.disabled=false;};
 document.getElementById("btnCopyOcr").onclick=function(){var t=document.getElementById("ocrTranslated").value||document.getElementById("ocrText").value;if(!t)return;navigator.clipboard.writeText(t).then(function(){toast("کپی شد");}).catch(function(){toast("کپی نشد","err");});};
 document.getElementById("btnClearOcr").onclick=function(){ocrDataUrl=null;document.getElementById("ocrImg").src="";document.getElementById("ocrImgWrap").classList.add("hidden");
 document.getElementById("btnOcr").disabled=true;document.getElementById("ocrText").value="";document.getElementById("ocrTranslated").value="";document.getElementById("ocrStatus").textContent="";};
+function toNumber(v){if(v==null||v==="")return null;if(typeof v==="number"&&!isNaN(v))return v;
+var s=String(v).replace(/,/g,"").replace(/،/g,"").replace(/\s/g,"").replace(/[^\d.\-]/g,"");
+if(s===""||s==="-"||s===".")return null;var n=parseFloat(s);return isNaN(n)?null:n;}
+function isAmountCol(name){var n=String(name||"").toLowerCase();
+return /مبلغ|قیمت|جمع|بدهکار|بستانکار|مانده|هزینه|درآمد|فروش|خرید|پرداخت|دریافت|amount|price|total|debit|credit|balance|cost|sales|revenue|sum/.test(n);}
+function loadSheetData(sheetName){if(!exWorkbook)return;var ws=exWorkbook.Sheets[sheetName];if(!ws)return;
+var aoa=XLSX.utils.sheet_to_json(ws,{header:1,defval:"",raw:false});if(!aoa.length){exHeaders=[];exRows=[];return;}
+exHeaders=(aoa[0]||[]).map(function(h,i){return String(h||"").trim()||("ستون"+(i+1));});exRows=[];
+for(var r=1;r<aoa.length;r++){var row=aoa[r]||[],obj={},empty=true;
+for(var c=0;c<exHeaders.length;c++){var val=row[c]!=null?row[c]:"";if(String(val).trim()!=="")empty=false;obj[exHeaders[c]]=val;}
+if(!empty)exRows.push(obj);}}
+function renderPreviewTable(){var wrap=document.getElementById("exTableWrap"),tbl=document.getElementById("exTable");
+if(!exHeaders.length){wrap.classList.add("hidden");return;}wrap.classList.remove("hidden");var maxShow=Math.min(exRows.length,50);
+var html="<thead><tr>"+exHeaders.map(function(h){return "<th>"+esc(h)+"</th>";}).join("")+"</tr></thead><tbody>";
+for(var i=0;i<maxShow;i++)html+="<tr>"+exHeaders.map(function(h){return "<td>"+esc(exRows[i][h])+"</td>";}).join("")+"</tr>";
+html+="</tbody>";tbl.innerHTML=html;}
+function analyzeExcel(){if(!exRows.length){toast("داده‌ای نیست","err");return null;}var colStats={};
+exHeaders.forEach(function(h){var nums=[],empty=0;exRows.forEach(function(row){var v=row[h];if(v==null||String(v).trim()===""){empty++;return;}var n=toNumber(v);if(n!=null)nums.push(n);});
+var sum=nums.reduce(function(a,b){return a+b;},0);
+colStats[h]={numericCount:nums.length,empty:empty,sum:nums.length?sum:null,avg:nums.length?sum/nums.length:null,min:nums.length?Math.min.apply(null,nums):null,max:nums.length?Math.max.apply(null,nums):null,isAmount:isAmountCol(h)};});
+var amountCols=exHeaders.filter(function(h){return colStats[h].isAmount&&colStats[h].numericCount>0;});
+if(!amountCols.length)amountCols=exHeaders.filter(function(h){return colStats[h].numericCount>=Math.max(3,exRows.length*0.3);});
+var totalAll=0,lines=[];amountCols.forEach(function(h){totalAll+=(colStats[h].sum||0);lines.push({col:h,sum:colStats[h].sum,avg:colStats[h].avg,min:colStats[h].min,max:colStats[h].max,count:colStats[h].numericCount});});
+var interpretation=["تعداد ردیف داده: "+exRows.length,"تعداد ستون: "+exHeaders.length];
+if(amountCols.length){interpretation.push("ستون‌های عددی/مالی شناسایی‌شده: "+amountCols.join("، "));
+lines.forEach(function(L){interpretation.push("• "+L.col+": جمع "+fmtNum(L.sum)+" | میانگین "+fmtNum(L.avg)+" | حداقل "+fmtNum(L.min)+" | حداکثر "+fmtNum(L.max));});}
+else interpretation.push("ستون مبلغ مشخصی یافت نشد.");
+var title=document.getElementById("exReportTitle").value.trim()||"گزارش مدیریتی و مالی";
+var reportText=title+"\n══════════════════════════════════\nفایل: "+(exFileMeta.name||"—")+"\nتاریخ گزارش: "+new Date().toLocaleString("fa-IR")+"\n──────────────────────────────────\n"+interpretation.join("\n")+"\n──────────────────────────────────\nتفسیر مدیریتی:\n"+(amountCols.length?("مجموع تقریبی مقادیر کلیدی: "+fmtNum(totalAll)+". میانگین نشان‌دهنده سطح فعالیت معمول است."):"داده‌ها بیشتر غیرعددی هستند.")+"\nتوصیه:\n۱) کنترل ردیف‌های خالی\n۲) تطبیق جمع‌ها با اسناد حسابداری\n۳) گزارش دوره‌ای ماهانه\n";
+return {colStats:colStats,amountCols:amountCols,lines:lines,totalAll:totalAll,reportText:reportText,title:title};}
+function showAnalysis(a){if(!a)return;exAnalysis=a;var stats=document.getElementById("exStats");
+var html='<div class="s"><div class="v">'+fmtNum(exRows.length)+'</div><div class="k">ردیف</div></div><div class="s"><div class="v">'+fmtNum(exHeaders.length)+'</div><div class="k">ستون</div></div>';
+a.lines.slice(0,6).forEach(function(L){html+='<div class="s"><div class="v">'+fmtNum(L.sum)+'</div><div class="k">جمع '+esc(L.col)+'</div></div>';});
+if(a.amountCols.length)html+='<div class="s"><div class="v">'+fmtNum(a.totalAll)+'</div><div class="k">جمع کل مالی</div></div>';
+stats.innerHTML=html;var rb=document.getElementById("exReport");rb.classList.remove("hidden");rb.textContent=a.reportText;
+document.getElementById("btnExExport").disabled=false;document.getElementById("exStatus").textContent="✓ تحلیل انجام شد";}
+function exportReportExcel(){if(!exAnalysis||typeof XLSX==="undefined"){toast("ابتدا تحلیل کنید","err");return;}
+var wb=XLSX.utils.book_new();var summary=[["عنوان",exAnalysis.title],["فایل منبع",exFileMeta.name],["تاریخ",new Date().toLocaleString("fa-IR")],["تعداد ردیف",exRows.length],["تعداد ستون",exHeaders.length],[]];
+summary.push(["ستون","جمع","میانگین","حداقل","حداکثر","تعداد عددی"]);
+exAnalysis.lines.forEach(function(L){summary.push([L.col,L.sum,L.avg,L.min,L.max,L.count]);});
+summary.push([]);summary.push(["جمع کل مالی",exAnalysis.totalAll]);summary.push([]);summary.push(["گزارش متنی"]);
+exAnalysis.reportText.split("\n").forEach(function(line){summary.push([line]);});
+XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(summary),"گزارش مدیریتی");
+var dataAoa=[exHeaders.slice()];exRows.forEach(function(row){dataAoa.push(exHeaders.map(function(h){return row[h];}));});
+XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(dataAoa),"داده‌ها");
+var outName="report-"+(exFileMeta.name||"excel").replace(/\.[^.]+$/,"")+"-"+Date.now()+".xlsx";
+XLSX.writeFile(wb,outName);toast("گزارش ذخیره شد: "+outName);}
+async function loadExcelFile(file){if(typeof XLSX==="undefined"){toast("کتابخانه اکسل لود نشده","err");return;}
+var n=(file.name||"").toLowerCase();if(!/\.(xlsx|xls|csv)$/.test(n)){toast("فقط XLSX / XLS / CSV","err");return;}
+if(file.size>15*1024*1024){toast("حداکثر ۱۵ مگابایت","err");return;}
+document.getElementById("exStatus").textContent="در حال خواندن...";
+try{var buf=await readFileAsArrayBuffer(file);exWorkbook=XLSX.read(buf,{type:"array",cellDates:true});exFileMeta={name:file.name,size:file.size};
+document.getElementById("exFileName").textContent="فایل: "+file.name+" ("+fmtSize(file.size)+")";
+var sel=document.getElementById("exSheet");sel.innerHTML="";
+(exWorkbook.SheetNames||[]).forEach(function(name,i){var o=document.createElement("option");o.value=name;o.textContent=name;if(i===0)o.selected=true;sel.appendChild(o);});
+loadSheetData(sel.value);renderPreviewTable();document.getElementById("btnExAnalyze").disabled=!exRows.length;
+document.getElementById("btnExExport").disabled=true;document.getElementById("exStats").innerHTML="";document.getElementById("exReport").classList.add("hidden");
+document.getElementById("exStatus").textContent="آماده — "+exRows.length+" ردیف";toast("فایل اکسل بارگذاری شد");}
+catch(e){document.getElementById("exStatus").textContent="خطا در خواندن";toast("خطا در خواندن اکسل","err");}}
+var exDrop=document.getElementById("exDrop"),exInput=document.getElementById("exInput");
+exDrop.addEventListener("click",function(){exInput.click();});
+exDrop.addEventListener("dragover",function(e){e.preventDefault();exDrop.classList.add("over");});
+exDrop.addEventListener("dragleave",function(){exDrop.classList.remove("over");});
+exDrop.addEventListener("drop",function(e){e.preventDefault();exDrop.classList.remove("over");if(e.dataTransfer.files&&e.dataTransfer.files[0])loadExcelFile(e.dataTransfer.files[0]);});
+exInput.addEventListener("change",function(){if(exInput.files&&exInput.files[0])loadExcelFile(exInput.files[0]);exInput.value="";});
+document.getElementById("exSheet").addEventListener("change",function(){loadSheetData(this.value);renderPreviewTable();
+document.getElementById("btnExAnalyze").disabled=!exRows.length;document.getElementById("btnExExport").disabled=true;
+document.getElementById("exStats").innerHTML="";document.getElementById("exReport").classList.add("hidden");
+document.getElementById("exStatus").textContent="برگه: "+this.value+" — "+exRows.length+" ردیف";});
+document.getElementById("btnExAnalyze").onclick=function(){var a=analyzeExcel();if(a){showAnalysis(a);toast("تحلیل انجام شد");}};
+document.getElementById("btnExExport").onclick=exportReportExcel;
+document.getElementById("btnExClear").onclick=function(){exWorkbook=null;exRows=[];exHeaders=[];exAnalysis=null;exFileMeta={name:"",size:0};
+document.getElementById("exFileName").textContent="";document.getElementById("exSheet").innerHTML="";document.getElementById("exStats").innerHTML="";
+document.getElementById("exReport").classList.add("hidden");document.getElementById("exTableWrap").classList.add("hidden");document.getElementById("exTable").innerHTML="";
+document.getElementById("btnExAnalyze").disabled=true;document.getElementById("btnExExport").disabled=true;document.getElementById("exStatus").textContent="";};
 async function renderKPI(){var all=await idbGetAll();var w=all.filter(function(x){return x.kind==="word";}).length,e=all.filter(function(x){return x.kind==="excel";}).length,i=all.filter(function(x){return x.kind==="img";}).length;
 var bytes=all.reduce(function(s,x){return s+(x.size||0);},0);
 document.getElementById("kpi").innerHTML='<div class="box"><div class="n">'+all.length+'</div><div class="l">کل فایل</div></div><div class="box"><div class="n">'+w+'</div><div class="l">ورد</div></div><div class="box"><div class="n">'+e+'</div><div class="l">اکسل</div></div><div class="box"><div class="n">'+i+'</div><div class="l">تصویر</div></div><div class="box"><div class="n">'+fmtSize(bytes)+'</div><div class="l">حجم</div></div>';}
