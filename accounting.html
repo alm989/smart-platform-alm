@@ -203,7 +203,11 @@ main.main > .panel { width:100%; box-sizing:border-box; }
 <div class="clock"><div class="j" id="dtJ">—</div><div class="g" id="dtG">—</div><div class="c" id="dtC">—</div><div class="u" id="activeUser">کاربر فعال: —</div></div>
 </header>
 <div class="body-row"><main class="main">
-<div class="panel on" id="p-dash"></div>
+<div class="panel on" id="p-dash"><div class="card" style="margin:12px;padding:12px;border:1px solid #334155;border-radius:12px;background:#1e293b">
+    <h2 style="font-size:.95rem;color:#7dd3fc;margin-bottom:8px">کارتابل ورودی از Suite</h2>
+    <div id="suiteCartableBox">—</div>
+    <button type="button" id="btnRefreshCartable" style="margin-top:8px;padding:8px 14px;border:none;border-radius:9px;background:#0ea5e9;color:#fff;font-weight:700;cursor:pointer;font-family:inherit">بروزرسانی کارتابل</button>
+  </div></div>
 <div class="kpi" id="kpi"></div><div class="card"><h2>داشبورد حسابداری</h2><p class="empty" id="dashMeta">—</p></div></div>
 <div class="panel" id="p-voucher"><div class="card has-exit">
 <button class="btn-form-exit" data-panel="p-dash" type="button">خروج</button>
