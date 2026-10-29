@@ -2359,7 +2359,25 @@ function render(){
 }
 function updateDashboard(){var host=document.getElementById('dashExtras');if(!host)return;var db={};try{db=JSON.parse(localStorage.getItem('smart_accounting_v4')||'{}')||{}}catch(e){};var vs=Array.isArray(db.vouchers)?db.vouchers:[];var active=vs.filter(function(v){return v&&v.status!=='void'});var temp=active.filter(function(v){return v.status==='temp'||v.status==='temporary'||v.status==='draft'}).length;var perm=active.filter(function(v){return v.status==='perm'||v.status==='permanent'||v.status==='posted'||v.status==='final'}).length;var notes=[];var rems=[];try{notes=JSON.parse(localStorage.getItem('smart_mod_notes_accounting')||'[]')||[]}catch(e){}try{rems=JSON.parse(localStorage.getItem('smart_mod_rem_accounting')||'[]')||[]}catch(e){};host.innerHTML=[['فایل‌های کارتابل',count()],['یادداشت‌ها',Array.isArray(notes)?notes.length:0],['یادآوری‌ها',Array.isArray(rems)?rems.length:0],['کل اسناد',active.length],['اسناد قطعی',perm],['اسناد موقت',temp]].map(function(a){return '<div class="dash-extra"><b>'+a[1]+'</b>'+a[0]+'</div>'}).join('')}
 function renderAllSafe(){render();updateDashboard()}
-function attach(){var duplicate=document.getElementById('cartableDock');if(duplicate)duplicate.remove();var rf=document.getElementById('btnCartRefresh');if(rf&&!rf.dataset.cartFix){rf.dataset.cartFix='1';rf.onclick=renderAllSafe}}
+function sendCurrentFile(){
+ var toEl=document.getElementById('cartTo'),msgEl=document.getElementById('cartMsg'),fileEl=document.getElementById('cartFile');
+ var to=(toEl&&toEl.value||'').trim(),msg=(msgEl&&msgEl.value||'').trim(),file=fileEl&&fileEl.files&&fileEl.files[0];
+ if(!to){alert('لطفاً نام گیرنده یا واحد گیرنده را وارد کنید.');if(toEl)toEl.focus();return}
+ if(!file&&!msg){alert('لطفاً یک فایل انتخاب کنید یا توضیح پیام را بنویسید.');return}
+ function save(dataUrl){
+  try{
+   var parsed=parseRaw(STORE),arr=parsed.items.slice();
+   var id='acct-'+Date.now()+'-'+Math.random().toString(36).slice(2,8);
+   var rec={id:id,from:'accounting',fromLabel:'حسابداری',to:to,toLabel:to,title:file?file.name:(msg||'پیام حسابداری'),body:msg,msg:msg|| (file?'ارسال فایل: '+file.name:'پیام حسابداری'),fileName:file?file.name:'',fileData:dataUrl||'',dataUrl:dataUrl||'',mime:file?(file.type||'application/octet-stream'):'',fileSize:file?file.size:0,kind:'sent',status:'sent',at:new Date().toISOString(),createdAt:new Date().toISOString()};
+   arr.unshift(rec);
+   if(parsed.isObject){parsed.raw.items=arr;localStorage.setItem(STORE,JSON.stringify(parsed.raw));}else localStorage.setItem(STORE,JSON.stringify(arr));
+   if(fileEl)fileEl.value='';if(msgEl)msgEl.value='';
+   renderAllSafe();alert('فایل/پیام در فهرست ارسالی حسابداری ثبت شد. توجه: این ثبت محلی است و به‌تنهایی ارسال شبکه‌ای به دستگاه دیگر محسوب نمی‌شود.');
+  }catch(e){alert('ثبت فایل در کارتابل انجام نشد: '+(e&&e.message?e.message:''))}
+ }
+ if(file){var reader=new FileReader();reader.onload=function(){save(String(reader.result||''))};reader.onerror=function(){alert('خواندن فایل انتخابی ناموفق بود. لطفاً دوباره انتخاب کنید.')};reader.readAsDataURL(file)}else save('');
+}
+function attach(){var duplicate=document.getElementById('cartableDock');if(duplicate)duplicate.remove();var rf=document.getElementById('btnCartRefresh');if(rf&&!rf.dataset.cartFix){rf.dataset.cartFix='1';rf.onclick=renderAllSafe}var sb=document.getElementById('btnCartSend');if(sb&&!sb.dataset.cartFix){sb.dataset.cartFix='1';sb.onclick=sendCurrentFile}}
 function init(){attach();renderAllSafe();read().items.filter(incomingActive).forEach(function(x){lastIds[x._source+':'+x.id]=1});window.addEventListener('storage',function(e){if(e.key===SUITE||e.key===STORE){var all=read().items.filter(incomingActive);var fresh=all.filter(function(x){return !lastIds[x._source+':'+x.id]});fresh.forEach(function(x){lastIds[x._source+':'+x.id]=1});if(fresh.length)notice(fresh[0].fileName||fresh[0].msg||'فایل جدید');renderAllSafe()}});document.addEventListener('visibilitychange',function(){if(!document.hidden)renderAllSafe()});window.addEventListener('focus',renderAllSafe)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();</script>
