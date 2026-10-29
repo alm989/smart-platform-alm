@@ -688,7 +688,7 @@ document.getElementById("storageInfo").textContent="فایل‌ها: "+all.lengt
 document.getElementById("btnExportMeta").onclick=async function(){var all=await idbGetAll();var meta=all.map(function(r){return{id:r.id,name:r.name,kind:r.kind,size:r.size,tag:r.tag,module:r.module,at:r.at,mime:r.mime};});
 var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(meta,null,2)],{type:"application/json"}));a.download="file-hub-list.json";a.click();toast("فهرست دانلود شد");};
 document.getElementById("btnClearAll").onclick=async function(){if(!confirm("همه فایل‌ها حذف شوند؟"))return;await idbClear();toast("همه پاک شد");renderKPI();renderList();updateStorageInfo();};
-document.getElementById("btnExit").onclick=function(){location.href="suite.html";};
+document.getElementById("btnExit").onclick=function(){location.href="index.html";};
 renderKPI();
 })();
 </script>
