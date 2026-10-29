@@ -1049,11 +1049,47 @@ document.addEventListener("click",function(e){var t=e.target.closest("[data-pane
 function getAuth(){return loadJSON("smart_users_"+MOD,{users:[{user:"admin",pass:"admin",name:"مدیر",role:"admin"}],session:null});}
 function saveAuth(a){saveJSON("smart_users_"+MOD,a);}
 function userName(){var a=getAuth();return(a.session&&(a.session.name||a.session.user))||"مهمان";}
-function ensureLogin(cb){var a=getAuth();if(a.session&&a.session.user){cb();return;}
-var m=document.createElement("div");m.className="login-mask";
-m.innerHTML='<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود</h2><label>نام کاربری</label><input id="lgU"><label>رمز</label><input id="lgP" type="password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty">admin / admin</p></div>';
-document.body.appendChild(m);if(document.getElementById("lgGo"))document.getElementById("lgGo").onclick=function(){var u=document.getElementById("lgU").value.trim(),p=document.getElementById("lgP").value;
-var f=(a.users||[]).find(function(x){return x.user===u&&x.pass===p;});if(!f){toast("اشتباه","err");return;}a.session={user:f.user,name:f.name||f.user,role:f.role||"user"};saveAuth(a);m.remove();cb();};}
+function ensureLogin(cb){
+  window.__accountingLoginCallbacks = window.__accountingLoginCallbacks || [];
+  if(typeof cb === "function") window.__accountingLoginCallbacks.push(cb);
+  function readSharedAuth(){
+    var a=null;
+    try { a=JSON.parse(localStorage.getItem("smart_users_accounting")||"null"); } catch(e) {}
+    if(!a || !Array.isArray(a.users)) {
+      a={users:[{user:"admin",pass:"admin",name:"مدیر",role:"admin"}],session:null};
+      try { localStorage.setItem("smart_users_accounting",JSON.stringify(a)); } catch(e) {}
+    }
+    return a;
+  }
+  function saveSharedAuth(a){
+    try { localStorage.setItem("smart_users_accounting",JSON.stringify(a)); return true; }
+    catch(e){ if(typeof toast==="function")toast("ذخیره ورود در مرورگر ممکن نشد","err"); return false; }
+  }
+  var auth=readSharedAuth();
+  if(auth.session && auth.session.user){
+    var queued=window.__accountingLoginCallbacks.splice(0);
+    queued.forEach(function(fn){try{fn();}catch(e){console.error("Accounting startup failed:",e);}});
+    return;
+  }
+  if(document.querySelector(".login-mask")) return;
+  var m=document.createElement("div");
+  m.className="login-mask"; m.id="accountingSharedLoginMask";
+  m.innerHTML='<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود به حسابداری</h2><label>نام کاربری</label><input id="lgU" autocomplete="username"><label>رمز عبور</label><input id="lgP" type="password" autocomplete="current-password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty">ورود پیش‌فرض در نصب تازه: admin / admin</p><p id="lgError" class="empty" style="color:#fca5a5"></p></div>';
+  document.body.appendChild(m);
+  function submitLogin(){
+    var u=(document.getElementById("lgU").value||"").trim(), p=document.getElementById("lgP").value||"";
+    var current=readSharedAuth(), f=(current.users||[]).find(function(x){return x.user===u&&x.pass===p;});
+    if(!f){var er=document.getElementById("lgError");if(er)er.textContent="نام کاربری یا رمز عبور نادرست است.";return;}
+    current.session={user:f.user,name:f.name||f.user,role:f.role||"user"};
+    if(!saveSharedAuth(current))return;
+    m.remove();
+    var queued=window.__accountingLoginCallbacks.splice(0);
+    queued.forEach(function(fn){try{fn();}catch(e){console.error("Accounting startup failed:",e);}});
+  }
+  document.getElementById("lgGo").addEventListener("click",submitLogin);
+  document.getElementById("lgP").addEventListener("keydown",function(e){if(e.key==="Enter")submitLogin();});
+  document.getElementById("lgU").addEventListener("keydown",function(e){if(e.key==="Enter")document.getElementById("lgP").focus();});
+}
 
 function nextNo(){var db=loadDB();var next=db.nextNo||1;if(db.vouchers&&db.vouchers.length){var max=0;db.vouchers.forEach(function(v){var n=parseInt(toEn(String(v.no)),10)||0;if(n>max)max=n;});if(max+1>next)next=max+1;}return next;}
 function refreshVoucherNo(){document.getElementById("vNo").value=String(nextNo());}
@@ -1492,11 +1528,47 @@ document.addEventListener("click",function(e){var t=e.target.closest("[data-pane
 function getAuth(){return loadJSON("smart_users_"+MOD,{users:[{user:"admin",pass:"admin",name:"مدیر"}],session:null});}
 function saveAuth(a){saveJSON("smart_users_"+MOD,a);}
 function userName(){var a=getAuth();return(a.session&&(a.session.name||a.session.user))||"مهمان";}
-function ensureLogin(cb){var a=getAuth();if(a.session&&a.session.user){cb();return;}
-var m=document.createElement("div");m.className="login-mask";
-m.innerHTML='<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود</h2><label>نام کاربری</label><input id="lgU"><label>رمز</label><input id="lgP" type="password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty">admin / admin</p></div>';
-document.body.appendChild(m);if(document.getElementById("lgGo"))document.getElementById("lgGo").onclick=function(){var u=document.getElementById("lgU").value.trim(),p=document.getElementById("lgP").value;
-var f=(a.users||[]).find(function(x){return x.user===u&&x.pass===p;});if(!f){toast("اشتباه","err");return;}a.session={user:f.user,name:f.name||f.user};saveAuth(a);m.remove();cb();};}
+function ensureLogin(cb){
+  window.__accountingLoginCallbacks = window.__accountingLoginCallbacks || [];
+  if(typeof cb === "function") window.__accountingLoginCallbacks.push(cb);
+  function readSharedAuth(){
+    var a=null;
+    try { a=JSON.parse(localStorage.getItem("smart_users_accounting")||"null"); } catch(e) {}
+    if(!a || !Array.isArray(a.users)) {
+      a={users:[{user:"admin",pass:"admin",name:"مدیر",role:"admin"}],session:null};
+      try { localStorage.setItem("smart_users_accounting",JSON.stringify(a)); } catch(e) {}
+    }
+    return a;
+  }
+  function saveSharedAuth(a){
+    try { localStorage.setItem("smart_users_accounting",JSON.stringify(a)); return true; }
+    catch(e){ if(typeof toast==="function")toast("ذخیره ورود در مرورگر ممکن نشد","err"); return false; }
+  }
+  var auth=readSharedAuth();
+  if(auth.session && auth.session.user){
+    var queued=window.__accountingLoginCallbacks.splice(0);
+    queued.forEach(function(fn){try{fn();}catch(e){console.error("Accounting startup failed:",e);}});
+    return;
+  }
+  if(document.querySelector(".login-mask")) return;
+  var m=document.createElement("div");
+  m.className="login-mask"; m.id="accountingSharedLoginMask";
+  m.innerHTML='<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود به حسابداری</h2><label>نام کاربری</label><input id="lgU" autocomplete="username"><label>رمز عبور</label><input id="lgP" type="password" autocomplete="current-password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty">ورود پیش‌فرض در نصب تازه: admin / admin</p><p id="lgError" class="empty" style="color:#fca5a5"></p></div>';
+  document.body.appendChild(m);
+  function submitLogin(){
+    var u=(document.getElementById("lgU").value||"").trim(), p=document.getElementById("lgP").value||"";
+    var current=readSharedAuth(), f=(current.users||[]).find(function(x){return x.user===u&&x.pass===p;});
+    if(!f){var er=document.getElementById("lgError");if(er)er.textContent="نام کاربری یا رمز عبور نادرست است.";return;}
+    current.session={user:f.user,name:f.name||f.user,role:f.role||"user"};
+    if(!saveSharedAuth(current))return;
+    m.remove();
+    var queued=window.__accountingLoginCallbacks.splice(0);
+    queued.forEach(function(fn){try{fn();}catch(e){console.error("Accounting startup failed:",e);}});
+  }
+  document.getElementById("lgGo").addEventListener("click",submitLogin);
+  document.getElementById("lgP").addEventListener("keydown",function(e){if(e.key==="Enter")submitLogin();});
+  document.getElementById("lgU").addEventListener("keydown",function(e){if(e.key==="Enter")document.getElementById("lgP").focus();});
+}
 
 function nextNo(){var db=loadDB();var next=db.nextNo||1;(db.vouchers||[]).forEach(function(v){var n=parseInt(toEn(String(v.no)),10)||0;if(n+1>next)next=n+1;});return next;}
 function refreshNo(id){document.getElementById(id).value=String(nextNo());}
