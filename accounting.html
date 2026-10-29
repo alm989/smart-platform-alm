@@ -204,7 +204,12 @@ main.main > .panel { width:100%; box-sizing:border-box; }
 <div class="clock"><div class="j" id="dtJ">—</div><div class="g" id="dtG">—</div><div class="c" id="dtC">—</div><div class="u" id="activeUser">کاربر فعال: —</div></div>
 </header>
 <div class="body-row"><main class="main">
-<div class="panel on" id="p-dash"><div class="kpi" id="kpi"></div><div class="card"><h2>داشبورد حسابداری</h2><p class="empty" id="dashMeta">—</p></div></div>
+<div class="panel on" id="p-dash">renderCartableBox();
+var br = document.getElementById("btnRefreshCartable");
+if (br) br.onclick = function () {
+  renderCartableBox();
+};
+<div class="kpi" id="kpi"></div><div class="card"><h2>داشبورد حسابداری</h2><p class="empty" id="dashMeta">—</p></div></div>
 <div class="panel" id="p-voucher"><div class="card has-exit">
 <button class="btn-form-exit" data-panel="p-dash" type="button">خروج</button>
 <h2>سند حسابداری</h2>
