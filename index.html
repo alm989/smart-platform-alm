@@ -4,106 +4,1059 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1220">
-<link rel="manifest" href="manifest-suite.json">
-<title>سامانه هوشمند یکپارچه مالی و اداری</title>
+<meta name="description" content="سوییت هوشمند — لانچر + مغز قوانین و خودکارسازی محلی">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="no-referrer">
+<meta http-equiv="Permissions-Policy" content="microphone=(self), geolocation=()">
+<title>سوییت هوشمند | لانچر و مغز قوانین</title>
 <style>
-:root{--bg:#0b1220;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#0ea5e9}
+:root{
+  --bg:#0b1220;--card:rgba(30,41,59,.94);--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;
+  --pri:#0ea5e9;--ok:#22c55e;--bad:#ef4444;--warn:#f59e0b;--vio:#8b5cf6;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:linear-gradient(160deg,#0b1220,#0f172a 50%,#1e3a5f);color:var(--txt);min-height:100dvh;padding:16px}
-.wrap{max-width:1100px;margin:0 auto}
-.hero{text-align:center;padding:24px 12px 16px}
-.hero .logo{width:60px;height:60px;margin:0 auto 10px;border-radius:16px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:grid;place-items:center;font-size:26px}
-.hero h1{font-size:1.25rem;margin-bottom:6px}.hero p{color:var(--muted);font-size:.82rem}
-.search{max-width:400px;margin:0 auto 18px}
-.search input{width:100%;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(15,23,42,.9);color:var(--txt);font-family:inherit}
-.section{margin-bottom:18px}
-.section h2{font-size:.9rem;color:#7dd3fc;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid rgba(125,211,252,.25)}
-.section h2 span{font-size:.68rem;color:var(--muted);font-weight:400}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}
-.mod{display:block;text-decoration:none;color:inherit;background:rgba(30,41,59,.92);border:1px solid var(--line);border-radius:14px;padding:12px 10px;text-align:center;transition:.15s}
+body{
+  font-family:Tahoma,"Segoe UI",system-ui,sans-serif;
+  background:radial-gradient(900px 480px at 85% -10%,#1e3a5f 0%,transparent 55%),linear-gradient(160deg,#0b1220,#0f172a 55%,#111827);
+  color:var(--txt);min-height:100dvh;padding:12px;text-align:right;
+}
+.wrap{max-width:1180px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:grid;place-items:center;font-size:20px}
+.brand h1{font-size:1rem}.brand p{font-size:.72rem;color:var(--muted)}
+.clock-box{background:rgba(15,23,42,.85);border:1px solid var(--line);border-radius:12px;padding:8px 12px;min-width:140px}
+.clock-box .j{color:#7dd3fc;font-weight:800;font-size:.8rem}
+.clock-box .g{color:var(--muted);font-size:.68rem;direction:ltr;unicode-bidi:isolate}
+.clock-box .c{color:#86efac;font-weight:700;font-size:.78rem}
+.mode-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.mode-tabs button{
+  border:1px solid var(--line);background:#1e293b;color:#cbd5e1;border-radius:999px;
+  padding:8px 14px;font-weight:800;font-size:.75rem;cursor:pointer;font-family:inherit;
+}
+.mode-tabs button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.mode-tabs button.brain-on{background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-color:transparent;color:#fff}
+.view{display:none}.view.on{display:block}
+.hero{text-align:center;padding:6px 8px 12px}
+.hero h2{font-size:1.05rem;margin-bottom:4px}.hero p{color:var(--muted);font-size:.8rem}
+.tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
+.search{flex:1;min-width:200px;max-width:400px}
+.search input,.tools select,input,select,textarea{
+  width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);
+  background:rgba(15,23,42,.92);color:var(--txt);font-family:inherit;font-size:.82rem;
+}
+.tools select{width:auto;min-width:140px}
+.btn{border:none;border-radius:12px;padding:9px 12px;font-weight:700;font-size:.74rem;cursor:pointer;font-family:inherit;background:#1e293b;color:#e2e8f0;border:1px solid var(--line)}
+.btn-p{background:linear-gradient(135deg,#0ea5e9,#2563eb);color:#fff;border:none}
+.btn-ok{background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;border:none}
+.btn-b{background:#7f1d1d;color:#fecaca;border:1px solid #991b1b}
+.btn-w{background:#92400e;color:#fde68a;border:1px solid #b45309}
+.btn-v{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;border:none}
+.section{margin-bottom:16px}
+.section h3{font-size:.88rem;color:#7dd3fc;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid rgba(125,211,252,.25);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.section h3 span{font-size:.68rem;color:var(--muted);font-weight:400}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:9px}
+.mod{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 10px;text-align:center;transition:.15s;position:relative}
 .mod:hover{border-color:var(--pri);transform:translateY(-2px);box-shadow:0 8px 18px rgba(14,165,233,.2)}
-.mod .ic{font-size:1.5rem;margin-bottom:5px}.mod .nm{font-size:.75rem;font-weight:700}
-.mod .ds{font-size:.6rem;color:var(--muted);margin-top:2px}
-.clock{text-align:center;color:#86efac;font-size:.78rem;margin-bottom:10px}
-.footer{text-align:center;padding:16px;color:var(--muted);font-size:.68rem}
+.mod .ic{font-size:1.4rem;margin-bottom:4px}.mod .nm{font-size:.75rem;font-weight:700}.mod .ds{font-size:.6rem;color:var(--muted);margin-top:2px}
+.mod .tag{position:absolute;top:6px;left:6px;font-size:.55rem;padding:2px 6px;border-radius:999px;background:rgba(14,165,233,.18);color:#7dd3fc;font-weight:700}
+.fav-bar,.recent-bar,.card{
+  background:rgba(15,23,42,.8);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;
+}
+.fav-bar h4,.recent-bar h4,.card h2{font-size:.8rem;color:#fde68a;margin-bottom:8px}
+.card h2{color:#c4b5fd}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border-radius:999px;background:#1e293b;border:1px solid var(--line);color:var(--txt);text-decoration:none;font-size:.7rem;font-weight:700}
+.kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-bottom:12px}
+.kpi .box{background:rgba(15,23,42,.9);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.kpi .n{font-size:1.05rem;font-weight:800;color:#c4b5fd}.kpi .l{font-size:.6rem;color:var(--muted)}
+.list-box{max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:6px;background:#0f172a}
+.list-item{padding:8px;border-bottom:1px solid var(--line);font-size:.74rem;border-radius:8px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+@media(max-width:800px){.row,.row3{grid-template-columns:1fr}}
+label{display:block;font-size:.68rem;color:var(--muted);margin:5px 0 2px}
+.note{font-size:.7rem;color:var(--muted);line-height:1.45;margin-top:6px}
+.scope{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.35);color:#c4b5fd;border-radius:10px;padding:10px;font-size:.72rem;margin-bottom:10px;line-height:1.55}
+.warn{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);color:#fde68a;border-radius:10px;padding:10px;font-size:.72rem;margin-bottom:10px;line-height:1.5}
+.secure{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#86efac;border-radius:10px;padding:10px;font-size:.72rem;margin-bottom:10px;line-height:1.5}
+.empty{color:var(--muted);font-size:.75rem}
+.toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:9px 12px;border-radius:12px;font-weight:700;opacity:0;z-index:200;transition:.15s;font-size:.8rem}
+.toast.show{opacity:1}.toast.err{background:var(--bad)}
+.footer{text-align:center;padding:16px 8px;color:var(--muted);font-size:.68rem;line-height:1.6}
+.login-mask{position:fixed;inset:0;background:rgba(2,6,23,.96);z-index:300;display:flex;align-items:center;justify-content:center}
+.login-box{background:#1e293b;border:1px solid var(--line);border-radius:16px;padding:20px;width:min(360px,92vw)}
+table{width:100%;border-collapse:collapse;font-size:.7rem}
+th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{color:#c4b5fd}
+.badge{display:inline-block;padding:1px 7px;border-radius:999px;font-size:.62rem;font-weight:700}
+.badge-ok{background:rgba(34,197,94,.2);color:#86efac}
+.badge-w{background:rgba(245,158,11,.2);color:#fde68a}
+.badge-b{background:rgba(239,68,68,.2);color:#fecaca}
+.chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="hero"><div class="logo">🏛️</div>
-    <h1>سامانه هوشمند یکپارچه مالی و اداری</h1>
-    <p>مدیریت مالی، اداری، منابع انسانی و عملیات</p>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">🏛️</div>
+      <div>
+        <h1>سوییت هوشمند یکپارچه</h1>
+        <p>لانچر · مغز قوانین · خودکارسازی محلی — Suite v2</p>
+      </div>
+    </div>
+    <div class="clock-box">
+      <div class="j" id="dtJ">—</div>
+      <div class="g" id="dtG">—</div>
+      <div class="c" id="dtC">—</div>
+    </div>
   </div>
-  <div class="clock" id="clock">—</div>
-  <div class="search"><input id="q" placeholder="جستجوی ماژول..."></div>
 
-  <div class="section"><h2>هسته و مدیریت <span>· کنترل سامانه</span></h2><div class="grid">
-    <a class="mod" href="ceo.html" data-n="مدیرعامل"><div class="ic">👔</div><div class="nm">مدیرعامل</div><div class="ds">مجوز و گزارش</div></a>
-    <a class="mod" href="manager.html" data-n="مدیریت"><div class="ic">📋</div><div class="nm">مدیریت</div><div class="ds">وظایف سازمانی</div></a>
-    <a class="mod" href="sysadmin.html" data-n="مدیریت نرم‌افزار"><div class="ic">⚙️</div><div class="nm">مدیریت نرم‌افزار</div><div class="ds">کاربران و دسترسی</div></a>
-    <a class="mod" href="controller.html" data-n="کنترلر"><div class="ic">🎛️</div><div class="nm">کنترلر</div><div class="ds">موتور تغییرات</div></a>
-    <a class="mod" href="brain.html" data-n="مغز متفکر"><div class="ic">🧠</div><div class="nm">مغز متفکر</div><div class="ds">رصد یکپارچه</div></a>
-  </div></div>
+  <div class="mode-tabs">
+    <button type="button" class="on" data-view="v-launch" id="tabLaunch">لانچر ماژول‌ها</button>
+    <button type="button" class="brain-on" data-view="v-brain" id="tabBrain">مغز سوییت</button>
+    <button type="button" data-view="v-rules" id="tabRules">قوانین و خودکارسازی</button>
+    <button type="button" data-view="v-security" id="tabSec">امنیت و یکپارچگی</button>
+  </div>
 
-  <div class="section"><h2>مالی و حسابداری</h2><div class="grid">
-    <a class="mod" href="accounting.html" data-n="حسابداری"><div class="ic">📒</div><div class="nm">حسابداری</div><div class="ds">سند و گزارش</div></a>
-    <a class="mod" href="bank.html" data-n="نقد و بانک"><div class="ic">🏦</div><div class="nm">نقد و بانک</div><div class="ds">دریافت پرداخت مغایرت</div></a>
-    <a class="mod" href="cashbox.html" data-n="صندوق"><div class="ic">💵</div><div class="nm">صندوق</div><div class="ds">نقد چک اوراق</div></a>
-    <a class="mod" href="pettycash.html" data-n="تنخواه"><div class="ic">🧾</div><div class="nm">تنخواه</div><div class="ds">تنخواه‌گردان</div></a>
-    <a class="mod" href="tax.html" data-n="مالیات"><div class="ic">📊</div><div class="nm">مالیات و بودجه</div><div class="ds">مالیات کنترل</div></a>
-    <a class="mod" href="budget.html" data-n="بودجه"><div class="ic">📈</div><div class="nm">بودجه و کنترل</div><div class="ds">برنامه‌ریزی</div></a>
-    <a class="mod" href="audit.html" data-n="حسابرسی"><div class="ic">🔍</div><div class="nm">حسابرسی</div><div class="ds">ممیزی</div></a>
-    <a class="mod" href="fixedassets.html" data-n="دارایی ثابت"><div class="ic">🏢</div><div class="nm">دارایی ثابت</div><div class="ds">استهلاک</div></a>
-  </div></div>
+  <!-- ========== VIEW: لانچر ========== -->
+  <div class="view on" id="v-launch">
+    <div class="hero">
+      <h2>لانچر سوییت</h2>
+      <p>دسترسی به ماژول‌ها · علاقه‌مندی · آخرین استفاده‌ها</p>
+      <div id="suiteStats" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px"></div>
+    </div>
+    <div class="tools">
+      <div class="search"><input id="q" type="search" placeholder="جستجوی ماژول..." autocomplete="off"></div>
+      <select id="catFilter">
+        <option value="">همه بخش‌ها</option>
+        <option value="core">هسته و مدیریت</option>
+        <option value="finance">مالی</option>
+        <option value="ops">عملیات</option>
+        <option value="hr">منابع انسانی</option>
+        <option value="admin">اداری</option>
+        <option value="legal">حقوقی</option>
+        <option value="org">سازمانی</option>
+      </select>
+      <button type="button" class="btn" id="btnClearFav">پاک علاقه‌مندی</button>
+      <button type="button" class="btn btn-p" id="btnHomeRefresh">بروزرسانی</button>
+      <button type="button" class="btn btn-v" id="btnOpenBrain">مغز سوییت</button>
+    </div>
+    <div class="fav-bar"><h4>علاقه‌مندی‌ها</h4><div class="chip-row" id="favRow"><span class="empty">دوبار کلیک روی کارت = علاقه‌مندی</span></div></div>
+    <div class="recent-bar"><h4>آخرین ماژول‌ها</h4><div class="chip-row" id="recentRow"><span class="empty">—</span></div></div>
 
-  <div class="section"><h2>عملیات و بازرگانی</h2><div class="grid">
-    <a class="mod" href="sales.html" data-n="فروش"><div class="ic">🛒</div><div class="nm">فروش</div><div class="ds">فاکتور</div></a>
-    <a class="mod" href="purchase.html" data-n="خرید"><div class="ic">🛍️</div><div class="nm">خرید</div><div class="ds">سفارش رسید</div></a>
-    <a class="mod" href="warehouse.html" data-n="انبار"><div class="ic">📦</div><div class="nm">انبار</div><div class="ds">رسید حواله</div></a>
-    <a class="mod" href="customers.html" data-n="مشتریان"><div class="ic">👥</div><div class="nm">مشتریان</div><div class="ds">CRM</div></a>
-    <a class="mod" href="production.html" data-n="تولید"><div class="ic">🏭</div><div class="nm">تولید</div><div class="ds">بهای تمام‌شده</div></a>
-    <a class="mod" href="contracts.html" data-n="قراردادها"><div class="ic">📝</div><div class="nm">قراردادها</div><div class="ds">مدیریت قرارداد</div></a>
-    <a class="mod" href="projects.html" data-n="پروژه"><div class="ic">📌</div><div class="nm">مدیریت پروژه</div><div class="ds">پیشرفت</div></a>
-    <a class="mod" href="fleet.html" data-n="ناوگان"><div class="ic">🚚</div><div class="nm">ناوگان</div><div class="ds">حمل‌ونقل</div></a>
-  </div></div>
+    <div class="section" data-cat="core">
+      <h3>هسته و مدیریت <span>brain/controller ادغام در مغز سوییت</span></h3>
+      <div class="grid">
+        <a class="mod" href="ceo.html" data-n="مدیرعامل" data-id="ceo"><div class="ic">👔</div><div class="nm">مدیرعامل</div><div class="ds">مجوز و گزارش</div></a>
+        <a class="mod" href="manager.html" data-n="مدیریت" data-id="manager"><div class="ic">📋</div><div class="nm">مدیریت</div><div class="ds">وظیفه KPI</div></a>
+        <a class="mod" href="sysadmin.html" data-n="مدیر سیستم" data-id="sysadmin"><div class="ic">⚙️</div><div class="nm">مدیر سیستم</div><div class="ds">کاربران</div></a>
+        <a class="mod" href="database.html" data-n="پایگاه داده‌ها" data-id="database"><span class="tag">داده</span><div class="ic">🗄️</div><div class="nm">پایگاه داده‌ها</div><div class="ds">کلید و پشتیبان</div></a>
+        <button type="button" class="mod" id="modBrainCard" data-n="مغز سوییت" data-id="suite-brain" style="width:100%;font:inherit;color:inherit;cursor:pointer">
+          <span class="tag">مرکزی</span><div class="ic">🧠</div><div class="nm">مغز سوییت</div><div class="ds">رصد و قوانین</div>
+        </button>
+      </div>
+    </div>
+    <div class="section" data-cat="finance">
+      <h3>مالی و حسابداری</h3>
+      <div class="grid">
+        <a class="mod" href="accounting.html" data-n="حسابداری" data-id="accounting"><div class="ic">📒</div><div class="nm">حسابداری</div><div class="ds">سند دفتر</div></a>
+        <a class="mod" href="bank.html" data-n="بانک" data-id="bank"><div class="ic">🏦</div><div class="nm">بانک</div><div class="ds">دریافت پرداخت</div></a>
+        <a class="mod" href="cashbox.html" data-n="صندوق" data-id="cashbox"><div class="ic">💵</div><div class="nm">صندوق</div><div class="ds">نقد</div></a>
+        <a class="mod" href="pettycash.html" data-n="تنخواه" data-id="pettycash"><div class="ic">🧾</div><div class="nm">تنخواه</div><div class="ds">تنخواه‌گردان</div></a>
+        <a class="mod" href="tax.html" data-n="مالیات" data-id="tax"><div class="ic">📊</div><div class="nm">مالیات</div><div class="ds">مالیات</div></a>
+        <a class="mod" href="budget.html" data-n="بودجه" data-id="budget"><div class="ic">📈</div><div class="nm">بودجه</div><div class="ds">برنامه</div></a>
+        <a class="mod" href="audit.html" data-n="حسابرسی" data-id="audit"><div class="ic">🔍</div><div class="nm">حسابرسی</div><div class="ds">ممیزی</div></a>
+        <a class="mod" href="fixedassets.html" data-n="دارایی ثابت" data-id="fixedassets"><div class="ic">🏢</div><div class="nm">دارایی ثابت</div><div class="ds">استهلاک</div></a>
+      </div>
+    </div>
+    <div class="section" data-cat="ops">
+      <h3>عملیات و بازرگانی</h3>
+      <div class="grid">
+        <a class="mod" href="sales.html" data-n="فروش" data-id="sales"><div class="ic">🛒</div><div class="nm">فروش</div><div class="ds">فاکتور</div></a>
+        <a class="mod" href="purchase.html" data-n="خرید" data-id="purchase"><div class="ic">🛍️</div><div class="nm">خرید</div><div class="ds">سفارش</div></a>
+        <a class="mod" href="warehouse.html" data-n="انبار" data-id="warehouse"><div class="ic">📦</div><div class="nm">انبار</div><div class="ds">رسید حواله</div></a>
+        <a class="mod" href="customers.html" data-n="مشتریان" data-id="customers"><div class="ic">👥</div><div class="nm">مشتریان</div><div class="ds">CRM</div></a>
+        <a class="mod" href="production.html" data-n="تولید" data-id="production"><div class="ic">🏭</div><div class="nm">تولید</div><div class="ds">بها</div></a>
+        <a class="mod" href="contracts.html" data-n="قراردادها" data-id="contracts"><div class="ic">📝</div><div class="nm">قراردادها</div><div class="ds">قرارداد</div></a>
+        <a class="mod" href="projects.html" data-n="پروژه" data-id="projects"><div class="ic">📌</div><div class="nm">پروژه</div><div class="ds">پیشرفت</div></a>
+        <a class="mod" href="fleet.html" data-n="ناوگان" data-id="fleet"><div class="ic">🚚</div><div class="nm">ناوگان</div><div class="ds">حمل</div></a>
+      </div>
+    </div>
+    <div class="section" data-cat="hr">
+      <h3>منابع انسانی</h3>
+      <div class="grid">
+        <a class="mod" href="personnel.html" data-n="پرسنلی" data-id="personnel"><div class="ic">👤</div><div class="nm">پرسنلی</div><div class="ds">پرونده</div></a>
+        <a class="mod" href="payroll.html" data-n="حقوق" data-id="payroll"><div class="ic">💰</div><div class="nm">حقوق</div><div class="ds">دستمزد</div></a>
+      </div>
+    </div>
+    <div class="section" data-cat="admin">
+      <h3>اداری و دبیرخانه</h3>
+      <div class="grid">
+        <a class="mod" href="secretariat.html" data-n="دبیرخانه" data-id="secretariat"><div class="ic">🗂️</div><div class="nm">دبیرخانه</div><div class="ds">نامه رسمی</div></a>
+        <a class="mod" href="secretary.html" data-n="منشی" data-id="secretary"><div class="ic">🗓️</div><div class="nm">منشی هوشمند</div><div class="ds">جلسه کار</div></a>
+        <a class="mod" href="correspondence.html" data-n="مکاتبات" data-id="correspondence"><div class="ic">✉️</div><div class="nm">مکاتبات</div><div class="ds">پیگیری</div></a>
+        <a class="mod" href="archive.html" data-n="بایگانی" data-id="archive"><div class="ic">📁</div><div class="nm">بایگانی</div><div class="ds">آرشیو</div></a>
+        <a class="mod" href="documents.html" data-n="اسناد" data-id="documents"><div class="ic">📄</div><div class="nm">اسناد</div><div class="ds">سند</div></a>
+        <a class="mod" href="assistant.html" data-n="دستیار" data-id="assistant"><div class="ic">🤖</div><div class="nm">دستیار</div><div class="ds">کنترل</div></a>
+      </div>
+    </div>
+    <div class="section" data-cat="legal">
+      <h3>حقوقی و روابط عمومی</h3>
+      <div class="grid">
+        <a class="mod" href="lawyer.html" data-n="وکیل" data-id="lawyer"><div class="ic">⚖️</div><div class="nm">وکیل</div><div class="ds">پرونده</div></a>
+        <a class="mod" href="pr.html" data-n="روابط عمومی" data-id="pr"><div class="ic">📢</div><div class="nm">روابط عمومی</div><div class="ds">رسانه</div></a>
+      </div>
+    </div>
+    <div class="section" data-cat="org">
+      <h3>سازمانی</h3>
+      <div class="grid">
+        <a class="mod" href="multicompany.html" data-n="چندشرکتی" data-id="multicompany"><div class="ic">🏛️</div><div class="nm">چند شرکتی</div><div class="ds">هلدینگ</div></a>
+        <a class="mod" href="chat.html" data-n="چت" data-id="chat"><div class="ic">💬</div><div class="nm">چت</div><div class="ds">پیام</div></a>
+        <a class="mod" href="meeting.html" data-n="متینگ" data-id="meeting"><div class="ic">🎥</div><div class="nm">متینگ</div><div class="ds">جلسه</div></a>
+        <a class="mod" href="file-hub.html" data-n="هاب فایل" data-id="filehub"><div class="ic">📎</div><div class="nm">هاب فایل</div><div class="ds">فایل</div></a>
+      </div>
+    </div>
+  </div>
 
-  <div class="section"><h2>منابع انسانی</h2><div class="grid">
-    <a class="mod" href="personnel.html" data-n="پرسنلی"><div class="ic">👤</div><div class="nm">پرسنلی</div><div class="ds">پرونده حضور</div></a>
-    <a class="mod" href="payroll.html" data-n="حقوق"><div class="ic">💰</div><div class="nm">حقوق و دستمزد</div><div class="ds">محاسبه لیست</div></a>
-  </div></div>
+  <!-- ========== VIEW: مغز ========== -->
+  <div class="view" id="v-brain">
+    <div class="scope">
+      <b>مغز سوییت</b> جایگزین مستقل <b>brain</b> و <b>controller</b> است.<br>
+      رصد کلیدهای <code>smart_mod_*</code> · خلاصه KPI · اجرای قوانین اعلامی · کارتابل — بدون سرویس بیرونی و بدون <code>eval</code>.
+    </div>
+    <div class="kpi" id="brainKpi"></div>
+    <div class="card">
+      <h2>وضعیت رصد ماژول‌ها</h2>
+      <div class="form-actions" style="margin-bottom:8px">
+        <button type="button" class="btn btn-v" id="btnScanAll">اسکن همه ماژول‌ها</button>
+        <button type="button" class="btn btn-ok" id="btnRunRules">اجرای قوانین اکنون</button>
+        <button type="button" class="btn btn-p" id="btnRefreshBrain">بروزرسانی</button>
+      </div>
+      <div class="list-box" id="brainModList"></div>
+      <p class="note" id="brainMeta">—</p>
+    </div>
+    <div class="card">
+      <h2>هشدارها و رویدادهای اخیر</h2>
+      <div class="list-box" id="brainEvents"></div>
+    </div>
+    <div class="card">
+      <h2>صف کارتابل سراسری (باز)</h2>
+      <div class="list-box" id="brainCart"></div>
+    </div>
+  </div>
 
-  <div class="section"><h2>اداری و دبیرخانه</h2><div class="grid">
-    <a class="mod" href="correspondence.html" data-n="نامه‌نگاری"><div class="ic">✉️</div><div class="nm">نامه‌نگاری</div><div class="ds">نامه پیگیری</div></a>
-    <a class="mod" href="secretariat.html" data-n="دبیرخانه"><div class="ic">🗂️</div><div class="nm">دبیرخانه</div><div class="ds">ثبت ارجاع</div></a>
-    <a class="mod" href="archive.html" data-n="بایگانی"><div class="ic">📁</div><div class="nm">بایگانی</div><div class="ds">آرشیو</div></a>
-    <a class="mod" href="secretary.html" data-n="منشی"><div class="ic">🗓️</div><div class="nm">منشی هوشمند</div><div class="ds">جلسه یادآوری</div></a>
-    <a class="mod" href="assistant.html" data-n="دستیار"><div class="ic">🤖</div><div class="nm">دستیار هوشمند</div><div class="ds">کنترل مجموعه</div></a>
-  </div></div>
+  <!-- ========== VIEW: قوانین ========== -->
+  <div class="view" id="v-rules">
+    <div class="warn">
+      قوانین فقط از فهرست امن ازپیش‌تعریف‌شده انتخاب می‌شوند. کاربر نمی‌تواند کد جاوااسکریپت دلخواه تزریق کند.
+      موتور قوانین از <code>eval</code> / <code>Function</code> / اسکریپت پویا استفاده نمی‌کند.
+    </div>
+    <div class="card">
+      <h2>افزودن قانون (اعلامی)</h2>
+      <div class="row">
+        <div>
+          <label>شرط (قالب امن)</label>
+          <select id="ruleWhen">
+            <option value="module_has_data">ماژول دارای داده است</option>
+            <option value="module_missing">ماژول هنوز داده ندارد</option>
+            <option value="cart_open_gt">تعداد کارتابل باز بیشتر از</option>
+            <option value="key_size_gt">حجم یک کلید (بایت) بیشتر از</option>
+          </select>
+        </div>
+        <div>
+          <label>ماژول / کلید هدف</label>
+          <select id="ruleTarget">
+            <option value="secretary">منشی (secretary)</option>
+            <option value="secretariat">دبیرخانه</option>
+            <option value="manager">مدیریت</option>
+            <option value="accounting">حسابداری</option>
+            <option value="database">پایگاه داده</option>
+            <option value="suite">سوییت / کارتابل</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>مقدار آستانه (در صورت نیاز)</label>
+          <input id="ruleThreshold" type="number" min="0" value="0" placeholder="مثلاً 5">
+        </div>
+        <div>
+          <label>اقدام</label>
+          <select id="ruleAction">
+            <option value="log">ثبت در رویداد مغز</option>
+            <option value="cart">ارسال پیام به کارتابل</option>
+            <option value="flag">پرچم هشدار در داشبورد</option>
+          </select>
+        </div>
+      </div>
+      <label>عنوان قانون</label>
+      <input id="ruleTitle" maxlength="80" placeholder="مثلاً هشدار کارتابل شلوغ">
+      <label class="chk"><input type="checkbox" id="ruleEnabled" checked> فعال</label>
+      <div style="margin-top:8px">
+        <button type="button" class="btn btn-v" id="btnAddRule">ثبت قانون</button>
+        <button type="button" class="btn btn-ok" id="btnRunRules2">اجرای همه قوانین فعال</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>قوانین ذخیره‌شده</h2>
+      <div class="list-box" id="rulesList"></div>
+    </div>
+  </div>
 
-  <div class="section"><h2>حقوقی و روابط عمومی</h2><div class="grid">
-    <a class="mod" href="lawyer.html" data-n="وکیل"><div class="ic">⚖️</div><div class="nm">وکیل هوشمند</div><div class="ds">پرونده قضایی</div></a>
-    <a class="mod" href="pr.html" data-n="روابط عمومی"><div class="ic">📢</div><div class="nm">روابط عمومی</div><div class="ds">رسانه</div></a>
-  </div></div>
+  <!-- ========== VIEW: امنیت ========== -->
+  <div class="view" id="v-security">
+    <div class="secure">
+      <b>کنترل‌های فعال:</b> CSP سخت · بدون object/frame بیرونی · بدون connect به API ثالث · بدون eval ·
+      قوانین اعلامی · ورود برای بخش مغز · لاگ عملیات حساس
+    </div>
+    <div class="warn">
+      <b>محدودیت واقعی:</b> هر کسی فایل‌های HTML را داشته باشد می‌تواند متن اسکریپت را ببیند.
+      «پنهان‌سازی کامل کد از مالک فایل» در اپ آفلاین مرورگر ممکن نیست. امنیت روی جلوگیری از تزریق، خرابکاری داده، و اجرای کد دلخواه تمرکز دارد.
+    </div>
+    <div class="card">
+      <h2>سیاست یکپارچگی مغز سوییت</h2>
+      <ul class="note" style="padding-right:18px">
+        <li>کلید اختصاصی: <code>smart_mod_suite_brain_v2</code></li>
+        <li>رویدادها: <code>suite_events_v1</code></li>
+        <li>کارتابل: <code>suite_cartable_v1</code> (مشترک)</li>
+        <li>ماژول‌های <code>brain.html</code> و <code>controller.html</code> دیگر لازم نیستند؛ از لانچر حذف مفهومی شدند</li>
+        <li>خروج همه ماژول‌ها باید به <code>suite.html</code> باشد</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>پشتیبان تنظیمات مغز</h2>
+      <button type="button" class="btn btn-p" id="btnBrainBackup">دانلود</button>
+      <button type="button" class="btn" id="btnBrainRestore">بازیابی</button>
+      <input type="file" id="brainRestoreFile" accept="application/json" hidden>
+      <div class="list-box" id="brainAudit" style="margin-top:10px"></div>
+    </div>
+  </div>
 
-  <div class="section"><h2>سازمانی</h2><div class="grid">
-    <a class="mod" href="multicompany.html" data-n="چندشرکتی"><div class="ic">🏛️</div><div class="nm">چند شرکتی</div><div class="ds">هلدینگ</div></a>
-    <a class="mod" href="chat.html" data-n="چت"><div class="ic">💬</div><div class="nm">چت سازمانی</div><div class="ds">پیام داخلی</div></a>
-    <a class="mod" href="meeting.html" data-n="متینگ"><div class="ic">🎥</div><div class="nm">متینگ تصویری</div><div class="ds">جلسه آنلاین</div></a>
-    <a class="mod" href="file-hub.html" style="بارگذاری+ترجمه"><div class="ic">📁</div><div class="nm">بارگذاری</div><div class="ds">بارگذاری فایل + ترجمه</div></a>
-  </div></div>
-  <div class="footer">سامانه هوشمند یکپارچه مالی و اداری · همه ماژول‌ها</div>
+  <div class="footer">
+    سوییت هوشمند · لانچر + مغز قوانین محلی · جایگزین brain/controller<br>
+    داده فقط در مرورگر · بدون سرویس بیرونی
+  </div>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
-(function(){
-var FA=["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"];
-function toFa(n){return String(n).replace(/\d/g,function(d){return FA[+d];});}
-function g2j(gy,gm,gd){var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];var gy2=(gm>2)?(gy+1):gy;var days=355666+365*gy+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+g_d_m[gm-1];var jy=-1595+33*Math.floor(days/12053);days%=12053;jy+=4*Math.floor(days/1461);days%=1461;if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}var jm=(days<186)?1+Math.floor(days/31):7+Math.floor((days-186)/30);var jd=1+((days<186)?(days%31):((days-186)%30));return{jy:jy,jm:jm,jd:jd};}
-function tick(){var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());
-document.getElementById("clock").textContent=toFa(j.jy)+"/"+toFa(String(j.jm).padStart(2,"0"))+"/"+toFa(String(j.jd).padStart(2,"0"))+" · "+toFa(String(n.getHours()).padStart(2,"0"))+":"+toFa(String(n.getMinutes()).padStart(2,"0"));}
-tick();setInterval(tick,1000);
-document.getElementById("q").oninput=function(){var q=this.value.trim().toLowerCase();
-document.querySelectorAll(".mod").forEach(function(m){var n=(m.getAttribute("data-n")||"")+m.textContent;m.style.display=!q||n.toLowerCase().indexOf(q)>=0?"":"none";});
-document.querySelectorAll(".section").forEach(function(s){var any=false;s.querySelectorAll(".mod").forEach(function(m){if(m.style.display!=="none")any=true;});s.style.display=any?"":"none";});};
+(function () {
+  "use strict";
+
+  var FA = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  var BRAIN_KEY = "smart_mod_suite_brain_v2";
+  var BRAIN_BACKUP = "smart_mod_suite_brain_backup_v2";
+  var EVENTS_KEY = "suite_events_v1";
+  var CART_KEY = "suite_cartable_v1";
+  var FAV_KEY = "suite_launcher_fav_v2";
+  var REC_KEY = "suite_launcher_recent_v2";
+  var PREF_KEY = "suite_launcher_pref_v2";
+  var AUTH_KEY = "smart_users_suite_brain";
+  var LEGACY_FAV = "suite_launcher_fav_v1";
+  var LEGACY_REC = "suite_launcher_recent_v1";
+
+  /* قالب‌های امن قانون — بدون eval */
+  var WHEN_LABELS = {
+    module_has_data: "ماژول دارای داده است",
+    module_missing: "ماژول هنوز داده ندارد",
+    cart_open_gt: "تعداد کارتابل باز بیشتر از",
+    key_size_gt: "حجم کلید داده ماژول بیشتر از"
+  };
+  var ACTION_LABELS = {
+    log: "ثبت در رویداد مغز",
+    cart: "ارسال به کارتابل",
+    flag: "پرچم هشدار"
+  };
+
+  var toastTimer = null;
+  var flags = {};
+
+  function $(id) { return document.getElementById(id); }
+  function toFa(n) {
+    return String(n).replace(/\d/g, function (d) { return FA[+d]; });
+  }
+  function esc(s) {
+    var d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
+  function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+  function now() { return new Date().toISOString(); }
+  function loadJSON(k, d) {
+    try { return JSON.parse(localStorage.getItem(k) || "null") || d; }
+    catch (e) { return d; }
+  }
+  function saveJSON(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch (e) { toast("خطای ذخیره", true); return false; }
+  }
+  function loadArr(k) {
+    var a = loadJSON(k, []);
+    return Array.isArray(a) ? a : [];
+  }
+  function saveArr(k, a) { return saveJSON(k, a); }
+  function toast(m, err) {
+    var el = $("toast");
+    if (!el) return;
+    el.textContent = m;
+    el.className = "toast show" + (err ? " err" : "");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2400);
+  }
+
+  function g2j(gy, gm, gd) {
+    var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    var gy2 = (gm > 2) ? (gy + 1) : gy;
+    var days = 355666 + 365 * gy + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
+    var jy = -1595 + 33 * Math.floor(days / 12053);
+    days %= 12053;
+    jy += 4 * Math.floor(days / 1461);
+    days %= 1461;
+    if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+    var jm = (days < 186) ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
+    var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
+    return { jy: jy, jm: jm, jd: jd };
+  }
+  function tick() {
+    var n = new Date(), j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    if ($("dtJ")) $("dtJ").textContent = toFa(j.jy) + "/" + toFa(String(j.jm).padStart(2, "0")) + "/" + toFa(String(j.jd).padStart(2, "0"));
+    if ($("dtG")) $("dtG").textContent = n.getFullYear() + "/" + String(n.getMonth() + 1).padStart(2, "0") + "/" + String(n.getDate()).padStart(2, "0");
+    if ($("dtC")) $("dtC").textContent = toFa(String(n.getHours()).padStart(2, "0")) + ":" + toFa(String(n.getMinutes()).padStart(2, "0")) + ":" + toFa(String(n.getSeconds()).padStart(2, "0"));
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  /* ---- مهاجرت علاقه‌مندی ---- */
+  (function migrateFav() {
+    if (!loadArr(FAV_KEY).length) {
+      var o = loadArr(LEGACY_FAV);
+      if (o.length) saveArr(FAV_KEY, o);
+    }
+    if (!loadArr(REC_KEY).length) {
+      var r = loadArr(LEGACY_REC);
+      if (r.length) saveArr(REC_KEY, r);
+    }
+  })();
+
+  /* ---- احراز هویت مغز ---- */
+  function getAuth() {
+    return loadJSON(AUTH_KEY, {
+      users: [{ user: "admin", pass: "admin", name: "مدیر سوییت" }],
+      session: null
+    });
+  }
+  function saveAuth(a) { return saveJSON(AUTH_KEY, a); }
+  function userName() {
+    var a = getAuth();
+    return (a.session && (a.session.name || a.session.user)) || "مهمان";
+  }
+  function ensureBrainAuth(cb) {
+    var a = getAuth();
+    if (a.session && a.session.user) { cb(); return; }
+    var m = document.createElement("div");
+    m.className = "login-mask";
+    m.innerHTML =
+      '<div class="login-box">' +
+      '<h2 style="text-align:center;color:#c4b5fd;margin-bottom:10px">ورود به مغز سوییت</h2>' +
+      '<p class="note" style="text-align:center;margin-bottom:8px">لانچر بدون ورود باز است · مغز نیاز به دسترسی دارد</p>' +
+      '<label>نام کاربری</label><input id="lgU">' +
+      '<label>رمز</label><input id="lgP" type="password">' +
+      '<button type="button" class="btn btn-v" id="lgGo" style="width:100%;margin-top:10px">ورود</button>' +
+      '<button type="button" class="btn" id="lgCancel" style="width:100%;margin-top:6px">بازگشت به لانچر</button>' +
+      '<p class="empty" style="margin-top:8px;text-align:center">admin / admin</p></div>';
+    document.body.appendChild(m);
+    $("lgGo").onclick = function () {
+      var u = $("lgU").value.trim(), p = $("lgP").value;
+      var f = (a.users || []).find(function (x) { return x.user === u && x.pass === p; });
+      if (!f) { toast("نام کاربری یا رمز اشتباه", true); return; }
+      a.session = { user: f.user, name: f.name || f.user };
+      saveAuth(a);
+      m.remove();
+      brainAudit("login", f.user);
+      cb();
+    };
+    $("lgCancel").onclick = function () {
+      m.remove();
+      showView("v-launch");
+    };
+  }
+
+  /* ---- ذخیره مغز ---- */
+  function defBrain() {
+    return {
+      version: 2,
+      rules: [],
+      audit: [],
+      lastScan: null,
+      flags: {},
+      createdAt: now(),
+      updatedAt: now()
+    };
+  }
+  function loadBrain() {
+    var d = loadJSON(BRAIN_KEY, null);
+    if (!d) {
+      d = defBrain();
+      /* قوانین پیش‌فرض امن */
+      d.rules = [
+        {
+          id: uid(), title: "هشدار کارتابل شلوغ", when: "cart_open_gt",
+          target: "suite", threshold: 5, action: "flag", enabled: true, at: now()
+        },
+        {
+          id: uid(), title: "منشی بدون داده", when: "module_missing",
+          target: "secretary", threshold: 0, action: "log", enabled: false, at: now()
+        }
+      ];
+      saveJSON(BRAIN_KEY, d);
+    }
+    if (!Array.isArray(d.rules)) d.rules = [];
+    if (!Array.isArray(d.audit)) d.audit = [];
+    if (!d.flags) d.flags = {};
+    return d;
+  }
+  function saveBrain(d) {
+    try {
+      var cur = localStorage.getItem(BRAIN_KEY);
+      if (cur) localStorage.setItem(BRAIN_BACKUP, cur);
+    } catch (e) {}
+    d.updatedAt = now();
+    d.version = 2;
+    return saveJSON(BRAIN_KEY, d);
+  }
+  function brainAudit(action, detail) {
+    var d = loadBrain();
+    d.audit = d.audit || [];
+    d.audit.unshift({
+      id: uid(), t: now(), user: userName(),
+      action: String(action || "").slice(0, 40),
+      detail: String(detail || "").slice(0, 200)
+    });
+    if (d.audit.length > 200) d.audit = d.audit.slice(0, 200);
+    saveBrain(d);
+  }
+
+  function pushEvent(type, message, meta) {
+    var list = loadArr(EVENTS_KEY);
+    list.unshift({
+      id: uid(),
+      t: now(),
+      type: String(type || "info").slice(0, 30),
+      message: String(message || "").slice(0, 240),
+      meta: meta || {},
+      by: userName()
+    });
+    if (list.length > 300) list = list.slice(0, 300);
+    saveArr(EVENTS_KEY, list);
+  }
+
+  /* ---- رصد ماژول‌ها ---- */
+  function isSuiteKey(k) {
+    return !!k && (k.indexOf("smart_") === 0 || k.indexOf("suite_") === 0);
+  }
+  function moduleDataSize(modId) {
+    var total = 0;
+    var keys = [];
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i) || "";
+        if (!isSuiteKey(k)) continue;
+        var hit =
+          k.indexOf("smart_mod_" + modId) === 0 ||
+          k.indexOf("smart_" + modId) === 0 ||
+          (modId === "suite" && k.indexOf("suite_") === 0) ||
+          (modId === "database" && k.indexOf("smart_db") === 0) ||
+          (modId === "manager" && (k.indexOf("smart_mgmt") === 0 || k.indexOf("management") >= 0));
+        if (hit) {
+          try {
+            total += (localStorage.getItem(k) || "").length;
+            keys.push(k);
+          } catch (e) {}
+        }
+      }
+    } catch (e) {}
+    return { size: total, keys: keys, hasData: total > 2 };
+  }
+  function scanModules() {
+    var ids = {};
+    document.querySelectorAll(".mod[data-id]").forEach(function (m) {
+      var id = m.getAttribute("data-id");
+      if (id) ids[id] = m.getAttribute("data-n") || id;
+    });
+    /* اهداف ثابت قوانین */
+    ["secretary", "secretariat", "manager", "accounting", "database", "suite"].forEach(function (id) {
+      if (!ids[id]) ids[id] = id;
+    });
+    var rows = [];
+    Object.keys(ids).forEach(function (id) {
+      var info = moduleDataSize(id);
+      rows.push({
+        id: id,
+        name: ids[id],
+        size: info.size,
+        keys: info.keys.length,
+        hasData: info.hasData,
+        flag: !!(flags[id] || (loadBrain().flags || {})[id])
+      });
+    });
+    rows.sort(function (a, b) { return b.size - a.size; });
+    var brain = loadBrain();
+    brain.lastScan = now();
+    saveBrain(brain);
+    return rows;
+  }
+  function cartOpenCount() {
+    try {
+      var all = JSON.parse(localStorage.getItem(CART_KEY) || "[]") || [];
+      if (!Array.isArray(all)) return 0;
+      return all.filter(function (x) { return x && x.status !== "done"; }).length;
+    } catch (e) { return 0; }
+  }
+  function formatSize(bytes) {
+    bytes = bytes || 0;
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+  }
+
+  /* ---- موتور قوانین (اعلامی) ---- */
+  function evalWhen(rule) {
+    var when = rule.when;
+    var target = rule.target || "";
+    var th = Number(rule.threshold) || 0;
+    if (when === "module_has_data") {
+      return moduleDataSize(target).hasData;
+    }
+    if (when === "module_missing") {
+      return !moduleDataSize(target).hasData;
+    }
+    if (when === "cart_open_gt") {
+      return cartOpenCount() > th;
+    }
+    if (when === "key_size_gt") {
+      return moduleDataSize(target).size > th;
+    }
+    return false;
+  }
+  function runAction(rule) {
+    var title = rule.title || "قانون";
+    if (rule.action === "log") {
+      pushEvent("rule", title + " · برقرار شد", { ruleId: rule.id, target: rule.target });
+      return "log";
+    }
+    if (rule.action === "flag") {
+      var b = loadBrain();
+      b.flags = b.flags || {};
+      b.flags[rule.target || "suite"] = title;
+      flags[rule.target || "suite"] = title;
+      saveBrain(b);
+      pushEvent("flag", title, { target: rule.target });
+      return "flag";
+    }
+    if (rule.action === "cart") {
+      var all = loadArr(CART_KEY);
+      all.unshift({
+        id: uid(),
+        from: "suite-brain",
+        fromLabel: "مغز سوییت · " + userName(),
+        to: rule.target === "suite" ? "manager" : rule.target,
+        title: "قانون: " + title,
+        body: "شرط «" + (WHEN_LABELS[rule.when] || rule.when) + "» برای «" + rule.target + "» برقرار شد.",
+        status: "new",
+        at: new Date().toLocaleString("fa-IR"),
+        version: 1
+      });
+      if (all.length > 500) all = all.slice(0, 500);
+      saveArr(CART_KEY, all);
+      pushEvent("cart", "کارتابل: " + title, { target: rule.target });
+      return "cart";
+    }
+    return "none";
+  }
+  function runAllRules() {
+    var brain = loadBrain();
+    var rules = (brain.rules || []).filter(function (r) { return r && r.enabled; });
+    var fired = 0;
+    rules.forEach(function (rule) {
+      /* فقط شناسه‌های مجاز */
+      if (!WHEN_LABELS[rule.when] || !ACTION_LABELS[rule.action]) return;
+      if (evalWhen(rule)) {
+        runAction(rule);
+        fired++;
+      }
+    });
+    brainAudit("run-rules", "fired=" + fired);
+    pushEvent("scan", "اجرای قوانین · " + fired + " مورد");
+    return fired;
+  }
+
+  /* ---- نماها ---- */
+  function showView(id) {
+    document.querySelectorAll(".view").forEach(function (v) { v.classList.remove("on"); });
+    document.querySelectorAll(".mode-tabs button").forEach(function (b) { b.classList.remove("on"); });
+    if ($(id)) $(id).classList.add("on");
+    document.querySelectorAll(".mode-tabs button[data-view]").forEach(function (b) {
+      if (b.getAttribute("data-view") === id) b.classList.add("on");
+    });
+    if (id === "v-brain" || id === "v-rules" || id === "v-security") {
+      ensureBrainAuth(function () {
+        if (id === "v-brain") renderBrain();
+        if (id === "v-rules") renderRules();
+        if (id === "v-security") renderSecurity();
+      });
+    }
+    if (id === "v-launch") {
+      renderFav();
+      renderRecent();
+      renderStats();
+      applyFilter();
+    }
+  }
+  document.querySelectorAll(".mode-tabs button[data-view]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      showView(b.getAttribute("data-view"));
+    });
+  });
+  if ($("btnOpenBrain")) $("btnOpenBrain").onclick = function () { showView("v-brain"); };
+  if ($("modBrainCard")) $("modBrainCard").onclick = function () { showView("v-brain"); };
+
+  /* ---- رندر مغز ---- */
+  function renderBrain() {
+    var rows = scanModules();
+    var totalSize = 0, withData = 0;
+    rows.forEach(function (r) {
+      totalSize += r.size;
+      if (r.hasData) withData++;
+    });
+    if ($("brainKpi")) {
+      $("brainKpi").innerHTML =
+        '<div class="box"><div class="n">' + toFa(rows.length) + '</div><div class="l">هدف رصد</div></div>' +
+        '<div class="box"><div class="n">' + toFa(withData) + '</div><div class="l">دارای داده</div></div>' +
+        '<div class="box"><div class="n">' + formatSize(totalSize) + '</div><div class="l">حجم تقریبی</div></div>' +
+        '<div class="box"><div class="n">' + toFa(cartOpenCount()) + '</div><div class="l">کارتابل باز</div></div>' +
+        '<div class="box"><div class="n">' + toFa((loadBrain().rules || []).filter(function (r) { return r.enabled; }).length) + '</div><div class="l">قانون فعال</div></div>' +
+        '<div class="box"><div class="n">' + toFa(Object.keys(loadBrain().flags || {}).length) + '</div><div class="l">پرچم</div></div>';
+    }
+    if ($("brainModList")) {
+      var html = "<table><thead><tr><th>ماژول</th><th>داده</th><th>کلید</th><th>حجم</th><th>پرچم</th></tr></thead><tbody>";
+      rows.forEach(function (r) {
+        html += "<tr><td>" + esc(r.name) + " <span class='empty'>(" + esc(r.id) + ")</span></td>" +
+          "<td>" + (r.hasData ? '<span class="badge badge-ok">دارد</span>' : '<span class="badge badge-w">ندارد</span>') + "</td>" +
+          "<td>" + toFa(r.keys) + "</td>" +
+          "<td>" + formatSize(r.size) + "</td>" +
+          "<td>" + (r.flag ? '<span class="badge badge-b">هشدار</span>' : "—") + "</td></tr>";
+      });
+      html += "</tbody></table>";
+      $("brainModList").innerHTML = html;
+    }
+    if ($("brainMeta")) {
+      var ls = loadBrain().lastScan;
+      $("brainMeta").textContent = "آخرین اسکن: " + (ls ? ls.slice(0, 19).replace("T", " ") : "—") + " · کاربر: " + userName();
+    }
+    if ($("brainEvents")) {
+      var ev = loadArr(EVENTS_KEY).slice(0, 40);
+      $("brainEvents").innerHTML = ev.map(function (e) {
+        return '<div class="list-item"><span class="badge badge-ok">' + esc(e.type) + "</span> " +
+          esc((e.t || "").slice(0, 19).replace("T", " ")) + " — " + esc(e.message) + "</div>";
+      }).join("") || '<p class="empty">رویدادی نیست</p>';
+    }
+    if ($("brainCart")) {
+      var open = loadArr(CART_KEY).filter(function (x) { return x && x.status !== "done"; }).slice(0, 30);
+      $("brainCart").innerHTML = open.map(function (x) {
+        return '<div class="list-item"><b>' + esc(x.title || "") + "</b> → " + esc(x.to || "") +
+          "<br>" + esc(x.body || x.msg || "") + "</div>";
+      }).join("") || '<p class="empty">کارتابل باز خالی است</p>';
+    }
+  }
+
+  if ($("btnScanAll")) $("btnScanAll").onclick = function () {
+    ensureBrainAuth(function () {
+      renderBrain();
+      brainAudit("scan", "manual");
+      pushEvent("scan", "اسکن دستی ماژول‌ها");
+      toast("اسکن انجام شد");
+    });
+  };
+  function doRunRules() {
+    ensureBrainAuth(function () {
+      var n = runAllRules();
+      renderBrain();
+      renderRules();
+      toast("قوانین اجرا شد · " + toFa(n) + " مورد");
+    });
+  }
+  if ($("btnRunRules")) $("btnRunRules").onclick = doRunRules;
+  if ($("btnRunRules2")) $("btnRunRules2").onclick = doRunRules;
+  if ($("btnRefreshBrain")) $("btnRefreshBrain").onclick = function () {
+    ensureBrainAuth(function () { renderBrain(); toast("بروزرسانی شد"); });
+  };
+
+  /* ---- قوانین UI ---- */
+  function renderRules() {
+    var rules = loadBrain().rules || [];
+    var box = $("rulesList");
+    if (!box) return;
+    if (!rules.length) {
+      box.innerHTML = '<p class="empty">قانونی نیست</p>';
+      return;
+    }
+    box.innerHTML = rules.map(function (r) {
+      return '<div class="list-item">' +
+        (r.enabled ? '<span class="badge badge-ok">فعال</span> ' : '<span class="badge badge-w">خاموش</span> ') +
+        "<b>" + esc(r.title || "") + "</b><br>" +
+        esc(WHEN_LABELS[r.when] || r.when) + " · هدف: " + esc(r.target) +
+        (r.threshold ? " · آستانه: " + toFa(r.threshold) : "") +
+        " · اقدام: " + esc(ACTION_LABELS[r.action] || r.action) +
+        '<br><button type="button" class="btn" data-toggle="' + esc(r.id) + '">' + (r.enabled ? "خاموش" : "روشن") + "</button> " +
+        '<button type="button" class="btn btn-b" data-del="' + esc(r.id) + '">حذف</button></div>';
+    }).join("");
+    box.querySelectorAll("[data-toggle]").forEach(function (b) {
+      b.onclick = function () {
+        var d = loadBrain();
+        d.rules.forEach(function (r) {
+          if (r.id === b.getAttribute("data-toggle")) r.enabled = !r.enabled;
+        });
+        saveBrain(d);
+        brainAudit("rule-toggle", b.getAttribute("data-toggle"));
+        renderRules();
+      };
+    });
+    box.querySelectorAll("[data-del]").forEach(function (b) {
+      b.onclick = function () {
+        if (!confirm("حذف قانون؟")) return;
+        var d = loadBrain();
+        d.rules = (d.rules || []).filter(function (r) { return r.id !== b.getAttribute("data-del"); });
+        saveBrain(d);
+        brainAudit("rule-del", b.getAttribute("data-del"));
+        renderRules();
+      };
+    });
+  }
+  if ($("btnAddRule")) $("btnAddRule").onclick = function () {
+    ensureBrainAuth(function () {
+      var when = $("ruleWhen").value;
+      var action = $("ruleAction").value;
+      var target = $("ruleTarget").value;
+      var title = ($("ruleTitle").value || "").trim();
+      var th = parseInt($("ruleThreshold").value, 10) || 0;
+      if (!WHEN_LABELS[when] || !ACTION_LABELS[action]) {
+        toast("قالب قانون نامعتبر", true);
+        return;
+      }
+      if (!title) { toast("عنوان قانون لازم است", true); return; }
+      if (title.length > 80) title = title.slice(0, 80);
+      var d = loadBrain();
+      d.rules = d.rules || [];
+      if (d.rules.length >= 50) { toast("حداکثر ۵۰ قانون", true); return; }
+      d.rules.unshift({
+        id: uid(),
+        title: title,
+        when: when,
+        target: target,
+        threshold: th,
+        action: action,
+        enabled: !!($("ruleEnabled") && $("ruleEnabled").checked),
+        at: now(),
+        by: userName()
+      });
+      saveBrain(d);
+      brainAudit("rule-add", title);
+      $("ruleTitle").value = "";
+      renderRules();
+      toast("قانون ثبت شد");
+    });
+  };
+
+  function renderSecurity() {
+    var box = $("brainAudit");
+    if (!box) return;
+    var list = loadBrain().audit || [];
+    box.innerHTML = list.slice(0, 50).map(function (a) {
+      return '<div class="list-item">' + esc((a.t || "").slice(0, 19).replace("T", " ")) +
+        " | " + esc(a.user || "") + " | " + esc(a.action) + " | " + esc(a.detail || "") + "</div>";
+    }).join("") || '<p class="empty">لاگی نیست</p>';
+  }
+  if ($("btnBrainBackup")) $("btnBrainBackup").onclick = function () {
+    ensureBrainAuth(function () {
+      var payload = {
+        module: "suite-brain",
+        version: 2,
+        exported: now(),
+        brain: loadBrain(),
+        events: loadArr(EVENTS_KEY)
+      };
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
+      a.download = "suite-brain-backup.json";
+      a.click();
+      brainAudit("backup", "");
+      toast("دانلود شد");
+    });
+  };
+  if ($("btnBrainRestore")) $("btnBrainRestore").onclick = function () {
+    ensureBrainAuth(function () {
+      if ($("brainRestoreFile")) $("brainRestoreFile").click();
+    });
+  };
+  if ($("brainRestoreFile")) $("brainRestoreFile").onchange = function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var d = JSON.parse(r.result);
+        if (d.brain) saveBrain(d.brain);
+        if (d.events) saveArr(EVENTS_KEY, d.events);
+        brainAudit("restore", f.name);
+        toast("بازیابی شد");
+        renderBrain();
+        renderRules();
+        renderSecurity();
+      } catch (err) {
+        toast("فایل نامعتبر", true);
+      }
+    };
+    r.readAsText(f);
+  };
+
+  /* ---- لانچر ---- */
+  function getPrefs() { return loadJSON(PREF_KEY, { cat: "", q: "" }); }
+  function savePrefs(p) { saveJSON(PREF_KEY, p); }
+  function allMods() { return Array.prototype.slice.call(document.querySelectorAll("a.mod[data-id], button.mod[data-id]")); }
+  function modMeta(m) {
+    return {
+      id: m.getAttribute("data-id") || "",
+      name: m.getAttribute("data-n") || "",
+      href: m.getAttribute("href") || "",
+      text: (m.getAttribute("data-n") || "") + " " + (m.textContent || "")
+    };
+  }
+  function applyFilter() {
+    var q = (($("q") && $("q").value) || "").trim().toLowerCase();
+    var cat = ($("catFilter") && $("catFilter").value) || "";
+    document.querySelectorAll(".section").forEach(function (s) {
+      var sc = s.getAttribute("data-cat") || "";
+      var catOk = !cat || sc === cat;
+      var any = false;
+      s.querySelectorAll(".mod").forEach(function (m) {
+        var n = modMeta(m).text.toLowerCase();
+        var show = catOk && (!q || n.indexOf(q) >= 0);
+        m.style.display = show ? "" : "none";
+        if (show) any = true;
+      });
+      s.style.display = any ? "" : "none";
+    });
+    var p = getPrefs();
+    p.q = q; p.cat = cat;
+    savePrefs(p);
+    renderStats();
+  }
+  function renderFav() {
+    var fav = loadArr(FAV_KEY);
+    var row = $("favRow");
+    if (!row) return;
+    row.innerHTML = fav.length
+      ? fav.map(function (f) {
+          return f.href
+            ? '<a class="chip" href="' + esc(f.href) + '">⭐ ' + esc(f.name) + "</a>"
+            : '<span class="chip">⭐ ' + esc(f.name) + "</span>";
+        }).join("")
+      : '<span class="empty">دوبار کلیک روی کارت = علاقه‌مندی</span>';
+  }
+  function renderRecent() {
+    var rec = loadArr(REC_KEY);
+    var row = $("recentRow");
+    if (!row) return;
+    row.innerHTML = rec.length
+      ? rec.map(function (f) {
+          return f.href
+            ? '<a class="chip" href="' + esc(f.href) + '">' + esc(f.name) + "</a>"
+            : '<span class="chip">' + esc(f.name) + "</span>";
+        }).join("")
+      : '<span class="empty">—</span>';
+  }
+  function renderStats() {
+    var box = $("suiteStats");
+    if (!box) return;
+    var mods = allMods();
+    var visible = mods.filter(function (m) { return m.style.display !== "none"; }).length;
+    function pill(l, v) {
+      return '<span style="background:rgba(15,23,42,.9);border:1px solid #334155;border-radius:999px;padding:5px 10px;font-size:.7rem;font-weight:700">' +
+        esc(l) + ": <b style='color:#7dd3fc'>" + v + "</b></span>";
+    }
+    box.innerHTML =
+      pill("ماژول‌ها", toFa(mods.length)) +
+      pill("نمایش", toFa(visible)) +
+      pill("علاقه‌مندی", toFa(loadArr(FAV_KEY).length)) +
+      pill("کارتابل باز", toFa(cartOpenCount()));
+  }
+  function bindLauncher() {
+    if ($("q")) $("q").oninput = applyFilter;
+    if ($("catFilter")) $("catFilter").onchange = applyFilter;
+    if ($("btnClearFav")) $("btnClearFav").onclick = function () {
+      if (!confirm("علاقه‌مندی‌ها پاک شوند؟")) return;
+      saveArr(FAV_KEY, []);
+      renderFav();
+      renderStats();
+    };
+    if ($("btnHomeRefresh")) $("btnHomeRefresh").onclick = function () {
+      renderFav();
+      renderRecent();
+      applyFilter();
+      renderStats();
+      toast("بروزرسانی شد");
+    };
+    allMods().forEach(function (m) {
+      m.addEventListener("click", function () {
+        var meta = modMeta(m);
+        if (meta.id === "suite-brain") return;
+        var rec = loadArr(REC_KEY).filter(function (x) { return x.id !== meta.id; });
+        rec.unshift({ id: meta.id, name: meta.name, href: meta.href, at: now() });
+        saveArr(REC_KEY, rec.slice(0, 12));
+      });
+      m.addEventListener("dblclick", function (e) {
+        if (m.tagName === "A") e.preventDefault();
+        var meta = modMeta(m);
+        var fav = loadArr(FAV_KEY);
+        if (fav.some(function (x) { return x.id === meta.id; })) {
+          fav = fav.filter(function (x) { return x.id !== meta.id; });
+        } else {
+          fav.unshift({ id: meta.id, name: meta.name, href: meta.href });
+        }
+        saveArr(FAV_KEY, fav.slice(0, 16));
+        renderFav();
+        renderStats();
+        toast("علاقه‌مندی به‌روز شد");
+      });
+    });
+    var p = getPrefs();
+    if ($("q") && p.q) $("q").value = p.q;
+    if ($("catFilter") && p.cat) $("catFilter").value = p.cat;
+  }
+
+  /* ---- Boot ---- */
+  bindLauncher();
+  renderFav();
+  renderRecent();
+  applyFilter();
+  renderStats();
+  showView("v-launch");
+
+  /* اجرای آرام قوانین هر ۲ دقیقه وقتی صفحه باز است (بدون eval) */
+  setInterval(function () {
+    try {
+      var a = getAuth();
+      if (a.session && a.session.user) {
+        runAllRules();
+        if (document.getElementById("v-brain") && document.getElementById("v-brain").classList.contains("on")) {
+          renderBrain();
+        }
+      }
+    } catch (e) {}
+  }, 120000);
 })();
 </script>
 </body>

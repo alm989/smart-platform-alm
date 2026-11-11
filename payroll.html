@@ -3,19 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>حقوق و دستمزد</title>
+<meta name="theme-color" content="#0b1220">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>حقوق و دستمزد هوشمند</title>
 <style>
 :root{--bg:#0b1220;--panel:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#0ea5e9;--ok:#22c55e;--bad:#ef4444}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100dvh;display:flex;flex-direction:column}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100dvh;display:flex;flex-direction:column;direction:rtl}
 .header{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#020617;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:8px}.brand .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:grid;place-items:center;font-size:15px}
+.brand{display:flex;align-items:center;gap:8px}.brand .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#22c55e,#0ea5e9);display:grid;place-items:center;font-size:15px}
 .brand b{font-size:.85rem}
 .nav{display:flex;align-items:center;gap:3px;flex:1;justify-content:center;flex-wrap:wrap}
 .nav-item{position:relative}
 .nav-item>.nb{background:#1e293b;border:1px solid var(--line);color:#cbd5e1;border-radius:999px;padding:7px 11px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit}
 .nav-item:hover>.nb,.nb.on{background:var(--pri);color:#fff;border-color:var(--pri)}
-.nav-item .dd{display:none;position:absolute;top:calc(100% + 4px);right:0;min-width:200px;background:#1e293b;border:1px solid var(--line);border-radius:12px;padding:6px;z-index:120;box-shadow:0 12px 28px rgba(0,0,0,.5)}
+.nav-item .dd{display:none;position:absolute;top:calc(100% + 4px);right:0;min-width:220px;background:#1e293b;border:1px solid var(--line);border-radius:12px;padding:6px;z-index:120;box-shadow:0 12px 28px rgba(0,0,0,.5);max-height:70vh;overflow:auto}
 .nav-item:hover .dd{display:block}
 .nav-item .dd button{display:block;width:100%;text-align:right;background:transparent;border:none;color:var(--txt);padding:8px 11px;border-radius:8px;font-size:.72rem;cursor:pointer;font-family:inherit}
 .nav-item .dd button:hover{background:rgba(14,165,233,.25)}
@@ -25,9 +29,9 @@ body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);col
 .clock div{font-size:11px;font-weight:700;line-height:1.35}
 .clock .j{color:#7dd3fc}.clock .g{color:#94a3b8;direction:ltr;unicode-bidi:isolate;font-size:10px}
 .clock .c{color:#86efac}.clock .u{color:#fde68a;font-size:10px}
-.body-row{display:flex;flex:1;min-height:0;flex-direction:row;direction:ltr}
-.main{flex:1;padding:12px;overflow:auto;min-width:0;direction:rtl}
-.side{width:280px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--line);padding:8px;display:flex;flex-direction:column;overflow:auto;direction:rtl}
+.body-row{display:flex;flex:1;min-height:0;height:calc(100vh - 70px);overflow:hidden;flex-direction:row;direction:ltr}
+.main{flex:1;padding:12px;overflow:auto;min-width:0;direction:rtl;height:100%;text-align:right}
+.side{width:280px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--line);padding:8px;display:flex;flex-direction:column;overflow:auto;direction:rtl;text-align:right}
 @media(max-width:960px){.side{display:none}}
 .side .block{margin-bottom:6px;border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden}
 .side .block>.hd{width:100%;text-align:right;padding:9px 11px;background:#020617;border:none;color:#7dd3fc;font-weight:800;font-size:.78rem;cursor:pointer;font-family:inherit}
@@ -37,13 +41,14 @@ body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);col
 .side .sub button:hover,.side .sub button.on{background:rgba(14,165,233,.2);color:#fff}
 .alerts{margin-top:auto;padding-top:6px;border-top:1px solid var(--line)}
 .alert{display:flex;justify-content:space-between;width:100%;padding:7px 9px;margin-bottom:4px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:.68rem;font-weight:700;cursor:pointer;font-family:inherit}
-.alert .n{background:var(--pri);color:#fff;border-radius:999px;padding:1px 6px;font-size:.62rem}
+.alert .n{background:var(--pri);color:#fff;border-radius:999px;padding:1px 6px;font-size:.62rem;min-width:18px;text-align:center}
 .panel{display:none!important}.panel.on{display:block!important}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;position:relative}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;position:relative;text-align:right}
 .card h2{font-size:.88rem;color:#7dd3fc;margin-bottom:8px}.card.has-exit h2{padding-left:80px}
 .btn-form-exit{position:absolute;top:10px;left:10px;background:#334155;color:#e2e8f0;border:none;border-radius:8px;padding:5px 10px;font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit}
-label{display:block;font-size:.68rem;color:var(--muted);margin:5px 0 2px}
-input,select,textarea{width:100%;padding:7px;border-radius:9px;border:1px solid var(--line);background:#020617;color:var(--txt);font-family:inherit;font-size:12.5px}
+label{display:block;font-size:.68rem;color:var(--muted);margin:5px 0 2px;text-align:right}
+input,select,textarea{width:100%;padding:7px;border-radius:9px;border:1px solid var(--line);background:#020617;color:var(--txt);font-family:inherit;font-size:12.5px;text-align:right}
+textarea{min-height:70px;resize:vertical}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
 @media(max-width:700px){.row,.row3{grid-template-columns:1fr}}
@@ -52,16 +57,15 @@ input,select,textarea{width:100%;padding:7px;border-radius:9px;border:1px solid 
 .kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:7px;margin-bottom:10px}
 .kpi .box{background:#0f172a;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
 .kpi .n{font-size:1.05rem;font-weight:800;color:#7dd3fc}.kpi .l{font-size:.6rem;color:var(--muted)}
-table{width:100%;border-collapse:collapse;font-size:.7rem}
-th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{color:#7dd3fc;font-size:.62rem}
 .empty{color:var(--muted);font-size:.78rem;text-align:center;padding:16px}
 .toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:9px 12px;border-radius:12px;font-weight:700;opacity:0;z-index:200;transition:.15s;font-size:.8rem}
 .toast.show{opacity:1}.toast.err{background:var(--bad)}
-.list-box{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:5px;margin:7px 0;background:#0f172a}
-.list-item{padding:7px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:8px;font-size:.74rem}
+.list-box{max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:5px;margin:7px 0;background:#0f172a}
+.list-item{padding:8px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:8px;font-size:.74rem;margin-bottom:3px;text-align:right}
 .list-item.sel{background:rgba(14,165,233,.2);border:1px solid #0ea5e9}
+.list-item.deleted{opacity:.65;border-right:3px solid var(--bad)}
 .login-mask{position:fixed;inset:0;background:rgba(2,6,23,.95);z-index:300;display:flex;align-items:center;justify-content:center}
-.login-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;width:min(320px,92vw)}
+.login-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;width:min(320px,92vw);text-align:right}
 .date-wrap{position:relative}
 .jcal{position:absolute;z-index:90;right:0;top:calc(100%+4px);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;width:290px;max-width:calc(100vw - 24px);overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.5)}
 .jcal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:4px}
@@ -71,172 +75,366 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
 .jcal-w span{text-align:center;font-size:.52rem;color:var(--muted)}
 .jcal-d button{border:none;background:transparent;color:#fff;border-radius:6px;padding:2px;cursor:pointer;font-family:inherit;min-height:34px;width:100%}
 .jcal-d button .jd{display:block;font-size:.7rem;font-weight:700}.jcal-d button .gd{display:block;font-size:.4rem;color:var(--muted)}
-.split{display:grid;grid-template-columns:1fr 1.05fr;gap:10px}@media(max-width:900px){.split{grid-template-columns:1fr}}
-.form-actions{margin-top:8px}
+.form-actions{margin-top:8px;display:flex;flex-wrap:wrap;gap:4px}
+.note-box{font-size:.72rem;color:var(--muted);margin:6px 0;line-height:1.7;background:#0f172a;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:right}
+.show-deleted-bar{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.75rem;justify-content:flex-start}
+.shortcut-hint{font-size:.65rem;color:var(--muted);margin-top:6px;text-align:right}
+.num{direction:ltr;unicode-bidi:isolate;text-align:left}
 </style>
 </head>
 <body>
 <header class="header">
-  <div class="brand"><div class="logo">💰</div><b>حقوق و دستمزد</b></div>
+  <div class="brand"><div class="logo">💰</div><b>حقوق و دستمزد هوشمند</b></div>
   <nav class="nav">
-    <button type="button" class="mic" id="btnMic">🎤</button>
+    <button type="button" class="mic" id="btnMic" title="تایپ صوتی">🎤</button>
     <div class="nav-item"><button type="button" class="nb on" data-panel="p-dash">داشبورد</button>
       <div class="dd"><button type="button" data-panel="p-dash">نمای کلی</button></div></div>
     <div class="nav-item"><button type="button" class="nb">ثبت</button>
-      <div class="dd"><button type="button" data-panel="p-payrun">محاسبه حقوق ماه</button><button type="button" data-panel="p-pins">لیست بیمه</button><button type="button" data-panel="p-ppay">ثبت پرداخت حقوق</button></div></div>
+      <div class="dd">
+        <button type="button" data-panel="p-payrun">محاسبه حقوق ماه</button>
+        <button type="button" data-panel="p-pins">لیست بیمه</button>
+        <button type="button" data-panel="p-ppay">ثبت پرداخت حقوق</button>
+        <button type="button" data-panel="p-calc">محاسبه گروهی از پرسنلی</button>
+      </div></div>
     <div class="nav-item"><button type="button" class="nb">فهرست</button>
-      <div class="dd"><button type="button" data-panel="p-list-0">فیش‌های حقوقی</button><button type="button" data-panel="p-list-1">لیست بیمه</button><button type="button" data-panel="p-list-2">پرداخت‌ها</button></div></div>
+      <div class="dd">
+        <button type="button" data-panel="p-list-payrun">فیش‌های حقوقی</button>
+        <button type="button" data-panel="p-list-pins">لیست بیمه</button>
+        <button type="button" data-panel="p-list-ppay">پرداخت‌ها</button>
+      </div></div>
     <div class="nav-item"><button type="button" class="nb">گزارش</button>
-      <div class="dd"><button type="button" data-panel="p-rep-0">گزارش حقوق ماهانه</button><button type="button" data-panel="p-rep-1">جمع کسور و مزایا</button></div></div>
+      <div class="dd">
+        <button type="button" data-panel="p-rep-pay">گزارش حقوق ماهانه</button>
+        <button type="button" data-panel="p-rep-ded">جمع کسور و مزایا</button>
+        <button type="button" data-panel="p-rep-ins">گزارش بیمه</button>
+      </div></div>
     <div class="nav-item"><button type="button" class="nb">امکانات</button>
       <div class="dd">
         <button type="button" data-panel="p-cal">تقویم شمسی</button>
         <button type="button" data-panel="p-notes">یادداشت</button>
-        <button type="button" data-panel="p-rems">یادآوری</button>
+        <button type="button" data-panel="p-rems">یادآوری پرداخت</button>
         <button type="button" data-panel="p-cartable">کارتابل</button>
+        <button type="button" data-panel="p-audit">لاگ تغییرات</button>
       </div></div>
     <div class="nav-item"><button type="button" class="nb">تنظیمات</button>
       <div class="dd">
-        <button type="button" data-panel="p-backup">پشتیبان و بازیابی</button>
-        <button type="button" data-panel="p-users">ایجاد کاربر جدید</button>
+        <button type="button" data-panel="p-backup">پشتیبان</button>
+        <button type="button" data-panel="p-users">کاربران</button>
       </div></div>
     <button type="button" class="exit-top" id="btnExit">خروج</button>
   </nav>
-  <div class="clock"><div class="j" id="dtJ">—</div><div class="g" id="dtG">—</div><div class="c" id="dtC">—</div><div class="u" id="activeUser">کاربر فعال: —</div></div>
+  <div class="clock">
+    <div class="j" id="dtJ">—</div>
+    <div class="g" id="dtG">—</div>
+    <div class="c" id="dtC">—</div>
+    <div class="u" id="activeUser">کاربر فعال: —</div>
+  </div>
 </header>
 <div class="body-row">
 <main class="main">
-  <div class="panel on" id="p-dash"><div class="kpi" id="kpi"></div><div class="card"><h2>داشبورد حقوق و دستمزد</h2><p class="empty" id="dashMeta">—</p></div></div>
-  
-  <div class="panel" id="p-payrun"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>محاسبه حقوق ماه</h2>
-    <div class="row"><div><label>ماه شمسی</label><input data-f="ماه شمسی" class=""></div><div><label>سال</label><input data-f="سال" class=""></div></div><div class="row"><div><label>پرسنل/همه</label><input data-f="پرسنل/همه" class=""></div><div><label>حقوق پایه</label><input data-f="حقوق پایه" class=""></div></div><div class="row"><div><label>مزایا</label><input data-f="مزایا" class=""></div><div><label>کسور</label><input data-f="کسور" class=""></div></div><div class="row"><div><label>بیمه</label><input data-f="بیمه" class=""></div><div><label>مالیات</label><input data-f="مالیات" class=""></div></div><div><label>خالص</label><input data-f="خالص" class=""></div>
-    <div class="form-actions">
-      <button type="button" class="btn btn-p btn-save-form" data-store="payrun" data-title="محاسبه حقوق ماه">ثبت</button>
-      <button type="button" class="btn btn-ok btn-save-form-new" data-store="payrun" data-title="محاسبه حقوق ماه">ثبت و جدید</button>
+<!-- داشبورد -->
+  <div class="panel on" id="p-dash">
+    <div class="kpi" id="kpi"></div>
+    <div class="card">
+      <h2>داشبورد حقوق و دستمزد</h2>
+      <p class="empty" id="dashMeta">—</p>
+      <p class="shortcut-hint">میانبر: Ctrl+1 داشبورد · Ctrl+2 محاسبه · Ctrl+3 بیمه · Ctrl+4 پرداخت · Ctrl+K کارتابل · Esc داشبورد</p>
     </div>
-  </div></div>
-  <div class="panel" id="p-pins"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>لیست بیمه</h2>
-    <div class="row"><div><label>ماه</label><input data-f="ماه" class=""></div><div><label>سال</label><input data-f="سال" class=""></div></div><div class="row"><div><label>تعداد نفر</label><input data-f="تعداد نفر" class=""></div><div><label>حق بیمه سهم کارگر</label><input data-f="حق بیمه سهم کارگر" class=""></div></div><div><label>سهم کارفرما</label><input data-f="سهم کارفرما" class=""></div>
-    <div class="form-actions">
-      <button type="button" class="btn btn-p btn-save-form" data-store="pins" data-title="لیست بیمه">ثبت</button>
-      <button type="button" class="btn btn-ok btn-save-form-new" data-store="pins" data-title="لیست بیمه">ثبت و جدید</button>
+  </div>
+
+  <!-- محاسبه حقوق ماه -->
+  <div class="panel" id="p-payrun">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>محاسبه / ثبت فیش حقوق</h2>
+      <div class="row">
+        <div><label>ماه شمسی *</label><input data-f="ماه شمسی" placeholder="1 تا 12"></div>
+        <div><label>سال *</label><input data-f="سال" placeholder="1404"></div>
+      </div>
+      <div class="row">
+        <div><label>پرسنل *</label><input data-f="پرسنل" placeholder="کد یا نام"></div>
+        <div><label>حقوق پایه</label><input data-f="حقوق پایه" class="amount"></div>
+      </div>
+      <div class="row">
+        <div><label>مزایا</label><input data-f="مزایا" class="amount"></div>
+        <div><label>کسور</label><input data-f="کسور" class="amount"></div>
+      </div>
+      <div class="row">
+        <div><label>بیمه</label><input data-f="بیمه" class="amount"></div>
+        <div><label>مالیات</label><input data-f="مالیات" class="amount"></div>
+      </div>
+      <div class="row">
+        <div><label>اضافه‌کار</label><input data-f="اضافه‌کار" class="amount"></div>
+        <div><label>خالص</label><input data-f="خالص" class="amount"></div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p btn-save-form" data-store="payrun" data-title="فیش حقوق">ثبت</button>
+        <button type="button" class="btn btn-ok btn-save-form-new" data-store="payrun" data-title="فیش حقوق">ثبت و جدید</button>
+      </div>
     </div>
-  </div></div>
-  <div class="panel" id="p-ppay"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>ثبت پرداخت حقوق</h2>
-    <div class="row"><div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div><div><label>ماه</label><input data-f="ماه" class=""></div></div><div class="row"><div><label>مبلغ کل</label><input data-f="مبلغ کل" class="amount"></div><div><label>روش پرداخت</label><input data-f="روش پرداخت" class=""></div></div><div><label>شرح</label><input data-f="شرح" class=""></div>
-    <div class="form-actions">
-      <button type="button" class="btn btn-p btn-save-form" data-store="ppay" data-title="ثبت پرداخت حقوق">ثبت</button>
-      <button type="button" class="btn btn-ok btn-save-form-new" data-store="ppay" data-title="ثبت پرداخت حقوق">ثبت و جدید</button>
+  </div>
+
+  <!-- محاسبه گروهی از پرسنلی -->
+  <div class="panel" id="p-calc">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>محاسبه گروهی از ماژول پرسنلی</h2>
+      <div class="note-box">
+        داده‌ها از کلید <b>smart_mod_personnel_v2</b> خوانده می‌شود.
+        برای هر پرسنل فعال، فیش ساخته می‌شود.
+      </div>
+      <div class="row3">
+        <div><label>سال</label><input id="calcYear" placeholder="1404"></div>
+        <div><label>ماه</label><input id="calcMonth" placeholder="1"></div>
+        <div><label>نرخ اضافه‌کار ساعتی</label><input id="calcOt" value="0"></div>
+      </div>
+      <div class="row3">
+        <div><label>بیمه کارمند ٪</label><input id="calcInsEmp" value="7"></div>
+        <div><label>بیمه کارفرما ٪</label><input id="calcInsEr" value="23"></div>
+        <div><label>مالیات ٪</label><input id="calcTax" value="0"></div>
+      </div>
+      <button type="button" class="btn btn-p" id="btnCalcGroup">محاسبه همه پرسنل فعال</button>
+      <p class="empty" id="calcResult" style="text-align:right">—</p>
     </div>
-  </div></div>
-  
-  <div class="panel" id="p-list-0"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>فیش‌های حقوقی</h2>
-    <input class="list-search" data-store="payrun" placeholder="جستجو...">
-    <div class="list-box data-list" data-store="payrun"></div>
-    <button type="button" class="btn btn-b btn-del-sel" data-store="payrun">حذف انتخاب‌شده</button>
-  </div></div>
-  <div class="panel" id="p-list-1"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>لیست بیمه</h2>
-    <input class="list-search" data-store="pins" placeholder="جستجو...">
-    <div class="list-box data-list" data-store="pins"></div>
-    <button type="button" class="btn btn-b btn-del-sel" data-store="pins">حذف انتخاب‌شده</button>
-  </div></div>
-  <div class="panel" id="p-list-2"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>پرداخت‌ها</h2>
-    <input class="list-search" data-store="ppay" placeholder="جستجو...">
-    <div class="list-box data-list" data-store="ppay"></div>
-    <button type="button" class="btn btn-b btn-del-sel" data-store="ppay">حذف انتخاب‌شده</button>
-  </div></div>
-  
-  <div class="panel" id="p-rep-0"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>گزارش حقوق ماهانه</h2>
-    <div class="data-report" data-store="payrun" data-title="گزارش حقوق ماهانه"></div>
-  </div></div>
-  <div class="panel" id="p-rep-1"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>جمع کسور و مزایا</h2>
-    <div class="data-report" data-store="payrun" data-title="جمع کسور و مزایا"></div>
-  </div></div>
-  <div class="panel" id="p-cal"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>تقویم شمسی</h2><div id="fullCal"></div>
-    <p class="empty" style="margin-top:8px">با کلیک روی روز، یادآوری ثبت کنید</p>
-  </div></div>
-  <div class="panel" id="p-notes"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>یادداشت</h2><textarea id="noteText" rows="3"></textarea>
-    <div class="list-box" id="notesList"></div>
-    <button type="button" class="btn btn-p" id="btnNoteSave">ذخیره</button>
-    <button type="button" class="btn btn-b" id="btnNoteDel">حذف</button>
-  </div></div>
-  <div class="panel" id="p-rems"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>یادآوری</h2>
-    <div class="row"><input id="remText" placeholder="متن"><input id="remDate" class="jdate"></div>
-    <button type="button" class="btn btn-p" id="btnRemAdd">افزودن</button>
-    <div class="list-box" id="remsList"></div>
-  </div></div>
-  <div class="panel" id="p-cartable"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>کارتابل</h2>
-    <div class="row"><input id="cartTo" placeholder="گیرنده"><input id="cartMsg" placeholder="پیام"></div>
-    <button type="button" class="btn btn-p" id="btnCartSend">ارسال</button>
-    <div class="list-box" id="cartList"></div>
-  </div></div>
-  <div class="panel" id="p-users"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>ایجاد کاربر جدید</h2>
-    <div class="row3">
-      <div><label>نام کاربری</label><input id="nuUser"></div>
-      <div><label>رمز عبور</label><input id="nuPass" type="password"></div>
-      <div><label>نام نمایشی</label><input id="nuName"></div>
+  </div>
+
+  <!-- لیست بیمه -->
+  <div class="panel" id="p-pins">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>ثبت لیست بیمه</h2>
+      <div class="row">
+        <div><label>ماه *</label><input data-f="ماه"></div>
+        <div><label>سال *</label><input data-f="سال"></div>
+      </div>
+      <div class="row">
+        <div><label>تعداد نفر</label><input data-f="تعداد نفر"></div>
+        <div><label>حق بیمه سهم کارگر</label><input data-f="حق بیمه سهم کارگر" class="amount"></div>
+      </div>
+      <div><label>سهم کارفرما</label><input data-f="سهم کارفرما" class="amount"></div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p btn-save-form" data-store="pins" data-title="لیست بیمه">ثبت</button>
+        <button type="button" class="btn btn-ok btn-save-form-new" data-store="pins" data-title="لیست بیمه">ثبت و جدید</button>
+      </div>
+      <div class="note-box" style="margin-top:10px">
+        <b>تولید خودکار از پرسنلی:</b>
+        <button type="button" class="btn btn-g" id="btnAutoIns">تولید گزارش بیمه از پرسنل فعال</button>
+        <button type="button" class="btn btn-g" id="btnInsCsv">دانلود CSV بیمه</button>
+      </div>
     </div>
-    <label>نقش</label><select id="nuRole"><option value="user">کاربر</option><option value="admin">مدیر ماژول (Admin)</option></select>
-    <div class="form-actions">
-      <button type="button" class="btn btn-p" id="btnAddUser">ایجاد کاربر</button>
+  </div>
+
+  <!-- پرداخت -->
+  <div class="panel" id="p-ppay">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>ثبت پرداخت حقوق</h2>
+      <div class="row">
+        <div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div>
+        <div><label>ماه</label><input data-f="ماه"></div>
+      </div>
+      <div class="row">
+        <div><label>مبلغ کل</label><input data-f="مبلغ کل" class="amount"></div>
+        <div><label>روش پرداخت</label><input data-f="روش پرداخت" placeholder="حواله / نقد / کارت"></div>
+      </div>
+      <div><label>شرح</label><input data-f="شرح"></div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p btn-save-form" data-store="ppay" data-title="پرداخت حقوق">ثبت</button>
+        <button type="button" class="btn btn-ok btn-save-form-new" data-store="ppay" data-title="پرداخت حقوق">ثبت و جدید</button>
+      </div>
     </div>
-    <div class="list-box" id="usersList" style="margin-top:10px"></div>
-  </div></div>
-  <div class="panel" id="p-backup"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>پشتیبان و بازیابی</h2>
-    <h3 style="color:#7dd3fc;font-size:.8rem;margin:8px 0">محلی (دستگاه)</h3>
-    <button type="button" class="btn btn-p" id="btnBackupLocal">دانلود پشتیبان محلی</button>
-    <button type="button" class="btn btn-g" id="btnRestoreLocal">بازیابی از فایل محلی</button>
-    <input type="file" id="restoreFile" accept="application/json" hidden>
-    <h3 style="color:#7dd3fc;font-size:.8rem;margin:14px 0 8px">گوگل درایو</h3>
-    <p class="empty" style="text-align:right;padding:6px 0">خروجی JSON برای آپلود دستی در گوگل درایو، یا بازیابی از فایلی که از درایو دانلود کرده‌اید.</p>
-    <button type="button" class="btn btn-ok" id="btnBackupGdrive">پشتیبان‌گیری برای گوگل درایو (دانلود JSON)</button>
-    <button type="button" class="btn btn-g" id="btnRestoreGdrive">بازیابی از فایل گوگل درایو</button>
-    <input type="file" id="restoreGdriveFile" accept="application/json" hidden>
-    <p class="empty" style="text-align:right;margin-top:8px;font-size:.7rem">نکته: در محیط مرورگر بدون سرور، اتصال مستقیم OAuth به گوگل درایو محدود است؛ فایل را در درایو آپلود/دانلود کنید.</p>
-  </div></div>
+  </div>
+
+  <!-- فهرست‌ها -->
+  <div class="panel" id="p-list-payrun">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>فیش‌های حقوقی</h2>
+      <div class="show-deleted-bar"><label><input type="checkbox" class="toggle-deleted" data-store="payrun"> نمایش حذف‌شده‌ها</label></div>
+      <input class="list-search" data-store="payrun" placeholder="جستجو...">
+      <div class="list-box data-list" data-store="payrun"></div>
+      <button type="button" class="btn btn-b btn-del-sel" data-store="payrun">حذف نرم</button>
+      <button type="button" class="btn btn-ok btn-restore-sel" data-store="payrun">بازیابی</button>
+    </div>
+  </div>
+  <div class="panel" id="p-list-pins">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>فهرست بیمه</h2>
+      <div class="show-deleted-bar"><label><input type="checkbox" class="toggle-deleted" data-store="pins"> نمایش حذف‌شده‌ها</label></div>
+      <input class="list-search" data-store="pins" placeholder="جستجو...">
+      <div class="list-box data-list" data-store="pins"></div>
+      <button type="button" class="btn btn-b btn-del-sel" data-store="pins">حذف نرم</button>
+      <button type="button" class="btn btn-ok btn-restore-sel" data-store="pins">بازیابی</button>
+    </div>
+  </div>
+  <div class="panel" id="p-list-ppay">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>پرداخت‌ها</h2>
+      <div class="show-deleted-bar"><label><input type="checkbox" class="toggle-deleted" data-store="ppay"> نمایش حذف‌شده‌ها</label></div>
+      <input class="list-search" data-store="ppay" placeholder="جستجو...">
+      <div class="list-box data-list" data-store="ppay"></div>
+      <button type="button" class="btn btn-b btn-del-sel" data-store="ppay">حذف نرم</button>
+      <button type="button" class="btn btn-ok btn-restore-sel" data-store="ppay">بازیابی</button>
+    </div>
+  </div>
+
+  <!-- گزارش‌ها -->
+  <div class="panel" id="p-rep-pay">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>گزارش حقوق ماهانه</h2>
+      <div class="data-report" data-store="payrun" data-title="گزارش حقوق ماهانه"></div>
+      <button type="button" class="btn btn-g" id="btnPrintPay">چاپ</button>
+    </div>
+  </div>
+  <div class="panel" id="p-rep-ded">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>جمع کسور و مزایا</h2>
+      <div id="dedSummary" class="note-box">—</div>
+      <div class="data-report" data-store="payrun" data-title="کسور و مزایا"></div>
+    </div>
+  </div>
+  <div class="panel" id="p-rep-ins">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>گزارش بیمه</h2>
+      <div class="data-report" data-store="pins" data-title="گزارش بیمه"></div>
+    </div>
+  </div>
+
+  <!-- امکانات -->
+  <div class="panel" id="p-cal">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>تقویم شمسی</h2>
+      <div id="fullCal"></div>
+      <p class="empty" style="margin-top:8px;text-align:right">با کلیک روی روز، یادآوری ثبت کنید</p>
+    </div>
+  </div>
+  <div class="panel" id="p-notes">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>یادداشت</h2>
+      <textarea id="noteText" rows="3"></textarea>
+      <div class="list-box" id="notesList"></div>
+      <button type="button" class="btn btn-p" id="btnNoteSave">ذخیره</button>
+      <button type="button" class="btn btn-b" id="btnNoteDel">حذف</button>
+    </div>
+  </div>
+  <div class="panel" id="p-rems">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>یادآوری روز پرداخت</h2>
+      <div class="row">
+        <div><label>روز پرداخت (۱–۲۸)</label><input id="payDay" value="5"></div>
+        <div><label>تاریخ یادآوری</label><input id="remDate" class="jdate"></div>
+      </div>
+      <div><label>متن</label><input id="remText" value="روز پرداخت حقوق کارکنان"></div>
+      <button type="button" class="btn btn-p" id="btnRemAdd">افزودن یادآوری</button>
+      <button type="button" class="btn btn-ok" id="btnSyncSec">ثبت یادآوری در منشی (در صورت وجود)</button>
+      <div class="list-box" id="remsList"></div>
+    </div>
+  </div>
+
+  <!-- کارتابل -->
+  <div class="panel" id="p-cartable">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>کارتابل سازمانی</h2>
+      <div class="row">
+        <div>
+          <label>گیرنده</label>
+          <select id="cartTo">
+            <option value="suite">سامانه مرکزی</option>
+            <option value="ceo">مدیرعامل</option>
+            <option value="personnel">پرسنلی</option>
+            <option value="secretary">منشی</option>
+            <option value="assistant">دستیار</option>
+            <option value="accounting">حسابداری</option>
+            <option value="payroll">حقوق (خودماژول)</option>
+          </select>
+        </div>
+        <div><label>عنوان</label><input id="cartTitle" maxlength="150"></div>
+      </div>
+      <label>متن</label>
+      <textarea id="cartMsg" rows="2"></textarea>
+      <label>پیوست (حداکثر ۱.۵MB)</label>
+      <input type="file" id="cartFile">
+      <button type="button" class="btn btn-p" id="btnCartSend">ارسال</button>
+      <button type="button" class="btn btn-g" id="btnCartRefresh">بروزرسانی</button>
+      <div class="list-box" id="cartList"></div>
+      <p class="empty" style="text-align:right">کلید مشترک: suite_cartable_v1</p>
+    </div>
+  </div>
+
+  <div class="panel" id="p-audit">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>لاگ تغییرات (Audit)</h2>
+      <div class="list-box" id="auditList"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="p-users">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>کاربران ماژول</h2>
+      <div class="row3">
+        <div><label>نام کاربری</label><input id="nuUser"></div>
+        <div><label>رمز</label><input id="nuPass" type="password"></div>
+        <div><label>نام نمایشی</label><input id="nuName"></div>
+      </div>
+      <label>نقش</label>
+      <select id="nuRole"><option value="user">کاربر</option><option value="admin">مدیر ماژول</option></select>
+      <div class="form-actions"><button type="button" class="btn btn-p" id="btnAddUser">ایجاد</button></div>
+      <div class="list-box" id="usersList" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="p-backup">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>پشتیبان و بازیابی</h2>
+      <button type="button" class="btn btn-p" id="btnBackupLocal">دانلود پشتیبان</button>
+      <button type="button" class="btn btn-g" id="btnRestoreLocal">بازیابی از فایل</button>
+      <input type="file" id="restoreFile" accept="application/json" hidden>
+      <button type="button" class="btn btn-ok" id="btnRestoreEmergency">بازیابی از پشتیبان اضطراری</button>
+      <p class="empty" style="text-align:right;margin-top:8px">قبل از هر ذخیره، نسخه قبلی به‌صورت خودکار نگه داشته می‌شود.</p>
+    </div>
+  </div>
 </main>
+
 <aside class="side">
   <div class="block"><button type="button" class="hd">داشبورد</button><div class="sub"><button type="button" data-panel="p-dash">نمای کلی</button></div></div>
-  <div class="block"><button type="button" class="hd">ثبت</button><div class="sub"><button type="button" data-panel="p-payrun">محاسبه حقوق ماه</button><button type="button" data-panel="p-pins">لیست بیمه</button><button type="button" data-panel="p-ppay">ثبت پرداخت حقوق</button></div></div>
-  <div class="block"><button type="button" class="hd">فهرست</button><div class="sub"><button type="button" data-panel="p-list-0">فیش‌های حقوقی</button><button type="button" data-panel="p-list-1">لیست بیمه</button><button type="button" data-panel="p-list-2">پرداخت‌ها</button></div></div>
-  <div class="block"><button type="button" class="hd">گزارش</button><div class="sub"><button type="button" data-panel="p-rep-0">گزارش حقوق ماهانه</button><button type="button" data-panel="p-rep-1">جمع کسور و مزایا</button></div></div>
+  <div class="block"><button type="button" class="hd">ثبت</button><div class="sub">
+    <button type="button" data-panel="p-payrun">محاسبه حقوق</button>
+    <button type="button" data-panel="p-calc">محاسبه گروهی</button>
+    <button type="button" data-panel="p-pins">بیمه</button>
+    <button type="button" data-panel="p-ppay">پرداخت</button>
+  </div></div>
+  <div class="block"><button type="button" class="hd">فهرست</button><div class="sub">
+    <button type="button" data-panel="p-list-payrun">فیش‌ها</button>
+    <button type="button" data-panel="p-list-pins">بیمه</button>
+    <button type="button" data-panel="p-list-ppay">پرداخت‌ها</button>
+  </div></div>
+  <div class="block"><button type="button" class="hd">گزارش</button><div class="sub">
+    <button type="button" data-panel="p-rep-pay">حقوق ماهانه</button>
+    <button type="button" data-panel="p-rep-ded">کسور و مزایا</button>
+    <button type="button" data-panel="p-rep-ins">بیمه</button>
+  </div></div>
   <div class="block"><button type="button" class="hd">امکانات</button><div class="sub">
-    <button type="button" data-panel="p-cal">تقویم شمسی</button>
+    <button type="button" data-panel="p-cal">تقویم</button>
     <button type="button" data-panel="p-notes">یادداشت</button>
-    <button type="button" data-panel="p-rems">یادآوری</button>
+    <button type="button" data-panel="p-rems">یادآوری پرداخت</button>
     <button type="button" data-panel="p-cartable">کارتابل</button>
+    <button type="button" data-panel="p-audit">لاگ</button>
   </div></div>
   <div class="block"><button type="button" class="hd">تنظیمات</button><div class="sub">
-    <button type="button" data-panel="p-backup">پشتیبان و بازیابی</button>
-    <button type="button" data-panel="p-users">ایجاد کاربر جدید</button>
+    <button type="button" data-panel="p-backup">پشتیبان</button>
+    <button type="button" data-panel="p-users">کاربران</button>
   </div></div>
   <div class="alerts">
     <button type="button" class="alert" data-panel="p-notes"><span>یادداشت</span><span class="n" id="aNotes">0</span></button>
@@ -247,152 +445,1001 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
 </div>
 <div class="toast" id="toast"></div>
 <script>
-(function(){
-var MOD="payroll", KEY="smart_mod_"+MOD+"_v1";
-var FA=["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"],JM=["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"],JW=["ش","ی","د","س","چ","پ","ج"];
-function toFa(n){return String(n).replace(/\d/g,function(d){return FA[+d];});}
-function toEn(s){return String(s).replace(/[۰-۹]/g,function(d){return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);}).replace(/,/g,"");}
-function g2j(gy,gm,gd){var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];var gy2=(gm>2)?(gy+1):gy;var days=355666+365*gy+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+g_d_m[gm-1];var jy=-1595+33*Math.floor(days/12053);days%=12053;jy+=4*Math.floor(days/1461);days%=1461;if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}var jm=(days<186)?1+Math.floor(days/31):7+Math.floor((days-186)/30);var jd=1+((days<186)?(days%31):((days-186)%30));return{jy:jy,jm:jm,jd:jd};}
-function j2g(jy,jm,jd){var jy2=jy-979,jm2=jm-1,jd2=jd-1;var days=365*jy2+Math.floor(jy2/33)*8+Math.floor(((jy2%33)+3)/4);for(var i=0;i<jm2;++i)days+=(i<6?31:30);days+=jd2;var gy=1600+400*Math.floor(days/146097);days%=146097;var leap=true;if(days>=36525){days--;gy+=100*Math.floor(days/36524);days%=36524;if(days>=365)leap=false;else days++;}gy+=4*Math.floor(days/1461);days%=1461;if(days>=366){leap=false;days--;gy+=Math.floor(days/365);days=days%365;}var gd=days+1,sal_a=[0,31,(leap?29:28),31,30,31,30,31,31,30,31,30,31],gm;for(gm=1;gm<=12&&gd>sal_a[gm];gm++)gd-=sal_a[gm];return{gy:gy,gm:gm,gd:gd};}
-function jML(jy,jm){if(jm<=6)return 31;if(jm<=11)return 30;var a=j2g(jy,12,30);var b=g2j(a.gy,a.gm,a.gd);return(b.jy===jy&&b.jm===12&&b.jd===30)?30:29;}
-function fmtJ(jy,jm,jd){return toFa(jy)+"/"+toFa(String(jm).padStart(2,"0"))+"/"+toFa(String(jd).padStart(2,"0"));}
-function tickClock(){var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());
-document.getElementById("dtJ").textContent=fmtJ(j.jy,j.jm,j.jd);
-document.getElementById("dtG").textContent=n.getFullYear()+"/"+String(n.getMonth()+1).padStart(2,"0")+"/"+String(n.getDate()).padStart(2,"0");
-document.getElementById("dtC").textContent=toFa(String(n.getHours()).padStart(2,"0"))+":"+toFa(String(n.getMinutes()).padStart(2,"0"))+":"+toFa(String(n.getSeconds()).padStart(2,"0"));}
-tickClock();setInterval(tickClock,1000);
-function toast(m,t){var el=document.getElementById("toast");el.textContent=m;el.className="toast show"+(t==="err"?" err":"");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("show");},2200);}
-function loadJSON(k,d){try{return JSON.parse(localStorage.getItem(k)||"null")||d;}catch(e){return d;}}
-function saveJSON(k,v){localStorage.setItem(k,JSON.stringify(v));}
-function loadDB(){return loadJSON(KEY,{stores:{}});}
-function saveDB(d){saveJSON(KEY,d);}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
-function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
-function showPanel(id){if(!id)return;var el=document.getElementById(id);if(!el)return;
-document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});el.classList.add("on");
-document.querySelectorAll(".side .sub button[data-panel]").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-panel")===id);});
-if(id==="p-cal")renderFullCal();
-if(id==="p-users")renderUsers();
-document.querySelectorAll(".data-list").forEach(renderListBox);
-document.querySelectorAll(".data-report").forEach(renderReport);
-}
-document.addEventListener("click",function(e){var t=e.target.closest("[data-panel]");if(t&&t.getAttribute("data-panel")){e.preventDefault();showPanel(t.getAttribute("data-panel"));}});
+(function () {
+  "use strict";
 
-function attachJDate(input){if(!input||input._j)return;input._j=true;
-var wrap=input.parentNode;if(!wrap.classList.contains("date-wrap")){var d=document.createElement("div");d.className="date-wrap";wrap.insertBefore(d,input);d.appendChild(input);wrap=d;}
-var pop,vy,vm;function close(){if(pop){pop.remove();pop=null;}document.removeEventListener("click",out);}
-function out(e){if(pop&&!pop.contains(e.target)&&e.target!==input)close();}
-function open(){close();var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());var m=toEn(input.value||"").match(/^(\d{4})[\/\-](\d{1,2})/);vy=m?+m[1]:j.jy;vm=m?+m[2]:j.jm;pop=document.createElement("div");pop.className="jcal";wrap.appendChild(pop);render();setTimeout(function(){document.addEventListener("click",out);},0);}
-function render(){if(!pop)return;pop.innerHTML="";var h=document.createElement("div");h.className="jcal-h";h.innerHTML='<button type="button" data-a="py">«</button><button type="button" data-a="pm">‹</button><span class="ttl">'+JM[vm-1]+' '+toFa(vy)+'</span><button type="button" data-a="nm">›</button><button type="button" data-a="ny">»</button>';
-var w=document.createElement("div");w.className="jcal-w";JW.forEach(function(x){var s=document.createElement("span");s.textContent=x;w.appendChild(s);});
-var days=document.createElement("div");days.className="jcal-d";var dim=jML(vy,vm),fg=j2g(vy,vm,1),st=(new Date(fg.gy,fg.gm-1,fg.gd).getDay()+1)%7;
-for(var i=0;i<st;i++){var em=document.createElement("button");em.type="button";em.disabled=true;em.style.visibility="hidden";days.appendChild(em);}
-for(var d=1;d<=dim;d++){(function(day){var g=j2g(vy,vm,day);var b=document.createElement("button");b.type="button";b.innerHTML='<span class="jd">'+toFa(day)+'</span><span class="gd">'+g.gy+'/'+String(g.gm).padStart(2,"0")+'/'+String(g.gd).padStart(2,"0")+'</span>';
-b.onclick=function(ev){ev.stopPropagation();input.value=fmtJ(vy,vm,day);close();};days.appendChild(b);})(d);}
-pop.appendChild(h);pop.appendChild(w);pop.appendChild(days);
-h.querySelectorAll("button").forEach(function(b){b.onclick=function(ev){ev.stopPropagation();var a=b.getAttribute("data-a");if(a==="pm"){vm--;if(vm<1){vm=12;vy--;}}if(a==="nm"){vm++;if(vm>12){vm=1;vy++;}}if(a==="py")vy--;if(a==="ny")vy++;render();};});}
-input.addEventListener("click",open);input.addEventListener("focus",open);}
+  var MOD = "payroll";
+  var CURRENT_VERSION = 2;
+  var KEY = "smart_mod_" + MOD + "_v2";
+  var BACKUP_KEY = KEY + "_bak";
+  var LOCK_KEY = KEY + "_lock";
+  var CART_KEY = "suite_cartable_v1";
+  var CART_MAX = 1.5 * 1024 * 1024;
+  var PERSONNEL_KEY = "smart_mod_personnel_v2";
+  var HR_LEGACY = "smart_hr_v2";
+  var STORES = ["payrun", "pins", "ppay"];
+  var FA = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  var JM = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
+  var JW = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
+  var selId = {};
+  var showDeleted = {};
+  var selNote = -1;
+  var lastInsRows = [];
 
-function renderFullCal(){var box=document.getElementById("fullCal");if(!box)return;var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());
-var vy=box._y||j.jy,vm=box._m||j.jm;box._y=vy;box._m=vm;
-var html='<div class="jcal" style="position:static;width:100%;max-width:340px"><div class="jcal-h"><button type="button" id="fcPy">«</button><button type="button" id="fcPm">‹</button><span class="ttl">'+JM[vm-1]+' '+toFa(vy)+'</span><button type="button" id="fcNm">›</button><button type="button" id="fcNy">»</button></div><div class="jcal-w">';
-JW.forEach(function(x){html+='<span>'+x+'</span>';});html+='</div><div class="jcal-d">';
-var dim=jML(vy,vm),fg=j2g(vy,vm,1),st=(new Date(fg.gy,fg.gm-1,fg.gd).getDay()+1)%7;
-for(var i=0;i<st;i++)html+='<button type="button" style="visibility:hidden"></button>';
-for(var d=1;d<=dim;d++){var g=j2g(vy,vm,d);html+='<button type="button" data-d="'+d+'"><span class="jd">'+toFa(d)+'</span><span class="gd">'+g.gy+'/'+g.gm+'/'+g.gd+'</span></button>';}
-html+='</div></div>';box.innerHTML=html;
-document.getElementById("fcPm").onclick=function(){box._m--;if(box._m<1){box._m=12;box._y--;}renderFullCal();};
-document.getElementById("fcNm").onclick=function(){box._m++;if(box._m>12){box._m=1;box._y++;}renderFullCal();};
-document.getElementById("fcPy").onclick=function(){box._y--;renderFullCal();};
-document.getElementById("fcNy").onclick=function(){box._y++;renderFullCal();};
-box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){document.getElementById("remDate").value=fmtJ(box._y,box._m,+b.getAttribute("data-d"));showPanel("p-rems");};});}
+  function $(id) { return document.getElementById(id); }
+  function toFa(n) { return String(n).replace(/\d/g, function (d) { return FA[+d]; }); }
+  function toEn(s) { return String(s).replace(/[۰-۹]/g, function (d) { return "۰۱۲۳۴۵۶۷۸۹".indexOf(d); }).replace(/,/g, ""); }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+  function esc(s) { var d = document.createElement("div"); d.textContent = s == null ? "" : String(s); return d.innerHTML; }
+  function now() { return new Date().toISOString(); }
+  function toast(m, t) {
+    var el = $("toast");
+    el.textContent = m;
+    el.className = "toast show" + (t === "err" ? " err" : "");
+    clearTimeout(el._t);
+    el._t = setTimeout(function () { el.classList.remove("show"); }, 2200);
+  }
+  function fmtSize(b) {
+    if (!b) return "0 B";
+    if (b < 1024) return b + " B";
+    if (b < 1048576) return (b / 1024).toFixed(1) + " KB";
+    return (b / 1048576).toFixed(2) + " MB";
+  }
+  function num(v) { return Number(toEn(String(v || "0"))) || 0; }
+  function fmtNum(n) { return (Number(n) || 0).toLocaleString("fa-IR", { maximumFractionDigits: 0 }); }
 
-function getAuth(){return loadJSON("smart_users_"+MOD,{users:[{user:"admin",pass:"admin",name:"مدیر",role:"admin"}],session:null});}
-function saveAuth(a){saveJSON("smart_users_"+MOD,a);}
-function userName(){var a=getAuth();return(a.session&&(a.session.name||a.session.user))||"مهمان";}
-function ensureLogin(cb){var a=getAuth();if(a.session&&a.session.user){cb();return;}
-var m=document.createElement("div");m.className="login-mask";
-m.innerHTML='<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود — حقوق و دستمزد</h2><label>نام کاربری</label><input id="lgU"><label>رمز</label><input id="lgP" type="password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty" style="margin-top:8px">admin / admin</p></div>';
-document.body.appendChild(m);document.getElementById("lgGo").onclick=function(){var u=document.getElementById("lgU").value.trim(),p=document.getElementById("lgP").value;
-var f=(a.users||[]).find(function(x){return x.user===u&&x.pass===p;});if(!f){toast("اشتباه","err");return;}a.session={user:f.user,name:f.name||f.user,role:f.role||"user"};saveAuth(a);m.remove();cb();};}
+  /* تاریخ شمسی */
+  function g2j(gy, gm, gd) {
+    var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    var gy2 = (gm > 2) ? (gy + 1) : gy;
+    var days = 355666 + 365 * gy + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
+    var jy = -1595 + 33 * Math.floor(days / 12053); days %= 12053;
+    jy += 4 * Math.floor(days / 1461); days %= 1461;
+    if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+    var jm = (days < 186) ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
+    var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
+    return { jy: jy, jm: jm, jd: jd };
+  }
+  function j2g(jy, jm, jd) {
+    var jy2 = jy - 979, jm2 = jm - 1, jd2 = jd - 1;
+    var days = 365 * jy2 + Math.floor(jy2 / 33) * 8 + Math.floor(((jy2 % 33) + 3) / 4);
+    for (var i = 0; i < jm2; ++i) days += (i < 6 ? 31 : 30);
+    days += jd2;
+    var gy = 1600 + 400 * Math.floor(days / 146097); days %= 146097;
+    var leap = true;
+    if (days >= 36525) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days >= 365) leap = false; else days++; }
+    gy += 4 * Math.floor(days / 1461); days %= 1461;
+    if (days >= 366) { leap = false; days--; gy += Math.floor(days / 365); days = days % 365; }
+    var gd = days + 1, sal_a = [0, 31, (leap ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], gm;
+    for (gm = 1; gm <= 12 && gd > sal_a[gm]; gm++) gd -= sal_a[gm];
+    return { gy: gy, gm: gm, gd: gd };
+  }
+  function jML(jy, jm) {
+    if (jm <= 6) return 31;
+    if (jm <= 11) return 30;
+    var a = j2g(jy, 12, 30), b = g2j(a.gy, a.gm, a.gd);
+    return (b.jy === jy && b.jm === 12 && b.jd === 30) ? 30 : 29;
+  }
+  function fmtJ(jy, jm, jd) {
+    return toFa(jy) + "/" + toFa(String(jm).padStart(2, "0")) + "/" + toFa(String(jd).padStart(2, "0"));
+  }
+  function todayJ() {
+    var n = new Date(), j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    return fmtJ(j.jy, j.jm, j.jd);
+  }
 
-function saveForm(store,andNew,btn){var card=btn.closest(".card");var data={id:uid(),at:new Date().toISOString()};
-card.querySelectorAll("[data-f]").forEach(function(inp){data[inp.getAttribute("data-f")]=inp.value;});
-var db=loadDB();db.stores=db.stores||{};db.stores[store]=db.stores[store]||[];db.stores[store].unshift(data);saveDB(db);
-toast("ثبت شد");if(andNew)card.querySelectorAll("[data-f]").forEach(function(inp){inp.value="";});renderDash();document.querySelectorAll(".data-list").forEach(renderListBox);}
-document.querySelectorAll(".btn-save-form").forEach(function(b){b.onclick=function(){saveForm(b.getAttribute("data-store"),false,b);};});
-document.querySelectorAll(".btn-save-form-new").forEach(function(b){b.onclick=function(){saveForm(b.getAttribute("data-store"),true,b);};});
+  function tickClock() {
+    var n = new Date(), j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    if ($("dtJ")) $("dtJ").textContent = fmtJ(j.jy, j.jm, j.jd);
+    if ($("dtG")) $("dtG").textContent = n.getFullYear() + "/" + String(n.getMonth() + 1).padStart(2, "0") + "/" + String(n.getDate()).padStart(2, "0");
+    if ($("dtC")) $("dtC").textContent = toFa(String(n.getHours()).padStart(2, "0")) + ":" + toFa(String(n.getMinutes()).padStart(2, "0")) + ":" + toFa(String(n.getSeconds()).padStart(2, "0"));
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
 
-var selId={};
-function renderListBox(box){var store=box.getAttribute("data-store");var db=loadDB();var items=(db.stores&&db.stores[store])||[];
-var q="";var search=box.parentElement.querySelector(".list-search");if(search)q=(search.value||"").toLowerCase();
-var filtered=items.filter(function(x){if(!q)return true;return JSON.stringify(x).toLowerCase().indexOf(q)>=0;});
-if(!filtered.length){box.innerHTML='<p class="empty">داده‌ای نیست</p>';return;}
-var keys=Object.keys(filtered[0]).filter(function(k){return k!=="id"&&k!=="at";}).slice(0,5);
-var html='<table><thead><tr><th>#</th>';keys.forEach(function(k){html+='<th>'+esc(k)+'</th>';});html+='</tr></thead><tbody>';
-filtered.forEach(function(row,i){html+='<tr data-id="'+row.id+'" style="cursor:pointer'+(selId[store]===row.id?';background:rgba(14,165,233,.15)':'')+'"><td>'+toFa(i+1)+'</td>';
-keys.forEach(function(k){html+='<td>'+esc(row[k])+'</td>';});html+='</tr>';});
-html+='</tbody></table>';box.innerHTML=html;
-box.querySelectorAll("tr[data-id]").forEach(function(tr){tr.onclick=function(){selId[store]=tr.getAttribute("data-id");renderListBox(box);};});}
-document.querySelectorAll(".list-search").forEach(function(inp){inp.oninput=function(){var box=inp.parentElement.querySelector(".data-list");if(box)renderListBox(box);};});
-document.querySelectorAll(".btn-del-sel").forEach(function(b){b.onclick=function(){var store=b.getAttribute("data-store");if(!selId[store]){toast("انتخاب کنید","err");return;}
-var db=loadDB();db.stores=db.stores||{};db.stores[store]=(db.stores[store]||[]).filter(function(x){return x.id!==selId[store];});saveDB(db);selId[store]=null;document.querySelectorAll('.data-list[data-store="'+store+'"]').forEach(renderListBox);renderDash();toast("حذف شد");};});
+  /* قفل چندتب */
+  function tabId() {
+    if (!window.__payTab) window.__payTab = Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+    return window.__payTab;
+  }
+  function acquireLock() {
+    try {
+      var ts = Date.now();
+      var lock = JSON.parse(localStorage.getItem(LOCK_KEY) || "null");
+      if (lock && lock.until > ts && lock.tab !== tabId()) {
+        toast("تب دیگری در حال ویرایش است", "err");
+        return false;
+      }
+      localStorage.setItem(LOCK_KEY, JSON.stringify({ tab: tabId(), until: ts + 8000 }));
+      return true;
+    } catch (e) { return true; }
+  }
 
-function renderReport(el){var store=el.getAttribute("data-store");var title=el.getAttribute("data-title")||"گزارش";
-var items=(loadDB().stores&&loadDB().stores[store])||[];
-if(!items.length){el.innerHTML='<p class="empty">داده‌ای برای گزارش نیست</p>';return;}
-var keys=Object.keys(items[0]).filter(function(k){return k!=="id"&&k!=="at";});
-var html='<p style="margin-bottom:8px;color:#94a3b8">'+esc(title)+' — تعداد: '+toFa(items.length)+'</p><table><thead><tr>';
-keys.forEach(function(k){html+='<th>'+esc(k)+'</th>';});html+='</tr></thead><tbody>';
-items.slice(0,100).forEach(function(row){html+='<tr>';keys.forEach(function(k){html+='<td>'+esc(row[k])+'</td>';});html+='</tr>';});
-html+='</tbody></table>';el.innerHTML=html;}
+  function loadJSON(k, d) {
+    try { return JSON.parse(localStorage.getItem(k) || "null") || d; } catch (e) { return d; }
+  }
+  function saveJSON(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch (e) { toast("خطای ذخیره", "err"); return false; }
+  }
 
-function renderDash(){var db=loadDB();var stores=db.stores||{};var total=0;Object.keys(stores).forEach(function(k){total+=(stores[k]||[]).length;});
-var html='<div class="box"><div class="n">'+toFa(total)+'</div><div class="l">کل رکوردها</div></div>';
-Object.keys(stores).slice(0,6).forEach(function(k){html+='<div class="box"><div class="n">'+toFa((stores[k]||[]).length)+'</div><div class="l">'+esc(k)+'</div></div>';});
-document.getElementById("kpi").innerHTML=html;
-document.getElementById("dashMeta").textContent="ماژول حقوق و دستمزد · کاربر: "+userName();
-updateAlerts();}
+  function defDB() {
+    return { version: CURRENT_VERSION, stores: { payrun: [], pins: [], ppay: [] }, audit: [], settings: { payDay: 5 }, createdAt: now() };
+  }
 
-var notesKey="smart_mod_notes_"+MOD,remsKey="smart_mod_rem_"+MOD,cartKey="smart_cartable_v1";var selNote=-1;
-function renderNotes(){var n=loadJSON(notesKey,[]);document.getElementById("notesList").innerHTML=n.map(function(x,i){return '<div class="list-item" data-i="'+i+'">'+esc(x.text)+'</div>';}).join("")||'<p class="empty">—</p>';
-document.getElementById("notesList").querySelectorAll("[data-i]").forEach(function(el){el.onclick=function(){selNote=+el.getAttribute("data-i");document.getElementById("noteText").value=loadJSON(notesKey,[])[selNote].text||"";};});}
-function renderRems(){var n=loadJSON(remsKey,[]);document.getElementById("remsList").innerHTML=n.map(function(x){return '<div class="list-item">'+esc(x.text)+' — '+esc(x.date||'')+'</div>';}).join("")||'<p class="empty">—</p>';}
-document.getElementById("btnNoteSave").onclick=function(){var t=document.getElementById("noteText").value.trim();if(!t)return;var n=loadJSON(notesKey,[]);if(selNote>=0&&n[selNote])n[selNote].text=t;else n.unshift({text:t});saveJSON(notesKey,n);selNote=-1;document.getElementById("noteText").value="";renderNotes();updateAlerts();};
-document.getElementById("btnNoteDel").onclick=function(){if(selNote<0)return;var n=loadJSON(notesKey,[]);n.splice(selNote,1);saveJSON(notesKey,n);selNote=-1;renderNotes();updateAlerts();};
-document.getElementById("btnRemAdd").onclick=function(){var t=document.getElementById("remText").value.trim(),d=document.getElementById("remDate").value;if(!t)return;var n=loadJSON(remsKey,[]);n.unshift({text:t,date:d,status:"new"});saveJSON(remsKey,n);renderRems();updateAlerts();};
-document.getElementById("btnCartSend").onclick=function(){var c=loadJSON(cartKey,{items:[]});c.items=c.items||[];c.items.unshift({from:userName()+"@"+MOD,to:document.getElementById("cartTo").value,msg:document.getElementById("cartMsg").value,status:"new"});saveJSON(cartKey,c);renderCart();updateAlerts();toast("ارسال");};
-function renderCart(){var all=loadJSON(cartKey,{items:[]}).items||[];document.getElementById("cartList").innerHTML=all.map(function(x){return '<div class="list-item">'+esc(x.msg)+'</div>';}).join("")||'<p class="empty">خالی</p>';}
-function updateAlerts(){document.getElementById("aNotes").textContent=String((loadJSON(notesKey,[])).length);document.getElementById("aRems").textContent=String((loadJSON(remsKey,[])).filter(function(x){return x.status!=="done";}).length);document.getElementById("aCart").textContent=String((loadJSON(cartKey,{items:[]}).items||[]).length);}
+  function migrateFromLegacy(db) {
+    try {
+      var leg = loadJSON(HR_LEGACY, null);
+      if (!leg || !Array.isArray(leg.payslips) || !leg.payslips.length) return db;
+      if (db.stores.payrun && db.stores.payrun.length) return db;
+      leg.payslips.forEach(function (p) {
+        db.stores.payrun.push({
+          id: String(p.id || uid()),
+          at: now(),
+          deleted: false,
+          "ماه شمسی": String(p.month || ""),
+          "سال": String(p.year || ""),
+          "پرسنل": String(p.empId || ""),
+          "حقوق پایه": String(p.gross || ""),
+          "مزایا": "0",
+          "کسور": String(p.ded || ""),
+          "بیمه": String(p.ins || ""),
+          "مالیات": String(p.tax || ""),
+          "اضافه‌کار": String(p.ot || ""),
+          "خالص": String(p.net || "")
+        });
+      });
+      db.migratedFrom = "smart_hr_v2";
+      db.migratedAt = now();
+    } catch (e) {}
+    return db;
+  }
 
-function renderUsers(){var a=getAuth();document.getElementById("usersList").innerHTML=(a.users||[]).map(function(u){return '<div class="list-item"><b>'+esc(u.user)+'</b> — '+esc(u.name||'')+' ('+esc(u.role||'user')+')</div>';}).join("");}
-document.getElementById("btnAddUser").onclick=function(){var u=document.getElementById("nuUser").value.trim(),p=document.getElementById("nuPass").value,n=document.getElementById("nuName").value.trim();
-if(!u||!p){toast("یوزر و رمز لازم است","err");return;}var a=getAuth();a.users=a.users||[];if(a.users.some(function(x){return x.user===u;})){toast("تکراری","err");return;}
-a.users.push({user:u,pass:p,name:n||u,role:document.getElementById("nuRole").value});saveAuth(a);toast("کاربر ایجاد شد");document.getElementById("nuUser").value="";document.getElementById("nuPass").value="";document.getElementById("nuName").value="";renderUsers();};
+  function loadDB() {
+    var db = loadJSON(KEY, null);
+    if (!db || typeof db !== "object") {
+      db = defDB();
+      var old = loadJSON("smart_mod_payroll_v1", null);
+      if (old && old.stores) {
+        db.stores = old.stores;
+        STORES.forEach(function (s) {
+          (db.stores[s] || []).forEach(function (row) {
+            if (row.deleted == null) row.deleted = false;
+          });
+        });
+      }
+      db = migrateFromLegacy(db);
+      saveJSON(KEY, db);
+    }
+    if (!db.version || db.version < CURRENT_VERSION) {
+      try { saveJSON(BACKUP_KEY, db); } catch (e) {}
+      db.version = CURRENT_VERSION;
+      STORES.forEach(function (s) {
+        db.stores[s] = db.stores[s] || [];
+        db.stores[s].forEach(function (r) { if (r.deleted == null) r.deleted = false; });
+      });
+      db.audit = db.audit || [];
+      db.settings = db.settings || { payDay: 5 };
+      saveJSON(KEY, db);
+    }
+    db.stores = db.stores || {};
+    STORES.forEach(function (s) { db.stores[s] = db.stores[s] || []; });
+    db.audit = db.audit || [];
+    db.settings = db.settings || { payDay: 5 };
+    return db;
+  }
 
-function downloadBackup(name){var payload={module:MOD,title:"حقوق و دستمزد",data:loadDB(),notes:loadJSON(notesKey,[]),rems:loadJSON(remsKey,[]),users:getAuth().users,at:new Date().toISOString()};
-var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}));a.download=name;a.click();toast("دانلود شد");}
-document.getElementById("btnBackupLocal").onclick=function(){downloadBackup(MOD+"-backup.json");};
-document.getElementById("btnBackupGdrive").onclick=function(){downloadBackup(MOD+"-gdrive-backup.json");toast("فایل را در گوگل درایو آپلود کنید");};
-function doRestore(file){if(!file)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(d.data)saveDB(d.data);if(d.notes)saveJSON(notesKey,d.notes);if(d.rems)saveJSON(remsKey,d.rems);if(d.users){var a=getAuth();a.users=d.users;saveAuth(a);}renderDash();renderNotes();renderRems();toast("بازیابی شد");}catch(e){toast("فایل نامعتبر","err");}};r.readAsText(file);}
-document.getElementById("btnRestoreLocal").onclick=function(){document.getElementById("restoreFile").click();};
-document.getElementById("restoreFile").onchange=function(e){doRestore(e.target.files[0]);};
-document.getElementById("btnRestoreGdrive").onclick=function(){document.getElementById("restoreGdriveFile").click();};
-document.getElementById("restoreGdriveFile").onchange=function(e){doRestore(e.target.files[0]);};
+  function saveDB(db) {
+    if (!acquireLock()) return false;
+    try {
+      var prev = localStorage.getItem(KEY);
+      if (prev) localStorage.setItem(BACKUP_KEY, prev);
+    } catch (e) {}
+    db.version = CURRENT_VERSION;
+    db.updatedAt = now();
+    return saveJSON(KEY, db);
+  }
 
-document.getElementById("btnExit").onclick=function(){location.href="index.html";};
-(function(){var btn=document.getElementById("btnMic");var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return;
-var rec=new SR(),on=false;rec.lang="fa-IR";rec.continuous=true;rec.interimResults=false;
-rec.onresult=function(ev){for(var i=ev.resultIndex;i<ev.results.length;i++)if(ev.results[i].isFinal){var a=document.activeElement;if(a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA")){var t=ev.results[i][0].transcript;var s=a.selectionStart||0,e2=a.selectionEnd||0;a.value=a.value.slice(0,s)+t+a.value.slice(e2);a.dispatchEvent(new Event("input",{bubbles:true}));}}};
-rec.onend=function(){if(on)try{rec.start();}catch(e){};};
-btn.onclick=function(){if(on){on=false;try{rec.stop();}catch(e){}btn.classList.remove("on");}else{on=true;try{rec.start();}catch(e){}btn.classList.add("on");}};})();
+  function audit(action, detail) {
+    var db = loadDB();
+    db.audit.unshift({ id: uid(), t: now(), user: userName(), action: action, detail: String(detail || "").slice(0, 200) });
+    if (db.audit.length > 200) db.audit = db.audit.slice(0, 200);
+    saveDB(db);
+  }
 
-ensureLogin(function(){
-  document.querySelectorAll(".jdate").forEach(attachJDate);
-  document.getElementById("activeUser").textContent="کاربر فعال: "+userName();
-  renderDash();renderNotes();renderRems();renderCart();
-  showPanel("p-dash");
-});
+  function getStore(name) {
+    return (loadDB().stores[name] || []).slice();
+  }
+  function setStore(name, arr) {
+    var db = loadDB();
+    db.stores[name] = arr;
+    return saveDB(db);
+  }
+
+  /* احراز هویت */
+  function getAuth() {
+    return loadJSON("smart_users_" + MOD, {
+      users: [{ user: "admin", pass: "admin", name: "مدیر", role: "admin" }],
+      session: null
+    });
+  }
+  function saveAuth(a) { saveJSON("smart_users_" + MOD, a); }
+  function userName() {
+    var a = getAuth();
+    return (a.session && (a.session.name || a.session.user)) || "مهمان";
+  }
+  function ensureLogin(cb) {
+    var a = getAuth();
+    if (a.session && a.session.user) { cb(); return; }
+    var m = document.createElement("div");
+    m.className = "login-mask";
+    m.innerHTML = '<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود — حقوق و دستمزد</h2><label>نام کاربری</label><input id="lgU"><label>رمز</label><input id="lgP" type="password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty" style="margin-top:8px">admin / admin</p></div>';
+    document.body.appendChild(m);
+    $("lgGo").onclick = function () {
+      var u = $("lgU").value.trim(), p = $("lgP").value;
+      var f = (a.users || []).find(function (x) { return x.user === u && x.pass === p; });
+      if (!f) { toast("اشتباه", "err"); return; }
+      a.session = { user: f.user, name: f.name || f.user, role: f.role || "user" };
+      saveAuth(a);
+      m.remove();
+      cb();
+    };
+  }
+
+  function showPanel(id) {
+    if (!id) return;
+    var el = $(id);
+    if (!el) return;
+    document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("on"); });
+    el.classList.add("on");
+    document.querySelectorAll(".side .sub button[data-panel]").forEach(function (b) {
+      b.classList.toggle("on", b.getAttribute("data-panel") === id);
+    });
+    if (id === "p-cal") renderFullCal();
+    if (id === "p-users") renderUsers();
+    if (id === "p-audit") renderAudit();
+    if (id === "p-cartable") renderCart();
+    if (id === "p-dash") renderDash();
+    if (id === "p-rep-ded") renderDedSummary();
+    document.querySelectorAll(".data-list").forEach(renderListBox);
+    document.querySelectorAll(".data-report").forEach(renderReport);
+  }
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-panel]");
+    if (t && t.getAttribute("data-panel")) {
+      e.preventDefault();
+      showPanel(t.getAttribute("data-panel"));
+    }
+  });
+
+  /* تقویم */
+  function attachJDate(input) {
+    if (!input || input._j) return;
+    input._j = true;
+    var wrap = input.parentNode;
+    if (!wrap.classList.contains("date-wrap")) {
+      var d = document.createElement("div");
+      d.className = "date-wrap";
+      wrap.insertBefore(d, input);
+      d.appendChild(input);
+      wrap = d;
+    }
+    var pop, vy, vm;
+    function close() { if (pop) { pop.remove(); pop = null; } document.removeEventListener("click", out); }
+    function out(e) { if (pop && !pop.contains(e.target) && e.target !== input) close(); }
+    function open() {
+      close();
+      var n = new Date(), j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+      var m = toEn(input.value || "").match(/^(\d{4})[\/\-](\d{1,2})/);
+      vy = m ? +m[1] : j.jy; vm = m ? +m[2] : j.jm;
+      pop = document.createElement("div");
+      pop.className = "jcal";
+      wrap.appendChild(pop);
+      render();
+      setTimeout(function () { document.addEventListener("click", out); }, 0);
+    }
+    function render() {
+      if (!pop) return;
+      pop.innerHTML = "";
+      var h = document.createElement("div");
+      h.className = "jcal-h";
+      h.innerHTML = '<button type="button" data-a="py">«</button><button type="button" data-a="pm">‹</button><span class="ttl">' + JM[vm - 1] + " " + toFa(vy) + '</span><button type="button" data-a="nm">›</button><button type="button" data-a="ny">»</button>';
+      var w = document.createElement("div"); w.className = "jcal-w";
+      JW.forEach(function (x) { var s = document.createElement("span"); s.textContent = x; w.appendChild(s); });
+      var days = document.createElement("div"); days.className = "jcal-d";
+      var dim = jML(vy, vm), fg = j2g(vy, vm, 1), st = (new Date(fg.gy, fg.gm - 1, fg.gd).getDay() + 1) % 7;
+      for (var i = 0; i < st; i++) {
+        var em = document.createElement("button"); em.type = "button"; em.disabled = true; em.style.visibility = "hidden"; days.appendChild(em);
+      }
+      for (var d = 1; d <= dim; d++) {
+        (function (day) {
+          var g = j2g(vy, vm, day);
+          var b = document.createElement("button");
+          b.type = "button";
+          b.innerHTML = '<span class="jd">' + toFa(day) + '</span><span class="gd">' + g.gy + "/" + String(g.gm).padStart(2, "0") + "/" + String(g.gd).padStart(2, "0") + "</span>";
+          b.onclick = function (ev) { ev.stopPropagation(); input.value = fmtJ(vy, vm, day); close(); };
+          days.appendChild(b);
+        })(d);
+      }
+      pop.appendChild(h); pop.appendChild(w); pop.appendChild(days);
+      h.querySelectorAll("button").forEach(function (b) {
+        b.onclick = function (ev) {
+          ev.stopPropagation();
+          var a = b.getAttribute("data-a");
+          if (a === "pm") { vm--; if (vm < 1) { vm = 12; vy--; } }
+          if (a === "nm") { vm++; if (vm > 12) { vm = 1; vy++; } }
+          if (a === "py") vy--;
+          if (a === "ny") vy++;
+          render();
+        };
+      });
+    }
+    input.addEventListener("click", open);
+    input.addEventListener("focus", open);
+  }
+
+  function renderFullCal() {
+    var box = $("fullCal");
+    if (!box) return;
+    var n = new Date(), j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    var vy = box._y || j.jy, vm = box._m || j.jm;
+    box._y = vy; box._m = vm;
+    var html = '<div class="jcal" style="position:static;width:100%;max-width:340px"><div class="jcal-h"><button type="button" id="fcPy">«</button><button type="button" id="fcPm">‹</button><span class="ttl">' + JM[vm - 1] + " " + toFa(vy) + '</span><button type="button" id="fcNm">›</button><button type="button" id="fcNy">»</button></div><div class="jcal-w">';
+    JW.forEach(function (x) { html += "<span>" + x + "</span>"; });
+    html += '</div><div class="jcal-d">';
+    var dim = jML(vy, vm), fg = j2g(vy, vm, 1), st = (new Date(fg.gy, fg.gm - 1, fg.gd).getDay() + 1) % 7;
+    for (var i = 0; i < st; i++) html += '<button type="button" style="visibility:hidden"></button>';
+    for (var d = 1; d <= dim; d++) {
+      var g = j2g(vy, vm, d);
+      html += '<button type="button" data-d="' + d + '"><span class="jd">' + toFa(d) + '</span><span class="gd">' + g.gy + "/" + g.gm + "/" + g.gd + "</span></button>";
+    }
+    html += "</div></div>";
+    box.innerHTML = html;
+    $("fcPm").onclick = function () { box._m--; if (box._m < 1) { box._m = 12; box._y--; } renderFullCal(); };
+    $("fcNm").onclick = function () { box._m++; if (box._m > 12) { box._m = 1; box._y++; } renderFullCal(); };
+    $("fcPy").onclick = function () { box._y--; renderFullCal(); };
+    $("fcNy").onclick = function () { box._y++; renderFullCal(); };
+    box.querySelectorAll("[data-d]").forEach(function (b) {
+      b.onclick = function () {
+        if ($("remDate")) $("remDate").value = fmtJ(box._y, box._m, +b.getAttribute("data-d"));
+        showPanel("p-rems");
+      };
+    });
+  }
+
+  /* ذخیره فرم */
+  function saveForm(store, andNew, btn) {
+    var card = btn.closest(".card");
+    var data = { id: uid(), at: now(), deleted: false };
+    card.querySelectorAll("[data-f]").forEach(function (inp) {
+      data[inp.getAttribute("data-f")] = (inp.value || "").trim();
+    });
+    if (store === "payrun") {
+      if (!data["ماه شمسی"] || !data["سال"] || !data["پرسنل"]) {
+        toast("ماه، سال و پرسنل الزامی", "err"); return;
+      }
+      if (!data["خالص"] && (data["حقوق پایه"] || data["مزایا"])) {
+        var base = num(data["حقوق پایه"]), ben = num(data["مزایا"]), ded = num(data["کسور"]);
+        var ins = num(data["بیمه"]), tax = num(data["مالیات"]), ot = num(data["اضافه‌کار"]);
+        data["خالص"] = String(Math.max(0, base + ben + ot - ded - ins - tax));
+      }
+    }
+    if (store === "pins" && (!data["ماه"] || !data["سال"])) {
+      toast("ماه و سال الزامی", "err"); return;
+    }
+    if (store === "ppay" && !data["مبلغ کل"]) {
+      toast("مبلغ الزامی", "err"); return;
+    }
+    var arr = getStore(store);
+    arr.unshift(data);
+    setStore(store, arr);
+    audit("create", store + ":" + (data["پرسنل"] || data["ماه"] || data.id));
+    toast("ثبت شد");
+    if (andNew) card.querySelectorAll("[data-f]").forEach(function (inp) { inp.value = ""; });
+    renderDash();
+    document.querySelectorAll(".data-list").forEach(renderListBox);
+  }
+  document.querySelectorAll(".btn-save-form").forEach(function (b) {
+    b.onclick = function () { saveForm(b.getAttribute("data-store"), false, b); };
+  });
+  document.querySelectorAll(".btn-save-form-new").forEach(function (b) {
+    b.onclick = function () { saveForm(b.getAttribute("data-store"), true, b); };
+  });
+
+  /* فهرست */
+  function renderListBox(box) {
+    var store = box.getAttribute("data-store");
+    var items = getStore(store);
+    var showDel = !!showDeleted[store];
+    var q = "";
+    var search = box.parentElement.querySelector(".list-search");
+    if (search) q = (search.value || "").toLowerCase();
+    var filtered = items.filter(function (x) {
+      if (!showDel && x.deleted) return false;
+      if (!q) return true;
+      return JSON.stringify(x).toLowerCase().indexOf(q) >= 0;
+    });
+    if (!filtered.length) {
+      box.innerHTML = '<p class="empty">داده‌ای نیست</p>';
+      return;
+    }
+    var keys = Object.keys(filtered[0]).filter(function (k) {
+      return ["id", "at", "deleted", "deletedAt", "deletedBy"].indexOf(k) < 0;
+    }).slice(0, 6);
+    var html = "";
+    filtered.forEach(function (row, i) {
+      html += '<div class="list-item' + (selId[store] === row.id ? " sel" : "") + (row.deleted ? " deleted" : "") + '" data-id="' + esc(row.id) + '">';
+      html += "<b>#" + toFa(i + 1) + (row.deleted ? " [حذف‌شده]" : "") + "</b> · ";
+      html += keys.map(function (k) { return esc(k) + ": " + esc(row[k]); }).join(" | ");
+      html += "</div>";
+    });
+    box.innerHTML = html;
+    box.querySelectorAll(".list-item").forEach(function (el) {
+      el.onclick = function () {
+        selId[store] = el.getAttribute("data-id");
+        renderListBox(box);
+      };
+    });
+  }
+  document.querySelectorAll(".list-search").forEach(function (inp) {
+    inp.oninput = function () {
+      var box = inp.parentElement.querySelector(".data-list");
+      if (box) renderListBox(box);
+    };
+  });
+  document.querySelectorAll(".toggle-deleted").forEach(function (cb) {
+    cb.onchange = function () {
+      showDeleted[cb.getAttribute("data-store")] = !!cb.checked;
+      document.querySelectorAll('.data-list[data-store="' + cb.getAttribute("data-store") + '"]').forEach(renderListBox);
+    };
+  });
+  document.querySelectorAll(".btn-del-sel").forEach(function (b) {
+    b.onclick = function () {
+      var store = b.getAttribute("data-store");
+      if (!selId[store]) { toast("انتخاب کنید", "err"); return; }
+      var arr = getStore(store);
+      arr.forEach(function (x) {
+        if (x.id === selId[store]) {
+          x.deleted = true; x.deletedAt = now(); x.deletedBy = userName();
+        }
+      });
+      setStore(store, arr);
+      audit("soft-delete", store + ":" + selId[store]);
+      selId[store] = null;
+      document.querySelectorAll('.data-list[data-store="' + store + '"]').forEach(renderListBox);
+      renderDash();
+      toast("حذف نرم شد");
+    };
+  });
+  document.querySelectorAll(".btn-restore-sel").forEach(function (b) {
+    b.onclick = function () {
+      var store = b.getAttribute("data-store");
+      if (!selId[store]) { toast("انتخاب کنید", "err"); return; }
+      var arr = getStore(store);
+      arr.forEach(function (x) {
+        if (x.id === selId[store]) {
+          x.deleted = false; delete x.deletedAt; delete x.deletedBy;
+        }
+      });
+      setStore(store, arr);
+      audit("restore", store + ":" + selId[store]);
+      document.querySelectorAll('.data-list[data-store="' + store + '"]').forEach(renderListBox);
+      renderDash();
+      toast("بازیابی شد");
+    };
+  });
+
+  function renderReport(el) {
+    var store = el.getAttribute("data-store");
+    var title = el.getAttribute("data-title") || "گزارش";
+    var items = getStore(store).filter(function (x) { return !x.deleted; });
+    if (!items.length) {
+      el.innerHTML = '<p class="empty">داده‌ای برای گزارش نیست</p>';
+      return;
+    }
+    var keys = Object.keys(items[0]).filter(function (k) {
+      return ["id", "at", "deleted", "deletedAt", "deletedBy"].indexOf(k) < 0;
+    });
+    var html = '<p style="margin-bottom:8px;color:#94a3b8;text-align:right">' + esc(title) + " — تعداد: " + toFa(items.length) + "</p>";
+    items.slice(0, 100).forEach(function (row, i) {
+      html += '<div class="list-item">#' + toFa(i + 1) + " · " + keys.map(function (k) { return esc(k) + ": " + esc(row[k]); }).join(" | ") + "</div>";
+    });
+    el.innerHTML = html;
+  }
+
+  function renderDedSummary() {
+    var items = getStore("payrun").filter(function (x) { return !x.deleted; });
+    var sumBen = 0, sumDed = 0, sumIns = 0, sumTax = 0, sumNet = 0, sumOt = 0;
+    items.forEach(function (x) {
+      sumBen += num(x["مزایا"]);
+      sumDed += num(x["کسور"]);
+      sumIns += num(x["بیمه"]);
+      sumTax += num(x["مالیات"]);
+      sumNet += num(x["خالص"]);
+      sumOt += num(x["اضافه‌کار"]);
+    });
+    if ($("dedSummary")) {
+      $("dedSummary").innerHTML =
+        "تعداد فیش: " + toFa(items.length) +
+        "<br>جمع مزایا: " + fmtNum(sumBen) +
+        "<br>جمع اضافه‌کار: " + fmtNum(sumOt) +
+        "<br>جمع کسور: " + fmtNum(sumDed) +
+        "<br>جمع بیمه: " + fmtNum(sumIns) +
+        "<br>جمع مالیات: " + fmtNum(sumTax) +
+        "<br>جمع خالص: " + fmtNum(sumNet);
+    }
+  }
+
+  function renderDash() {
+    var pay = getStore("payrun").filter(function (x) { return !x.deleted; });
+    var pins = getStore("pins").filter(function (x) { return !x.deleted; });
+    var ppay = getStore("ppay").filter(function (x) { return !x.deleted; });
+    var sumNet = pay.reduce(function (s, x) { return s + num(x["خالص"]); }, 0);
+    var sumPay = ppay.reduce(function (s, x) { return s + num(x["مبلغ کل"]); }, 0);
+    var html = "";
+    html += '<div class="box"><div class="n">' + toFa(pay.length) + '</div><div class="l">فیش حقوقی</div></div>';
+    html += '<div class="box"><div class="n">' + toFa(pins.length) + '</div><div class="l">لیست بیمه</div></div>';
+    html += '<div class="box"><div class="n">' + toFa(ppay.length) + '</div><div class="l">پرداخت‌ها</div></div>';
+    html += '<div class="box"><div class="n num">' + fmtNum(sumNet) + '</div><div class="l">جمع خالص فیش‌ها</div></div>';
+    html += '<div class="box"><div class="n num">' + fmtNum(sumPay) + '</div><div class="l">جمع پرداخت‌ها</div></div>';
+    if ($("kpi")) $("kpi").innerHTML = html;
+    if ($("dashMeta")) $("dashMeta").textContent = "حقوق و دستمزد v2 · کاربر: " + userName();
+    updateAlerts();
+  }
+
+  /* خواندن پرسنلی */
+  function loadPersonnelActive() {
+    var out = [];
+    try {
+      var pdb = loadJSON(PERSONNEL_KEY, null);
+      if (pdb && pdb.stores && Array.isArray(pdb.stores.emp)) {
+        pdb.stores.emp.forEach(function (e) {
+          if (e.deleted) return;
+          if ((e["وضعیت"] || "فعال") !== "فعال") return;
+          out.push(e);
+        });
+        return out;
+      }
+    } catch (e) {}
+    try {
+      var hr = loadJSON(HR_LEGACY, null);
+      if (hr && Array.isArray(hr.employees)) {
+        hr.employees.forEach(function (e) {
+          if (e.status && e.status !== "active") return;
+          out.push({
+            "کد پرسنلی": e.code || "",
+            "نام": e.name || "",
+            "نام خانوادگی": e.family || "",
+            "حقوق پایه": String(e.base || 0),
+            "حق مسکن": String(e.house || 0),
+            "بن خواربار": String(e.food || 0),
+            "کد ملی": e.nid || ""
+          });
+        });
+      }
+    } catch (e2) {}
+    return out;
+  }
+
+  /* محاسبه گروهی */
+  if ($("btnCalcGroup")) {
+    $("btnCalcGroup").onclick = function () {
+      var year = toEn($("calcYear").value || "").trim();
+      var month = toEn($("calcMonth").value || "").trim();
+      if (!year || !month) { toast("سال و ماه را وارد کنید", "err"); return; }
+      var otRate = num($("calcOt").value);
+      var insP = num($("calcInsEmp").value);
+      var insEr = num($("calcInsEr").value);
+      var taxP = num($("calcTax").value);
+      var emps = loadPersonnelActive();
+      if (!emps.length) {
+        toast("پرسنل فعالی در ماژول پرسنلی یافت نشد", "err");
+        if ($("calcResult")) $("calcResult").textContent = "ابتدا در ماژول پرسنلی، پرسنل فعال ثبت کنید.";
+        return;
+      }
+      var arr = getStore("payrun").filter(function (x) {
+        return !(String(x["سال"]) === year && String(x["ماه شمسی"]) === month && !x.deleted);
+      });
+      var n = 0, sumNet = 0;
+      emps.forEach(function (e) {
+        var base = num(e["حقوق پایه"]);
+        var house = num(e["حق مسکن"]);
+        var food = num(e["بن خواربار"]);
+        var gross = base + house + food;
+        var ins = Math.round(gross * (insP / 100));
+        var tax = Math.round(gross * (taxP / 100));
+        var erIns = Math.round(gross * (insEr / 100));
+        var net = Math.max(0, gross - ins - tax);
+        var label = (e["کد پرسنلی"] || "") + " " + (e["نام"] || "") + " " + (e["نام خانوادگی"] || "");
+        arr.unshift({
+          id: uid(), at: now(), deleted: false,
+          "ماه شمسی": month, "سال": year, "پرسنل": label.trim(),
+          "حقوق پایه": String(base), "مزایا": String(house + food),
+          "کسور": "0", "بیمه": String(ins), "مالیات": String(tax),
+          "اضافه‌کار": String(otRate ? 0 : 0), "خالص": String(net),
+          "بیمه کارفرما": String(erIns)
+        });
+        sumNet += net;
+        n++;
+      });
+      setStore("payrun", arr);
+      audit("calc-group", year + "/" + month + " n=" + n);
+      if ($("calcResult")) {
+        $("calcResult").innerHTML = "تعداد فیش: " + toFa(n) + " · جمع خالص: " + fmtNum(sumNet);
+      }
+      renderDash();
+      toast(n + " فیش ساخته شد");
+    };
+  }
+
+  /* بیمه خودکار */
+  function buildInsFromPersonnel() {
+    var emps = loadPersonnelActive();
+    lastInsRows = [];
+    var se = 0, sr = 0;
+    emps.forEach(function (e) {
+      var base = num(e["حقوق پایه"]);
+      var gross = base + num(e["حق مسکن"]) + num(e["بن خواربار"]);
+      var ee = Math.round(gross * 0.07);
+      var er = Math.round(gross * 0.23);
+      lastInsRows.push({
+        code: e["کد پرسنلی"] || "",
+        name: ((e["نام"] || "") + " " + (e["نام خانوادگی"] || "")).trim(),
+        nid: e["کد ملی"] || "",
+        base: gross, emp: ee, er: er, total: ee + er
+      });
+      se += ee; sr += er;
+    });
+    if (!lastInsRows.length) {
+      toast("پرسنل فعالی نیست", "err");
+      return;
+    }
+    var j = g2j(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
+    var arr = getStore("pins");
+    arr.unshift({
+      id: uid(), at: now(), deleted: false,
+      "ماه": String(j.jm), "سال": String(j.jy),
+      "تعداد نفر": String(lastInsRows.length),
+      "حق بیمه سهم کارگر": String(se),
+      "سهم کارفرما": String(sr)
+    });
+    setStore("pins", arr);
+    audit("auto-ins", lastInsRows.length + " نفر");
+    toast("لیست بیمه ثبت شد");
+    renderDash();
+  }
+  if ($("btnAutoIns")) $("btnAutoIns").onclick = buildInsFromPersonnel;
+  if ($("btnInsCsv")) {
+    $("btnInsCsv").onclick = function () {
+      if (!lastInsRows.length) buildInsFromPersonnel();
+      if (!lastInsRows.length) return;
+      var lines = ["code,name,national_id,base,employee_share,employer_share,total"];
+      lastInsRows.forEach(function (r) {
+        lines.push([r.code, r.name, r.nid, r.base, r.emp, r.er, r.total].join(","));
+      });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" }));
+      a.download = "insurance-list.csv";
+      a.click();
+    };
+  }
+  if ($("btnPrintPay")) $("btnPrintPay").onclick = function () { window.print(); };
+
+  /* یادداشت / یادآوری */
+  var notesKey = "smart_mod_notes_" + MOD, remsKey = "smart_mod_rem_" + MOD;
+  function renderNotes() {
+    var n = loadJSON(notesKey, []);
+    $("notesList").innerHTML = n.map(function (x, i) {
+      return '<div class="list-item" data-i="' + i + '">' + esc(x.text) + "</div>";
+    }).join("") || '<p class="empty">—</p>';
+    $("notesList").querySelectorAll("[data-i]").forEach(function (el) {
+      el.onclick = function () {
+        selNote = +el.getAttribute("data-i");
+        $("noteText").value = loadJSON(notesKey, [])[selNote].text || "";
+      };
+    });
+  }
+  function renderRems() {
+    var n = loadJSON(remsKey, []);
+    $("remsList").innerHTML = n.map(function (x) {
+      return '<div class="list-item">' + esc(x.text) + " — " + esc(x.date || "") + "</div>";
+    }).join("") || '<p class="empty">—</p>';
+  }
+  if ($("btnNoteSave")) {
+    $("btnNoteSave").onclick = function () {
+      var t = $("noteText").value.trim();
+      if (!t) return;
+      var n = loadJSON(notesKey, []);
+      if (selNote >= 0 && n[selNote]) n[selNote].text = t;
+      else n.unshift({ text: t });
+      saveJSON(notesKey, n);
+      selNote = -1;
+      $("noteText").value = "";
+      renderNotes();
+      updateAlerts();
+    };
+  }
+  if ($("btnNoteDel")) {
+    $("btnNoteDel").onclick = function () {
+      if (selNote < 0) return;
+      var n = loadJSON(notesKey, []);
+      n.splice(selNote, 1);
+      saveJSON(notesKey, n);
+      selNote = -1;
+      renderNotes();
+      updateAlerts();
+    };
+  }
+  if ($("btnRemAdd")) {
+    $("btnRemAdd").onclick = function () {
+      var t = ($("remText").value || "").trim(), d = $("remDate").value;
+      if (!t) return;
+      var n = loadJSON(remsKey, []);
+      n.unshift({ text: t, date: d, status: "new" });
+      saveJSON(remsKey, n);
+      var db = loadDB();
+      db.settings.payDay = num($("payDay").value) || 5;
+      saveDB(db);
+      renderRems();
+      updateAlerts();
+      toast("یادآوری افزوده شد");
+    };
+  }
+  if ($("btnSyncSec")) {
+    $("btnSyncSec").onclick = function () {
+      try {
+        var items = loadJSON("items", []);
+        if (!Array.isArray(items)) items = [];
+        var day = num($("payDay").value) || 5;
+        var msg = ($("remText").value || "روز پرداخت حقوق").trim();
+        items = items.filter(function (it) { return !(it && it.tag === "hr-payroll-day"); });
+        items.unshift({
+          id: Date.now(),
+          type: "reminder",
+          title: "روز پرداخت حقوق",
+          desc: msg,
+          status: "open",
+          priority: "مهم",
+          tag: "hr-payroll-day",
+          source: "payroll",
+          date: $("remDate").value || todayJ(),
+          when: $("remDate").value || todayJ()
+        });
+        saveJSON("items", items);
+        toast("در منشی ثبت شد");
+      } catch (e) {
+        toast("منشی در دسترس نیست — فقط یادآوری محلی ذخیره شد", "err");
+      }
+    };
+  }
+
+  /* کارتابل */
+  function getCart() {
+    try { return JSON.parse(localStorage.getItem(CART_KEY) || "[]") || []; } catch (e) { return []; }
+  }
+  function saveCart(list) {
+    try { localStorage.setItem(CART_KEY, JSON.stringify(list)); return true; }
+    catch (e) { toast("خطای کارتابل", "err"); return false; }
+  }
+  function renderCart() {
+    var all = getCart();
+    var mine = all.filter(function (x) { return x.to === MOD || x.to === "payroll"; });
+    var box = $("cartList");
+    if (!box) return;
+    if (!mine.length) {
+      box.innerHTML = '<p class="empty">خالی</p>';
+      updateAlerts();
+      return;
+    }
+    box.innerHTML = mine.map(function (x) {
+      var att = "";
+      if (x.attachment && x.attachment.data) {
+        att = '<div style="margin-top:4px">📎 ' + esc(x.attachment.name) + " (" + fmtSize(x.attachment.size) + ") " +
+          '<button type="button" class="btn btn-g btn-dl" data-cid="' + esc(x.id) + '">دانلود</button></div>';
+      }
+      return '<div class="list-item"><b>' + esc(x.title || "پیام") + "</b><br><span style='font-size:.68rem;color:#94a3b8'>از: " +
+        esc(x.fromLabel || x.from) + " | " + esc(x.at || "") + "</span><div style='margin-top:4px;white-space:pre-wrap'>" +
+        esc(x.body || x.msg || "") + "</div>" + att +
+        (x.status !== "done" ? '<button type="button" class="btn btn-ok btn-done" data-cid="' + esc(x.id) + '" style="margin-top:4px">انجام شد</button>' : " ✓") +
+        "</div>";
+    }).join("");
+    box.querySelectorAll(".btn-done").forEach(function (btn) {
+      btn.onclick = function () {
+        var all2 = getCart();
+        all2.forEach(function (x) { if (x.id === btn.getAttribute("data-cid")) x.status = "done"; });
+        saveCart(all2);
+        renderCart();
+      };
+    });
+    box.querySelectorAll(".btn-dl").forEach(function (btn) {
+      btn.onclick = function () {
+        var item = getCart().find(function (x) { return x.id === btn.getAttribute("data-cid"); });
+        if (!item || !item.attachment) return;
+        var a = document.createElement("a");
+        a.href = item.attachment.data;
+        a.download = item.attachment.name || "file";
+        a.click();
+      };
+    });
+    updateAlerts();
+  }
+  function sendCart() {
+    var to = $("cartTo") ? $("cartTo").value : "suite";
+    var title = $("cartTitle") ? $("cartTitle").value.trim() : "";
+    var body = $("cartMsg") ? $("cartMsg").value.trim() : "";
+    var fileInput = $("cartFile");
+    if (!title && !body && !(fileInput && fileInput.files && fileInput.files[0])) {
+      toast("عنوان، متن یا فایل", "err"); return;
+    }
+    function doSend(attachment) {
+      var all = getCart();
+      all.unshift({
+        id: uid(), from: MOD, fromLabel: "حقوق · " + userName(), to: to,
+        title: title || (attachment ? "فایل" : "پیام"), body: body, status: "new",
+        at: new Date().toLocaleString("fa-IR"), attachment: attachment || null
+      });
+      if (!saveCart(all)) return;
+      if ($("cartTitle")) $("cartTitle").value = "";
+      if ($("cartMsg")) $("cartMsg").value = "";
+      if (fileInput) fileInput.value = "";
+      toast("ارسال شد");
+      renderCart();
+    }
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      var file = fileInput.files[0];
+      if (file.size > CART_MAX) { toast("حداکثر ۱.۵MB", "err"); return; }
+      var reader = new FileReader();
+      reader.onload = function () {
+        doSend({ name: file.name, type: file.type || "application/octet-stream", size: file.size, data: reader.result });
+      };
+      reader.readAsDataURL(file);
+    } else doSend(null);
+  }
+  if ($("btnCartSend")) $("btnCartSend").onclick = sendCart;
+  if ($("btnCartRefresh")) $("btnCartRefresh").onclick = function () { renderCart(); toast("بروزرسانی"); };
+
+  function updateAlerts() {
+    if ($("aNotes")) $("aNotes").textContent = String((loadJSON(notesKey, [])).length);
+    if ($("aRems")) $("aRems").textContent = String((loadJSON(remsKey, [])).filter(function (x) { return x.status !== "done"; }).length);
+    var cartN = getCart().filter(function (x) { return (x.to === MOD || x.to === "payroll") && x.status !== "done"; }).length;
+    if ($("aCart")) $("aCart").textContent = String(cartN);
+  }
+
+  function renderAudit() {
+    var db = loadDB();
+    $("auditList").innerHTML = (db.audit || []).slice(0, 80).map(function (a) {
+      return '<div class="list-item">' + esc((a.t || "").slice(0, 19)) + " | " + esc(a.user) + " | " + esc(a.action) + " | " + esc(a.detail) + "</div>";
+    }).join("") || '<p class="empty">—</p>';
+  }
+
+  function renderUsers() {
+    var a = getAuth();
+    $("usersList").innerHTML = (a.users || []).map(function (u) {
+      return '<div class="list-item"><b>' + esc(u.user) + "</b> — " + esc(u.name || "") + " (" + esc(u.role || "user") + ")</div>";
+    }).join("");
+  }
+  if ($("btnAddUser")) {
+    $("btnAddUser").onclick = function () {
+      var u = $("nuUser").value.trim(), p = $("nuPass").value, n = $("nuName").value.trim();
+      if (!u || !p) { toast("یوزر و رمز", "err"); return; }
+      var a = getAuth();
+      a.users = a.users || [];
+      if (a.users.some(function (x) { return x.user === u; })) { toast("تکراری", "err"); return; }
+      a.users.push({ user: u, pass: p, name: n || u, role: $("nuRole").value });
+      saveAuth(a);
+      toast("ایجاد شد");
+      $("nuUser").value = ""; $("nuPass").value = ""; $("nuName").value = "";
+      renderUsers();
+    };
+  }
+
+  /* پشتیبان */
+  function downloadBackup() {
+    var payload = {
+      module: MOD, version: CURRENT_VERSION, title: "حقوق و دستمزد",
+      data: loadDB(), notes: loadJSON(notesKey, []), rems: loadJSON(remsKey, []),
+      users: getAuth().users, at: now()
+    };
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
+    a.download = "payroll-backup.json";
+    a.click();
+    toast("دانلود شد");
+  }
+  if ($("btnBackupLocal")) $("btnBackupLocal").onclick = downloadBackup;
+  if ($("btnRestoreLocal")) $("btnRestoreLocal").onclick = function () { $("restoreFile").click(); };
+  if ($("restoreFile")) {
+    $("restoreFile").onchange = function (e) {
+      var f = e.target.files && e.target.files[0];
+      if (!f) return;
+      var r = new FileReader();
+      r.onload = function () {
+        try {
+          var d = JSON.parse(r.result);
+          if (d.data) saveDB(d.data);
+          if (d.notes) saveJSON(notesKey, d.notes);
+          if (d.rems) saveJSON(remsKey, d.rems);
+          if (d.users) { var a = getAuth(); a.users = d.users; saveAuth(a); }
+          audit("restore-file", "");
+          renderDash(); renderNotes(); renderRems();
+          toast("بازیابی شد");
+        } catch (err) { toast("نامعتبر", "err"); }
+      };
+      r.readAsText(f);
+    };
+  }
+  if ($("btnRestoreEmergency")) {
+    $("btnRestoreEmergency").onclick = function () {
+      var bak = localStorage.getItem(BACKUP_KEY);
+      if (!bak) { toast("پشتیبان اضطراری نیست", "err"); return; }
+      if (!confirm("بازیابی از پشتیبان اضطراری؟")) return;
+      try {
+        saveJSON(KEY, JSON.parse(bak));
+        audit("restore-emergency", "");
+        renderDash();
+        toast("بازیابی شد");
+      } catch (e) { toast("خطا", "err"); }
+    };
+  }
+
+  if ($("btnExit")) $("btnExit").onclick = function () { location.href = "suite.html"; };
+
+  /* صوت */
+  (function () {
+    var btn = $("btnMic");
+    if (!btn) return;
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return;
+    var rec = new SR(), on = false;
+    rec.lang = "fa-IR";
+    rec.continuous = true;
+    rec.interimResults = false;
+    rec.onresult = function (ev) {
+      for (var i = ev.resultIndex; i < ev.results.length; i++) {
+        if (!ev.results[i].isFinal) continue;
+        var a = document.activeElement;
+        if (a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA")) {
+          var t = ev.results[i][0].transcript;
+          var s = a.selectionStart || 0, e2 = a.selectionEnd || 0;
+          a.value = a.value.slice(0, s) + t + a.value.slice(e2);
+          a.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+      }
+    };
+    rec.onend = function () { if (on) try { rec.start(); } catch (e) {} };
+    btn.onclick = function () {
+      if (on) { on = false; try { rec.stop(); } catch (e) {} btn.classList.remove("on"); }
+      else { on = true; try { rec.start(); } catch (e) {} btn.classList.add("on"); }
+    };
+  })();
+
+  /* میانبر */
+  document.addEventListener("keydown", function (e) {
+    if (e.ctrlKey || e.metaKey) {
+      if (e.key === "1") { e.preventDefault(); showPanel("p-dash"); }
+      if (e.key === "2") { e.preventDefault(); showPanel("p-payrun"); }
+      if (e.key === "3") { e.preventDefault(); showPanel("p-pins"); }
+      if (e.key === "4") { e.preventDefault(); showPanel("p-ppay"); }
+      if (e.key === "k" || e.key === "K") { e.preventDefault(); showPanel("p-cartable"); }
+    }
+    if (e.key === "Escape") showPanel("p-dash");
+  });
+
+  /* Boot */
+  ensureLogin(function () {
+    document.querySelectorAll(".jdate").forEach(attachJDate);
+    document.querySelectorAll(".jdate").forEach(function (el) {
+      if (!el.value) el.value = todayJ();
+    });
+    if ($("activeUser")) $("activeUser").textContent = "کاربر فعال: " + userName();
+    var db = loadDB();
+    if ($("payDay") && db.settings && db.settings.payDay) $("payDay").value = db.settings.payDay;
+    renderDash();
+    renderNotes();
+    renderRems();
+    renderCart();
+    showPanel("p-dash");
+  });
 })();
 </script>
 </body>

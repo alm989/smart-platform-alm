@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<meta name="description" content="پایگاه داده‌ها — کلیدها، پشتیبان سراسری، مشاهده و پاک‌سازی داده">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>پایگاه داده‌ها | سامانه هوشمند</title>
+<style>
+:root{--bg:#0b1220;--panel:#0f172a;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#8b5cf6;--ok:#22c55e;--bad:#ef4444;--warn:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100dvh;display:flex;flex-direction:column;text-align:right}
+.header{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#020617;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px}.brand .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#8b5cf6,#4c1d95);display:grid;place-items:center;font-size:15px}
+.brand b{font-size:.85rem}
+.nav{display:flex;align-items:center;gap:3px;flex:1;justify-content:center;flex-wrap:wrap}
+.nav-item{position:relative}
+.nav-item>.nb{background:#1e293b;border:1px solid var(--line);color:#cbd5e1;border-radius:999px;padding:7px 11px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit}
+.nav-item:hover>.nb,.nb.on,.nav-item.open>.nb{background:var(--pri);color:#fff;border-color:var(--pri)}
+.nav-item .dd{display:none;position:absolute;top:calc(100% + 4px);right:0;min-width:240px;max-height:70vh;overflow:auto;background:#1e293b;border:1px solid var(--line);border-radius:12px;padding:6px;z-index:120;box-shadow:0 12px 28px rgba(0,0,0,.5)}
+.nav-item.open .dd,.nav-item:hover .dd{display:block}
+.nav-item .dd button{display:block;width:100%;text-align:right;background:transparent;border:none;color:var(--txt);padding:8px 11px;border-radius:8px;font-size:.72rem;cursor:pointer;font-family:inherit}
+.nav-item .dd button:hover{background:rgba(139,92,246,.25)}
+.mic{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:#7f1d1d;color:#fff;cursor:pointer}.mic.on{background:#166534}
+.exit-top{background:#dc2626;color:#fff;border:none;border-radius:999px;padding:7px 12px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit}
+.clock{display:flex;flex-direction:column;gap:1px;background:#1e293b;border:1px solid #475569;border-radius:10px;padding:5px 9px;min-width:120px;margin-inline-start:auto}
+.clock div{font-size:11px;font-weight:700;line-height:1.35}
+.clock .j{color:#c4b5fd}.clock .g{color:#94a3b8;direction:ltr;unicode-bidi:isolate;font-size:10px}
+.clock .c{color:#86efac}.clock .u{color:#fde68a;font-size:10px}
+.body-row{display:flex;flex:1;min-height:0;flex-direction:row;direction:ltr}
+.main{flex:1;padding:12px;overflow:auto;min-width:0;direction:rtl;text-align:right}
+.side{width:280px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--line);padding:8px;display:flex;flex-direction:column;overflow:auto;direction:rtl}
+@media(max-width:960px){.side{display:none}}
+.side .block{margin-bottom:6px;border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden}
+.side .block>.hd{width:100%;text-align:right;padding:9px 11px;background:#020617;border:none;color:#c4b5fd;font-weight:800;font-size:.78rem;cursor:pointer;font-family:inherit}
+.side .block.open>.hd,.side .block:hover>.hd{background:rgba(139,92,246,.22)}
+.side .sub{display:none;padding:5px}.side .block.open .sub,.side .block:hover .sub{display:block}
+.side .sub button{display:block;width:100%;text-align:right;background:transparent;border:none;color:#cbd5e1;padding:7px 9px;font-size:.72rem;cursor:pointer;font-family:inherit;border-radius:8px}
+.side .sub button:hover,.side .sub button.on{background:rgba(139,92,246,.2);color:#fff}
+.alerts{margin-top:auto;padding-top:6px;border-top:1px solid var(--line)}
+.alert{display:flex;justify-content:space-between;width:100%;padding:7px 9px;margin-bottom:4px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:.68rem;font-weight:700;cursor:pointer;font-family:inherit}
+.alert .n{background:var(--pri);color:#fff;border-radius:999px;padding:1px 6px;font-size:.62rem}
+.panel{display:none!important}.panel.on{display:block!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;position:relative}
+.card h2{font-size:.88rem;color:#c4b5fd;margin-bottom:8px}.card.has-exit h2{padding-left:80px}
+.btn-form-exit{position:absolute;top:10px;left:10px;background:#334155;color:#e2e8f0;border:none;border-radius:8px;padding:5px 10px;font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit}
+label{display:block;font-size:.68rem;color:var(--muted);margin:5px 0 2px}
+input,select,textarea{width:100%;padding:7px;border-radius:9px;border:1px solid var(--line);background:#020617;color:var(--txt);font-family:inherit;font-size:12.5px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+@media(max-width:800px){.row,.row3{grid-template-columns:1fr}}
+.btn{border:none;border-radius:9px;padding:7px 12px;font-weight:700;font-size:.72rem;cursor:pointer;font-family:inherit;margin:2px}
+.btn-p{background:var(--pri);color:#fff}.btn-g{background:#334155;color:#e2e8f0}.btn-b{background:#7f1d1d;color:#fecaca}.btn-ok{background:#166534;color:#bbf7d0}.btn-w{background:#92400e;color:#fde68a}
+.kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:7px;margin-bottom:10px}
+.kpi .box{background:#0f172a;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.kpi .n{font-size:1.05rem;font-weight:800;color:#c4b5fd}.kpi .l{font-size:.6rem;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:.7rem}
+th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{color:#c4b5fd;font-size:.62rem}
+.num{direction:ltr;unicode-bidi:isolate;text-align:left;font-size:.68rem}
+.empty{color:var(--muted);font-size:.78rem;text-align:center;padding:16px}
+.toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:9px 12px;border-radius:12px;font-weight:700;opacity:0;z-index:200;transition:.15s;font-size:.8rem}
+.toast.show{opacity:1}.toast.err{background:var(--bad)}
+.list-box{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:5px;margin:7px 0;background:#0f172a}
+.list-item{padding:7px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:8px;font-size:.74rem}
+.list-item.sel{background:rgba(139,92,246,.2);border:1px solid #8b5cf6}
+.login-mask{position:fixed;inset:0;background:rgba(2,6,23,.95);z-index:300;display:flex;align-items:center;justify-content:center}
+.login-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;width:min(340px,92vw)}
+.form-actions{margin-top:8px}
+.note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
+.warn{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);color:#fde68a;border-radius:10px;padding:10px;font-size:.72rem;margin-bottom:10px;line-height:1.5}
+.scope{background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.3);color:#c4b5fd;border-radius:10px;padding:10px;font-size:.72rem;margin-bottom:10px;line-height:1.5}
+.detail{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:.68rem;max-height:280px;overflow:auto;direction:ltr;text-align:left;font-family:ui-monospace,Consolas,monospace;color:#cbd5e1}
+.chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
+.badge{display:inline-block;padding:1px 7px;border-radius:999px;font-size:.62rem;font-weight:700}
+.badge-ok{background:rgba(34,197,94,.2);color:#86efac}
+.badge-w{background:rgba(245,158,11,.2);color:#fde68a}
+.badge-b{background:rgba(239,68,68,.2);color:#fecaca}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="brand"><div class="logo">🗄️</div><b>پایگاه داده‌ها</b></div>
+  <nav class="nav">
+    <button type="button" class="mic" id="btnMic">🎤</button>
+    <div class="nav-item"><button type="button" class="nb on" data-panel="p-dash">داشبورد</button>
+      <div class="dd"><button type="button" data-panel="p-dash">نمای کلی فضای داده</button></div></div>
+    <div class="nav-item"><button type="button" class="nb">کلیدها</button>
+      <div class="dd">
+        <button type="button" data-panel="p-keys">فهرست کلیدها</button>
+        <button type="button" data-panel="p-view">مشاهده محتوا</button>
+        <button type="button" data-panel="p-search">جستجو در داده‌ها</button>
+      </div></div>
+    <div class="nav-item"><button type="button" class="nb">پشتیبان</button>
+      <div class="dd">
+        <button type="button" data-panel="p-backup-full">پشتیبان سراسری</button>
+        <button type="button" data-panel="p-restore">بازیابی سراسری</button>
+        <button type="button" data-panel="p-backup-sel">پشتیبان انتخابی</button>
+      </div></div>
+    <div class="nav-item"><button type="button" class="nb">پاک‌سازی</button>
+      <div class="dd">
+        <button type="button" data-panel="p-clean">حذف کلید</button>
+        <button type="button" data-panel="p-orphan">کلیدهای یتیم / قدیمی</button>
+        <button type="button" data-panel="p-quota">وضعیت فضای مرورگر</button>
+      </div></div>
+    <div class="nav-item"><button type="button" class="nb">گزارش</button>
+      <div class="dd">
+        <button type="button" data-panel="p-rep-map">نقشه ماژول‌ها و کلیدها</button>
+        <button type="button" data-panel="p-rep-size">رتبه‌بندی حجم</button>
+        <button type="button" data-panel="p-audit">لاگ عملیات داده</button>
+      </div></div>
+    <div class="nav-item"><button type="button" class="nb">امکانات</button>
+      <div class="dd">
+        <button type="button" data-panel="p-notes">یادداشت</button>
+        <button type="button" data-panel="p-rems">یادآوری</button>
+        <button type="button" data-panel="p-cartable">کارتابل</button>
+      </div></div>
+    <div class="nav-item"><button type="button" class="nb">تنظیمات</button>
+      <div class="dd">
+        <button type="button" data-panel="p-access">دسترسی ماژول</button>
+        <button type="button" data-panel="p-mod-backup">پشتیبان خود ماژول</button>
+      </div></div>
+    <button type="button" class="exit-top" id="btnExit">خروج</button>
+  </nav>
+  <div class="clock">
+    <div class="j" id="dtJ">—</div><div class="g" id="dtG">—</div>
+    <div class="c" id="dtC">—</div><div class="u" id="activeUser">کاربر فعال: —</div>
+  </div>
+</header>
+
+<div class="body-row">
+<main class="main">
+  <div class="panel on" id="p-dash">
+    <div class="scope">
+      <b>محدوده این ماژول:</b> کلیدهای localStorage · مشاهده JSON · پشتیبان/بازیابی سراسری · پاک‌سازی داده<br>
+      <b>خارج از محدوده (مدیر سیستم):</b> کاربران · نقش‌ها · مجوزها · تنظیمات سازمانی
+    </div>
+    <div class="kpi" id="kpi"></div>
+    <div class="card">
+      <h2>داشبورد پایگاه داده‌ها</h2>
+      <p class="empty" id="dashMeta">—</p>
+      <p class="note">مرکز دادهٔ سوییت — Suite Data Center v2</p>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p" data-panel="p-keys">اسکن کلیدها</button>
+        <button type="button" class="btn btn-ok" data-panel="p-backup-full">پشتیبان سراسری</button>
+        <button type="button" class="btn btn-g" data-panel="p-view">مشاهده</button>
+        <button type="button" class="btn btn-w" data-panel="p-clean">پاک‌سازی</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- کلیدها -->
+  <div class="panel" id="p-keys"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>فهرست کلیدهای سامانه</h2>
+    <div class="warn">فقط کلیدهای مرتبط با سوییت (`smart_*` · `suite_*` · موارد شناخته‌شده) نمایش داده می‌شوند.</div>
+    <div class="row">
+      <div><label>فیلتر نام کلید</label><input id="keyFilter" placeholder="مثلاً accounting یا cartable"></div>
+      <div><label>مرتب‌سازی</label>
+        <select id="keySort">
+          <option value="name">نام</option>
+          <option value="size">حجم (نزولی)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-p" id="btnScanKeys">بررسی مجدد</button>
+      <button type="button" class="btn btn-g" id="btnRefreshKeys">بروزرسانی</button>
+    </div>
+    <div class="list-box" id="keyListBox"></div>
+    <p class="note" id="keyListMeta">—</p>
+  </div></div>
+
+  <div class="panel" id="p-view"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>مشاهده محتوای کلید</h2>
+    <div class="row">
+      <div><label>کلید انتخاب‌شده</label><input id="viewKey" class="num" readonly placeholder="از فهرست کلیدها انتخاب کنید"></div>
+      <div><label>حداکثر نمایش (کاراکتر)</label>
+        <select id="viewLimit">
+          <option value="4000">۴٬۰۰۰</option>
+          <option value="8000" selected>۸٬۰۰۰</option>
+          <option value="20000">۲۰٬۰۰۰</option>
+          <option value="50000">۵۰٬۰۰۰</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-p" id="btnViewKey">نمایش</button>
+      <button type="button" class="btn btn-g" id="btnCopyKey">کپی متن</button>
+      <button type="button" class="btn btn-ok" id="btnExportOne">دانلود همین کلید</button>
+    </div>
+    <pre class="detail" id="viewDetail">—</pre>
+  </div></div>
+
+  <div class="panel" id="p-search"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>جستجو در محتوای داده‌ها</h2>
+    <div class="row">
+      <div><label>عبارت جستجو</label><input id="searchQ" placeholder="متن داخل JSON"></div>
+      <div><label>محدود به کلید</label><input id="searchKeyHint" placeholder="اختیاری — بخشی از نام کلید"></div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-p" id="btnSearchData">جستجو</button>
+    </div>
+    <div class="list-box" id="searchResults"></div>
+    <p class="note">جستجو فقط در کلیدهای سوییت انجام می‌شود و متن کامل کلیدهای حجیم کوتاه می‌شود.</p>
+  </div></div>
+
+  <!-- پشتیبان -->
+  <div class="panel" id="p-backup-full"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>پشتیبان سراسری</h2>
+    <div class="warn">خروجی شامل همه کلیدهای مرتبط سوییت است. فایل را در جای امن نگه دارید.</div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-ok" id="btnExportAll">دانلود پشتیبان کامل JSON</button>
+      <button type="button" class="btn btn-p" id="btnExportAllGdrive">دانلود برای آپلود در گوگل درایو</button>
+    </div>
+    <p class="note" id="backupMeta">—</p>
+  </div></div>
+
+  <div class="panel" id="p-restore"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>بازیابی سراسری</h2>
+    <div class="warn">بازیابی می‌تواند داده‌های فعلی را بازنویسی کند. قبل از ادامه یک پشتیبان تازه بگیرید.</div>
+    <label class="chk"><input type="checkbox" id="restoreMerge"> حالت ادغام (کلیدهای موجود را نگه دار؛ فقط کلیدهای فایل را بنویس)</label>
+    <label class="chk"><input type="checkbox" id="restoreReplace"> حالت جایگزینی کامل کلیدهای موجود در فایل</label>
+    <div class="form-actions">
+      <button type="button" class="btn btn-p" id="btnRestorePick">انتخاب فایل JSON</button>
+      <button type="button" class="btn btn-g" id="btnRestoreGdrivePick">فایل دانلودشده از درایو</button>
+    </div>
+    <input type="file" id="restoreFile" accept="application/json,.json" hidden>
+    <input type="file" id="restoreGdriveFile" accept="application/json,.json" hidden>
+    <p class="note">فقط کلیدهای مجاز سوییت بازیابی می‌شوند.</p>
+  </div></div>
+
+  <div class="panel" id="p-backup-sel"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>پشتیبان انتخابی</h2>
+    <p class="note">کلیدهای علامت‌خورده را از فهرست کلیدها انتخاب کنید، سپس دانلود کنید.</p>
+    <div class="list-box" id="selKeyBox"></div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-p" id="btnLoadSelKeys">بارگذاری فهرست برای انتخاب</button>
+      <button type="button" class="btn btn-ok" id="btnExportSelected">دانلود انتخاب‌شده‌ها</button>
+    </div>
+  </div></div>
+
+  <!-- پاک‌سازی -->
+  <div class="panel" id="p-clean"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>حذف کلید</h2>
+    <div class="warn">حذف غیرقابل بازگشت است (مگر پشتیبان داشته باشید). این عملیات در لاگ ثبت می‌شود.</div>
+    <div class="row">
+      <div><label>کلید</label><input id="delKey" class="num" placeholder="smart_mod_..."></div>
+      <div><label>تأیید با تایپ DELETE</label><input id="delConfirm" placeholder="DELETE"></div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-b" id="btnDeleteKey">حذف کلید</button>
+      <button type="button" class="btn btn-g" id="btnUseSelectedDel">استفاده از کلید انتخاب‌شده</button>
+    </div>
+  </div></div>
+
+  <div class="panel" id="p-orphan"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>کلیدهای یتیم / قدیمی / پشتیبان</h2>
+    <p class="note">کلیدهایی که نامشان شبیه پشتیبان، قفل تب، یا نسخهٔ قدیمی است پیشنهاد می‌شوند — حذف خودکار انجام نمی‌شود.</p>
+    <div class="form-actions">
+      <button type="button" class="btn btn-p" id="btnFindOrphans">شناسایی</button>
+    </div>
+    <div class="list-box" id="orphanBox"></div>
+  </div></div>
+
+  <div class="panel" id="p-quota"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>وضعیت فضای مرورگر</h2>
+    <div class="kpi" id="quotaKpi"></div>
+    <p class="empty" id="quotaMeta">—</p>
+    <div class="form-actions">
+      <button type=""button" class="btn btn-p" id="btnQuota">برآورد مجدد</button>
+    </div>
+  </div></div>
+
+  <!-- گزارش -->
+  <div class="panel" id="p-rep-map"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>نقشه ماژول‌ها و کلیدها</h2>
+    <div class="form-actions"><button type="button" class="btn btn-p" id="btnMap">بروزرسانی نقشه</button></div>
+    <div class="list-box" id="mapBox"></div>
+  </div></div>
+
+  <div class="panel" id="p-rep-size"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>رتبه‌بندی حجم کلیدها</h2>
+    <div class="form-actions"><button type="button" class="btn btn-p" id="btnSizeRank">بروزرسانی</button></div>
+    <div class="list-box" id="sizeBox"></div>
+  </div></div>
+
+  <div class="panel" id="p-audit"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>لاگ عملیات داده</h2>
+    <button type="button" class="btn btn-b" id="btnClearAudit">پاک‌کردن لاگ این ماژول</button>
+    <div class="list-box" id="auditList" style="margin-top:8px"></div>
+  </div></div>
+
+  <!-- امکانات مشترک -->
+  <div class="panel" id="p-notes"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>یادداشت</h2>
+    <textarea id="noteText" rows="3"></textarea>
+    <div class="list-box" id="notesList"></div>
+    <button type="button" class="btn btn-p" id="btnNoteSave">ذخیره</button>
+    <button type="button" class="btn btn-b" id="btnNoteDel">حذف</button>
+  </div></div>
+  <div class="panel" id="p-rems"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>یادآوری</h2>
+    <div class="row"><input id="remText" placeholder="متن"><input id="remDate" class="jdate"></div>
+    <button type="button" class="btn btn-p" id="btnRemAdd">افزودن</button>
+    <div class="list-box" id="remsList"></div>
+  </div></div>
+  <div class="panel" id="p-cartable"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>کارتابل</h2>
+    <div class="row">
+      <div><label>گیرنده</label>
+        <select id="cartTo">
+          <option value="suite">سوییت</option>
+          <option value="ceo">مدیرعامل</option>
+          <option value="sysadmin">مدیر سیستم</option>
+          <option value="database">پایگاه داده‌ها</option>
+        </select>
+      </div>
+      <div><label>عنوان</label><input id="cartTitle"></div>
+    </div>
+    <label>پیام</label><textarea id="cartMsg" rows="2"></textarea>
+    <label>پیوست (حداکثر ۱.۵MB)</label><input type="file" id="cartFile">
+    <div class="form-actions">
+      <button type="button" class="btn btn-p" id="btnCartSend">ارسال</button>
+      <button type="button" class="btn btn-g" id="btnCartRefresh">بروزرسانی</button>
+    </div>
+    <div class="list-box" id="cartList"></div>
+  </div></div>
+
+  <div class="panel" id="p-access"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>دسترسی ماژول پایگاه داده</h2>
+    <div class="scope">کاربران این ماژول فقط برای ورود به مرکز داده هستند — مدیریت نقش سازمانی در «مدیر سیستم» است.</div>
+    <div class="row3">
+      <div><label>نام کاربری</label><input id="nuUser"></div>
+      <div><label>رمز</label><input id="nuPass" type="password"></div>
+      <div><label>نام نمایشی</label><input id="nuName"></div>
+    </div>
+    <label>سطح</label>
+    <select id="nuRole">
+      <option value="viewer">مشاهده‌گر</option>
+      <option value="operator">اپراتور داده</option>
+      <option value="admin">مدیر داده</option>
+    </select>
+    <div class="form-actions"><button type="button" class="btn btn-p" id="btnAddUser">ایجاد</button></div>
+    <div class="list-box" id="usersList" style="margin-top:10px"></div>
+  </div></div>
+
+  <div class="panel" id="p-mod-backup"><div class="card has-exit">
+    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+    <h2>پشتیبان خود ماژول (لاگ و تنظیمات داخلی)</h2>
+    <button type="button" class="btn btn-p" id="btnBackupLocal">دانلود</button>
+    <button type="button" class="btn btn-g" id="btnRestoreLocal">بازیابی</button>
+    <input type="file" id="modRestoreFile" accept="application/json" hidden>
+    <button type="button" class="btn btn-b" id="btnRestoreEmergency">بازیابی اضطراری</button>
+  </div></div>
+</main>
+
+<aside class="side">
+  <div class="block open"><button type="button" class="hd">داشبورد</button>
+    <div class="sub"><button type="button" data-panel="p-dash">نمای کلی</button></div></div>
+  <div class="block"><button type="button" class="hd">کلیدها</button>
+    <div class="sub">
+      <button type="button" data-panel="p-keys">فهرست</button>
+      <button type="button" data-panel="p-view">مشاهده</button>
+      <button type="button" data-panel="p-search">جستجو</button>
+    </div></div>
+  <div class="block"><button type="button" class="hd">پشتیبان</button>
+    <div class="sub">
+      <button type="button" data-panel="p-backup-full">سراسری</button>
+      <button type="button" data-panel="p-restore">بازیابی</button>
+      <button type="button" data-panel="p-backup-sel">انتخابی</button>
+    </div></div>
+  <div class="block"><button type="button" class="hd">پاک‌سازی</button>
+    <div class="sub">
+      <button type="button" data-panel="p-clean">حذف کلید</button>
+      <button type="button" data-panel="p-orphan">یتیم / قدیمی</button>
+      <button type="button" data-panel="p-quota">فضا</button>
+    </div></div>
+  <div class="block"><button type="button" class="hd">گزارش</button>
+    <div class="sub">
+      <button type="button" data-panel="p-rep-map">نقشه</button>
+      <button type="button" data-panel="p-rep-size">حجم</button>
+      <button type="button" data-panel="p-audit">لاگ</button>
+    </div></div>
+  <div class="block"><button type="button" class="hd">امکانات</button>
+    <div class="sub">
+      <button type="button" data-panel="p-notes">یادداشت</button>
+      <button type="button" data-panel="p-rems">یادآوری</button>
+      <button type="button" data-panel="p-cartable">کارتابل</button>
+    </div></div>
+  <div class="block"><button type="button" class="hd">تنظیمات</button>
+    <div class="sub">
+      <button type="button" data-panel="p-access">دسترسی</button>
+      <button type="button" data-panel="p-mod-backup">پشتیبان ماژول</button>
+    </div></div>
+  <div class="alerts">
+    <button type="button" class="alert" data-panel="p-notes"><span>یادداشت</span><span class="n" id="aNotes">0</span></button>
+    <button type="button" class="alert" data-panel="p-rems"><span>یادآوری</span><span class="n" id="aRems">0</span></button>
+    <button type="button" class="alert" data-panel="p-cartable"><span>کارتابل</span><span class="n" id="aCart">0</span></button>
+  </div>
+</aside>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function () {
+  "use strict";
+
+  var MOD = "database";
+  var CURRENT_VERSION = 2;
+  var KEY = "smart_mod_" + MOD + "_v2";
+  var LEGACY_KEYS = ["smart_db_v1"];
+  var BACKUP_KEY = "smart_mod_" + MOD + "_backup_v2";
+  var LOCK_KEY = "smart_mod_" + MOD + "_lock_v2";
+  var AUTH_KEY = "smart_users_" + MOD;
+  var NOTES_KEY = "smart_mod_notes_" + MOD;
+  var REMS_KEY = "smart_mod_rem_" + MOD;
+  var CART_KEY = "suite_cartable_v1";
+  var CART_MAX_FILE_SIZE = 1.5 * 1024 * 1024;
+
+  var FA = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  var JM = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
+
+  var listeners = [];
+  var selectedKey = "";
+  var selectedSet = {};
+  var selNote = -1;
+  var toastTimer = null;
+  var cachedKeys = [];
+
+  var MODULE_MAP = [
+    { mod: "accounting", labels: ["accounting", "acct"] },
+    { mod: "secretariat", labels: ["secretariat"] },
+    { mod: "manager", labels: ["manager", "mgmt", "management"] },
+    { mod: "database", labels: ["database", "db"] },
+    { mod: "ceo", labels: ["ceo"] },
+    { mod: "sysadmin", labels: ["sysadmin", "admin"] },
+    { mod: "documents", labels: ["documents", "docs"] },
+    { mod: "cartable", labels: ["cartable"] },
+    { mod: "suite", labels: ["suite"] }
+  ];
+
+  function onDataChange(fn) { if (typeof fn === "function") listeners.push(fn); }
+  function notifyChange() { listeners.forEach(function (fn) { try { fn(); } catch (e) {} }); }
+
+  function $(id) { return document.getElementById(id); }
+  function toFa(n) {
+    return String(n).replace(/\d/g, function (d) { return FA[+d]; });
+  }
+  function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+  function now() { return new Date().toISOString(); }
+  function esc(s) {
+    var d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
+  function formatSize(bytes) {
+    bytes = bytes || 0;
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+  }
+  function toast(m, err) {
+    var el = $("toast");
+    if (!el) return;
+    el.textContent = m;
+    el.className = "toast show" + (err ? " err" : "");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2400);
+  }
+  function loadJSON(k, d) {
+    try { return JSON.parse(localStorage.getItem(k) || "null") || d; }
+    catch (e) { return d; }
+  }
+  function saveJSON(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch (e) { toast("خطای ذخیره — فضای مرورگر پر است", true); return false; }
+  }
+
+  function g2j(gy, gm, gd) {
+    var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    var gy2 = (gm > 2) ? (gy + 1) : gy;
+    var days = 355666 + 365 * gy + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
+    var jy = -1595 + 33 * Math.floor(days / 12053);
+    days %= 12053;
+    jy += 4 * Math.floor(days / 1461);
+    days %= 1461;
+    if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+    var jm = (days < 186) ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
+    var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
+    return { jy: jy, jm: jm, jd: jd };
+  }
+  function fmtJ(jy, jm, jd) {
+    return toFa(jy) + "/" + toFa(String(jm).padStart(2, "0")) + "/" + toFa(String(jd).padStart(2, "0"));
+  }
+  function todayJ() {
+    var n = new Date(), j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    return fmtJ(j.jy, j.jm, j.jd);
+  }
+
+  function tickClock() {
+    var n = new Date(), j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    if ($("dtJ")) $("dtJ").textContent = fmtJ(j.jy, j.jm, j.jd);
+    if ($("dtG")) $("dtG").textContent = n.getFullYear() + "/" + String(n.getMonth() + 1).padStart(2, "0") + "/" + String(n.getDate()).padStart(2, "0");
+    if ($("dtC")) $("dtC").textContent = toFa(String(n.getHours()).padStart(2, "0")) + ":" + toFa(String(n.getMinutes()).padStart(2, "0")) + ":" + toFa(String(n.getSeconds()).padStart(2, "0"));
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  function getTabId() {
+    if (!window.__dbTabId) {
+      window.__dbTabId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+    return window.__dbTabId;
+  }
+  function acquireLock() {
+    try {
+      var ts = Date.now();
+      var lock = JSON.parse(localStorage.getItem(LOCK_KEY) || "null");
+      if (lock && lock.until > ts && lock.tabId !== getTabId()) {
+        toast("تب دیگری در حال ویرایش است", true);
+        return false;
+      }
+      localStorage.setItem(LOCK_KEY, JSON.stringify({
+        tabId: getTabId(), until: ts + 8000, user: userName()
+      }));
+      return true;
+    } catch (e) { return true; }
+  }
+
+  function defDB() {
+    return {
+      version: CURRENT_VERSION,
+      audit: [],
+      settings: { allowDelete: true },
+      createdAt: now(),
+      updatedAt: now()
+    };
+  }
+  function migrateDB(old) {
+    var neu = old || defDB();
+    neu.version = CURRENT_VERSION;
+    if (!Array.isArray(neu.audit)) neu.audit = [];
+    if (!neu.settings) neu.settings = { allowDelete: true };
+    return neu;
+  }
+  function loadDB() {
+    try {
+      var d = loadJSON(KEY, null);
+      if (!d) {
+        d = defDB();
+        saveJSON(KEY, d);
+        return d;
+      }
+      if (!d.version || d.version < CURRENT_VERSION) {
+        try { localStorage.setItem(BACKUP_KEY, JSON.stringify(d)); } catch (e) {}
+        d = migrateDB(d);
+        saveJSON(KEY, d);
+      }
+      return migrateDB(d);
+    } catch (e) {
+      return defDB();
+    }
+  }
+  function saveDB(db) {
+    if (!acquireLock()) return false;
+    try {
+      var cur = localStorage.getItem(KEY);
+      if (cur) localStorage.setItem(BACKUP_KEY, cur);
+    } catch (e) {}
+    db.version = CURRENT_VERSION;
+    db.updatedAt = now();
+    if (!saveJSON(KEY, db)) return false;
+    notifyChange();
+    return true;
+  }
+  function auditLog(action, detail) {
+    var db = loadDB();
+    db.audit = db.audit || [];
+    db.audit.unshift({
+      id: uid(), t: now(), user: userName(),
+      action: action, detail: String(detail || "").slice(0, 300)
+    });
+    if (db.audit.length > 500) db.audit = db.audit.slice(0, 500);
+    saveDB(db);
+  }
+  function restoreFromBackup() {
+    try {
+      var bak = localStorage.getItem(BACKUP_KEY);
+      if (!bak) { toast("پشتیبان اضطراری نیست", true); return false; }
+      if (!confirm("بازیابی اضطراری تنظیمات/لاگ این ماژول؟")) return false;
+      localStorage.setItem(KEY, bak);
+      auditLog("emergency-restore", KEY);
+      toast("بازیابی شد");
+      notifyChange();
+      return true;
+    } catch (e) {
+      toast("خطا در بازیابی", true);
+      return false;
+    }
+  }
+
+  function getAuth() {
+    return loadJSON(AUTH_KEY, {
+      users: [
+        { user: "admin", pass: "admin", name: "مدیر داده", role: "admin" },
+        { user: "viewer", pass: "viewer", name: "مشاهده‌گر", role: "viewer" }
+      ],
+      session: null
+    });
+  }
+  function saveAuth(a) { return saveJSON(AUTH_KEY, a); }
+  function userName() {
+    var a = getAuth();
+    return (a.session && (a.session.name || a.session.user)) || "مهمان";
+  }
+  function userRole() {
+    var a = getAuth();
+    return (a.session && a.session.role) || "viewer";
+  }
+  function canOperate() {
+    return userRole() === "operator" || userRole() === "admin";
+  }
+  function canAdmin() {
+    return userRole() === "admin";
+  }
+  function ensureLogin(cb) {
+    var a = getAuth();
+    if (a.session && a.session.user) { cb(); return; }
+    var m = document.createElement("div");
+    m.className = "login-mask";
+    m.innerHTML =
+      '<div class="login-box">' +
+      '<h2 style="text-align:center;color:#c4b5fd;margin-bottom:10px">ورود — پایگاه داده‌ها</h2>' +
+      '<p class="note" style="text-align:center;margin-bottom:8px">مرکز داده سوییت · جدا از مدیر سیستم</p>' +
+      '<label>نام کاربری</label><input id="lgU">' +
+      '<label>رمز</label><input id="lgP" type="password">' +
+      '<button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button>' +
+      '<p class="empty" style="margin-top:8px">admin / admin · viewer / viewer</p></div>';
+    document.body.appendChild(m);
+    $("lgGo").onclick = function () {
+      var u = $("lgU").value.trim(), p = $("lgP").value;
+      var f = (a.users || []).find(function (x) { return x.user === u && x.pass === p; });
+      if (!f) { toast("نام کاربری یا رمز اشتباه", true); return; }
+      a.session = { user: f.user, name: f.name || f.user, role: f.role || "viewer" };
+      saveAuth(a);
+      m.remove();
+      auditLog("login", f.user + ":" + (f.role || "viewer"));
+      cb();
+    };
+  }
+
+  function isSuiteKey(k) {
+    if (!k) return false;
+    if (k.indexOf("smart_") === 0) return true;
+    if (k.indexOf("suite_") === 0) return true;
+    if (k === "items") return true;
+    return false;
+  }
+  function guessModule(k) {
+    var low = String(k).toLowerCase();
+    for (var i = 0; i < MODULE_MAP.length; i++) {
+      var m = MODULE_MAP[i];
+      for (var j = 0; j < m.labels.length; j++) {
+        if (low.indexOf(m.labels[j]) >= 0) return m.mod;
+      }
+    }
+    return "سایر";
+  }
+  function scanKeys() {
+    var list = [];
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (!isSuiteKey(k)) continue;
+        var raw = "";
+        try { raw = localStorage.getItem(k) || ""; } catch (e) { raw = ""; }
+        list.push({
+          key: k,
+          size: raw.length,
+          module: guessModule(k),
+          kind: classifyKey(k)
+        });
+      }
+    } catch (e) {}
+    list.sort(function (a, b) { return a.key.localeCompare(b.key); });
+    cachedKeys = list;
+    return list;
+  }
+  function classifyKey(k) {
+    var s = String(k).toLowerCase();
+    if (s.indexOf("_backup") >= 0 || s.indexOf("backup") >= 0) return "backup";
+    if (s.indexOf("_lock") >= 0) return "lock";
+    if (s.indexOf("_v1") >= 0 && s.indexOf("_v2") < 0) return "legacy";
+    if (s.indexOf("audit") >= 0) return "audit";
+    if (s.indexOf("session") >= 0) return "session";
+    return "data";
+  }
+  function kindBadge(kind) {
+    if (kind === "backup") return '<span class="badge badge-w">پشتیبان</span>';
+    if (kind === "lock") return '<span class="badge badge-w">قفل</span>';
+    if (kind === "legacy") return '<span class="badge badge-b">قدیمی</span>';
+    if (kind === "audit") return '<span class="badge badge-ok">لاگ</span>';
+    return '<span class="badge badge-ok">داده</span>';
+  }
+
+  function showPanel(id) {
+    if (!id || !$(id)) return;
+    document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("on"); });
+    $(id).classList.add("on");
+    document.querySelectorAll(".side .sub button[data-panel]").forEach(function (b) {
+      b.classList.toggle("on", b.getAttribute("data-panel") === id);
+    });
+    document.querySelectorAll(".nav-item.open").forEach(function (x) { x.classList.remove("open"); });
+    if (id === "p-dash") renderDash();
+    if (id === "p-keys") renderKeyList();
+    if (id === "p-view" && selectedKey && $("viewKey")) $("viewKey").value = selectedKey;
+    if (id === "p-backup-sel") renderSelKeys();
+    if (id === "p-audit") renderAudit();
+    if (id === "p-cartable") renderCart();
+    if (id === "p-access") renderUsers();
+    if (id === "p-quota") renderQuota();
+    if (id === "p-rep-map") renderMap();
+    if (id === "p-rep-size") renderSizeRank();
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-panel]");
+    if (t && t.getAttribute("data-panel")) {
+      e.preventDefault();
+      showPanel(t.getAttribute("data-panel"));
+    }
+  });
+  document.querySelectorAll(".nav-item > .nb").forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      var item = btn.closest(".nav-item");
+      if (!item || !item.querySelector(".dd") || btn.getAttribute("data-panel")) return;
+      e.stopPropagation();
+      document.querySelectorAll(".nav-item.open").forEach(function (x) {
+        if (x !== item) x.classList.remove("open");
+      });
+      item.classList.toggle("open");
+    });
+  });
+  document.addEventListener("click", function () {
+    document.querySelectorAll(".nav-item.open").forEach(function (x) { x.classList.remove("open"); });
+  });
+  document.querySelectorAll(".side .block > .hd").forEach(function (hd) {
+    hd.addEventListener("click", function () {
+      var block = hd.closest(".block");
+      if (block) block.classList.toggle("open");
+    });
+  });
+
+  function renderDash() {
+    var list = scanKeys();
+    var total = 0;
+    list.forEach(function (x) { total += x.size; });
+    var backups = list.filter(function (x) { return x.kind === "backup"; }).length;
+    var legacy = list.filter(function (x) { return x.kind === "legacy"; }).length;
+    var mods = {};
+    list.forEach(function (x) { mods[x.module] = true; });
+    if ($("kpi")) {
+      $("kpi").innerHTML =
+        '<div class="box"><div class="n">' + toFa(list.length) + '</div><div class="l">کلید سوییت</div></div>' +
+        '<div class="box"><div class="n">' + formatSize(total) + '</div><div class="l">حجم تقریبی</div></div>' +
+        '<div class="box"><div class="n">' + toFa(Object.keys(mods).length) + '</div><div class="l">ماژول مرتبط</div></div>' +
+        '<div class="box"><div class="n">' + toFa(backups) + '</div><div class="l">کلید پشتیبان</div></div>' +
+        '<div class="box"><div class="n">' + toFa(legacy) + '</div><div class="l">نسخه قدیمی</div></div>' +
+        '<div class="box"><div class="n">' + esc(userRole()) + '</div><div class="l">نقش شما</div></div>';
+    }
+    var db = loadDB();
+    if ($("dashMeta")) {
+      $("dashMeta").textContent = "پایگاه داده‌ها v" + CURRENT_VERSION +
+        " · " + userName() +
+        " · " + ((db.updatedAt || "").slice(0, 16).replace("T", " ") || "—");
+    }
+    if ($("backupMeta")) {
+      $("backupMeta").textContent = "آماده پشتیبان · " + toFa(list.length) + " کلید · " + formatSize(total);
+    }
+    updateAlerts();
+  }
+
+  function renderKeyList() {
+    var list = scanKeys();
+    var q = (($("keyFilter") && $("keyFilter").value) || "").toLowerCase();
+    var sort = ($("keySort") && $("keySort").value) || "name";
+    var filtered = list.filter(function (x) {
+      return !q || x.key.toLowerCase().indexOf(q) >= 0 || x.module.toLowerCase().indexOf(q) >= 0;
+    });
+    if (sort === "size") {
+      filtered.sort(function (a, b) { return b.size - a.size; });
+    } else {
+      filtered.sort(function (a, b) { return a.key.localeCompare(b.key); });
+    }
+    var box = $("keyListBox");
+    if (!box) return;
+    if (!filtered.length) {
+      box.innerHTML = '<p class="empty">کلیدی یافت نشد</p>';
+    } else {
+      var html = "<table><thead><tr><th>کلید</th><th>ماژول</th><th>نوع</th><th>حجم</th></tr></thead><tbody>";
+      filtered.forEach(function (x) {
+        var sel = selectedKey === x.key ? " sel" : "";
+        html += '<tr class="list-item' + sel + '" data-k="' + esc(x.key) + '">' +
+          '<td class="num">' + esc(x.key) + "</td>" +
+          "<td>" + esc(x.module) + "</td>" +
+          "<td>" + kindBadge(x.kind) + "</td>" +
+          '<td class="num">' + formatSize(x.size) + "</td></tr>";
+      });
+      html += "</tbody></table>";
+      box.innerHTML = html;
+      box.querySelectorAll("[data-k]").forEach(function (tr) {
+        tr.onclick = function () {
+          selectedKey = tr.getAttribute("data-k");
+          if ($("viewKey")) $("viewKey").value = selectedKey;
+          if ($("delKey")) $("delKey").value = selectedKey;
+          renderKeyList();
+          toast("انتخاب شد: " + selectedKey);
+        };
+      });
+    }
+    if ($("keyListMeta")) {
+      $("keyListMeta").textContent = "نمایش " + toFa(filtered.length) + " از " + toFa(list.length) +
+        (selectedKey ? " · انتخاب: " + selectedKey : "");
+    }
+  }
+  if ($("btnScanKeys")) $("btnScanKeys").onclick = function () {
+    renderKeyList();
+    renderDash();
+    auditLog("scan", "keys");
+    toast("اسکن شد");
+  };
+  if ($("btnRefreshKeys")) $("btnRefreshKeys").onclick = function () { renderKeyList(); };
+  if ($("keyFilter")) $("keyFilter").oninput = function () { renderKeyList(); };
+  if ($("keySort")) $("keySort").onchange = function () { renderKeyList(); };
+
+  function viewSelected() {
+    var k = ($("viewKey") && $("viewKey").value.trim()) || selectedKey;
+    if (!k) { toast("کلیدی انتخاب نشده", true); return; }
+    if (!isSuiteKey(k)) { toast("کلید خارج از محدوده سوییت", true); return; }
+    var lim = parseInt(($("viewLimit") && $("viewLimit").value) || "8000", 10);
+    var raw = "";
+    try { raw = localStorage.getItem(k) || ""; } catch (e) { toast("خطا در خواندن", true); return; }
+    var pretty = raw;
+    try { pretty = JSON.stringify(JSON.parse(raw), null, 2); } catch (e) {}
+    var clipped = pretty.length > lim;
+    if (clipped) pretty = pretty.slice(0, lim) + "\n\n… [کوتاه‌شده — حجم کامل " + formatSize(raw.length) + "]";
+    if ($("viewDetail")) {
+      $("viewDetail").textContent = k + "\nحجم: " + formatSize(raw.length) + "\n\n" + pretty;
+    }
+    selectedKey = k;
+    auditLog("view", k);
+  }
+  if ($("btnViewKey")) $("btnViewKey").onclick = viewSelected;
+  if ($("btnCopyKey")) $("btnCopyKey").onclick = function () {
+    var t = ($("viewDetail") && $("viewDetail").textContent) || "";
+    if (!t || t === "—") { toast("محتوایی نیست", true); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(function () { toast("کپی شد"); }).catch(function () {
+        toast("کپی پشتیبانی نشد", true);
+      });
+    } else {
+      toast("کلیپ‌بورد در دسترس نیست", true);
+    }
+  };
+  if ($("btnExportOne")) $("btnExportOne").onclick = function () {
+    if (!canOperate()) { toast("نیاز به نقش اپراتور یا بالاتر", true); return; }
+    var k = ($("viewKey") && $("viewKey").value.trim()) || selectedKey;
+    if (!k || !isSuiteKey(k)) { toast("کلید نامعتبر", true); return; }
+    var raw = localStorage.getItem(k);
+    var payload = { module: MOD, type: "single-key", key: k, exported: now(), value: null };
+    try { payload.value = JSON.parse(raw); }
+    catch (e) { payload.value = raw; payload.raw = true; }
+    downloadJSON(payload, "key-" + k.replace(/[^\w.-]+/g, "_") + ".json");
+    auditLog("export-one", k);
+  };
+
+  if ($("btnSearchData")) $("btnSearchData").onclick = function () {
+    var q = (($("searchQ") && $("searchQ").value) || "").trim().toLowerCase();
+    var hint = (($("searchKeyHint") && $("searchKeyHint").value) || "").trim().toLowerCase();
+    if (!q) { toast("عبارت جستجو لازم است", true); return; }
+    var hits = [];
+    scanKeys().forEach(function (item) {
+      if (hint && item.key.toLowerCase().indexOf(hint) < 0) return;
+      var raw = "";
+      try { raw = localStorage.getItem(item.key) || ""; } catch (e) { return; }
+      if (raw.toLowerCase().indexOf(q) < 0) return;
+      var idx = raw.toLowerCase().indexOf(q);
+      var snip = raw.slice(Math.max(0, idx - 40), Math.min(raw.length, idx + 80));
+      hits.push({ key: item.key, size: item.size, snip: snip });
+    });
+    var box = $("searchResults");
+    if (!box) return;
+    if (!hits.length) {
+      box.innerHTML = '<p class="empty">نتیجه‌ای نیست</p>';
+      return;
+    }
+    box.innerHTML = hits.slice(0, 80).map(function (h) {
+      return '<div class="list-item" data-k="' + esc(h.key) + '"><b class="num">' + esc(h.key) +
+        "</b> · " + formatSize(h.size) + '<div class="note num">' + esc(h.snip) + "</div></div>";
+    }).join("");
+    box.querySelectorAll("[data-k]").forEach(function (el) {
+      el.onclick = function () {
+        selectedKey = el.getAttribute("data-k");
+        if ($("viewKey")) $("viewKey").value = selectedKey;
+        showPanel("p-view");
+        viewSelected();
+      };
+    });
+    auditLog("search", q);
+    toast(toFa(hits.length) + " نتیجه");
+  };
+
+  function collectSuiteDump(filterKeys) {
+    var dump = {
+      module: MOD,
+      type: "suite-global-backup",
+      version: CURRENT_VERSION,
+      exported: now(),
+      by: userName(),
+      keys: {}
+    };
+    var list = scanKeys();
+    list.forEach(function (item) {
+      if (filterKeys && !filterKeys[item.key]) return;
+      try {
+        var raw = localStorage.getItem(item.key);
+        try { dump.keys[item.key] = JSON.parse(raw); }
+        catch (e) { dump.keys[item.key] = raw; }
+      } catch (e) {}
+    });
+    return dump;
+  }
+  function downloadJSON(obj, name) {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" }));
+    a.download = name;
+    a.click();
+    toast("دانلود شد");
+  }
+  if ($("btnExportAll")) $("btnExportAll").onclick = function () {
+    if (!canOperate()) { toast("نیاز به نقش اپراتور یا بالاتر", true); return; }
+    var dump = collectSuiteDump(null);
+    downloadJSON(dump, "suite-data-full-" + Date.now() + ".json");
+    auditLog("export-full", Object.keys(dump.keys).length + " keys");
+  };
+  if ($("btnExportAllGdrive")) $("btnExportAllGdrive").onclick = function () {
+    if (!canOperate()) { toast("نیاز به نقش اپراتور یا بالاتر", true); return; }
+    var dump = collectSuiteDump(null);
+    downloadJSON(dump, "suite-data-gdrive-" + Date.now() + ".json");
+    auditLog("export-gdrive", Object.keys(dump.keys).length + " keys");
+    toast("فایل را در گوگل درایو آپلود کنید");
+  };
+
+  function doRestoreFile(file) {
+    if (!file) return;
+    if (!canAdmin()) { toast("بازیابی سراسری فقط برای مدیر داده", true); return; }
+    var merge = $("restoreMerge") && $("restoreMerge").checked;
+    var replace = $("restoreReplace") && $("restoreReplace").checked;
+    if (!merge && !replace) {
+      toast("یکی از حالت‌های ادغام یا جایگزینی را انتخاب کنید", true);
+      return;
+    }
+    if (merge && replace) {
+      toast("فقط یکی از دو حالت را انتخاب کنید", true);
+      return;
+    }
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var d = JSON.parse(r.result);
+        var keys = d.keys || d;
+        if (!keys || typeof keys !== "object") throw new Error("x");
+        if (!confirm("بازیابی انجام شود؟ این عمل حساس است.")) return;
+        var n = 0;
+        Object.keys(keys).forEach(function (k) {
+          if (!isSuiteKey(k)) return;
+          if (merge && localStorage.getItem(k) != null) {
+            /* keep existing unless we still write — merge writes only missing? 
+               Spec: merge = write file keys (overwrite those keys), keep others.
+               replace = same for keys in file. For global, both overwrite keys present in file.
+               Difference: replace could mean wipe suite keys not in file — dangerous.
+               Implement: both overwrite keys present in file; replace additionally removes suite keys absent from file only if confirmed. */
+          }
+          var val = keys[k];
+          localStorage.setItem(k, typeof val === "string" ? val : JSON.stringify(val));
+          n++;
+        });
+        if (replace) {
+          var fileSet = {};
+          Object.keys(keys).forEach(function (k) { if (isSuiteKey(k)) fileSet[k] = true; });
+          if (confirm("حالت جایگزینی: کلیدهای سوییت که در فایل نیستند حذف شوند؟")) {
+            scanKeys().forEach(function (item) {
+              if (!fileSet[item.key] && item.key !== KEY) {
+                try { localStorage.removeItem(item.key); } catch (e) {}
+              }
+            });
+          }
+        }
+        auditLog("restore-global", file.name + " · " + n);
+        renderDash();
+        renderKeyList();
+        toast("بازیابی شد · " + toFa(n) + " کلید");
+      } catch (e) {
+        toast("فایل نامعتبر", true);
+      }
+    };
+    r.readAsText(file);
+  }
+  if ($("btnRestorePick")) $("btnRestorePick").onclick = function () {
+    if ($("restoreFile")) $("restoreFile").click();
+  };
+  if ($("btnRestoreGdrivePick")) $("btnRestoreGdrivePick").onclick = function () {
+    if ($("restoreGdriveFile")) $("restoreGdriveFile").click();
+  };
+  if ($("restoreFile")) $("restoreFile").onchange = function (e) { doRestoreFile(e.target.files[0]); };
+  if ($("restoreGdriveFile")) $("restoreGdriveFile").onchange = function (e) { doRestoreFile(e.target.files[0]); };
+
+  function renderSelKeys() {
+    var list = scanKeys();
+    var box = $("selKeyBox");
+    if (!box) return;
+    box.innerHTML = list.map(function (x) {
+      var checked = selectedSet[x.key] ? " checked" : "";
+      return '<label class="chk"><input type="checkbox" class="sel-key" data-k="' + esc(x.key) + '"' + checked + "> " +
+        '<span class="num">' + esc(x.key) + "</span> · " + formatSize(x.size) + "</label>";
+    }).join("") || '<p class="empty">—</p>';
+    box.querySelectorAll(".sel-key").forEach(function (chk) {
+      chk.onchange = function () {
+        var k = chk.getAttribute("data-k");
+        if (chk.checked) selectedSet[k] = true;
+        else delete selectedSet[k];
+      };
+    });
+  }
+  if ($("btnLoadSelKeys")) $("btnLoadSelKeys").onclick = function () { renderSelKeys(); toast("فهرست بارگذاری شد"); };
+  if ($("btnExportSelected")) $("btnExportSelected").onclick = function () {
+    if (!canOperate()) { toast("نیاز به نقش اپراتور یا بالاتر", true); return; }
+    var keys = Object.keys(selectedSet);
+    if (!keys.length) { toast("کلیدی انتخاب نشده", true); return; }
+    var filter = {};
+    keys.forEach(function (k) { filter[k] = true; });
+    var dump = collectSuiteDump(filter);
+    downloadJSON(dump, "suite-data-selected-" + Date.now() + ".json");
+    auditLog("export-selected", keys.length + " keys");
+  };
+
+  if ($("btnUseSelectedDel")) $("btnUseSelectedDel").onclick = function () {
+    if (selectedKey && $("delKey")) $("delKey").value = selectedKey;
+  };
+  if ($("btnDeleteKey")) $("btnDeleteKey").onclick = function () {
+    if (!canAdmin()) { toast("حذف فقط برای مدیر داده", true); return; }
+    var k = ($("delKey") && $("delKey").value.trim()) || "";
+    var conf = ($("delConfirm") && $("delConfirm").value.trim()) || "";
+    if (!k || !isSuiteKey(k)) { toast("کلید نامعتبر", true); return; }
+    if (conf !== "DELETE") { toast("برای تأیید DELETE را تایپ کنید", true); return; }
+    if (k === KEY && !confirm("حذف کلید خود ماژول پایگاه داده؟")) return;
+    if (!confirm("حذف قطعی «" + k + "»؟")) return;
+    try {
+      localStorage.removeItem(k);
+      if (selectedKey === k) selectedKey = "";
+      if ($("delConfirm")) $("delConfirm").value = "";
+      auditLog("delete-key", k);
+      renderKeyList();
+      renderDash();
+      toast("حذف شد");
+    } catch (e) {
+      toast("خطا در حذف", true);
+    }
+  };
+
+  if ($("btnFindOrphans")) $("btnFindOrphans").onclick = function () {
+    var list = scanKeys().filter(function (x) {
+      return x.kind === "backup" || x.kind === "legacy" || x.kind === "lock";
+    });
+    var box = $("orphanBox");
+    if (!box) return;
+    if (!list.length) {
+      box.innerHTML = '<p class="empty">مورد پیشنهادی نیست</p>';
+      return;
+    }
+    box.innerHTML = "<table><thead><tr><th>کلید</th><th>نوع</th><th>حجم</th><th></th></tr></thead><tbody>" +
+      list.map(function (x) {
+        return "<tr><td class='num'>" + esc(x.key) + "</td><td>" + kindBadge(x.kind) +
+          "</td><td class='num'>" + formatSize(x.size) +
+          "</td><td><button type='button' class='btn btn-g btn-pick' data-k='" + esc(x.key) + "'>انتخاب</button></td></tr>";
+      }).join("") + "</tbody></table>";
+    box.querySelectorAll(".btn-pick").forEach(function (b) {
+      b.onclick = function () {
+        selectedKey = b.getAttribute("data-k");
+        if ($("delKey")) $("delKey").value = selectedKey;
+        showPanel("p-clean");
+      };
+    });
+    auditLog("orphan-scan", list.length);
+  };
+
+  function renderQuota() {
+    var list = scanKeys();
+    var used = 0;
+    list.forEach(function (x) { used += x.size; });
+    var estimate = "نامشخص";
+    if (navigator.storage && navigator.storage.estimate) {
+      navigator.storage.estimate().then(function (est) {
+        var u = est.usage || 0, q = est.quota || 0;
+        if ($("quotaKpi")) {
+          $("quotaKpi").innerHTML =
+            '<div class="box"><div class="n">' + formatSize(used) + '</div><div class="l">کلیدهای سوییت</div></div>' +
+            '<div class="box"><div class="n">' + formatSize(u) + '</div><div class="l">مصرف storage</div></div>' +
+            '<div class="box"><div class="n">' + formatSize(q) + '</div><div class="l">سهمیه تقریبی</div></div>' +
+            '<div class="box"><div class="n">' + toFa(list.length) + '</div><div class="l">تعداد کلید</div></div>';
+        }
+        if ($("quotaMeta")) {
+          $("quotaMeta").textContent = q ? ("حدود " + ((u / q) * 100).toFixed(1) + "٪ از سهمیه") : "—";
+        }
+      }).catch(function () {
+        if ($("quotaKpi")) {
+          $("quotaKpi").innerHTML =
+            '<div class="box"><div class="n">' + formatSize(used) + '</div><div class="l">کلیدهای سوییت</div></div>' +
+            '<div class="box"><div class="n">' + toFa(list.length) + '</div><div class="l">تعداد کلید</div></div>';
+        }
+        if ($("quotaMeta")) $("quotaMeta").textContent = estimate;
+      });
+    } else {
+      if ($("quotaKpi")) {
+        $("quotaKpi").innerHTML =
+          '<div class="box"><div class="n">' + formatSize(used) + '</div><div class="l">کلیدهای سوییت</div></div>' +
+          '<div class="box"><div class="n">' + toFa(list.length) + '</div><div class="l">تعداد کلید</div></div>';
+      }
+      if ($("quotaMeta")) $("quotaMeta").textContent = "API سهمیه در این مرورگر در دسترس نیست";
+    }
+  }
+  if ($("btnQuota")) $("btnQuota").onclick = function () { renderQuota(); toast("بروزرسانی شد"); };
+
+  function renderMap() {
+    var list = scanKeys();
+    var map = {};
+    list.forEach(function (x) {
+      if (!map[x.module]) map[x.module] = { count: 0, size: 0, keys: [] };
+      map[x.module].count++;
+      map[x.module].size += x.size;
+      map[x.module].keys.push(x.key);
+    });
+    var box = $("mapBox");
+    if (!box) return;
+    var html = "<table><thead><tr><th>ماژول</th><th>تعداد کلید</th><th>حجم</th></tr></thead><tbody>";
+    Object.keys(map).sort().forEach(function (m) {
+      html += "<tr><td>" + esc(m) + "</td><td>" + toFa(map[m].count) +
+        "</td><td class='num'>" + formatSize(map[m].size) + "</td></tr>";
+    });
+    html += "</tbody></table>";
+    box.innerHTML = html;
+  }
+  if ($("btnMap")) $("btnMap").onclick = function () { renderMap(); };
+
+  function renderSizeRank() {
+    var list = scanKeys().slice().sort(function (a, b) { return b.size - a.size; });
+    var box = $("sizeBox");
+    if (!box) return;
+    box.innerHTML = "<table><thead><tr><th>#</th><th>کلید</th><th>حجم</th></tr></thead><tbody>" +
+      list.slice(0, 50).map(function (x, i) {
+        return "<tr><td>" + toFa(i + 1) + "</td><td class='num'>" + esc(x.key) +
+          "</td><td class='num'>" + formatSize(x.size) + "</td></tr>";
+      }).join("") + "</tbody></table>";
+  }
+  if ($("btnSizeRank")) $("btnSizeRank").onclick = function () { renderSizeRank(); };
+
+  function renderAudit() {
+    if (!$("auditList")) return;
+    var list = loadDB().audit || [];
+    $("auditList").innerHTML = list.slice(0, 120).map(function (a) {
+      return '<div class="list-item">' + esc((a.t || "").slice(0, 19).replace("T", " ")) +
+        " | " + esc(a.user || "") + " | " + esc(a.action) + " | " + esc(a.detail || "") + "</div>";
+    }).join("") || '<p class="empty">لاگی نیست</p>';
+  }
+  if ($("btnClearAudit")) $("btnClearAudit").onclick = function () {
+    if (!canAdmin()) { toast("فقط مدیر داده", true); return; }
+    if (!confirm("لاگ این ماژول پاک شود؟")) return;
+    var db = loadDB();
+    db.audit = [];
+    saveDB(db);
+    renderAudit();
+    toast("لاگ پاک شد");
+  };
+
+  function renderNotes() {
+    if (!$("notesList")) return;
+    var n = loadJSON(NOTES_KEY, []).filter(function (x) { return !x.deleted; });
+    $("notesList").innerHTML = n.map(function (x, i) {
+      return '<div class="list-item" data-i="' + i + '">' + esc(x.text) + "</div>";
+    }).join("") || '<p class="empty">—</p>';
+    $("notesList").querySelectorAll("[data-i]").forEach(function (el) {
+      el.onclick = function () {
+        selNote = +el.getAttribute("data-i");
+        var all = loadJSON(NOTES_KEY, []).filter(function (x) { return !x.deleted; });
+        $("noteText").value = (all[selNote] && all[selNote].text) || "";
+      };
+    });
+  }
+  function renderRems() {
+    if (!$("remsList")) return;
+    var n = loadJSON(REMS_KEY, []).filter(function (x) { return !x.deleted; });
+    $("remsList").innerHTML = n.map(function (x) {
+      return '<div class="list-item">' + esc(x.text) + " — " + esc(x.date || "") + "</div>";
+    }).join("") || '<p class="empty">—</p>';
+  }
+  if ($("btnNoteSave")) $("btnNoteSave").onclick = function () {
+    var t = $("noteText").value.trim();
+    if (!t) return;
+    var n = loadJSON(NOTES_KEY, []);
+    var active = n.filter(function (x) { return !x.deleted; });
+    if (selNote >= 0 && active[selNote]) {
+      var id = active[selNote].id;
+      n.forEach(function (x) { if (x.id === id) x.text = t; });
+    } else {
+      n.unshift({ id: uid(), text: t, at: now(), deleted: false });
+    }
+    saveJSON(NOTES_KEY, n);
+    selNote = -1;
+    $("noteText").value = "";
+    renderNotes();
+    updateAlerts();
+  };
+  if ($("btnNoteDel")) $("btnNoteDel").onclick = function () {
+    if (selNote < 0) return;
+    var n = loadJSON(NOTES_KEY, []);
+    var active = n.filter(function (x) { return !x.deleted; });
+    if (!active[selNote]) return;
+    var id = active[selNote].id;
+    n.forEach(function (x) {
+      if (x.id === id) { x.deleted = true; x.deletedAt = now(); }
+    });
+    saveJSON(NOTES_KEY, n);
+    selNote = -1;
+    $("noteText").value = "";
+    renderNotes();
+    updateAlerts();
+  };
+  if ($("btnRemAdd")) $("btnRemAdd").onclick = function () {
+    var t = $("remText").value.trim(), d = $("remDate").value;
+    if (!t) return;
+    var n = loadJSON(REMS_KEY, []);
+    n.unshift({ id: uid(), text: t, date: d || todayJ(), status: "new", deleted: false });
+    saveJSON(REMS_KEY, n);
+    $("remText").value = "";
+    renderRems();
+    updateAlerts();
+  };
+
+  function getCartAll() {
+    try { return JSON.parse(localStorage.getItem(CART_KEY) || "[]") || []; }
+    catch (e) { return []; }
+  }
+  function saveCartAll(list) {
+    try { localStorage.setItem(CART_KEY, JSON.stringify(list)); return true; }
+    catch (e) { toast("خطا در کارتابل", true); return false; }
+  }
+  function renderCart() {
+    var all = getCartAll();
+    var mine = all.filter(function (x) { return x.to === MOD || x.to === "database"; });
+    var open = mine.filter(function (x) { return x.status !== "done"; });
+    var box = $("cartList");
+    if (!box) return;
+    box.innerHTML = open.map(function (x) {
+      return '<div class="list-item"><b>' + esc(x.title || "") + "</b><br>" +
+        esc(x.body || x.msg || "") +
+        '<br><button type="button" class="btn btn-ok btn-done" data-cid="' + esc(x.id) + '">انجام شد</button></div>';
+    }).join("") || '<p class="empty">خالی</p>';
+    box.querySelectorAll(".btn-done").forEach(function (btn) {
+      btn.onclick = function () {
+        var all2 = getCartAll();
+        all2.forEach(function (x) {
+          if (x.id === btn.getAttribute("data-cid")) x.status = "done";
+        });
+        saveCartAll(all2);
+        renderCart();
+        updateAlerts();
+      };
+    });
+  }
+  if ($("btnCartSend")) $("btnCartSend").onclick = function () {
+    var to = $("cartTo") ? $("cartTo").value : "suite";
+    var title = $("cartTitle") ? $("cartTitle").value.trim() : "";
+    var body = $("cartMsg") ? $("cartMsg").value.trim() : "";
+    if (!title && !body) { toast("عنوان یا متن لازم است", true); return; }
+    var all = getCartAll();
+    all.unshift({
+      id: uid(), from: MOD, fromLabel: "پایگاه داده‌ها · " + userName(),
+      to: to, title: title || "پیام", body: body, status: "new",
+      at: new Date().toLocaleString("fa-IR"), version: 1
+    });
+    saveCartAll(all);
+    if ($("cartTitle")) $("cartTitle").value = "";
+    if ($("cartMsg")) $("cartMsg").value = "";
+    auditLog("cart-send", to);
+    toast("ارسال شد");
+    renderCart();
+    updateAlerts();
+  };
+  if ($("btnCartRefresh")) $("btnCartRefresh").onclick = function () {
+    renderCart();
+    updateAlerts();
+  };
+
+  function updateAlerts() {
+    if ($("aNotes")) {
+      $("aNotes").textContent = String(
+        (loadJSON(NOTES_KEY, []) || []).filter(function (x) { return !x.deleted; }).length
+      );
+    }
+    if ($("aRems")) {
+      $("aRems").textContent = String(
+        (loadJSON(REMS_KEY, []) || []).filter(function (x) { return !x.deleted && x.status !== "done"; }).length
+      );
+    }
+    if ($("aCart")) {
+      $("aCart").textContent = String(
+        getCartAll().filter(function (x) {
+          return (x.to === MOD || x.to === "database") && x.status !== "done";
+        }).length
+      );
+    }
+  }
+
+  function renderUsers() {
+    if (!$("usersList")) return;
+    var a = getAuth();
+    $("usersList").innerHTML = (a.users || []).map(function (u) {
+      return '<div class="list-item"><b>' + esc(u.user) + "</b> — " + esc(u.name || "") +
+        " (" + esc(u.role || "viewer") + ")</div>";
+    }).join("");
+  }
+  if ($("btnAddUser")) $("btnAddUser").onclick = function () {
+    if (!canAdmin()) { toast("فقط مدیر داده", true); return; }
+    var u = $("nuUser").value.trim(), p = $("nuPass").value, n = $("nuName").value.trim();
+    if (!u || !p) { toast("یوزر و رمز لازم است", true); return; }
+    if (p.length < 4) { toast("رمز حداقل ۴ کاراکتر", true); return; }
+    var a = getAuth();
+    a.users = a.users || [];
+    if (a.users.some(function (x) { return x.user === u; })) {
+      toast("نام کاربری تکراری", true);
+      return;
+    }
+    a.users.push({ user: u, pass: p, name: n || u, role: $("nuRole").value });
+    saveAuth(a);
+    auditLog("user-add", u);
+    toast("کاربر ایجاد شد");
+    $("nuUser").value = "";
+    $("nuPass").value = "";
+    $("nuName").value = "";
+    renderUsers();
+  };
+
+  if ($("btnBackupLocal")) $("btnBackupLocal").onclick = function () {
+    downloadJSON({
+      module: MOD, type: "module-self", version: CURRENT_VERSION,
+      data: loadDB(), notes: loadJSON(NOTES_KEY, []), rems: loadJSON(REMS_KEY, []),
+      users: getAuth().users, exported: now()
+    }, MOD + "-self-backup.json");
+    auditLog("backup-self", "");
+  };
+  if ($("btnRestoreLocal")) $("btnRestoreLocal").onclick = function () {
+    if ($("modRestoreFile")) $("modRestoreFile").click();
+  };
+  if ($("modRestoreFile")) $("modRestoreFile").onchange = function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var d = JSON.parse(r.result);
+        if (d.data) saveDB(migrateDB(d.data));
+        if (d.notes) saveJSON(NOTES_KEY, d.notes);
+        if (d.rems) saveJSON(REMS_KEY, d.rems);
+        if (d.users) {
+          var a = getAuth();
+          a.users = d.users;
+          saveAuth(a);
+        }
+        auditLog("restore-self", f.name);
+        toast("بازیابی ماژول انجام شد");
+        renderDash();
+      } catch (err) {
+        toast("فایل نامعتبر", true);
+      }
+    };
+    r.readAsText(f);
+  };
+  if ($("btnRestoreEmergency")) $("btnRestoreEmergency").onclick = function () {
+    if (restoreFromBackup()) {
+      renderDash();
+      renderAudit();
+    }
+  };
+
+  if ($("btnExit")) $("btnExit").onclick = function () {
+    location.href = "suite.html";
+  };
+
+  (function () {
+    var btn = $("btnMic");
+    if (!btn) return;
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return;
+    var rec = new SR(), on = false;
+    rec.lang = "fa-IR";
+    rec.continuous = true;
+    rec.interimResults = false;
+    rec.onresult = function (ev) {
+      for (var i = ev.resultIndex; i < ev.results.length; i++) {
+        if (!ev.results[i].isFinal) continue;
+        var a = document.activeElement;
+        if (a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA")) {
+          var t = ev.results[i][0].transcript;
+          var s = a.selectionStart || 0, e2 = a.selectionEnd || 0;
+          a.value = a.value.slice(0, s) + t + a.value.slice(e2);
+          a.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+      }
+    };
+    rec.onend = function () { if (on) try { rec.start(); } catch (e) {} };
+    btn.onclick = function () {
+      if (on) {
+        on = false;
+        try { rec.stop(); } catch (e) {}
+        btn.classList.remove("on");
+      } else {
+        on = true;
+        try { rec.start(); } catch (e) {}
+        btn.classList.add("on");
+      }
+    };
+  })();
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") showPanel("p-dash");
+  });
+
+  onDataChange(function () {
+    var active = document.querySelector(".panel.on");
+    if (!active) return;
+    if (active.id === "p-dash") renderDash();
+    if (active.id === "p-audit") renderAudit();
+    if (active.id === "p-cartable") renderCart();
+  });
+
+  ensureLogin(function () {
+    if ($("activeUser")) {
+      $("activeUser").textContent = "کاربر فعال: " + userName() + " (" + userRole() + ")";
+    }
+    if ($("remDate") && !$("remDate").value) $("remDate").value = todayJ();
+    renderDash();
+    renderNotes();
+    renderRems();
+    renderCart();
+    showPanel("p-dash");
+  });
+})();
+</script>
+</body>
+</html>

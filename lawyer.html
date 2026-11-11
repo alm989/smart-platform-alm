@@ -15,7 +15,7 @@ body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);col
 .nav-item{position:relative}
 .nav-item>.nb{background:#1e293b;border:1px solid var(--line);color:#cbd5e1;border-radius:999px;padding:7px 11px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit}
 .nav-item:hover>.nb,.nb.on{background:var(--pri);color:#fff;border-color:var(--pri)}
-.nav-item .dd{display:none;position:absolute;top:calc(100% + 4px);right:0;min-width:200px;background:#1e293b;border:1px solid var(--line);border-radius:12px;padding:6px;z-index:120;box-shadow:0 12px 28px rgba(0,0,0,.5)}
+.nav-item .dd{display:none;position:absolute;top:calc(100% + 4px);right:0;min-width:220px;background:#1e293b;border:1px solid var(--line);border-radius:12px;padding:6px;z-index:120;box-shadow:0 12px 28px rgba(0,0,0,.5);max-height:70vh;overflow:auto}
 .nav-item:hover .dd{display:block}
 .nav-item .dd button{display:block;width:100%;text-align:right;background:transparent;border:none;color:var(--txt);padding:8px 11px;border-radius:8px;font-size:.72rem;cursor:pointer;font-family:inherit}
 .nav-item .dd button:hover{background:rgba(14,165,233,.25)}
@@ -25,8 +25,8 @@ body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);col
 .clock div{font-size:11px;font-weight:700;line-height:1.35}
 .clock .j{color:#7dd3fc}.clock .g{color:#94a3b8;direction:ltr;unicode-bidi:isolate;font-size:10px}
 .clock .c{color:#86efac}.clock .u{color:#fde68a;font-size:10px}
-.body-row{display:flex;flex:1;min-height:0;flex-direction:row;direction:ltr}
-.main{flex:1;padding:12px;overflow:auto;min-width:0;direction:rtl}
+.body-row{display:flex;flex:1;min-height:0;height:calc(100vh - 70px);overflow:hidden;flex-direction:row;direction:ltr}
+.main{flex:1;padding:12px;overflow:auto;min-width:0;direction:rtl;height:100%}
 .side{width:280px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--line);padding:8px;display:flex;flex-direction:column;overflow:auto;direction:rtl}
 @media(max-width:960px){.side{display:none}}
 .side .block{margin-bottom:6px;border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden}
@@ -37,29 +37,29 @@ body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:var(--bg);col
 .side .sub button:hover,.side .sub button.on{background:rgba(14,165,233,.2);color:#fff}
 .alerts{margin-top:auto;padding-top:6px;border-top:1px solid var(--line)}
 .alert{display:flex;justify-content:space-between;width:100%;padding:7px 9px;margin-bottom:4px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:.68rem;font-weight:700;cursor:pointer;font-family:inherit}
-.alert .n{background:var(--pri);color:#fff;border-radius:999px;padding:1px 6px;font-size:.62rem}
+.alert .n{background:var(--pri);color:#fff;border-radius:999px;padding:1px 6px;font-size:.62rem;min-width:18px;text-align:center}
 .panel{display:none!important}.panel.on{display:block!important}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;position:relative}
 .card h2{font-size:.88rem;color:#7dd3fc;margin-bottom:8px}.card.has-exit h2{padding-left:80px}
 .btn-form-exit{position:absolute;top:10px;left:10px;background:#334155;color:#e2e8f0;border:none;border-radius:8px;padding:5px 10px;font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit}
 label{display:block;font-size:.68rem;color:var(--muted);margin:5px 0 2px}
 input,select,textarea{width:100%;padding:7px;border-radius:9px;border:1px solid var(--line);background:#020617;color:var(--txt);font-family:inherit;font-size:12.5px}
+textarea{min-height:72px;resize:vertical}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
 @media(max-width:700px){.row,.row3{grid-template-columns:1fr}}
 .btn{border:none;border-radius:9px;padding:7px 12px;font-weight:700;font-size:.72rem;cursor:pointer;font-family:inherit;margin:2px}
-.btn-p{background:var(--pri);color:#fff}.btn-g{background:#334155;color:#e2e8f0}.btn-b{background:#7f1d1d;color:#fecaca}.btn-ok{background:#166534;color:#bbf7d0}
+.btn-p{background:var(--pri);color:#fff}.btn-g{background:#334155;color:#e2e8f0}.btn-b{background:#7f1d1d;color:#fecaca}.btn-ok{background:#166534;color:#bbf7d0}.btn-print{background:#0ea5e9;color:#fff}
 .kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:7px;margin-bottom:10px}
 .kpi .box{background:#0f172a;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
 .kpi .n{font-size:1.05rem;font-weight:800;color:#7dd3fc}.kpi .l{font-size:.6rem;color:var(--muted)}
-table{width:100%;border-collapse:collapse;font-size:.7rem}
-th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{color:#7dd3fc;font-size:.62rem}
 .empty{color:var(--muted);font-size:.78rem;text-align:center;padding:16px}
 .toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:9px 12px;border-radius:12px;font-weight:700;opacity:0;z-index:200;transition:.15s;font-size:.8rem}
 .toast.show{opacity:1}.toast.err{background:var(--bad)}
-.list-box{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:5px;margin:7px 0;background:#0f172a}
-.list-item{padding:7px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:8px;font-size:.74rem}
+.list-box{max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:5px;margin:7px 0;background:#0f172a}
+.list-item{padding:8px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:8px;font-size:.74rem;margin-bottom:3px}
 .list-item.sel{background:rgba(14,165,233,.2);border:1px solid #0ea5e9}
+.list-item.deleted{opacity:.7;border-right:3px solid var(--bad)}
 .login-mask{position:fixed;inset:0;background:rgba(2,6,23,.95);z-index:300;display:flex;align-items:center;justify-content:center}
 .login-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;width:min(320px,92vw)}
 .date-wrap{position:relative}
@@ -71,156 +71,647 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
 .jcal-w span{text-align:center;font-size:.52rem;color:var(--muted)}
 .jcal-d button{border:none;background:transparent;color:#fff;border-radius:6px;padding:2px;cursor:pointer;font-family:inherit;min-height:34px;width:100%}
 .jcal-d button .jd{display:block;font-size:.7rem;font-weight:700}.jcal-d button .gd{display:block;font-size:.4rem;color:var(--muted)}
-.split{display:grid;grid-template-columns:1fr 1.05fr;gap:10px}@media(max-width:900px){.split{grid-template-columns:1fr}}
-.form-actions{margin-top:8px}
+.form-actions{margin-top:8px;display:flex;flex-wrap:wrap;gap:4px}
+.note-box{font-size:.72rem;color:var(--muted);margin:6px 0;line-height:1.7;background:#0f172a;border:1px solid var(--line);border-radius:10px;padding:10px}
+.show-deleted-bar{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.75rem}
+.shortcut-hint{font-size:.65rem;color:var(--muted);margin-top:6px}
+.template-bar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
 </style>
 </head>
 <body>
 <header class="header">
   <div class="brand"><div class="logo">⚖️</div><b>وکیل هوشمند</b></div>
   <nav class="nav">
-    <button type="button" class="mic" id="btnMic">🎤</button>
-    <div class="nav-item"><button type="button" class="nb on" data-panel="p-dash">داشبورد</button>
-      <div class="dd"><button type="button" data-panel="p-dash">نمای کلی</button></div></div>
+    <button type="button" class="mic" id="btnMic" title="تایپ صوتی (Ctrl+M)">🎤</button>
+    <div class="nav-item"><button type="button" class="nb on" data-panel="p-dash">داشبورد</button><div class="dd"><button type="button" data-panel="p-dash">نمای کلی</button></div></div>
     <div class="nav-item"><button type="button" class="nb">ثبت</button>
-      <div class="dd"><button type="button" data-panel="p-case">پرونده حقوقی</button><button type="button" data-panel="p-cact">اقدام قضایی</button></div></div>
+      <div class="dd">
+        <button type="button" data-panel="p-case">پرونده حقوقی</button>
+        <button type="button" data-panel="p-cact">اقدام قضایی</button>
+        <button type="button" data-panel="p-consult">مشاوره حقوقی</button>
+        <button type="button" data-panel="p-petition">تهیه دادخواست</button>
+        <button type="button" data-panel="p-defense">لایحه دفاعیه</button>
+        <button type="button" data-panel="p-poa">وکالتنامه</button>
+        <button type="button" data-panel="p-hearing">جلسه / ابلاغ</button>
+        <button type="button" data-panel="p-cost">هزینه دادرسی</button>
+      </div></div>
     <div class="nav-item"><button type="button" class="nb">فهرست</button>
-      <div class="dd"><button type="button" data-panel="p-list-0">فهرست پرونده‌ها</button><button type="button" data-panel="p-list-1">اقدامات</button></div></div>
+      <div class="dd">
+        <button type="button" data-panel="p-list-case">پرونده‌ها</button>
+        <button type="button" data-panel="p-list-cact">اقدامات</button>
+        <button type="button" data-panel="p-list-consult">مشاوره‌ها</button>
+        <button type="button" data-panel="p-list-petition">دادخواست‌ها</button>
+        <button type="button" data-panel="p-list-defense">لوایح</button>
+        <button type="button" data-panel="p-list-poa">وکالتنامه‌ها</button>
+        <button type="button" data-panel="p-list-hearing">جلسات</button>
+        <button type="button" data-panel="p-list-cost">هزینه‌ها</button>
+      </div></div>
     <div class="nav-item"><button type="button" class="nb">گزارش</button>
-      <div class="dd"><button type="button" data-panel="p-rep-0">گزارش پرونده‌های باز</button><button type="button" data-panel="p-rep-1">مهلت‌های نزدیک</button></div></div>
+      <div class="dd">
+        <button type="button" data-panel="p-rep-open">پرونده‌های باز</button>
+        <button type="button" data-panel="p-rep-deadline">مهلت‌های نزدیک</button>
+        <button type="button" data-panel="p-rep-stage">مراحل قضایی</button>
+        <button type="button" data-panel="p-rep-topic">آمار موضوعی</button>
+        <button type="button" data-panel="p-rep-cost">هزینه‌ها</button>
+      </div></div>
     <div class="nav-item"><button type="button" class="nb">امکانات</button>
       <div class="dd">
         <button type="button" data-panel="p-cal">تقویم شمسی</button>
+        <button type="button" data-panel="p-guide">راهنمای مراحل</button>
+        <button type="button" data-panel="p-laws">راهنمای قوانین</button>
         <button type="button" data-panel="p-notes">یادداشت</button>
         <button type="button" data-panel="p-rems">یادآوری</button>
         <button type="button" data-panel="p-cartable">کارتابل</button>
+        <button type="button" data-panel="p-audit">لاگ تغییرات</button>
       </div></div>
     <div class="nav-item"><button type="button" class="nb">تنظیمات</button>
       <div class="dd">
-        <button type="button" data-panel="p-backup">پشتیبان و بازیابی</button>
-        <button type="button" data-panel="p-users">ایجاد کاربر جدید</button>
+        <button type="button" data-panel="p-backup">پشتیبان</button>
+        <button type="button" data-panel="p-users">کاربران</button>
       </div></div>
     <button type="button" class="exit-top" id="btnExit">خروج</button>
   </nav>
-  <div class="clock"><div class="j" id="dtJ">—</div><div class="g" id="dtG">—</div><div class="c" id="dtC">—</div><div class="u" id="activeUser">کاربر فعال: —</div></div>
+  <div class="clock">
+    <div class="j" id="dtJ">—</div>
+    <div class="g" id="dtG">—</div>
+    <div class="c" id="dtC">—</div>
+    <div class="u" id="activeUser">کاربر فعال: —</div>
+  </div>
 </header>
+
 <div class="body-row">
 <main class="main">
-  <div class="panel on" id="p-dash"><div class="kpi" id="kpi"></div><div class="card"><h2>داشبورد وکیل هوشمند</h2><p class="empty" id="dashMeta">—</p></div></div>
-  
-  <div class="panel" id="p-case"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>پرونده حقوقی</h2>
-    <div class="row"><div><label>شماره</label><input data-f="شماره" class=""></div><div><label>عنوان</label><input data-f="عنوان" class=""></div></div><div class="row"><div><label>طرف دعوا</label><input data-f="طرف دعوا" class=""></div><div><label>مرجع</label><input data-f="مرجع" class=""></div></div><div class="row"><div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div><div><label>وضعیت</label><input data-f="وضعیت" class=""></div></div><div><label>شرح</label><input data-f="شرح" class=""></div>
-    <div class="form-actions">
-      <button type="button" class="btn btn-p btn-save-form" data-store="case" data-title="پرونده حقوقی">ثبت</button>
-      <button type="button" class="btn btn-ok btn-save-form-new" data-store="case" data-title="پرونده حقوقی">ثبت و جدید</button>
+<!-- داشبورد -->
+  <div class="panel on" id="p-dash">
+    <div class="kpi" id="kpi"></div>
+    <div class="card">
+      <h2>داشبورد وکیل هوشمند</h2>
+      <p class="empty" id="dashMeta">—</p>
+      <div class="note-box">
+        ثبت و پیگیری پرونده · دادخواست · لایحه · مشاوره · جلسه · هزینه<br>
+        <span class="shortcut-hint">میانبرها: Ctrl+S ذخیره | Ctrl+N جدید | Ctrl+M میکروفون | Esc داشبورد | Ctrl+1 تا Ctrl+8 پنل‌های اصلی</span>
+      </div>
     </div>
-  </div></div>
-  <div class="panel" id="p-cact"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>اقدام قضایی</h2>
-    <div class="row"><div><label>پرونده</label><input data-f="پرونده" class=""></div><div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div></div><div class="row"><div><label>اقدام</label><input data-f="اقدام" class=""></div><div><label>نتیجه</label><input data-f="نتیجه" class=""></div></div><div><label>مهلت بعدی</label><input data-f="مهلت بعدی" class=""></div>
-    <div class="form-actions">
-      <button type="button" class="btn btn-p btn-save-form" data-store="cact" data-title="اقدام قضایی">ثبت</button>
-      <button type="button" class="btn btn-ok btn-save-form-new" data-store="cact" data-title="اقدام قضایی">ثبت و جدید</button>
+  </div>
+
+  <!-- فرم پرونده -->
+  <div class="panel" id="p-case">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>پرونده حقوقی</h2>
+      <div class="row3">
+        <div><label>شماره پرونده</label><input data-f="شماره پرونده"></div>
+        <div><label>بایگانی داخلی</label><input data-f="بایگانی داخلی"></div>
+        <div><label>تاریخ تشکیل</label><input data-f="تاریخ تشکیل" class="jdate"></div>
+      </div>
+      <div class="row">
+        <div><label>عنوان</label><input data-f="عنوان"></div>
+        <div><label>نوع دعوا</label>
+          <select data-f="نوع دعوا">
+            <option>حقوقی</option><option>کیفری</option><option>خانواده</option><option>ثبتی</option>
+            <option>اداری / دیوان</option><option>تجاری</option><option>کار</option><option>سایر</option>
+          </select>
+        </div>
+      </div>
+      <div class="row3">
+        <div><label>خواهان</label><input data-f="خواهان"></div>
+        <div><label>خوانده</label><input data-f="خوانده"></div>
+        <div><label>موکل</label><input data-f="موکل"></div>
+      </div>
+      <div class="row3">
+        <div><label>مرجع</label><input data-f="مرجع"></div>
+        <div><label>شهر</label><input data-f="شهر"></div>
+        <div><label>وضعیت</label>
+          <select data-f="وضعیت">
+            <option>باز</option><option>در جریان</option><option>معلق</option>
+            <option>رأی صادره</option><option>اجرا</option><option>بایگانی / مختومه</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div><label>مرحله</label>
+          <select data-f="مرحله">
+            <option>مشاوره اولیه</option><option>تنظیم دادخواست</option><option>ثبت دادخواست</option>
+            <option>ابلاغ</option><option>تبادل لوایح</option><option>جلسه دادرسی</option>
+            <option>کارشناسی</option><option>صدور رأی</option><option>اعتراض / تجدیدنظر</option>
+            <option>اجرای احکام</option><option>خاتمه</option>
+          </select>
+        </div>
+        <div><label>مهلت بعدی</label><input data-f="مهلت بعدی" class="jdate"></div>
+      </div>
+      <label>شرح</label><textarea data-f="شرح"></textarea>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p btn-save-form" data-store="case" data-title="پرونده">ثبت</button>
+        <button type="button" class="btn btn-ok btn-save-form-new" data-store="case" data-title="پرونده">ثبت و جدید</button>
+      </div>
     </div>
-  </div></div>
-  
-  <div class="panel" id="p-list-0"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>فهرست پرونده‌ها</h2>
-    <input class="list-search" data-store="case" placeholder="جستجو...">
-    <div class="list-box data-list" data-store="case"></div>
-    <button type="button" class="btn btn-b btn-del-sel" data-store="case">حذف انتخاب‌شده</button>
-  </div></div>
-  <div class="panel" id="p-list-1"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>اقدامات</h2>
-    <input class="list-search" data-store="cact" placeholder="جستجو...">
-    <div class="list-box data-list" data-store="cact"></div>
-    <button type="button" class="btn btn-b btn-del-sel" data-store="cact">حذف انتخاب‌شده</button>
-  </div></div>
-  
-  <div class="panel" id="p-rep-0"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>گزارش پرونده‌های باز</h2>
-    <div class="data-report" data-store="case" data-title="گزارش پرونده‌های باز"></div>
-  </div></div>
-  <div class="panel" id="p-rep-1"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>مهلت‌های نزدیک</h2>
-    <div class="data-report" data-store="case" data-title="مهلت‌های نزدیک"></div>
-  </div></div>
-  <div class="panel" id="p-cal"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>تقویم شمسی</h2><div id="fullCal"></div>
-    <p class="empty" style="margin-top:8px">با کلیک روی روز، یادآوری ثبت کنید</p>
-  </div></div>
-  <div class="panel" id="p-notes"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>یادداشت</h2><textarea id="noteText" rows="3"></textarea>
-    <div class="list-box" id="notesList"></div>
-    <button type="button" class="btn btn-p" id="btnNoteSave">ذخیره</button>
-    <button type="button" class="btn btn-b" id="btnNoteDel">حذف</button>
-  </div></div>
-  <div class="panel" id="p-rems"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>یادآوری</h2>
-    <div class="row"><input id="remText" placeholder="متن"><input id="remDate" class="jdate"></div>
-    <button type="button" class="btn btn-p" id="btnRemAdd">افزودن</button>
-    <div class="list-box" id="remsList"></div>
-  </div></div>
-  <div class="panel" id="p-cartable"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>کارتابل</h2>
-    <div class="row"><input id="cartTo" placeholder="گیرنده"><input id="cartMsg" placeholder="پیام"></div>
-    <button type="button" class="btn btn-p" id="btnCartSend">ارسال</button>
-    <div class="list-box" id="cartList"></div>
-  </div></div>
-  <div class="panel" id="p-users"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>ایجاد کاربر جدید</h2>
-    <div class="row3">
-      <div><label>نام کاربری</label><input id="nuUser"></div>
-      <div><label>رمز عبور</label><input id="nuPass" type="password"></div>
-      <div><label>نام نمایشی</label><input id="nuName"></div>
+  </div>
+
+  <!-- فرم اقدام -->
+  <div class="panel" id="p-cact">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>اقدام قضایی</h2>
+      <div class="row3">
+        <div><label>پرونده</label><input data-f="پرونده"></div>
+        <div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div>
+        <div><label>نوع اقدام</label>
+          <select data-f="نوع اقدام">
+            <option>ثبت دادخواست</option><option>ارائه لایحه</option><option>حضور در جلسه</option>
+            <option>درخواست کارشناسی</option><option>اعتراض به رأی</option><option>پیگیری اجرا</option>
+            <option>مکاتبه</option><option>سایر</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div><label>اقدام</label><input data-f="اقدام"></div>
+        <div><label>نتیجه</label><input data-f="نتیجه"></div>
+      </div>
+      <div class="row">
+        <div><label>مهلت بعدی</label><input data-f="مهلت بعدی" class="jdate"></div>
+        <div><label>مسئول</label><input data-f="مسئول"></div>
+      </div>
+      <label>یادداشت</label><textarea data-f="یادداشت"></textarea>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p btn-save-form" data-store="cact" data-title="اقدام">ثبت</button>
+        <button type="button" class="btn btn-ok btn-save-form-new" data-store="cact" data-title="اقدام">ثبت و جدید</button>
+      </div>
+      <p class="shortcut-hint">با ثبت اقدام، در صورت یافتن پرونده مرتبط، مرحله آن به‌صورت خودکار به‌روز می‌شود.</p>
     </div>
-    <label>نقش</label><select id="nuRole"><option value="user">کاربر</option><option value="admin">مدیر ماژول (Admin)</option></select>
-    <div class="form-actions">
-      <button type="button" class="btn btn-p" id="btnAddUser">ایجاد کاربر</button>
+  </div>
+
+  <!-- فرم مشاوره -->
+  <div class="panel" id="p-consult">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>مشاوره حقوقی</h2>
+      <div class="row3">
+        <div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div>
+        <div><label>مراجعه‌کننده</label><input data-f="مراجعه‌کننده"></div>
+        <div><label>موضوع</label>
+          <select data-f="موضوع">
+            <option>قرارداد</option><option>ملک / ثبت</option><option>خانواده</option><option>چک</option>
+            <option>کیفری</option><option>کار</option><option>شرکت‌ها</option><option>سایر</option>
+          </select>
+        </div>
+      </div>
+      <label>شرح مسئله</label><textarea data-f="شرح مسئله"></textarea>
+      <label>نظر مشاور</label><textarea data-f="نظر مشاور"></textarea>
+      <div class="row">
+        <div><label>اقدام بعدی</label><input data-f="اقدام بعدی"></div>
+        <div><label>وضعیت</label>
+          <select data-f="وضعیت"><option>انجام شد</option><option>نیاز به پیگیری</option><option>منجر به پرونده</option></select>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p btn-save-form" data-store="consult" data-title="مشاوره">ثبت</button>
+        <button type="button" class="btn btn-ok btn-save-form-new" data-store="consult" data-title="مشاوره">ثبت و جدید</button>
+      </div>
     </div>
-    <div class="list-box" id="usersList" style="margin-top:10px"></div>
-  </div></div>
-  <div class="panel" id="p-backup"><div class="card has-exit">
-    <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
-    <h2>پشتیبان و بازیابی</h2>
-    <h3 style="color:#7dd3fc;font-size:.8rem;margin:8px 0">محلی (دستگاه)</h3>
-    <button type="button" class="btn btn-p" id="btnBackupLocal">دانلود پشتیبان محلی</button>
-    <button type="button" class="btn btn-g" id="btnRestoreLocal">بازیابی از فایل محلی</button>
-    <input type="file" id="restoreFile" accept="application/json" hidden>
-    <h3 style="color:#7dd3fc;font-size:.8rem;margin:14px 0 8px">گوگل درایو</h3>
-    <p class="empty" style="text-align:right;padding:6px 0">خروجی JSON برای آپلود دستی در گوگل درایو، یا بازیابی از فایلی که از درایو دانلود کرده‌اید.</p>
-    <button type="button" class="btn btn-ok" id="btnBackupGdrive">پشتیبان‌گیری برای گوگل درایو (دانلود JSON)</button>
-    <button type="button" class="btn btn-g" id="btnRestoreGdrive">بازیابی از فایل گوگل درایو</button>
-    <input type="file" id="restoreGdriveFile" accept="application/json" hidden>
-    <p class="empty" style="text-align:right;margin-top:8px;font-size:.7rem">نکته: در محیط مرورگر بدون سرور، اتصال مستقیم OAuth به گوگل درایو محدود است؛ فایل را در درایو آپلود/دانلود کنید.</p>
-  </div></div>
+  </div>
+
+  <!-- فرم دادخواست + قالب -->
+  <div class="panel" id="p-petition">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>تهیه دادخواست</h2>
+      <div class="template-bar">
+        <button type="button" class="btn btn-g btn-template" data-target="petition" data-tpl="badvi">قالب دادخواست بدوی</button>
+        <button type="button" class="btn btn-g btn-template" data-target="petition" data-tpl="tajdid">قالب تجدیدنظر</button>
+        <button type="button" class="btn btn-g btn-template" data-target="petition" data-tpl="dastor">قالب دستور موقت</button>
+      </div>
+      <div class="row3">
+        <div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div>
+        <div><label>پرونده</label><input data-f="پرونده"></div>
+        <div><label>نوع</label>
+          <select data-f="نوع">
+            <option>دادخواست بدوی</option><option>تجدیدنظر</option><option>فرجام</option>
+            <option>اعاده دادرسی</option><option>دستور موقت</option><option>تأمین دلیل</option><option>سایر</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div><label>خواهان</label><input data-f="خواهان"></div>
+        <div><label>خوانده</label><input data-f="خوانده"></div>
+      </div>
+      <label>خواسته</label><textarea data-f="خواسته"></textarea>
+      <label>دلایل</label><textarea data-f="دلایل"></textarea>
+      <label>متن پیش‌نویس</label><textarea data-f="متن" rows="7" id="petitionText"></textarea>
+      <div class="row">
+        <div><label>وضعیت</label><select data-f="وضعیت"><option>پیش‌نویس</option><option>تأیید موکل</option><option>ثبت‌شده</option></select></div>
+        <div><label>شماره ثبت</label><input data-f="شماره ثبت"></div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p btn-save-form" data-store="petition" data-title="دادخواست">ثبت</button>
+        <button type="button" class="btn btn-ok btn-save-form-new" data-store="petition" data-title="دادخواست">ثبت و جدید</button>
+        <button type="button" class="btn btn-print btn-print-form">پرینت</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- فرم لایحه + قالب -->
+  <div class="panel" id="p-defense">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>لایحه دفاعیه</h2>
+      <div class="template-bar">
+        <button type="button" class="btn btn-g btn-template" data-target="defense" data-tpl="defae">قالب دفاعیه</button>
+        <button type="button" class="btn btn-g btn-template" data-target="defense" data-tpl="etraz">قالب اعتراض</button>
+        <button type="button" class="btn btn-g btn-template" data-target="defense" data-tpl="takmili">قالب لایحه تکمیلی</button>
+      </div>
+      <div class="row3">
+        <div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div>
+        <div><label>پرونده</label><input data-f="پرونده"></div>
+        <div><label>نوع</label>
+          <select data-f="نوع"><option>دفاعیه</option><option>پاسخ به ادعانامه</option><option>لایحه تکمیلی</option><option>اعتراض</option></select>
+        </div>
+      </div>
+      <label>متن لایحه</label><textarea data-f="متن" rows="8" id="defenseText"></textarea>
+      <div class="row">
+        <div><label>وضعیت</label><select data-f="وضعیت"><option>پیش‌نویس</option><option>تأیید</option><option>تقدیم‌شده</option></select></div>
+        <div><label>مهلت</label><input data-f="مهلت" class="jdate"></div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p btn-save-form" data-store="defense" data-title="لایحه">ثبت</button>
+        <button type="button" class="btn btn-ok btn-save-form-new" data-store="defense" data-title="لایحه">ثبت و جدید</button>
+        <button type="button" class="btn btn-print btn-print-form">پرینت</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- فرم وکالتنامه -->
+  <div class="panel" id="p-poa">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>وکالتنامه / قرارداد وکالت</h2>
+      <div class="row3">
+        <div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div>
+        <div><label>موکل</label><input data-f="موکل"></div>
+        <div><label>نوع</label>
+          <select data-f="نوع"><option>وکالتنامه دادگستری</option><option>قرارداد حق‌الوکاله</option><option>تمدید</option></select>
+        </div>
+      </div>
+      <div class="row">
+        <div><label>موضوع</label><input data-f="موضوع"></div>
+        <div><label>شماره</label><input data-f="شماره"></div>
+      </div>
+      <div class="row3">
+        <div><label>حق‌الوکاله</label><input data-f="حق‌الوکاله" class="amount"></div>
+        <div><label>بیعانه</label><input data-f="بیعانه" class="amount"></div>
+        <div><label>اعتبار تا</label><input data-f="اعتبار تا" class="jdate"></div>
+      </div>
+      <label>شرایط</label><textarea data-f="شرایط"></textarea>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p btn-save-form" data-store="poa" data-title="وکالتنامه">ثبت</button>
+        <button type="button" class="btn btn-ok btn-save-form-new" data-store="poa" data-title="وکالتنامه">ثبت و جدید</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- فرم جلسه -->
+  <div class="panel" id="p-hearing">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>جلسه دادرسی / ابلاغ</h2>
+      <div class="row3">
+        <div><label>پرونده</label><input data-f="پرونده"></div>
+        <div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div>
+        <div><label>ساعت</label><input data-f="ساعت"></div>
+      </div>
+      <div class="row">
+        <div><label>نوع</label>
+          <select data-f="نوع">
+            <option>جلسه بدوی</option><option>جلسه تجدیدنظر</option><option>کارشناسی</option>
+            <option>ابلاغ رأی</option><option>ابلاغ وقت</option><option>سایر</option>
+          </select>
+        </div>
+        <div><label>محل</label><input data-f="محل"></div>
+      </div>
+      <label>خلاصه</label><textarea data-f="خلاصه"></textarea>
+      <div class="row">
+        <div><label>نتیجه</label><input data-f="نتیجه"></div>
+        <div><label>مهلت بعدی</label><input data-f="مهلت بعدی" class="jdate"></div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p btn-save-form" data-store="hearing" data-title="جلسه">ثبت</button>
+        <button type="button" class="btn btn-ok btn-save-form-new" data-store="hearing" data-title="جلسه">ثبت و جدید</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- فرم هزینه -->
+  <div class="panel" id="p-cost">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>هزینه دادرسی</h2>
+      <div class="row3">
+        <div><label>تاریخ</label><input data-f="تاریخ" class="jdate"></div>
+        <div><label>پرونده</label><input data-f="پرونده"></div>
+        <div><label>نوع</label>
+          <select data-f="نوع">
+            <option>تمبر</option><option>کارشناسی</option><option>اجرائیه</option>
+            <option>حق‌الوکاله</option><option>ایاب‌وذهاب</option><option>سایر</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div><label>مبلغ</label><input data-f="مبلغ" class="amount"></div>
+        <div><label>پرداخت‌کننده</label><input data-f="پرداخت‌کننده"></div>
+      </div>
+      <label>شرح</label><input data-f="شرح">
+      <div class="form-actions">
+        <button type="button" class="btn btn-p btn-save-form" data-store="cost" data-title="هزینه">ثبت</button>
+        <button type="button" class="btn btn-ok btn-save-form-new" data-store="cost" data-title="هزینه">ثبت و جدید</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- فهرست‌ها -->
+  <div class="panel" id="p-list-case">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>فهرست پرونده‌ها</h2>
+      <div class="show-deleted-bar"><label><input type="checkbox" class="toggle-deleted" data-store="case"> نمایش حذف‌شده‌ها</label></div>
+      <input class="list-search" data-store="case" placeholder="جستجو...">
+      <div class="list-box data-list" data-store="case"></div>
+      <button type="button" class="btn btn-b btn-del-sel" data-store="case">حذف نرم انتخاب‌شده</button>
+    </div>
+  </div>
+  <div class="panel" id="p-list-cact">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>فهرست اقدامات</h2>
+      <div class="show-deleted-bar"><label><input type="checkbox" class="toggle-deleted" data-store="cact"> نمایش حذف‌شده‌ها</label></div>
+      <input class="list-search" data-store="cact" placeholder="جستجو...">
+      <div class="list-box data-list" data-store="cact"></div>
+      <button type="button" class="btn btn-b btn-del-sel" data-store="cact">حذف نرم انتخاب‌شده</button>
+    </div>
+  </div>
+  <div class="panel" id="p-list-consult">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>فهرست مشاوره‌ها</h2>
+      <div class="show-deleted-bar"><label><input type="checkbox" class="toggle-deleted" data-store="consult"> نمایش حذف‌شده‌ها</label></div>
+      <input class="list-search" data-store="consult" placeholder="جستجو...">
+      <div class="list-box data-list" data-store="consult"></div>
+      <button type="button" class="btn btn-b btn-del-sel" data-store="consult">حذف نرم انتخاب‌شده</button>
+    </div>
+  </div>
+  <div class="panel" id="p-list-petition">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>فهرست دادخواست‌ها</h2>
+      <div class="show-deleted-bar"><label><input type="checkbox" class="toggle-deleted" data-store="petition"> نمایش حذف‌شده‌ها</label></div>
+      <input class="list-search" data-store="petition" placeholder="جستجو...">
+      <div class="list-box data-list" data-store="petition"></div>
+      <button type="button" class="btn btn-b btn-del-sel" data-store="petition">حذف نرم انتخاب‌شده</button>
+    </div>
+  </div>
+  <div class="panel" id="p-list-defense">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>فهرست لوایح</h2>
+      <div class="show-deleted-bar"><label><input type="checkbox" class="toggle-deleted" data-store="defense"> نمایش حذف‌شده‌ها</label></div>
+      <input class="list-search" data-store="defense" placeholder="جستجو...">
+      <div class="list-box data-list" data-store="defense"></div>
+      <button type="button" class="btn btn-b btn-del-sel" data-store="defense">حذف نرم انتخاب‌شده</button>
+    </div>
+  </div>
+  <div class="panel" id="p-list-poa">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>فهرست وکالتنامه‌ها</h2>
+      <div class="show-deleted-bar"><label><input type="checkbox" class="toggle-deleted" data-store="poa"> نمایش حذف‌شده‌ها</label></div>
+      <input class="list-search" data-store="poa" placeholder="جستجو...">
+      <div class="list-box data-list" data-store="poa"></div>
+      <button type="button" class="btn btn-b btn-del-sel" data-store="poa">حذف نرم انتخاب‌شده</button>
+    </div>
+  </div>
+  <div class="panel" id="p-list-hearing">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>فهرست جلسات</h2>
+      <div class="show-deleted-bar"><label><input type="checkbox" class="toggle-deleted" data-store="hearing"> نمایش حذف‌شده‌ها</label></div>
+      <input class="list-search" data-store="hearing" placeholder="جستجو...">
+      <div class="list-box data-list" data-store="hearing"></div>
+      <button type="button" class="btn btn-b btn-del-sel" data-store="hearing">حذف نرم انتخاب‌شده</button>
+    </div>
+  </div>
+  <div class="panel" id="p-list-cost">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>فهرست هزینه‌ها</h2>
+      <div class="show-deleted-bar"><label><input type="checkbox" class="toggle-deleted" data-store="cost"> نمایش حذف‌شده‌ها</label></div>
+      <input class="list-search" data-store="cost" placeholder="جستجو...">
+      <div class="list-box data-list" data-store="cost"></div>
+      <button type="button" class="btn btn-b btn-del-sel" data-store="cost">حذف نرم انتخاب‌شده</button>
+    </div>
+  </div>
+
+  <!-- گزارش‌ها -->
+  <div class="panel" id="p-rep-open"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button><h2>پرونده‌های باز</h2><div class="data-report" data-store="case" data-filter="open"></div></div></div>
+  <div class="panel" id="p-rep-deadline"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button><h2>مهلت‌های نزدیک</h2><div class="data-report" data-store="case" data-filter="deadline"></div></div></div>
+  <div class="panel" id="p-rep-stage"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button><h2>مراحل قضایی</h2><div class="data-report" data-store="case" data-filter="stage"></div></div></div>
+  <div class="panel" id="p-rep-topic"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button><h2>آمار موضوعی</h2><div class="data-report" data-store="case" data-filter="topic"></div></div></div>
+  <div class="panel" id="p-rep-cost"><div class="card has-exit"><button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button><h2>خلاصه هزینه‌ها</h2><div class="data-report" data-store="cost" data-filter="all"></div></div></div>
+
+  <!-- امکانات -->
+  <div class="panel" id="p-cal">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>تقویم شمسی</h2>
+      <div id="fullCal"></div>
+      <p class="empty">کلیک روی روز → یادآوری</p>
+    </div>
+  </div>
+
+  <div class="panel" id="p-guide">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>راهنمای مراحل قضایی</h2>
+      <div class="note-box">
+        ۱. مشاوره و جمع‌آوری مدارک<br>
+        ۲. تنظیم و ثبت دادخواست<br>
+        ۳. ابلاغ و تبادل لوایح<br>
+        ۴. جلسه دادرسی / کارشناسی<br>
+        ۵. صدور رأی<br>
+        ۶. اعتراض در مهلت قانونی<br>
+        ۷. اجرای احکام<br>
+        این ماژول ابزار ثبت و پیگیری است و جایگزین وکیل رسمی نیست.
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="p-laws">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>راهنمای قوانین و نکات کاربردی</h2>
+      <div class="note-box">
+        <b>نکات مهم آیین دادرسی مدنی (یادآوری):</b><br>
+        • مهلت تجدیدنظرخواهی از آراء دادگاه‌های عمومی معمولاً ۲۰ روز از تاریخ ابلاغ است (ماده ۳۳۶).<br>
+        • دادخواست باید دارای شرایط ماده ۵۱ قانون آیین دادرسی مدنی باشد.<br>
+        • در دعاوی مالی، پرداخت هزینه دادرسی بر اساس ارزش خواسته الزامی است.<br>
+        • قرار تأمین خواسته و دستور موقت شرایط خاص خود را دارند.<br><br>
+        <b>توجه:</b> این بخش فقط یادآوری نکات پرکاربرد است و جایگزین مراجعه به متن کامل قوانین و نظر وکیل دادگستری نیست.
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="p-notes">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>یادداشت</h2>
+      <textarea id="noteText" rows="3"></textarea>
+      <div class="list-box" id="notesList"></div>
+      <button type="button" class="btn btn-p" id="btnNoteSave">ذخیره</button>
+      <button type="button" class="btn btn-b" id="btnNoteDel">حذف</button>
+    </div>
+  </div>
+
+  <div class="panel" id="p-rems">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>یادآوری</h2>
+      <div class="row">
+        <input id="remText" placeholder="متن">
+        <input id="remDate" class="jdate">
+      </div>
+      <button type="button" class="btn btn-p" id="btnRemAdd">افزودن</button>
+      <button type="button" class="btn btn-ok" id="btnRemDone">انجام شد</button>
+      <button type="button" class="btn btn-b" id="btnRemDel">حذف</button>
+      <div class="list-box" id="remsList"></div>
+    </div>
+  </div>
+
+  <!-- کارتابل جدید با پیوست فایل -->
+  <div class="panel" id="p-cartable">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>کارتابل (ارسال و دریافت پیام و فایل)</h2>
+      <div class="row">
+        <div>
+          <label>گیرنده</label>
+          <select id="cartTo">
+            <option value="suite">سامانه مرکزی</option>
+            <option value="accounting">حسابداری</option>
+            <option value="secretary">منشی</option>
+            <option value="ceo">مدیرعامل</option>
+            <option value="lawyer">وکیل هوشمند (خودماژول)</option>
+          </select>
+        </div>
+        <div>
+          <label>عنوان</label>
+          <input id="cartTitle" placeholder="عنوان پیام">
+        </div>
+      </div>
+      <label>متن پیام</label>
+      <textarea id="cartMsg" rows="3" placeholder="متن پیام..."></textarea>
+      <div class="row" style="margin-top:8px">
+        <div>
+          <label>پیوست فایل (حداکثر ۱.۵ مگابایت)</label>
+          <input type="file" id="cartFile" accept="*/*">
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:6px">
+          <button type="button" class="btn btn-p" id="btnCartSend">ارسال پیام / فایل</button>
+          <button type="button" class="btn btn-g" id="btnCartRefresh">بروزرسانی</button>
+        </div>
+      </div>
+      <div class="note-box" style="margin-top:10px">
+        پیام‌ها و فایل‌ها از طریق کلید مشترک <b>suite_cartable_v1</b> با سایر ماژول‌ها رد و بدل می‌شوند.
+      </div>
+      <h3 style="margin:14px 0 6px;font-size:.85rem;color:#7dd3fc">صندوق دریافت</h3>
+      <div class="list-box" id="cartList" style="max-height:360px"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="p-audit">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>لاگ تغییرات (Audit)</h2>
+      <div class="note-box">فقط مدیر می‌تواند این بخش را ببیند. آخرین ۵۰۰ رویداد نگه داشته می‌شود.</div>
+      <div class="list-box" id="auditList" style="max-height:400px"></div>
+      <button type="button" class="btn btn-g" id="btnRefreshAudit">بروزرسانی لاگ</button>
+    </div>
+  </div>
+
+  <div class="panel" id="p-users">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>کاربران</h2>
+      <div class="row">
+        <div><label>نام کاربری من</label><input id="myUser" readonly></div>
+        <div><label>رمز جدید</label><input id="myNewPass" type="password"></div>
+      </div>
+      <button type="button" class="btn btn-p" id="btnMyPass">تغییر رمز من</button>
+      <div class="row3" style="margin-top:12px">
+        <div><label>کاربر جدید</label><input id="nuUser"></div>
+        <div><label>رمز</label><input id="nuPass" type="password"></div>
+        <div><label>نام</label><input id="nuName"></div>
+      </div>
+      <label>نقش</label>
+      <select id="nuRole"><option value="user">کاربر</option><option value="admin">مدیر</option></select>
+      <button type="button" class="btn btn-ok" id="btnAddUser">ایجاد</button>
+      <div class="list-box" id="usersList" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="p-backup">
+    <div class="card has-exit">
+      <button type="button" class="btn-form-exit" data-panel="p-dash">خروج</button>
+      <h2>پشتیبان و بازیابی</h2>
+      <button type="button" class="btn btn-p" id="btnBackupLocal">دانلود پشتیبان</button>
+      <button type="button" class="btn btn-g" id="btnRestoreLocal">بازیابی از فایل</button>
+      <input type="file" id="restoreFile" accept="application/json" hidden>
+      <button type="button" class="btn btn-ok" id="btnBackupGdrive">پشتیبان برای گوگل‌درایو</button>
+      <button type="button" class="btn btn-g" id="btnRestoreGdrive">بازیابی از فایل درایو</button>
+      <input type="file" id="restoreGdriveFile" accept="application/json" hidden>
+      <button type="button" class="btn btn-b" id="btnRestoreEmergency" style="margin-top:12px;width:100%">بازیابی از پشتیبان اضطراری</button>
+    </div>
+  </div>
+
 </main>
+
 <aside class="side">
   <div class="block"><button type="button" class="hd">داشبورد</button><div class="sub"><button type="button" data-panel="p-dash">نمای کلی</button></div></div>
-  <div class="block"><button type="button" class="hd">ثبت</button><div class="sub"><button type="button" data-panel="p-case">پرونده حقوقی</button><button type="button" data-panel="p-cact">اقدام قضایی</button></div></div>
-  <div class="block"><button type="button" class="hd">فهرست</button><div class="sub"><button type="button" data-panel="p-list-0">فهرست پرونده‌ها</button><button type="button" data-panel="p-list-1">اقدامات</button></div></div>
-  <div class="block"><button type="button" class="hd">گزارش</button><div class="sub"><button type="button" data-panel="p-rep-0">گزارش پرونده‌های باز</button><button type="button" data-panel="p-rep-1">مهلت‌های نزدیک</button></div></div>
+  <div class="block"><button type="button" class="hd">ثبت</button><div class="sub">
+    <button type="button" data-panel="p-case">پرونده</button>
+    <button type="button" data-panel="p-cact">اقدام</button>
+    <button type="button" data-panel="p-consult">مشاوره</button>
+    <button type="button" data-panel="p-petition">دادخواست</button>
+    <button type="button" data-panel="p-defense">لایحه</button>
+    <button type="button" data-panel="p-poa">وکالتنامه</button>
+    <button type="button" data-panel="p-hearing">جلسه</button>
+    <button type="button" data-panel="p-cost">هزینه</button>
+  </div></div>
+  <div class="block"><button type="button" class="hd">فهرست</button><div class="sub">
+    <button type="button" data-panel="p-list-case">پرونده‌ها</button>
+    <button type="button" data-panel="p-list-cact">اقدامات</button>
+    <button type="button" data-panel="p-list-consult">مشاوره‌ها</button>
+    <button type="button" data-panel="p-list-petition">دادخواست‌ها</button>
+    <button type="button" data-panel="p-list-defense">لوایح</button>
+    <button type="button" data-panel="p-list-poa">وکالتنامه‌ها</button>
+    <button type="button" data-panel="p-list-hearing">جلسات</button>
+    <button type="button" data-panel="p-list-cost">هزینه‌ها</button>
+  </div></div>
+  <div class="block"><button type="button" class="hd">گزارش</button><div class="sub">
+    <button type="button" data-panel="p-rep-open">باز</button>
+    <button type="button" data-panel="p-rep-deadline">مهلت</button>
+    <button type="button" data-panel="p-rep-stage">مراحل</button>
+    <button type="button" data-panel="p-rep-topic">موضوعی</button>
+    <button type="button" data-panel="p-rep-cost">هزینه</button>
+  </div></div>
   <div class="block"><button type="button" class="hd">امکانات</button><div class="sub">
-    <button type="button" data-panel="p-cal">تقویم شمسی</button>
+    <button type="button" data-panel="p-cal">تقویم</button>
+    <button type="button" data-panel="p-guide">راهنمای مراحل</button>
+    <button type="button" data-panel="p-laws">راهنمای قوانین</button>
     <button type="button" data-panel="p-notes">یادداشت</button>
     <button type="button" data-panel="p-rems">یادآوری</button>
     <button type="button" data-panel="p-cartable">کارتابل</button>
+    <button type="button" data-panel="p-audit">لاگ تغییرات</button>
   </div></div>
   <div class="block"><button type="button" class="hd">تنظیمات</button><div class="sub">
-    <button type="button" data-panel="p-backup">پشتیبان و بازیابی</button>
-    <button type="button" data-panel="p-users">ایجاد کاربر جدید</button>
+    <button type="button" data-panel="p-backup">پشتیبان</button>
+    <button type="button" data-panel="p-users">کاربران</button>
   </div></div>
   <div class="alerts">
     <button type="button" class="alert" data-panel="p-notes"><span>یادداشت</span><span class="n" id="aNotes">0</span></button>
@@ -229,154 +720,1206 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
   </div>
 </aside>
 </div>
+
 <div class="toast" id="toast"></div>
 <script>
-(function(){
-var MOD="lawyer", KEY="smart_mod_"+MOD+"_v1";
-var FA=["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"],JM=["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"],JW=["ش","ی","د","س","چ","پ","ج"];
-function toFa(n){return String(n).replace(/\d/g,function(d){return FA[+d];});}
-function toEn(s){return String(s).replace(/[۰-۹]/g,function(d){return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);}).replace(/,/g,"");}
-function g2j(gy,gm,gd){var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];var gy2=(gm>2)?(gy+1):gy;var days=355666+365*gy+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+g_d_m[gm-1];var jy=-1595+33*Math.floor(days/12053);days%=12053;jy+=4*Math.floor(days/1461);days%=1461;if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}var jm=(days<186)?1+Math.floor(days/31):7+Math.floor((days-186)/30);var jd=1+((days<186)?(days%31):((days-186)%30));return{jy:jy,jm:jm,jd:jd};}
-function j2g(jy,jm,jd){var jy2=jy-979,jm2=jm-1,jd2=jd-1;var days=365*jy2+Math.floor(jy2/33)*8+Math.floor(((jy2%33)+3)/4);for(var i=0;i<jm2;++i)days+=(i<6?31:30);days+=jd2;var gy=1600+400*Math.floor(days/146097);days%=146097;var leap=true;if(days>=36525){days--;gy+=100*Math.floor(days/36524);days%=36524;if(days>=365)leap=false;else days++;}gy+=4*Math.floor(days/1461);days%=1461;if(days>=366){leap=false;days--;gy+=Math.floor(days/365);days=days%365;}var gd=days+1,sal_a=[0,31,(leap?29:28),31,30,31,30,31,31,30,31,30,31],gm;for(gm=1;gm<=12&&gd>sal_a[gm];gm++)gd-=sal_a[gm];return{gy:gy,gm:gm,gd:gd};}
-function jML(jy,jm){if(jm<=6)return 31;if(jm<=11)return 30;var a=j2g(jy,12,30);var b=g2j(a.gy,a.gm,a.gd);return(b.jy===jy&&b.jm===12&&b.jd===30)?30:29;}
-function fmtJ(jy,jm,jd){return toFa(jy)+"/"+toFa(String(jm).padStart(2,"0"))+"/"+toFa(String(jd).padStart(2,"0"));}
-function tickClock(){var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());
-document.getElementById("dtJ").textContent=fmtJ(j.jy,j.jm,j.jd);
-document.getElementById("dtG").textContent=n.getFullYear()+"/"+String(n.getMonth()+1).padStart(2,"0")+"/"+String(n.getDate()).padStart(2,"0");
-document.getElementById("dtC").textContent=toFa(String(n.getHours()).padStart(2,"0"))+":"+toFa(String(n.getMinutes()).padStart(2,"0"))+":"+toFa(String(n.getSeconds()).padStart(2,"0"));}
-tickClock();setInterval(tickClock,1000);
-function toast(m,t){var el=document.getElementById("toast");el.textContent=m;el.className="toast show"+(t==="err"?" err":"");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("show");},2200);}
-function loadJSON(k,d){try{return JSON.parse(localStorage.getItem(k)||"null")||d;}catch(e){return d;}}
-function saveJSON(k,v){localStorage.setItem(k,JSON.stringify(v));}
-function loadDB(){return loadJSON(KEY,{stores:{}});}
-function saveDB(d){saveJSON(KEY,d);}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
-function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
-function showPanel(id){if(!id)return;var el=document.getElementById(id);if(!el)return;
-document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});el.classList.add("on");
-document.querySelectorAll(".side .sub button[data-panel]").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-panel")===id);});
-if(id==="p-cal")renderFullCal();
-if(id==="p-users")renderUsers();
-document.querySelectorAll(".data-list").forEach(renderListBox);
-document.querySelectorAll(".data-report").forEach(renderReport);
-}
-document.addEventListener("click",function(e){var t=e.target.closest("[data-panel]");if(t&&t.getAttribute("data-panel")){e.preventDefault();showPanel(t.getAttribute("data-panel"));}});
+(function () {
+  "use strict";
 
-function attachJDate(input){if(!input||input._j)return;input._j=true;
-var wrap=input.parentNode;if(!wrap.classList.contains("date-wrap")){var d=document.createElement("div");d.className="date-wrap";wrap.insertBefore(d,input);d.appendChild(input);wrap=d;}
-var pop,vy,vm;function close(){if(pop){pop.remove();pop=null;}document.removeEventListener("click",out);}
-function out(e){if(pop&&!pop.contains(e.target)&&e.target!==input)close();}
-function open(){close();var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());var m=toEn(input.value||"").match(/^(\d{4})[\/\-](\d{1,2})/);vy=m?+m[1]:j.jy;vm=m?+m[2]:j.jm;pop=document.createElement("div");pop.className="jcal";wrap.appendChild(pop);render();setTimeout(function(){document.addEventListener("click",out);},0);}
-function render(){if(!pop)return;pop.innerHTML="";var h=document.createElement("div");h.className="jcal-h";h.innerHTML='<button type="button" data-a="py">«</button><button type="button" data-a="pm">‹</button><span class="ttl">'+JM[vm-1]+' '+toFa(vy)+'</span><button type="button" data-a="nm">›</button><button type="button" data-a="ny">»</button>';
-var w=document.createElement("div");w.className="jcal-w";JW.forEach(function(x){var s=document.createElement("span");s.textContent=x;w.appendChild(s);});
-var days=document.createElement("div");days.className="jcal-d";var dim=jML(vy,vm),fg=j2g(vy,vm,1),st=(new Date(fg.gy,fg.gm-1,fg.gd).getDay()+1)%7;
-for(var i=0;i<st;i++){var em=document.createElement("button");em.type="button";em.disabled=true;em.style.visibility="hidden";days.appendChild(em);}
-for(var d=1;d<=dim;d++){(function(day){var g=j2g(vy,vm,day);var b=document.createElement("button");b.type="button";b.innerHTML='<span class="jd">'+toFa(day)+'</span><span class="gd">'+g.gy+'/'+String(g.gm).padStart(2,"0")+'/'+String(g.gd).padStart(2,"0")+'</span>';
-b.onclick=function(ev){ev.stopPropagation();input.value=fmtJ(vy,vm,day);close();};days.appendChild(b);})(d);}
-pop.appendChild(h);pop.appendChild(w);pop.appendChild(days);
-h.querySelectorAll("button").forEach(function(b){b.onclick=function(ev){ev.stopPropagation();var a=b.getAttribute("data-a");if(a==="pm"){vm--;if(vm<1){vm=12;vy--;}}if(a==="nm"){vm++;if(vm>12){vm=1;vy++;}}if(a==="py")vy--;if(a==="ny")vy++;render();};});}
-input.addEventListener("click",open);input.addEventListener("focus",open);}
+  /* ===================== هسته مرکزی ===================== */
+  var MOD = "lawyer";
+  var KEY = "smart_mod_" + MOD + "_v2";
+  var CART_KEY = "suite_cartable_v1";
+  var NOTES_KEY = "smart_mod_notes_" + MOD;
+  var REM_KEY = "smart_mod_rem_" + MOD;
+  var USERS_KEY = "smart_users_" + MOD;
+  var BACKUP_KEY = "smart_mod_" + MOD + "_backup";
+  var AUDIT_KEY = "smart_mod_" + MOD + "_audit";
+  var LOCK_KEY = "smart_mod_" + MOD + "_lock";
+  var CURRENT_VERSION = 3;
+  var CART_MAX_FILE_SIZE = 1.5 * 1024 * 1024; // 1.5 MB
 
-function renderFullCal(){var box=document.getElementById("fullCal");if(!box)return;var n=new Date(),j=g2j(n.getFullYear(),n.getMonth()+1,n.getDate());
-var vy=box._y||j.jy,vm=box._m||j.jm;box._y=vy;box._m=vm;
-var html='<div class="jcal" style="position:static;width:100%;max-width:340px"><div class="jcal-h"><button type="button" id="fcPy">«</button><button type="button" id="fcPm">‹</button><span class="ttl">'+JM[vm-1]+' '+toFa(vy)+'</span><button type="button" id="fcNm">›</button><button type="button" id="fcNy">»</button></div><div class="jcal-w">';
-JW.forEach(function(x){html+='<span>'+x+'</span>';});html+='</div><div class="jcal-d">';
-var dim=jML(vy,vm),fg=j2g(vy,vm,1),st=(new Date(fg.gy,fg.gm-1,fg.gd).getDay()+1)%7;
-for(var i=0;i<st;i++)html+='<button type="button" style="visibility:hidden"></button>';
-for(var d=1;d<=dim;d++){var g=j2g(vy,vm,d);html+='<button type="button" data-d="'+d+'"><span class="jd">'+toFa(d)+'</span><span class="gd">'+g.gy+'/'+g.gm+'/'+g.gd+'</span></button>';}
-html+='</div></div>';box.innerHTML=html;
-document.getElementById("fcPm").onclick=function(){box._m--;if(box._m<1){box._m=12;box._y--;}renderFullCal();};
-document.getElementById("fcNm").onclick=function(){box._m++;if(box._m>12){box._m=1;box._y++;}renderFullCal();};
-document.getElementById("fcPy").onclick=function(){box._y--;renderFullCal();};
-document.getElementById("fcNy").onclick=function(){box._y++;renderFullCal();};
-box.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){document.getElementById("remDate").value=fmtJ(box._y,box._m,+b.getAttribute("data-d"));showPanel("p-rems");};});}
+  var STORES = ["case", "cact", "consult", "petition", "defense", "poa", "hearing", "cost"];
+  var PREFERRED_REQUIRED = {
+    case: ["شماره پرونده", "عنوان", "خواهان", "خوانده"],
+    cact: ["پرونده", "اقدام"],
+    consult: ["مراجعه‌کننده", "موضوع"],
+    petition: ["خواهان", "خوانده", "خواسته"],
+    defense: ["پرونده", "متن"],
+    poa: ["موکل", "موضوع"],
+    hearing: ["پرونده", "تاریخ"],
+    cost: ["پرونده", "مبلغ"]
+  };
 
-function getAuth(){return loadJSON("smart_users_"+MOD,{users:[{user:"admin",pass:"admin",name:"مدیر",role:"admin"}],session:null});}
-function saveAuth(a){saveJSON("smart_users_"+MOD,a);}
-function userName(){var a=getAuth();return(a.session&&(a.session.name||a.session.user))||"مهمان";}
-function ensureLogin(cb){var a=getAuth();if(a.session&&a.session.user){cb();return;}
-var m=document.createElement("div");m.className="login-mask";
-m.innerHTML='<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود — وکیل هوشمند</h2><label>نام کاربری</label><input id="lgU"><label>رمز</label><input id="lgP" type="password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty" style="margin-top:8px">admin / admin</p></div>';
-document.body.appendChild(m);document.getElementById("lgGo").onclick=function(){var u=document.getElementById("lgU").value.trim(),p=document.getElementById("lgP").value;
-var f=(a.users||[]).find(function(x){return x.user===u&&x.pass===p;});if(!f){toast("اشتباه","err");return;}a.session={user:f.user,name:f.name||f.user,role:f.role||"user"};saveAuth(a);m.remove();cb();};}
+  var showDeleted = {};
+  var listeners = [];
+  var selNote = null, selRem = null, selList = {};
 
-function saveForm(store,andNew,btn){var card=btn.closest(".card");var data={id:uid(),at:new Date().toISOString()};
-card.querySelectorAll("[data-f]").forEach(function(inp){data[inp.getAttribute("data-f")]=inp.value;});
-var db=loadDB();db.stores=db.stores||{};db.stores[store]=db.stores[store]||[];db.stores[store].unshift(data);saveDB(db);
-toast("ثبت شد");if(andNew)card.querySelectorAll("[data-f]").forEach(function(inp){inp.value="";});renderDash();document.querySelectorAll(".data-list").forEach(renderListBox);}
-document.querySelectorAll(".btn-save-form").forEach(function(b){b.onclick=function(){saveForm(b.getAttribute("data-store"),false,b);};});
-document.querySelectorAll(".btn-save-form-new").forEach(function(b){b.onclick=function(){saveForm(b.getAttribute("data-store"),true,b);};});
+  function onDataChange(fn) { if (typeof fn === "function") listeners.push(fn); }
+  function notifyChange(storeName) {
+    listeners.forEach(function (fn) { try { fn(storeName); } catch (e) {} });
+  }
 
-var selId={};
-function renderListBox(box){var store=box.getAttribute("data-store");var db=loadDB();var items=(db.stores&&db.stores[store])||[];
-var q="";var search=box.parentElement.querySelector(".list-search");if(search)q=(search.value||"").toLowerCase();
-var filtered=items.filter(function(x){if(!q)return true;return JSON.stringify(x).toLowerCase().indexOf(q)>=0;});
-if(!filtered.length){box.innerHTML='<p class="empty">داده‌ای نیست</p>';return;}
-var keys=Object.keys(filtered[0]).filter(function(k){return k!=="id"&&k!=="at";}).slice(0,5);
-var html='<table><thead><tr><th>#</th>';keys.forEach(function(k){html+='<th>'+esc(k)+'</th>';});html+='</tr></thead><tbody>';
-filtered.forEach(function(row,i){html+='<tr data-id="'+row.id+'" style="cursor:pointer'+(selId[store]===row.id?';background:rgba(14,165,233,.15)':'')+'"><td>'+toFa(i+1)+'</td>';
-keys.forEach(function(k){html+='<td>'+esc(row[k])+'</td>';});html+='</tr>';});
-html+='</tbody></table>';box.innerHTML=html;
-box.querySelectorAll("tr[data-id]").forEach(function(tr){tr.onclick=function(){selId[store]=tr.getAttribute("data-id");renderListBox(box);};});}
-document.querySelectorAll(".list-search").forEach(function(inp){inp.oninput=function(){var box=inp.parentElement.querySelector(".data-list");if(box)renderListBox(box);};});
-document.querySelectorAll(".btn-del-sel").forEach(function(b){b.onclick=function(){var store=b.getAttribute("data-store");if(!selId[store]){toast("انتخاب کنید","err");return;}
-var db=loadDB();db.stores=db.stores||{};db.stores[store]=(db.stores[store]||[]).filter(function(x){return x.id!==selId[store];});saveDB(db);selId[store]=null;document.querySelectorAll('.data-list[data-store="'+store+'"]').forEach(renderListBox);renderDash();toast("حذف شد");};});
+  function $(id) { return document.getElementById(id); }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+  function esc(s) {
+    var d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
 
-function renderReport(el){var store=el.getAttribute("data-store");var title=el.getAttribute("data-title")||"گزارش";
-var items=(loadDB().stores&&loadDB().stores[store])||[];
-if(!items.length){el.innerHTML='<p class="empty">داده‌ای برای گزارش نیست</p>';return;}
-var keys=Object.keys(items[0]).filter(function(k){return k!=="id"&&k!=="at";});
-var html='<p style="margin-bottom:8px;color:#94a3b8">'+esc(title)+' — تعداد: '+toFa(items.length)+'</p><table><thead><tr>';
-keys.forEach(function(k){html+='<th>'+esc(k)+'</th>';});html+='</tr></thead><tbody>';
-items.slice(0,100).forEach(function(row){html+='<tr>';keys.forEach(function(k){html+='<td>'+esc(row[k])+'</td>';});html+='</tr>';});
-html+='</tbody></table>';el.innerHTML=html;}
+  function loadJSON(k, d) {
+    try {
+      var v = JSON.parse(localStorage.getItem(k) || "null");
+      return v == null ? d : v;
+    } catch (e) { return d; }
+  }
+  function saveJSON(k, v) {
+    try {
+      localStorage.setItem(k, JSON.stringify(v));
+      return true;
+    } catch (e) {
+      toast("خطا در ذخیره‌سازی", "err");
+      return false;
+    }
+  }
 
-function renderDash(){var db=loadDB();var stores=db.stores||{};var total=0;Object.keys(stores).forEach(function(k){total+=(stores[k]||[]).length;});
-var html='<div class="box"><div class="n">'+toFa(total)+'</div><div class="l">کل رکوردها</div></div>';
-Object.keys(stores).slice(0,6).forEach(function(k){html+='<div class="box"><div class="n">'+toFa((stores[k]||[]).length)+'</div><div class="l">'+esc(k)+'</div></div>';});
-document.getElementById("kpi").innerHTML=html;
-document.getElementById("dashMeta").textContent="ماژول وکیل هوشمند · کاربر: "+userName();
-updateAlerts();}
+  function loadDB() {
+    var d = loadJSON(KEY, null);
+    if (!d || typeof d !== "object") {
+      d = { version: CURRENT_VERSION, stores: {}, createdAt: new Date().toISOString() };
+    }
+    if (!d.version || d.version < CURRENT_VERSION) d = migrateDB(d);
+    if (!d.stores || typeof d.stores !== "object") d.stores = {};
+    STORES.forEach(function (s) {
+      if (!Array.isArray(d.stores[s])) d.stores[s] = [];
+      d.stores[s] = d.stores[s].filter(function (item) {
+        return item && typeof item === "object" && item.id;
+      });
+    });
+    return d;
+  }
 
-var notesKey="smart_mod_notes_"+MOD,remsKey="smart_mod_rem_"+MOD,cartKey="smart_cartable_v1";var selNote=-1;
-function renderNotes(){var n=loadJSON(notesKey,[]);document.getElementById("notesList").innerHTML=n.map(function(x,i){return '<div class="list-item" data-i="'+i+'">'+esc(x.text)+'</div>';}).join("")||'<p class="empty">—</p>';
-document.getElementById("notesList").querySelectorAll("[data-i]").forEach(function(el){el.onclick=function(){selNote=+el.getAttribute("data-i");document.getElementById("noteText").value=loadJSON(notesKey,[])[selNote].text||"";};});}
-function renderRems(){var n=loadJSON(remsKey,[]);document.getElementById("remsList").innerHTML=n.map(function(x){return '<div class="list-item">'+esc(x.text)+' — '+esc(x.date||'')+'</div>';}).join("")||'<p class="empty">—</p>';}
-document.getElementById("btnNoteSave").onclick=function(){var t=document.getElementById("noteText").value.trim();if(!t)return;var n=loadJSON(notesKey,[]);if(selNote>=0&&n[selNote])n[selNote].text=t;else n.unshift({text:t});saveJSON(notesKey,n);selNote=-1;document.getElementById("noteText").value="";renderNotes();updateAlerts();};
-document.getElementById("btnNoteDel").onclick=function(){if(selNote<0)return;var n=loadJSON(notesKey,[]);n.splice(selNote,1);saveJSON(notesKey,n);selNote=-1;renderNotes();updateAlerts();};
-document.getElementById("btnRemAdd").onclick=function(){var t=document.getElementById("remText").value.trim(),d=document.getElementById("remDate").value;if(!t)return;var n=loadJSON(remsKey,[]);n.unshift({text:t,date:d,status:"new"});saveJSON(remsKey,n);renderRems();updateAlerts();};
-document.getElementById("btnCartSend").onclick=function(){var c=loadJSON(cartKey,{items:[]});c.items=c.items||[];c.items.unshift({from:userName()+"@"+MOD,to:document.getElementById("cartTo").value,msg:document.getElementById("cartMsg").value,status:"new"});saveJSON(cartKey,c);renderCart();updateAlerts();toast("ارسال");};
-function renderCart(){var all=loadJSON(cartKey,{items:[]}).items||[];document.getElementById("cartList").innerHTML=all.map(function(x){return '<div class="list-item">'+esc(x.msg)+'</div>';}).join("")||'<p class="empty">خالی</p>';}
-function updateAlerts(){document.getElementById("aNotes").textContent=String((loadJSON(notesKey,[])).length);document.getElementById("aRems").textContent=String((loadJSON(remsKey,[])).filter(function(x){return x.status!=="done";}).length);document.getElementById("aCart").textContent=String((loadJSON(cartKey,{items:[]}).items||[]).length);}
+  function migrateDB(old) {
+    var neu = {
+      version: CURRENT_VERSION,
+      stores: {},
+      migratedAt: new Date().toISOString(),
+      previousVersion: old.version || 1
+    };
+    STORES.forEach(function (s) {
+      neu.stores[s] = Array.isArray(old.stores && old.stores[s]) ? old.stores[s] : [];
+    });
+    try { localStorage.setItem(BACKUP_KEY, JSON.stringify(old)); } catch (e) {}
+    return neu;
+  }
 
-function renderUsers(){var a=getAuth();document.getElementById("usersList").innerHTML=(a.users||[]).map(function(u){return '<div class="list-item"><b>'+esc(u.user)+'</b> — '+esc(u.name||'')+' ('+esc(u.role||'user')+')</div>';}).join("");}
-document.getElementById("btnAddUser").onclick=function(){var u=document.getElementById("nuUser").value.trim(),p=document.getElementById("nuPass").value,n=document.getElementById("nuName").value.trim();
-if(!u||!p){toast("یوزر و رمز لازم است","err");return;}var a=getAuth();a.users=a.users||[];if(a.users.some(function(x){return x.user===u;})){toast("تکراری","err");return;}
-a.users.push({user:u,pass:p,name:n||u,role:document.getElementById("nuRole").value});saveAuth(a);toast("کاربر ایجاد شد");document.getElementById("nuUser").value="";document.getElementById("nuPass").value="";document.getElementById("nuName").value="";renderUsers();};
+  function saveDB(d) {
+    if (!d || typeof d !== "object") return false;
+    d.version = CURRENT_VERSION;
+    d.updatedAt = new Date().toISOString();
+    try {
+      var current = localStorage.getItem(KEY);
+      if (current) localStorage.setItem(BACKUP_KEY, current);
+    } catch (e) {}
+    var ok = saveJSON(KEY, d);
+    if (ok) notifyChange("*");
+    return ok;
+  }
 
-function downloadBackup(name){var payload={module:MOD,title:"وکیل هوشمند",data:loadDB(),notes:loadJSON(notesKey,[]),rems:loadJSON(remsKey,[]),users:getAuth().users,at:new Date().toISOString()};
-var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}));a.download=name;a.click();toast("دانلود شد");}
-document.getElementById("btnBackupLocal").onclick=function(){downloadBackup(MOD+"-backup.json");};
-document.getElementById("btnBackupGdrive").onclick=function(){downloadBackup(MOD+"-gdrive-backup.json");toast("فایل را در گوگل درایو آپلود کنید");};
-function doRestore(file){if(!file)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(d.data)saveDB(d.data);if(d.notes)saveJSON(notesKey,d.notes);if(d.rems)saveJSON(remsKey,d.rems);if(d.users){var a=getAuth();a.users=d.users;saveAuth(a);}renderDash();renderNotes();renderRems();toast("بازیابی شد");}catch(e){toast("فایل نامعتبر","err");}};r.readAsText(file);}
-document.getElementById("btnRestoreLocal").onclick=function(){document.getElementById("restoreFile").click();};
-document.getElementById("restoreFile").onchange=function(e){doRestore(e.target.files[0]);};
-document.getElementById("btnRestoreGdrive").onclick=function(){document.getElementById("restoreGdriveFile").click();};
-document.getElementById("restoreGdriveFile").onchange=function(e){doRestore(e.target.files[0]);};
+  function getStore(name, includeDeleted) {
+    if (STORES.indexOf(name) < 0) return [];
+    var list = loadDB().stores[name] || [];
+    if (includeDeleted) return list;
+    return list.filter(function (item) { return !item.deleted; });
+  }
 
-document.getElementById("btnExit").onclick=function(){location.href="index.html";};
-(function(){var btn=document.getElementById("btnMic");var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return;
-var rec=new SR(),on=false;rec.lang="fa-IR";rec.continuous=true;rec.interimResults=false;
-rec.onresult=function(ev){for(var i=ev.resultIndex;i<ev.results.length;i++)if(ev.results[i].isFinal){var a=document.activeElement;if(a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA")){var t=ev.results[i][0].transcript;var s=a.selectionStart||0,e2=a.selectionEnd||0;a.value=a.value.slice(0,s)+t+a.value.slice(e2);a.dispatchEvent(new Event("input",{bubbles:true}));}}};
-rec.onend=function(){if(on)try{rec.start();}catch(e){};};
-btn.onclick=function(){if(on){on=false;try{rec.stop();}catch(e){}btn.classList.remove("on");}else{on=true;try{rec.start();}catch(e){}btn.classList.add("on");}};})();
+  function getTabId() {
+    if (!window.__lawyerTabId) {
+      window.__lawyerTabId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+    return window.__lawyerTabId;
+  }
 
-ensureLogin(function(){
-  document.querySelectorAll(".jdate").forEach(attachJDate);
-  document.getElementById("activeUser").textContent="کاربر فعال: "+userName();
-  renderDash();renderNotes();renderRems();renderCart();
-  showPanel("p-dash");
-});
+  function userName() {
+    try {
+      var s = currentSession();
+      return (s && (s.name || s.user)) || "سیستم";
+    } catch (e) { return "سیستم"; }
+  }
+
+  function acquireLock() {
+    var now = Date.now();
+    var lock = loadJSON(LOCK_KEY, null);
+    if (lock && lock.until > now && lock.tabId !== getTabId()) {
+      toast("تب دیگری در حال ویرایش است. چند لحظه صبر کنید.", "err");
+      return false;
+    }
+    saveJSON(LOCK_KEY, { tabId: getTabId(), until: now + 8000, user: userName() });
+    return true;
+  }
+
+  function addAudit(action, store, itemId, extra) {
+    try {
+      var logs = loadJSON(AUDIT_KEY, []);
+      logs.unshift({
+        id: uid(), action: action, store: store, itemId: itemId || null,
+        user: userName(), at: new Date().toISOString(), extra: extra || null
+      });
+      if (logs.length > 500) logs = logs.slice(0, 500);
+      saveJSON(AUDIT_KEY, logs);
+    } catch (e) {}
+  }
+
+  function setStore(name, arr, options) {
+    options = options || {};
+    if (STORES.indexOf(name) < 0) return false;
+    if (!acquireLock()) return false;
+    var db = loadDB();
+    db.stores[name] = Array.isArray(arr) ? arr : [];
+    var ok = saveDB(db);
+    if (ok) {
+      notifyChange(name);
+      if (options.auditAction) addAudit(options.auditAction, name, options.itemId, options.extra);
+    }
+    return ok;
+  }
+
+  function softDelete(store, id) {
+    var list = getStore(store, true);
+    var found = false;
+    list.forEach(function (item) {
+      if (item.id === id) {
+        item.deleted = true;
+        item.deletedAt = new Date().toISOString();
+        item.deletedBy = userName();
+        found = true;
+      }
+    });
+    if (!found) return false;
+    return setStore(store, list, { auditAction: "delete", itemId: id });
+  }
+
+  function restoreDeleted(store, id) {
+    var list = getStore(store, true);
+    var found = false;
+    list.forEach(function (item) {
+      if (item.id === id) {
+        item.deleted = false;
+        delete item.deletedAt;
+        delete item.deletedBy;
+        found = true;
+      }
+    });
+    if (!found) return false;
+    return setStore(store, list, { auditAction: "restore", itemId: id });
+  }
+
+  function restoreFromBackup() {
+    try {
+      var bak = localStorage.getItem(BACKUP_KEY);
+      if (!bak) { toast("پشتیبان اضطراری وجود ندارد", "err"); return false; }
+      if (!confirm("داده‌ها از آخرین پشتیبان بازیابی شود؟")) return false;
+      localStorage.setItem(KEY, bak);
+      notifyChange("*");
+      toast("بازیابی از پشتیبان انجام شد");
+      return true;
+    } catch (e) {
+      toast("خطا در بازیابی", "err");
+      return false;
+    }
+  }
+
+  /* ===================== تاریخ ===================== */
+  var FA = ["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"];
+  var JM = ["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"];
+  var JW = ["ش","ی","د","س","چ","پ","ج"];
+
+  function toFa(n) {
+    return String(n).replace(/\d/g, function (d) { return FA[+d]; });
+  }
+  function toEn(s) {
+    return String(s == null ? "" : s).replace(/[۰-۹]/g, function (d) {
+      return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);
+    }).replace(/,/g, "").trim();
+  }
+  function g2j(gy, gm, gd) {
+    var g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
+    var gy2 = (gm > 2) ? (gy + 1) : gy;
+    var days = 355666 + 365 * gy + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
+    var jy = -1595 + 33 * Math.floor(days / 12053);
+    days %= 12053;
+    jy += 4 * Math.floor(days / 1461);
+    days %= 1461;
+    if (days > 365) {
+      jy += Math.floor((days - 1) / 365);
+      days = (days - 1) % 365;
+    }
+    var jm = (days < 186) ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
+    var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
+    return { jy: jy, jm: jm, jd: jd };
+  }
+  function j2g(jy, jm, jd) {
+    var jy2 = jy - 979, jm2 = jm - 1, jd2 = jd - 1;
+    var days = 365 * jy2 + Math.floor(jy2 / 33) * 8 + Math.floor(((jy2 % 33) + 3) / 4);
+    for (var i = 0; i < jm2; ++i) days += (i < 6 ? 31 : 30);
+    days += jd2;
+    var gy = 1600 + 400 * Math.floor(days / 146097);
+    days %= 146097;
+    var leap = true;
+    if (days >= 36525) {
+      days--;
+      gy += 100 * Math.floor(days / 36524);
+      days %= 36524;
+      if (days >= 365) leap = false; else days++;
+    }
+    gy += 4 * Math.floor(days / 1461);
+    days %= 1461;
+    if (days >= 366) {
+      leap = false;
+      days--;
+      gy += Math.floor(days / 365);
+      days = days % 365;
+    }
+    var gd = days + 1;
+    var sal_a = [0, 31, (leap ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    var gm;
+    for (gm = 1; gm <= 12 && gd > sal_a[gm]; gm++) gd -= sal_a[gm];
+    return { gy: gy, gm: gm, gd: gd };
+  }
+  function jML(jy, jm) {
+    if (jm <= 6) return 31;
+    if (jm <= 11) return 30;
+    var a = j2g(jy, 12, 30);
+    var b = g2j(a.gy, a.gm, a.gd);
+    return (b.jy === jy && b.jm === 12 && b.jd === 30) ? 30 : 29;
+  }
+  function fmtJ(jy, jm, jd) {
+    return toFa(jy) + "/" + toFa(String(jm).padStart(2, "0")) + "/" + toFa(String(jd).padStart(2, "0"));
+  }
+  function todayJ() {
+    var n = new Date();
+    var j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    return fmtJ(j.jy, j.jm, j.jd);
+  }
+  function parseJDate(str) {
+    var s = toEn(str || "");
+    var m = s.match(/^(\d{3,4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+    if (!m) return null;
+    var jy = +m[1], jm = +m[2], jd = +m[3];
+    if (jm < 1 || jm > 12 || jd < 1 || jd > 31) return null;
+    return { jy: jy, jm: jm, jd: jd };
+  }
+  function daysBetweenJ(a, b) {
+    if (!a || !b) return null;
+    var ga = j2g(a.jy, a.jm, a.jd);
+    var gb = j2g(b.jy, b.jm, b.jd);
+    var da = new Date(ga.gy, ga.gm - 1, ga.gd);
+    var db = new Date(gb.gy, gb.gm - 1, gb.gd);
+    return Math.round((db - da) / 86400000);
+  }
+  function todayJObj() {
+    var n = new Date();
+    return g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+  }
+  function normalizeSpokenNumbers(text) {
+    if (!text) return text;
+    var map = { "صفر":"0","یک":"1","دو":"2","سه":"3","چهار":"4","پنج":"5","شش":"6","هفت":"7","هشت":"8","نه":"9","ده":"10","یازده":"11","دوازده":"12","بیست":"20","سی":"30" };
+    var t = text;
+    Object.keys(map).forEach(function (k) { t = t.replace(new RegExp(k, "g"), map[k]); });
+    return t;
+  }
+
+  function tickClock() {
+    var n = new Date();
+    var j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    if ($("dtJ")) $("dtJ").textContent = fmtJ(j.jy, j.jm, j.jd);
+    if ($("dtG")) $("dtG").textContent = n.getFullYear() + "/" + String(n.getMonth() + 1).padStart(2, "0") + "/" + String(n.getDate()).padStart(2, "0");
+    if ($("dtC")) $("dtC").textContent = toFa(String(n.getHours()).padStart(2, "0")) + ":" + toFa(String(n.getMinutes()).padStart(2, "0")) + ":" + toFa(String(n.getSeconds()).padStart(2, "0"));
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  function toast(m, t) {
+    var el = $("toast");
+    if (!el) return;
+    el.textContent = m;
+    el.className = "toast show" + (t === "err" ? " err" : "");
+    clearTimeout(el._t);
+    el._t = setTimeout(function () { el.classList.remove("show"); }, 2500);
+  }
+
+  /* ===================== احراز هویت ===================== */
+  function getAuth() {
+    return loadJSON(USERS_KEY, {
+      users: [{ user: "admin", pass: "admin", name: "مدیر", role: "admin" }],
+      session: null
+    });
+  }
+  function saveAuth(a) { return saveJSON(USERS_KEY, a); }
+  function currentSession() {
+    var a = getAuth();
+    return a.session || null;
+  }
+  function isAdmin() {
+    var s = currentSession();
+    return !!(s && s.role === "admin");
+  }
+  function applyRoleUI() {
+    document.querySelectorAll('button[data-panel="p-users"], button[data-panel="p-audit"]').forEach(function (el) {
+      el.style.display = isAdmin() ? "" : "none";
+    });
+  }
+  function ensureLogin(cb) {
+    var a = getAuth();
+    if (!Array.isArray(a.users) || !a.users.length) {
+      a.users = [{ user: "admin", pass: "admin", name: "مدیر", role: "admin" }];
+      saveAuth(a);
+    }
+    if (a.session && a.session.user) { cb(); return; }
+    var m = document.createElement("div");
+    m.className = "login-mask";
+    m.innerHTML = '<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود — وکیل هوشمند</h2><label>نام کاربری</label><input id="lgU" autocomplete="username"><label>رمز</label><input id="lgP" type="password" autocomplete="current-password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty" style="margin-top:8px">پیش‌فرض: admin / admin</p></div>';
+    document.body.appendChild(m);
+    function doLogin() {
+      var u = $("lgU").value.trim();
+      var p = $("lgP").value;
+      var f = (a.users || []).find(function (x) { return x.user === u && x.pass === p; });
+      if (!f) { toast("نام کاربری یا رمز اشتباه است", "err"); return; }
+      a.session = { user: f.user, name: f.name || f.user, role: f.role || "user" };
+      saveAuth(a);
+      m.remove();
+      cb();
+    }
+    $("lgGo").onclick = doLogin;
+    $("lgP").addEventListener("keydown", function (e) { if (e.key === "Enter") doLogin(); });
+  }
+
+  /* ===================== قالب‌ها ===================== */
+  var TEMPLATES = {
+    petition: {
+      badvi: "ریاست محترم دادگاه عمومی حقوقی\n\nبا سلام\nاینجانب .................... به وکالت از خواهان .................... به طرفیت خوانده .................... به استحضار می‌رساند:\n\nخواسته: ....................\n\nدلایل و منضمات: ....................\n\nمستدعی است با لحاظ مواد قانونی مربوطه حکم به ورود خواسته صادر فرمایید.\n\nبا احترام",
+      tajdid: "ریاست محترم دادگاه تجدیدنظر استان\n\nبا سلام\nاینجانب .................... به وکالت از تجدیدنظرخواه نسبت به دادنامه شماره .................... صادره از شعبه .................... ظرف مهلت قانونی اعتراض دارم.\n\nجهات تجدیدنظرخواهی: ....................\n\nبا احترام",
+      dastor: "ریاست محترم دادگاه عمومی حقوقی\n\nبا سلام\nمستدعی است با عنایت به فوریت امر، وفق مواد ۳۱۰ به بعد قانون آیین دادرسی مدنی دستور موقت مبنی بر .................... صادر فرمایید.\n\nبا احترام"
+    },
+    defense: {
+      defae: "ریاست محترم دادگاه\n\nبا سلام\nدر خصوص پرونده کلاسه .................... به وکالت از خوانده در مقام دفاع به استحضار می‌رساند:\n\n۱. ....................\n۲. ....................\n\nتقاضای رد دعوای خواهان را دارم.\n\nبا احترام",
+      etraz: "ریاست محترم دادگاه\n\nبا سلام\nنسبت به دادنامه شماره .................... صادره از آن مرجع ظرف مهلت قانونی اعتراض دارم.\n\nجهات اعتراض: ....................\n\nبا احترام",
+      takmili: "ریاست محترم دادگاه\n\nبا سلام\nدر تکمیل لایحه قبلی و در خصوص پرونده کلاسه .................... به استحضار می‌رساند:\n\n....................\n\nبا احترام"
+    }
+  };
+
+  /* ===================== گردش‌کار ساده ===================== */
+  function autoUpdateCaseStage(caseNo, actionType) {
+    if (!caseNo) return;
+    var cases = getStore("case", true);
+    var updated = false;
+    var stageMap = {
+      "ثبت دادخواست": "ثبت دادخواست",
+      "ارائه لایحه": "تبادل لوایح",
+      "حضور در جلسه": "جلسه دادرسی",
+      "درخواست کارشناسی": "کارشناسی",
+      "اعتراض به رأی": "اعتراض / تجدیدنظر",
+      "پیگیری اجرا": "اجرای احکام"
+    };
+    var newStage = stageMap[actionType];
+    if (!newStage) return;
+    cases.forEach(function (c) {
+      if ((c["شماره پرونده"] || "").trim() === caseNo.trim() && !c.deleted) {
+        c["مرحله"] = newStage;
+        if (c["وضعیت"] === "باز") c["وضعیت"] = "در جریان";
+        updated = true;
+      }
+    });
+    if (updated) {
+      setStore("case", cases, { auditAction: "auto-stage", extra: newStage });
+      toast("مرحله پرونده به‌صورت خودکار به‌روز شد");
+    }
+  }
+
+  /* ===================== کارتابل با پیوست فایل ===================== */
+  function getCartAll() {
+    try { return JSON.parse(localStorage.getItem(CART_KEY) || "[]") || []; }
+    catch (e) { return []; }
+  }
+  function saveCartAll(list) {
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify(list));
+      return true;
+    } catch (e) {
+      toast("خطا در ذخیره کارتابل (حجم فایل زیاد است)", "err");
+      return false;
+    }
+  }
+  function formatSize(bytes) {
+    if (!bytes) return "0 B";
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+  }
+
+  function renderCart() {
+    var all = getCartAll();
+    var mine = all.filter(function (x) { return x.to === MOD; });
+    var open = mine.filter(function (x) { return x.status !== "done"; });
+    var done = mine.filter(function (x) { return x.status === "done"; });
+    if (!$("cartList")) return;
+
+    function row(x, isDone) {
+      var attachHtml = "";
+      if (x.attachment && x.attachment.data) {
+        attachHtml = '<div style="margin-top:6px;padding:6px;background:#0f172a;border-radius:8px;font-size:.7rem">' +
+          "📎 " + esc(x.attachment.name) + " (" + formatSize(x.attachment.size || 0) + ") " +
+          '<button type="button" class="btn btn-g btn-dl-attach" data-cid="' + esc(x.id) + '" style="padding:2px 8px;font-size:.65rem;margin-right:6px">دانلود</button></div>';
+      }
+      return '<div class="list-item" style="margin-bottom:10px">' +
+        "<b>" + esc(x.title || "بدون عنوان") + "</b><br>" +
+        "<small>از: " + esc(x.fromLabel || x.from || "") + " | " + esc(x.at || "") + "</small>" +
+        '<pre style="white-space:pre-wrap;font-size:12px;margin:6px 0">' + esc(x.body || "") + "</pre>" +
+        attachHtml +
+        (isDone ? '<small style="color:#86efac">انجام‌شده</small>' :
+          '<button type="button" class="btn btn-ok btn-cart-done" data-cid="' + esc(x.id) + '">علامت به‌عنوان انجام‌شده</button>') +
+        "</div>";
+    }
+
+    var html = "";
+    if (open.length) {
+      html += "<h3 style=\"margin:8px 0;font-size:.9rem;color:#7dd3fc\">در انتظار (" + toFa(open.length) + ")</h3>";
+      html += open.map(function (x) { return row(x, false); }).join("");
+    }
+    if (done.length) {
+      html += "<h3 style=\"margin:12px 0 8px;font-size:.9rem;color:#94a3b8\">انجام‌شده (" + toFa(done.length) + ")</h3>";
+      html += done.slice(0, 30).map(function (x) { return row(x, true); }).join("");
+    }
+    $("cartList").innerHTML = html || '<p class="empty">صندوق دریافت خالی است</p>';
+
+    $("cartList").querySelectorAll(".btn-cart-done").forEach(function (btn) {
+      btn.onclick = function () {
+        var all2 = getCartAll();
+        all2.forEach(function (x) { if (x.id === btn.getAttribute("data-cid")) x.status = "done"; });
+        saveCartAll(all2);
+        renderCart();
+        renderDash();
+        toast("از کارتابل فعال خارج شد");
+      };
+    });
+
+    $("cartList").querySelectorAll(".btn-dl-attach").forEach(function (btn) {
+      btn.onclick = function () {
+        var item = getCartAll().find(function (x) { return x.id === btn.getAttribute("data-cid"); });
+        if (!item || !item.attachment || !item.attachment.data) {
+          toast("فایل یافت نشد", "err");
+          return;
+        }
+        try {
+          var link = document.createElement("a");
+          link.href = item.attachment.data;
+          link.download = item.attachment.name || "file";
+          link.click();
+          toast("دانلود آغاز شد");
+        } catch (e) {
+          toast("خطا در دانلود فایل", "err");
+        }
+      };
+    });
+  }
+
+  function sendCartMessage() {
+    var to = $("cartTo") ? $("cartTo").value : "suite";
+    var title = $("cartTitle") ? $("cartTitle").value.trim() : "";
+    var body = $("cartMsg") ? $("cartMsg").value.trim() : "";
+    var fileInput = $("cartFile");
+
+    if (!title && !body && !(fileInput && fileInput.files && fileInput.files[0])) {
+      toast("عنوان، متن یا فایل لازم است", "err");
+      return;
+    }
+
+    function doSend(attachment) {
+      var all = getCartAll();
+      all.unshift({
+        id: uid(),
+        from: MOD,
+        fromLabel: "وکیل هوشمند",
+        to: to,
+        title: title || (attachment ? "ارسال فایل" : "پیام"),
+        body: body,
+        status: "new",
+        at: new Date().toLocaleString("fa-IR"),
+        attachment: attachment || null,
+        version: 1
+      });
+      if (!saveCartAll(all)) return;
+      if ($("cartTitle")) $("cartTitle").value = "";
+      if ($("cartMsg")) $("cartMsg").value = "";
+      if (fileInput) fileInput.value = "";
+      toast("پیام / فایل ارسال شد");
+      renderDash();
+      renderCart();
+    }
+
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      var file = fileInput.files[0];
+      if (file.size > CART_MAX_FILE_SIZE) {
+        toast("حجم فایل بیشتر از ۱.۵ مگابایت است", "err");
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function () {
+        doSend({
+          name: file.name,
+          type: file.type || "application/octet-stream",
+          size: file.size,
+          data: reader.result
+        });
+      };
+      reader.onerror = function () { toast("خطا در خواندن فایل", "err"); };
+      reader.readAsDataURL(file);
+    } else {
+      doSend(null);
+    }
+  }
+
+  /* ===================== رندر فهرست و گزارش ===================== */
+  function itemLine(it) {
+    var parts = [];
+    Object.keys(it).forEach(function (k) {
+      if (["id","at","_title","deleted","deletedAt","deletedBy"].indexOf(k) >= 0) return;
+      if (it[k] != null && String(it[k]).trim() !== "") parts.push(String(it[k]));
+    });
+    return parts.slice(0, 6).join(" | ") || "(بدون شرح)";
+  }
+
+  function renderListBox(box) {
+    var store = box.getAttribute("data-store");
+    if (STORES.indexOf(store) < 0) {
+      box.innerHTML = '<p class="empty">انبار نامعتبر</p>';
+      return;
+    }
+    var includeDeleted = !!showDeleted[store];
+    var arr = getStore(store, includeDeleted);
+    var q = "";
+    var search = document.querySelector('.list-search[data-store="' + store + '"]');
+    if (search) q = (search.value || "").toLowerCase().trim();
+    var filtered = arr.filter(function (it) {
+      return !q || itemLine(it).toLowerCase().indexOf(q) >= 0;
+    });
+    if (!filtered.length) {
+      box.innerHTML = '<p class="empty">موردی نیست</p>';
+      return;
+    }
+    box.innerHTML = filtered.map(function (it) {
+      var isDel = !!it.deleted;
+      var cls = "list-item" + (selList[store] === it.id ? " sel" : "") + (isDel ? " deleted" : "");
+      var extra = isDel ? " <small style='color:#f87171'>[حذف‌شده]</small>" : "";
+      var btn = isDel ? '<button type="button" class="btn btn-ok btn-restore" data-store="' + store + '" data-id="' + esc(it.id) + '" style="margin-top:4px;padding:3px 8px;font-size:.65rem">بازیابی</button>' : "";
+      return '<div class="' + cls + '" data-id="' + esc(it.id) + '">' + esc(itemLine(it)) + extra + btn + "</div>";
+    }).join("");
+    box.querySelectorAll(".list-item").forEach(function (el) {
+      el.onclick = function (e) {
+        if (e.target.classList.contains("btn-restore")) return;
+        selList[store] = el.getAttribute("data-id");
+        renderListBox(box);
+      };
+    });
+    box.querySelectorAll(".btn-restore").forEach(function (btn) {
+      btn.onclick = function (e) {
+        e.stopPropagation();
+        if (restoreDeleted(btn.getAttribute("data-store"), btn.getAttribute("data-id"))) toast("بازیابی شد");
+      };
+    });
+  }
+  function renderAllLists() {
+    document.querySelectorAll(".data-list").forEach(renderListBox);
+  }
+
+  function caseDeadlineField(it) { return it["مهلت بعدی"] || it["مهلت"] || ""; }
+  function isDeadlineNear(it, daysWindow) {
+    var jd = parseJDate(caseDeadlineField(it));
+    if (!jd) return false;
+    var diff = daysBetweenJ(todayJObj(), jd);
+    return diff != null && diff >= 0 && diff <= (daysWindow || 3);
+  }
+  function isDeadlineOverdue(it) {
+    var jd = parseJDate(caseDeadlineField(it));
+    if (!jd) return false;
+    var diff = daysBetweenJ(todayJObj(), jd);
+    return diff != null && diff < 0;
+  }
+
+  function renderReport(el) {
+    var store = el.getAttribute("data-store");
+    var filter = el.getAttribute("data-filter") || "all";
+    var arr = getStore(store);
+    var html = "";
+    if (store === "case" && filter === "open") {
+      arr = arr.filter(function (x) {
+        return (x["وضعیت"] || "") !== "بایگانی / مختومه" && (x["وضعیت"] || "") !== "مختومه";
+      });
+    }
+    if (store === "case" && filter === "deadline") {
+      var near = arr.filter(function (x) { return isDeadlineNear(x, 7); });
+      var overdue = arr.filter(function (x) { return isDeadlineOverdue(x); });
+      html = '<div class="list-item"><b>مهلت گذشته: ' + toFa(overdue.length) + " | نزدیک: " + toFa(near.length) + "</b></div>";
+      arr = overdue.concat(near.filter(function (x) {
+        return !overdue.some(function (o) { return o.id === x.id; });
+      }));
+    }
+    if (filter === "topic" && store === "case") {
+      var map = {};
+      arr.forEach(function (x) {
+        var t = x["نوع دعوا"] || "سایر";
+        map[t] = (map[t] || 0) + 1;
+      });
+      el.innerHTML = Object.keys(map).length ? Object.keys(map).map(function (k) {
+        return '<div class="list-item">' + esc(k) + ": " + toFa(map[k]) + "</div>";
+      }).join("") : '<p class="empty">—</p>';
+      return;
+    }
+    if (filter === "stage" && store === "case") {
+      var map2 = {};
+      arr.forEach(function (x) {
+        var t = x["مرحله"] || "—";
+        map2[t] = (map2[t] || 0) + 1;
+      });
+      el.innerHTML = Object.keys(map2).length ? Object.keys(map2).map(function (k) {
+        return '<div class="list-item">' + esc(k) + ": " + toFa(map2[k]) + "</div>";
+      }).join("") : '<p class="empty">—</p>';
+      return;
+    }
+    if (store === "cost") {
+      var sum = 0;
+      arr.forEach(function (x) {
+        sum += parseInt(toEn(String(x["مبلغ"] || "0")).replace(/\D/g, ""), 10) || 0;
+      });
+      html = '<div class="list-item"><b>جمع: ' + toFa(sum.toLocaleString()) + " ریال</b></div>";
+    }
+    el.innerHTML = html + (arr.length ? arr.map(function (it) {
+      return '<div class="list-item">' + esc(itemLine(it)) + "</div>";
+    }).join("") : '<p class="empty">موردی نیست</p>');
+  }
+  function renderAllReports() {
+    document.querySelectorAll(".data-report").forEach(renderReport);
+  }
+
+  /* ===================== فرم‌ها ===================== */
+  function collectFormData(card) {
+    var data = {}, count = 0;
+    card.querySelectorAll("[data-f]").forEach(function (inp) {
+      var key = inp.getAttribute("data-f");
+      if (!key) return;
+      var val = (inp.value || "").trim();
+      data[key] = val;
+      if (val) count++;
+    });
+    return { data: data, filled: count };
+  }
+  function validateForm(store, data, filled) {
+    if (filled < 1) return "حداقل یک فیلد را پر کنید";
+    var prefs = PREFERRED_REQUIRED[store] || [];
+    for (var i = 0; i < prefs.length; i++) {
+      var k = prefs[i];
+      if (Object.prototype.hasOwnProperty.call(data, k) && !String(data[k] || "").trim()) {
+        return "فیلد «" + k + "» را پر کنید";
+      }
+    }
+    return null;
+  }
+  function saveForm(store, andNew, btn) {
+    if (STORES.indexOf(store) < 0) return;
+    var card = btn.closest(".card");
+    if (!card) return;
+    var collected = collectFormData(card);
+    var err = validateForm(store, collected.data, collected.filled);
+    if (err) { toast(err, "err"); return; }
+    var row = { id: uid(), at: new Date().toISOString(), _title: btn.getAttribute("data-title") || store };
+    Object.keys(collected.data).forEach(function (k) { row[k] = collected.data[k]; });
+    var arr = getStore(store, true);
+    arr.unshift(row);
+    if (!setStore(store, arr, { auditAction: "create", itemId: row.id })) return;
+    if (store === "cact") autoUpdateCaseStage(row["پرونده"], row["نوع اقدام"]);
+    if (andNew) {
+      card.querySelectorAll("[data-f]").forEach(function (inp) { inp.value = ""; });
+      card.querySelectorAll(".jdate").forEach(function (inp) { if (!inp.value) inp.value = todayJ(); });
+    }
+    toast("ثبت شد");
+  }
+
+  function renderDash() {
+    var cases = getStore("case");
+    var open = cases.filter(function (x) {
+      return (x["وضعیت"] || "") !== "بایگانی / مختومه" && (x["وضعیت"] || "") !== "مختومه";
+    }).length;
+    var notes = loadJSON(NOTES_KEY, []).length;
+    var rems = loadJSON(REM_KEY, []).filter(function (r) { return r.status !== "done"; }).length;
+    var cart = getCartAll().filter(function (x) { return x.to === MOD && x.status !== "done"; }).length;
+    var near = cases.filter(function (x) { return isDeadlineNear(x, 7) || isDeadlineOverdue(x); }).length;
+    if ($("kpi")) {
+      $("kpi").innerHTML =
+        '<div class="box"><div class="n">' + toFa(cases.length) + '</div><div class="l">پرونده</div></div>' +
+        '<div class="box"><div class="n">' + toFa(open) + '</div><div class="l">باز</div></div>' +
+        '<div class="box"><div class="n">' + toFa(near) + '</div><div class="l">مهلت</div></div>' +
+        '<div class="box"><div class="n">' + toFa(getStore("cact").length) + '</div><div class="l">اقدام</div></div>' +
+        '<div class="box"><div class="n">' + toFa(getStore("consult").length) + '</div><div class="l">مشاوره</div></div>' +
+        '<div class="box"><div class="n">' + toFa(getStore("petition").length) + '</div><div class="l">دادخواست</div></div>' +
+        '<div class="box"><div class="n">' + toFa(getStore("hearing").length) + '</div><div class="l">جلسه</div></div>' +
+        '<div class="box"><div class="n">' + toFa(notes) + '</div><div class="l">یادداشت</div></div>' +
+        '<div class="box"><div class="n">' + toFa(rems) + '</div><div class="l">یادآوری</div></div>' +
+        '<div class="box"><div class="n">' + toFa(cart) + '</div><div class="l">کارتابل</div></div>';
+    }
+    if ($("dashMeta")) $("dashMeta").textContent = "کاربر: " + userName() + (isAdmin() ? " (مدیر)" : "");
+    if ($("activeUser")) $("activeUser").textContent = "کاربر فعال: " + userName();
+    if ($("aNotes")) $("aNotes").textContent = String(notes);
+    if ($("aRems")) $("aRems").textContent = String(rems);
+    if ($("aCart")) $("aCart").textContent = String(cart);
+    applyRoleUI();
+  }
+
+  function showPanel(id) {
+    if (!id || !$(id)) { toast("صفحه یافت نشد", "err"); return; }
+    if ((id === "p-users" || id === "p-audit") && !isAdmin()) {
+      toast("فقط مدیر دسترسی دارد", "err"); return;
+    }
+    document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("on"); });
+    $(id).classList.add("on");
+    document.querySelectorAll(".side .sub button[data-panel]").forEach(function (b) {
+      b.classList.toggle("on", b.getAttribute("data-panel") === id);
+    });
+    if (id === "p-dash") renderDash();
+    if (id === "p-cal") renderFullCal();
+    if (id === "p-users") renderUsers();
+    if (id === "p-audit") renderAudit();
+    if (id.indexOf("p-list") === 0) renderAllLists();
+    if (id.indexOf("p-rep") === 0) renderAllReports();
+    if (id === "p-notes") renderNotes();
+    if (id === "p-rems") renderRems();
+    if (id === "p-cartable") renderCart();
+  }
+
+  /* ===================== تقویم و رندرهای فرعی ===================== */
+  function attachJDate(input) {
+    if (!input || input._j) return;
+    input._j = true;
+    var wrap = input.parentNode;
+    if (!wrap.classList.contains("date-wrap")) {
+      var d = document.createElement("div");
+      d.className = "date-wrap";
+      wrap.insertBefore(d, input);
+      d.appendChild(input);
+      wrap = d;
+    }
+    var pop, vy, vm;
+    function close() { if (pop) { pop.remove(); pop = null; } document.removeEventListener("click", out); }
+    function out(e) { if (pop && !pop.contains(e.target) && e.target !== input) close(); }
+    function open() {
+      close();
+      var n = new Date();
+      var j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+      var m = toEn(input.value || "").match(/^(\d{4})[\/\-](\d{1,2})/);
+      vy = m ? +m[1] : j.jy;
+      vm = m ? +m[2] : j.jm;
+      pop = document.createElement("div");
+      pop.className = "jcal";
+      wrap.appendChild(pop);
+      render();
+      setTimeout(function () { document.addEventListener("click", out); }, 0);
+    }
+    function render() {
+      if (!pop) return;
+      pop.innerHTML = "";
+      var h = document.createElement("div");
+      h.className = "jcal-h";
+      h.innerHTML = '<button type="button" data-a="py">«</button><button type="button" data-a="pm">‹</button><span class="ttl">' + JM[vm - 1] + " " + toFa(vy) + '</span><button type="button" data-a="nm">›</button><button type="button" data-a="ny">»</button>';
+      var w = document.createElement("div");
+      w.className = "jcal-w";
+      JW.forEach(function (x) { var s = document.createElement("span"); s.textContent = x; w.appendChild(s); });
+      var days = document.createElement("div");
+      days.className = "jcal-d";
+      var dim = jML(vy, vm);
+      var fg = j2g(vy, vm, 1);
+      var st = (new Date(fg.gy, fg.gm - 1, fg.gd).getDay() + 1) % 7;
+      for (var i = 0; i < st; i++) {
+        var em = document.createElement("button");
+        em.type = "button"; em.disabled = true; em.style.visibility = "hidden";
+        days.appendChild(em);
+      }
+      for (var d = 1; d <= dim; d++) {
+        (function (day) {
+          var g = j2g(vy, vm, day);
+          var b = document.createElement("button");
+          b.type = "button";
+          b.innerHTML = '<span class="jd">' + toFa(day) + '</span><span class="gd">' + g.gy + "/" + String(g.gm).padStart(2, "0") + "/" + String(g.gd).padStart(2, "0") + "</span>";
+          b.onclick = function (ev) {
+            ev.stopPropagation();
+            input.value = fmtJ(vy, vm, day);
+            input.dispatchEvent(new Event("input", { bubbles: true }));
+            close();
+          };
+          days.appendChild(b);
+        })(d);
+      }
+      pop.appendChild(h); pop.appendChild(w); pop.appendChild(days);
+      h.querySelectorAll("button").forEach(function (b) {
+        b.onclick = function (ev) {
+          ev.stopPropagation();
+          var a = b.getAttribute("data-a");
+          if (a === "pm") { vm--; if (vm < 1) { vm = 12; vy--; } }
+          if (a === "nm") { vm++; if (vm > 12) { vm = 1; vy++; } }
+          if (a === "py") vy--;
+          if (a === "ny") vy++;
+          render();
+        };
+      });
+    }
+    input.addEventListener("click", open);
+    input.addEventListener("focus", open);
+  }
+
+  function renderFullCal() {
+    var box = $("fullCal");
+    if (!box) return;
+    var n = new Date();
+    var j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    var vy = box._y || j.jy;
+    var vm = box._m || j.jm;
+    box._y = vy; box._m = vm;
+    var html = '<div class="jcal" style="position:static;width:100%;max-width:340px"><div class="jcal-h"><button type="button" id="fcPy">«</button><button type="button" id="fcPm">‹</button><span class="ttl">' + JM[vm - 1] + " " + toFa(vy) + '</span><button type="button" id="fcNm">›</button><button type="button" id="fcNy">»</button></div><div class="jcal-w">';
+    JW.forEach(function (x) { html += "<span>" + x + "</span>"; });
+    html += '</div><div class="jcal-d">';
+    var dim = jML(vy, vm);
+    var fg = j2g(vy, vm, 1);
+    var st = (new Date(fg.gy, fg.gm - 1, fg.gd).getDay() + 1) % 7;
+    for (var i = 0; i < st; i++) html += '<button type="button" style="visibility:hidden"></button>';
+    for (var d = 1; d <= dim; d++) {
+      var g = j2g(vy, vm, d);
+      html += '<button type="button" data-d="' + d + '"><span class="jd">' + toFa(d) + '</span><span class="gd">' + g.gy + "/" + g.gm + "/" + g.gd + "</span></button>";
+    }
+    html += "</div></div>";
+    box.innerHTML = html;
+    $("fcPm").onclick = function () { box._m--; if (box._m < 1) { box._m = 12; box._y--; } renderFullCal(); };
+    $("fcNm").onclick = function () { box._m++; if (box._m > 12) { box._m = 1; box._y++; } renderFullCal(); };
+    $("fcPy").onclick = function () { box._y--; renderFullCal(); };
+    $("fcNy").onclick = function () { box._y++; renderFullCal(); };
+    box.querySelectorAll("[data-d]").forEach(function (b) {
+      b.onclick = function () {
+        if ($("remDate")) $("remDate").value = fmtJ(box._y, box._m, +b.getAttribute("data-d"));
+        showPanel("p-rems");
+      };
+    });
+  }
+
+  function renderNotes() {
+    var list = loadJSON(NOTES_KEY, []);
+    if (!$("notesList")) return;
+    $("notesList").innerHTML = list.length ? list.map(function (x) {
+      return '<div class="list-item' + (selNote === x.id ? " sel" : "") + '" data-nid="' + esc(x.id) + '">' + esc(x.text) + "</div>";
+    }).join("") : '<p class="empty">—</p>';
+    $("notesList").querySelectorAll("[data-nid]").forEach(function (el) {
+      el.onclick = function () { selNote = el.getAttribute("data-nid"); renderNotes(); };
+    });
+  }
+  function renderRems() {
+    var list = loadJSON(REM_KEY, []);
+    if (!$("remsList")) return;
+    $("remsList").innerHTML = list.length ? list.map(function (x) {
+      return '<div class="list-item' + (selRem === x.id ? " sel" : "") + '" data-rid="' + esc(x.id) + '">' + esc(x.text) + " <small>(" + esc(x.date || "") + (x.status === "done" ? " · انجام" : "") + ")</small></div>";
+    }).join("") : '<p class="empty">—</p>';
+    $("remsList").querySelectorAll("[data-rid]").forEach(function (el) {
+      el.onclick = function () { selRem = el.getAttribute("data-rid"); renderRems(); };
+    });
+  }
+  function renderUsers() {
+    if (!isAdmin()) return;
+    var a = getAuth();
+    if ($("myUser")) $("myUser").value = (a.session && a.session.user) || "";
+    if ($("usersList")) {
+      $("usersList").innerHTML = (a.users || []).map(function (u) {
+        return '<div class="list-item">' + esc(u.user) + " — " + esc(u.name || "") + " <small>(" + esc(u.role || "user") + ")</small></div>";
+      }).join("");
+    }
+  }
+  function renderAudit() {
+    if (!isAdmin()) return;
+    var logs = loadJSON(AUDIT_KEY, []);
+    if (!$("auditList")) return;
+    $("auditList").innerHTML = logs.length ? logs.map(function (l) {
+      return '<div class="list-item"><b>' + esc(l.action) + "</b> | " + esc(l.store) + (l.itemId ? " | " + esc(l.itemId.slice(0, 8)) : "") + "<br><small>" + esc(l.user) + " — " + esc(l.at) + "</small></div>";
+    }).join("") : '<p class="empty">لاگی ثبت نشده</p>';
+  }
+
+  /* ===================== رویدادها ===================== */
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-panel]");
+    if (t && t.getAttribute("data-panel")) {
+      e.preventDefault();
+      showPanel(t.getAttribute("data-panel"));
+    }
+  });
+
+  document.querySelectorAll(".btn-save-form").forEach(function (b) {
+    b.onclick = function () { saveForm(b.getAttribute("data-store"), false, b); };
+  });
+  document.querySelectorAll(".btn-save-form-new").forEach(function (b) {
+    b.onclick = function () { saveForm(b.getAttribute("data-store"), true, b); };
+  });
+
+  document.querySelectorAll(".btn-del-sel").forEach(function (b) {
+    b.onclick = function () {
+      var store = b.getAttribute("data-store");
+      if (!selList[store]) { toast("ابتدا یک مورد را انتخاب کنید", "err"); return; }
+      if (!confirm("این مورد به حالت حذف‌شده منتقل شود؟")) return;
+      if (softDelete(store, selList[store])) {
+        selList[store] = null;
+        toast("حذف نرم انجام شد");
+      }
+    };
+  });
+
+  document.querySelectorAll(".toggle-deleted").forEach(function (chk) {
+    chk.onchange = function () {
+      showDeleted[chk.getAttribute("data-store")] = chk.checked;
+      var box = document.querySelector('.data-list[data-store="' + chk.getAttribute("data-store") + '"]');
+      if (box) renderListBox(box);
+    };
+  });
+
+  document.querySelectorAll(".list-search").forEach(function (inp) {
+    inp.oninput = function () {
+      document.querySelectorAll('.data-list[data-store="' + inp.getAttribute("data-store") + '"]').forEach(renderListBox);
+    };
+  });
+
+  document.querySelectorAll(".btn-template").forEach(function (btn) {
+    btn.onclick = function () {
+      var target = btn.getAttribute("data-target");
+      var tpl = btn.getAttribute("data-tpl");
+      var text = (TEMPLATES[target] && TEMPLATES[target][tpl]) || "";
+      if (target === "petition" && $("petitionText")) $("petitionText").value = text;
+      if (target === "defense" && $("defenseText")) $("defenseText").value = text;
+      toast("قالب درج شد");
+    };
+  });
+
+  if ($("btnCartSend")) $("btnCartSend").onclick = function () { sendCartMessage(); };
+  if ($("btnCartRefresh")) $("btnCartRefresh").onclick = function () { renderCart(); renderDash(); toast("بروزرسانی شد"); };
+
+  if ($("btnRestoreEmergency")) {
+    $("btnRestoreEmergency").onclick = function () {
+      if (restoreFromBackup()) {
+        renderDash(); renderAllLists(); renderAllReports();
+      }
+    };
+  }
+  if ($("btnRefreshAudit")) $("btnRefreshAudit").onclick = function () { renderAudit(); };
+
+  onDataChange(function () {
+    renderDash();
+    renderAllLists();
+    renderAllReports();
+    if ($("p-notes") && $("p-notes").classList.contains("on")) renderNotes();
+    if ($("p-rems") && $("p-rems").classList.contains("on")) renderRems();
+    if ($("p-cartable") && $("p-cartable").classList.contains("on")) renderCart();
+    if ($("p-audit") && $("p-audit").classList.contains("on")) renderAudit();
+  });
+
+  // یادداشت، یادآوری، کاربران، پشتیبان
+  if ($("btnNoteSave")) {
+    $("btnNoteSave").onclick = function () {
+      var t = $("noteText").value.trim();
+      if (!t) { toast("متن خالی است", "err"); return; }
+      var n = loadJSON(NOTES_KEY, []);
+      n.unshift({ id: uid(), text: t, at: new Date().toISOString() });
+      saveJSON(NOTES_KEY, n);
+      $("noteText").value = "";
+      renderNotes(); renderDash(); toast("ذخیره شد");
+    };
+  }
+  if ($("btnNoteDel")) {
+    $("btnNoteDel").onclick = function () {
+      if (!selNote) { toast("انتخاب کنید", "err"); return; }
+      saveJSON(NOTES_KEY, loadJSON(NOTES_KEY, []).filter(function (x) { return x.id !== selNote; }));
+      selNote = null; renderNotes(); renderDash(); toast("حذف شد");
+    };
+  }
+  if ($("btnRemAdd")) {
+    $("btnRemAdd").onclick = function () {
+      var t = $("remText").value.trim();
+      if (!t) { toast("متن خالی است", "err"); return; }
+      var n = loadJSON(REM_KEY, []);
+      n.unshift({ id: uid(), text: t, date: $("remDate") ? $("remDate").value : todayJ(), status: "pending" });
+      saveJSON(REM_KEY, n);
+      $("remText").value = "";
+      renderRems(); renderDash(); toast("افزوده شد");
+    };
+  }
+  if ($("btnRemDone")) {
+    $("btnRemDone").onclick = function () {
+      if (!selRem) { toast("انتخاب کنید", "err"); return; }
+      var n = loadJSON(REM_KEY, []);
+      n.forEach(function (x) { if (x.id === selRem) x.status = "done"; });
+      saveJSON(REM_KEY, n);
+      renderRems(); renderDash(); toast("انجام شد");
+    };
+  }
+  if ($("btnRemDel")) {
+    $("btnRemDel").onclick = function () {
+      if (!selRem) { toast("انتخاب کنید", "err"); return; }
+      saveJSON(REM_KEY, loadJSON(REM_KEY, []).filter(function (x) { return x.id !== selRem; }));
+      selRem = null; renderRems(); renderDash(); toast("حذف شد");
+    };
+  }
+
+  if ($("btnMyPass")) {
+    $("btnMyPass").onclick = function () {
+      var a = getAuth();
+      var u = (a.users || []).find(function (x) { return a.session && x.user === a.session.user; });
+      if (!u) return;
+      var p = $("myNewPass").value;
+      if (!p || p.length < 3) { toast("رمز حداقل ۳ کاراکتر", "err"); return; }
+      u.pass = p; saveAuth(a); $("myNewPass").value = ""; toast("رمز تغییر کرد");
+    };
+  }
+  if ($("btnAddUser")) {
+    $("btnAddUser").onclick = function () {
+      if (!isAdmin()) { toast("فقط مدیر", "err"); return; }
+      var u = $("nuUser").value.trim();
+      var p = $("nuPass").value;
+      var nm = $("nuName").value.trim();
+      if (!u || !p) { toast("یوزر و رمز لازم است", "err"); return; }
+      var a = getAuth();
+      if ((a.users || []).some(function (x) { return x.user === u; })) { toast("کاربر تکراری", "err"); return; }
+      a.users.push({ user: u, pass: p, name: nm || u, role: ($("nuRole") && $("nuRole").value) || "user" });
+      saveAuth(a);
+      if ($("nuUser")) $("nuUser").value = "";
+      if ($("nuPass")) $("nuPass").value = "";
+      if ($("nuName")) $("nuName").value = "";
+      renderUsers(); toast("کاربر ایجاد شد");
+    };
+  }
+
+  function dlBackup(name) {
+    var payload = {
+      app: "lawyer", version: CURRENT_VERSION, exportedAt: new Date().toISOString(),
+      data: loadDB(), notes: loadJSON(NOTES_KEY, []), reminders: loadJSON(REM_KEY, [])
+    };
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
+    a.download = name;
+    a.click();
+    toast("فایل پشتیبان دانلود شد");
+  }
+  if ($("btnBackupLocal")) $("btnBackupLocal").onclick = function () { dlBackup("lawyer-backup-" + Date.now() + ".json"); };
+  if ($("btnBackupGdrive")) $("btnBackupGdrive").onclick = function () {
+    dlBackup("lawyer-for-gdrive-" + Date.now() + ".json");
+    toast("فایل را در گوگل‌درایو آپلود کنید");
+  };
+  function doRestore(file) {
+    if (!file) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var d = JSON.parse(r.result);
+        var data = d.data || d;
+        if (!confirm("همه داده‌های فعلی جایگزین شود؟")) return;
+        if (data.stores) saveDB(data);
+        else if (d.stores) saveDB(d);
+        if (d.notes) saveJSON(NOTES_KEY, d.notes);
+        if (d.reminders) saveJSON(REM_KEY, d.reminders);
+        renderDash(); renderAllLists(); toast("بازیابی شد");
+      } catch (e) { toast("فایل نامعتبر", "err"); }
+    };
+    r.readAsText(file);
+  }
+  if ($("btnRestoreLocal")) $("btnRestoreLocal").onclick = function () { if ($("restoreFile")) $("restoreFile").click(); };
+  if ($("restoreFile")) $("restoreFile").onchange = function (e) { doRestore(e.target.files[0]); e.target.value = ""; };
+  if ($("btnRestoreGdrive")) $("btnRestoreGdrive").onclick = function () { if ($("restoreGdriveFile")) $("restoreGdriveFile").click(); };
+  if ($("restoreGdriveFile")) $("restoreGdriveFile").onchange = function (e) { doRestore(e.target.files[0]); e.target.value = ""; };
+
+  if ($("btnExit")) {
+    $("btnExit").onclick = function () {
+      try { saveDB(loadDB()); } catch (e) {}
+      location.href = "index.html";
+    };
+  }
+
+  /* ===================== میانبرهای صفحه‌کلید ===================== */
+  document.addEventListener("keydown", function (e) {
+    if (e.ctrlKey || e.metaKey) {
+      if (e.key === "s" || e.key === "S") {
+        e.preventDefault();
+        var activePanel = document.querySelector(".panel.on");
+        if (activePanel) {
+          var saveBtn = activePanel.querySelector(".btn-save-form");
+          if (saveBtn) saveBtn.click();
+        }
+      }
+      if (e.key === "n" || e.key === "N") {
+        e.preventDefault();
+        var activePanel2 = document.querySelector(".panel.on");
+        if (activePanel2) {
+          var newBtn = activePanel2.querySelector(".btn-save-form-new");
+          if (newBtn) newBtn.click();
+          else activePanel2.querySelectorAll("[data-f]").forEach(function (inp) { inp.value = ""; });
+        }
+      }
+      if (e.key === "m" || e.key === "M") {
+        e.preventDefault();
+        if ($("btnMic")) $("btnMic").click();
+      }
+      if (e.key >= "1" && e.key <= "8") {
+        e.preventDefault();
+        var panels = ["p-dash", "p-case", "p-cact", "p-consult", "p-petition", "p-defense", "p-hearing", "p-cost"];
+        showPanel(panels[+e.key - 1]);
+      }
+    }
+    if (e.key === "Escape") showPanel("p-dash");
+  });
+
+  /* ===================== میکروفون ===================== */
+  (function () {
+    var btn = $("btnMic");
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR || !btn) return;
+    var rec = new SR();
+    var on = false;
+    rec.lang = "fa-IR";
+    rec.continuous = true;
+    rec.interimResults = false;
+    rec.onresult = function (ev) {
+      for (var i = ev.resultIndex; i < ev.results.length; i++) {
+        if (!ev.results[i].isFinal) continue;
+        var a = document.activeElement;
+        if (a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA")) {
+          var t = normalizeSpokenNumbers(ev.results[i][0].transcript);
+          var s = a.selectionStart || 0;
+          var e2 = a.selectionEnd || 0;
+          a.value = a.value.slice(0, s) + t + a.value.slice(e2);
+          a.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+      }
+    };
+    rec.onend = function () { if (on) { try { rec.start(); } catch (e) {} } };
+    btn.onclick = function () {
+      if (on) {
+        on = false; try { rec.stop(); } catch (e) {}
+        btn.classList.remove("on");
+      } else {
+        on = true; try { rec.start(); } catch (e) {}
+        btn.classList.add("on");
+      }
+    };
+  })();
+
+  /* ===================== راه‌اندازی ===================== */
+  ensureLogin(function () {
+    document.querySelectorAll(".jdate").forEach(attachJDate);
+    document.querySelectorAll(".jdate").forEach(function (el) {
+      if (!el.value) el.value = todayJ();
+    });
+    renderDash();
+    showPanel("p-dash");
+  });
+
 })();
 </script>
 </body>
