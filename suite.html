@@ -1,15 +1,20 @@
+بخش ۱ از ۴ — suite.html
+از اول فایل تا پایان بخش لانچر (قبل از ویو مغز).
+بخش‌های ۲ تا ۴ را بعد از این به‌ترتیب بخواهید.
+
+html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1220">
-<meta name="description" content="سوییت هوشمند — لانچر + مغز قوانین و خودکارسازی محلی">
+<meta name="description" content="سوییت هوشمند — لانچر + مغز قوانین + مرکز داده">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="no-referrer">
 <meta http-equiv="Permissions-Policy" content="microphone=(self), geolocation=()">
-<title>سوییت هوشمند | لانچر و مغز قوانین</title>
+<title>سوییت هوشمند | لانچر · مغز · مرکز داده</title>
 <style>
 :root{
   --bg:#0b1220;--card:rgba(30,41,59,.94);--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;
@@ -37,6 +42,7 @@ body{
 }
 .mode-tabs button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
 .mode-tabs button.brain-on{background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-color:transparent;color:#fff}
+.mode-tabs button.data-on{background:linear-gradient(135deg,#0ea5e9,#0369a1);border-color:transparent;color:#fff}
 .view{display:none}.view.on{display:block}
 .hero{text-align:center;padding:6px 8px 12px}
 .hero h2{font-size:1.05rem;margin-bottom:4px}.hero p{color:var(--muted);font-size:.8rem}
@@ -53,6 +59,7 @@ body{
 .btn-b{background:#7f1d1d;color:#fecaca;border:1px solid #991b1b}
 .btn-w{background:#92400e;color:#fde68a;border:1px solid #b45309}
 .btn-v{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;border:none}
+.btn-sm{padding:5px 8px;font-size:.68rem;border-radius:8px}
 .section{margin-bottom:16px}
 .section h3{font-size:.88rem;color:#7dd3fc;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid rgba(125,211,252,.25);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .section h3 span{font-size:.68rem;color:var(--muted);font-weight:400}
@@ -72,6 +79,7 @@ body{
 .kpi .box{background:rgba(15,23,42,.9);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
 .kpi .n{font-size:1.05rem;font-weight:800;color:#c4b5fd}.kpi .l{font-size:.6rem;color:var(--muted)}
 .list-box{max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:6px;background:#0f172a}
+.list-box.tall{max-height:420px}
 .list-item{padding:8px;border-bottom:1px solid var(--line);font-size:.74rem;border-radius:8px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
@@ -81,6 +89,7 @@ label{display:block;font-size:.68rem;color:var(--muted);margin:5px 0 2px}
 .scope{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.35);color:#c4b5fd;border-radius:10px;padding:10px;font-size:.72rem;margin-bottom:10px;line-height:1.55}
 .warn{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);color:#fde68a;border-radius:10px;padding:10px;font-size:.72rem;margin-bottom:10px;line-height:1.5}
 .secure{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#86efac;border-radius:10px;padding:10px;font-size:.72rem;margin-bottom:10px;line-height:1.5}
+.info{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.35);color:#7dd3fc;border-radius:10px;padding:10px;font-size:.72rem;margin-bottom:10px;line-height:1.5}
 .empty{color:var(--muted);font-size:.75rem}
 .toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:9px 12px;border-radius:12px;font-weight:700;opacity:0;z-index:200;transition:.15s;font-size:.8rem}
 .toast.show{opacity:1}.toast.err{background:var(--bad)}
@@ -94,6 +103,11 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
 .badge-w{background:rgba(245,158,11,.2);color:#fde68a}
 .badge-b{background:rgba(239,68,68,.2);color:#fecaca}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
+pre.detail{
+  white-space:pre-wrap;word-break:break-word;background:#020617;border:1px solid var(--line);
+  border-radius:10px;padding:10px;font-size:.68rem;max-height:260px;overflow:auto;color:#cbd5e1;direction:ltr;text-align:left;
+}
+.form-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -103,7 +117,7 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
       <div class="logo">🏛️</div>
       <div>
         <h1>سوییت هوشمند یکپارچه</h1>
-        <p>لانچر · مغز قوانین · خودکارسازی محلی — Suite v2</p>
+        <p>لانچر · مغز قوانین · مرکز داده — Suite v2</p>
       </div>
     </div>
     <div class="clock-box">
@@ -116,11 +130,12 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
   <div class="mode-tabs">
     <button type="button" class="on" data-view="v-launch" id="tabLaunch">لانچر ماژول‌ها</button>
     <button type="button" class="brain-on" data-view="v-brain" id="tabBrain">مغز سوییت</button>
+    <button type="button" class="data-on" data-view="v-datacenter" id="tabData">مرکز داده</button>
     <button type="button" data-view="v-rules" id="tabRules">قوانین و خودکارسازی</button>
     <button type="button" data-view="v-security" id="tabSec">امنیت و یکپارچگی</button>
   </div>
 
-  <!-- ========== VIEW: لانچر ========== -->
+  <!-- VIEW: لانچر -->
   <div class="view on" id="v-launch">
     <div class="hero">
       <h2>لانچر سوییت</h2>
@@ -142,17 +157,20 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
       <button type="button" class="btn" id="btnClearFav">پاک علاقه‌مندی</button>
       <button type="button" class="btn btn-p" id="btnHomeRefresh">بروزرسانی</button>
       <button type="button" class="btn btn-v" id="btnOpenBrain">مغز سوییت</button>
+      <button type="button" class="btn btn-p" id="btnOpenData">مرکز داده</button>
     </div>
     <div class="fav-bar"><h4>علاقه‌مندی‌ها</h4><div class="chip-row" id="favRow"><span class="empty">دوبار کلیک روی کارت = علاقه‌مندی</span></div></div>
     <div class="recent-bar"><h4>آخرین ماژول‌ها</h4><div class="chip-row" id="recentRow"><span class="empty">—</span></div></div>
 
     <div class="section" data-cat="core">
-      <h3>هسته و مدیریت <span>brain/controller ادغام در مغز سوییت</span></h3>
+      <h3>هسته و مدیریت <span>brain/controller/database در سوییت ادغام شدند</span></h3>
       <div class="grid">
         <a class="mod" href="ceo.html" data-n="مدیرعامل" data-id="ceo"><div class="ic">👔</div><div class="nm">مدیرعامل</div><div class="ds">مجوز و گزارش</div></a>
         <a class="mod" href="manager.html" data-n="مدیریت" data-id="manager"><div class="ic">📋</div><div class="nm">مدیریت</div><div class="ds">وظیفه KPI</div></a>
         <a class="mod" href="sysadmin.html" data-n="مدیر سیستم" data-id="sysadmin"><div class="ic">⚙️</div><div class="nm">مدیر سیستم</div><div class="ds">کاربران</div></a>
-        <a class="mod" href="database.html" data-n="پایگاه داده‌ها" data-id="database"><span class="tag">داده</span><div class="ic">🗄️</div><div class="nm">پایگاه داده‌ها</div><div class="ds">کلید و پشتیبان</div></a>
+        <button type="button" class="mod" id="modDataCard" data-n="مرکز داده" data-id="datacenter" style="width:100%;font:inherit;color:inherit;cursor:pointer">
+          <span class="tag">سیستمی</span><div class="ic">🗄️</div><div class="nm">مرکز داده</div><div class="ds">کلید · پشتیبان · بازیابی</div>
+        </button>
         <button type="button" class="mod" id="modBrainCard" data-n="مغز سوییت" data-id="suite-brain" style="width:100%;font:inherit;color:inherit;cursor:pointer">
           <span class="tag">مرکزی</span><div class="ic">🧠</div><div class="nm">مغز سوییت</div><div class="ds">رصد و قوانین</div>
         </button>
@@ -219,8 +237,7 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
       </div>
     </div>
   </div>
-
-  <!-- ========== VIEW: مغز ========== -->
+<!-- VIEW: مغز -->
   <div class="view" id="v-brain">
     <div class="scope">
       <b>مغز سوییت</b> جایگزین مستقل <b>brain</b> و <b>controller</b> است.<br>
@@ -229,7 +246,7 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     <div class="kpi" id="brainKpi"></div>
     <div class="card">
       <h2>وضعیت رصد ماژول‌ها</h2>
-      <div class="form-actions" style="margin-bottom:8px">
+      <div class="form-actions">
         <button type="button" class="btn btn-v" id="btnScanAll">اسکن همه ماژول‌ها</button>
         <button type="button" class="btn btn-ok" id="btnRunRules">اجرای قوانین اکنون</button>
         <button type="button" class="btn btn-p" id="btnRefreshBrain">بروزرسانی</button>
@@ -247,7 +264,62 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     </div>
   </div>
 
-  <!-- ========== VIEW: قوانین ========== -->
+  <!-- VIEW: مرکز داده -->
+  <div class="view" id="v-datacenter">
+    <div class="info">
+      <b>مرکز داده سامانه</b> جایگزین ماژول مستقل <code>database.html</code> است.
+      فقط کلیدهای <code>smart_*</code> و <code>suite_*</code> · پشتیبان قالب <code>suite-backup-v2</code> · حذف/بازیابی با تأیید دو مرحله‌ای · دسترسی محدود.
+    </div>
+    <div class="warn">
+      حذف کلید و بازیابی کامل می‌تواند داده ماژول‌ها را تغییر دهد. قبل از هر عملیات خطرناک پشتیبان بگیرید.
+    </div>
+    <div class="kpi" id="dcKpi"></div>
+    <div class="card">
+      <h2>عملیات</h2>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p" id="btnDcScan">اسکن مجدد</button>
+        <button type="button" class="btn btn-ok" id="btnDcBackupAll">پشتیبان کامل</button>
+        <button type="button" class="btn btn-ok" id="btnDcBackupSelected">پشتیبان انتخابی</button>
+        <button type="button" class="btn btn-w" id="btnDcRestore">بازیابی از فایل</button>
+        <button type="button" class="btn" id="btnDcRefresh">بروزرسانی</button>
+      </div>
+      <input type="file" id="dcRestoreFile" accept="application/json,.json" hidden>
+      <div class="row">
+        <div>
+          <label>جستجوی کلید</label>
+          <input id="dcSearch" type="search" placeholder="مثلاً accounting یا suite_cartable" autocomplete="off">
+        </div>
+        <div>
+          <label>فیلتر</label>
+          <select id="dcFilter">
+            <option value="all">همه کلیدهای مجاز</option>
+            <option value="mod">فقط smart_mod_*</option>
+            <option value="suite">فقط suite_*</option>
+            <option value="bad">فقط JSON نامعتبر</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>مخازن داده</h2>
+      <div class="list-box tall" id="dcKeyTable"></div>
+    </div>
+    <div class="card">
+      <h2>جزئیات کلید</h2>
+      <p class="note" id="dcDetailMeta">یک کلید را از جدول «مشاهده» کنید.</p>
+      <pre class="detail" id="dcDetail">—</pre>
+      <div class="form-actions" style="margin-top:8px">
+        <button type="button" class="btn btn-p" id="btnDcDownloadOne" disabled>دانلود این کلید</button>
+        <button type="button" class="btn btn-b" id="btnDcDeleteOne" disabled>حذف این کلید</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>لاگ عملیات مرکز داده</h2>
+      <div class="list-box" id="dcAudit"></div>
+    </div>
+  </div>
+
+  <!-- VIEW: قوانین -->
   <div class="view" id="v-rules">
     <div class="warn">
       قوانین فقط از فهرست امن ازپیش‌تعریف‌شده انتخاب می‌شوند. کاربر نمی‌تواند کد جاوااسکریپت دلخواه تزریق کند.
@@ -272,7 +344,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
             <option value="secretariat">دبیرخانه</option>
             <option value="manager">مدیریت</option>
             <option value="accounting">حسابداری</option>
-            <option value="database">پایگاه داده</option>
             <option value="suite">سوییت / کارتابل</option>
           </select>
         </div>
@@ -305,24 +376,26 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     </div>
   </div>
 
-  <!-- ========== VIEW: امنیت ========== -->
+  <!-- VIEW: امنیت -->
   <div class="view" id="v-security">
     <div class="secure">
       <b>کنترل‌های فعال:</b> CSP سخت · بدون object/frame بیرونی · بدون connect به API ثالث · بدون eval ·
-      قوانین اعلامی · ورود برای بخش مغز · لاگ عملیات حساس
+      قوانین اعلامی · ورود برای مغز و مرکز داده · لاگ عملیات حساس
     </div>
     <div class="warn">
       <b>محدودیت واقعی:</b> هر کسی فایل‌های HTML را داشته باشد می‌تواند متن اسکریپت را ببیند.
-      «پنهان‌سازی کامل کد از مالک فایل» در اپ آفلاین مرورگر ممکن نیست. امنیت روی جلوگیری از تزریق، خرابکاری داده، و اجرای کد دلخواه تمرکز دارد.
+      امنیت روی جلوگیری از تزریق، خرابکاری داده، و اجرای کد دلخواه تمرکز دارد.
     </div>
     <div class="card">
-      <h2>سیاست یکپارچگی مغز سوییت</h2>
+      <h2>سیاست یکپارچگی سوییت</h2>
       <ul class="note" style="padding-right:18px">
-        <li>کلید اختصاصی: <code>smart_mod_suite_brain_v2</code></li>
+        <li>کلید مغز: <code>smart_mod_suite_brain_v2</code></li>
+        <li>لاگ مرکز داده: <code>suite_datacenter_audit_v1</code></li>
         <li>رویدادها: <code>suite_events_v1</code></li>
-        <li>کارتابل: <code>suite_cartable_v1</code> (مشترک)</li>
-        <li>ماژول‌های <code>brain.html</code> و <code>controller.html</code> دیگر لازم نیستند؛ از لانچر حذف مفهومی شدند</li>
-        <li>خروج همه ماژول‌ها باید به <code>suite.html</code> باشد</li>
+        <li>کارتابل: <code>suite_cartable_v1</code></li>
+        <li>پشتیبان سراسری: قالب <code>suite-backup-v2</code></li>
+        <li>ماژول‌های brain / controller / database مستقل لازم نیستند</li>
+        <li>خروج ماژول‌ها باید به <code>suite.html</code> باشد</li>
       </ul>
     </div>
     <div class="card">
@@ -335,7 +408,7 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
   </div>
 
   <div class="footer">
-    سوییت هوشمند · لانچر + مغز قوانین محلی · جایگزین brain/controller<br>
+    سوییت هوشمند · لانچر + مغز + مرکز داده · جایگزین brain/controller/database<br>
     داده فقط در مرورگر · بدون سرویس بیرونی
   </div>
 </div>
@@ -353,10 +426,12 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
   var REC_KEY = "suite_launcher_recent_v2";
   var PREF_KEY = "suite_launcher_pref_v2";
   var AUTH_KEY = "smart_users_suite_brain";
+  var DC_AUDIT_KEY = "suite_datacenter_audit_v1";
   var LEGACY_FAV = "suite_launcher_fav_v1";
   var LEGACY_REC = "suite_launcher_recent_v1";
+  var DETAIL_LIMIT = 8000;
+  var SENSITIVE_HINT = /pass|password|secret|token|hash|cred/i;
 
-  /* قالب‌های امن قانون — بدون eval */
   var WHEN_LABELS = {
     module_has_data: "ماژول دارای داده است",
     module_missing: "ماژول هنوز داده ندارد",
@@ -371,6 +446,8 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
 
   var toastTimer = null;
   var flags = {};
+  var dcSelectedKey = null;
+  var dcCache = [];
 
   function $(id) { return document.getElementById(id); }
   function toFa(n) {
@@ -429,7 +506,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
   tick();
   setInterval(tick, 1000);
 
-  /* ---- مهاجرت علاقه‌مندی ---- */
   (function migrateFav() {
     if (!loadArr(FAV_KEY).length) {
       var o = loadArr(LEGACY_FAV);
@@ -441,7 +517,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     }
   })();
 
-  /* ---- احراز هویت مغز ---- */
   function getAuth() {
     return loadJSON(AUTH_KEY, {
       users: [{ user: "admin", pass: "admin", name: "مدیر سوییت" }],
@@ -460,8 +535,8 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     m.className = "login-mask";
     m.innerHTML =
       '<div class="login-box">' +
-      '<h2 style="text-align:center;color:#c4b5fd;margin-bottom:10px">ورود به مغز سوییت</h2>' +
-      '<p class="note" style="text-align:center;margin-bottom:8px">لانچر بدون ورود باز است · مغز نیاز به دسترسی دارد</p>' +
+      '<h2 style="text-align:center;color:#c4b5fd;margin-bottom:10px">ورود به بخش سیستمی سوییت</h2>' +
+      '<p class="note" style="text-align:center;margin-bottom:8px">لانچر آزاد است · مغز و مرکز داده نیاز به دسترسی دارند</p>' +
       '<label>نام کاربری</label><input id="lgU">' +
       '<label>رمز</label><input id="lgP" type="password">' +
       '<button type="button" class="btn btn-v" id="lgGo" style="width:100%;margin-top:10px">ورود</button>' +
@@ -484,7 +559,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     };
   }
 
-  /* ---- ذخیره مغز ---- */
   function defBrain() {
     return {
       version: 2,
@@ -500,7 +574,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     var d = loadJSON(BRAIN_KEY, null);
     if (!d) {
       d = defBrain();
-      /* قوانین پیش‌فرض امن */
       d.rules = [
         {
           id: uid(), title: "هشدار کارتابل شلوغ", when: "cart_open_gt",
@@ -538,7 +611,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     if (d.audit.length > 200) d.audit = d.audit.slice(0, 200);
     saveBrain(d);
   }
-
   function pushEvent(type, message, meta) {
     var list = loadArr(EVENTS_KEY);
     list.unshift({
@@ -553,7 +625,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     saveArr(EVENTS_KEY, list);
   }
 
-  /* ---- رصد ماژول‌ها ---- */
   function isSuiteKey(k) {
     return !!k && (k.indexOf("smart_") === 0 || k.indexOf("suite_") === 0);
   }
@@ -568,7 +639,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
           k.indexOf("smart_mod_" + modId) === 0 ||
           k.indexOf("smart_" + modId) === 0 ||
           (modId === "suite" && k.indexOf("suite_") === 0) ||
-          (modId === "database" && k.indexOf("smart_db") === 0) ||
           (modId === "manager" && (k.indexOf("smart_mgmt") === 0 || k.indexOf("management") >= 0));
         if (hit) {
           try {
@@ -586,8 +656,7 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
       var id = m.getAttribute("data-id");
       if (id) ids[id] = m.getAttribute("data-n") || id;
     });
-    /* اهداف ثابت قوانین */
-    ["secretary", "secretariat", "manager", "accounting", "database", "suite"].forEach(function (id) {
+    ["secretary", "secretariat", "manager", "accounting", "suite"].forEach(function (id) {
       if (!ids[id]) ids[id] = id;
     });
     var rows = [];
@@ -622,23 +691,14 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     return (bytes / (1024 * 1024)).toFixed(2) + " MB";
   }
 
-  /* ---- موتور قوانین (اعلامی) ---- */
   function evalWhen(rule) {
     var when = rule.when;
     var target = rule.target || "";
     var th = Number(rule.threshold) || 0;
-    if (when === "module_has_data") {
-      return moduleDataSize(target).hasData;
-    }
-    if (when === "module_missing") {
-      return !moduleDataSize(target).hasData;
-    }
-    if (when === "cart_open_gt") {
-      return cartOpenCount() > th;
-    }
-    if (when === "key_size_gt") {
-      return moduleDataSize(target).size > th;
-    }
+    if (when === "module_has_data") return moduleDataSize(target).hasData;
+    if (when === "module_missing") return !moduleDataSize(target).hasData;
+    if (when === "cart_open_gt") return cartOpenCount() > th;
+    if (when === "key_size_gt") return moduleDataSize(target).size > th;
     return false;
   }
   function runAction(rule) {
@@ -681,7 +741,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     var rules = (brain.rules || []).filter(function (r) { return r && r.enabled; });
     var fired = 0;
     rules.forEach(function (rule) {
-      /* فقط شناسه‌های مجاز */
       if (!WHEN_LABELS[rule.when] || !ACTION_LABELS[rule.action]) return;
       if (evalWhen(rule)) {
         runAction(rule);
@@ -693,7 +752,317 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     return fired;
   }
 
-  /* ---- نماها ---- */
+  /* ========== مرکز داده ========== */
+  function dcAudit(action, detail) {
+    var list = loadArr(DC_AUDIT_KEY);
+    list.unshift({
+      id: uid(),
+      t: now(),
+      user: userName(),
+      action: String(action || "").slice(0, 40),
+      detail: String(detail || "").slice(0, 240)
+    });
+    if (list.length > 300) list = list.slice(0, 300);
+    saveArr(DC_AUDIT_KEY, list);
+  }
+  function inspectKey(k) {
+    var raw = "";
+    try { raw = localStorage.getItem(k) || ""; } catch (e) { raw = ""; }
+    var schemaOk = true;
+    var parsed = null;
+    var recordCounts = {};
+    var note = "";
+    try {
+      parsed = JSON.parse(raw);
+    } catch (e) {
+      schemaOk = false;
+      note = "JSON نامعتبر";
+    }
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      if (parsed.stores && typeof parsed.stores === "object") {
+        Object.keys(parsed.stores).forEach(function (s) {
+          recordCounts[s] = Array.isArray(parsed.stores[s]) ? parsed.stores[s].length : 0;
+        });
+      } else if (Array.isArray(parsed.items)) {
+        recordCounts.items = parsed.items.length;
+      } else if (Array.isArray(parsed)) {
+        recordCounts.array = parsed.length;
+      }
+    } else if (Array.isArray(parsed)) {
+      recordCounts.array = parsed.length;
+    }
+    var sensitive = SENSITIVE_HINT.test(k);
+    return {
+      key: k,
+      bytes: raw.length,
+      schemaOk: schemaOk,
+      recordCounts: recordCounts,
+      note: note,
+      sensitive: sensitive,
+      updated: (parsed && parsed.meta && parsed.meta.updated) || (parsed && parsed.updatedAt) || (parsed && parsed.updated) || null,
+      module: guessModule(k)
+    };
+  }
+  function guessModule(k) {
+    var m = k.match(/^smart_mod_([a-z0-9_]+)_v\d+/i);
+    if (m) return m[1];
+    if (k.indexOf("suite_") === 0) return "suite";
+    if (k.indexOf("smart_auth") === 0 || k.indexOf("smart_users") === 0) return "auth";
+    if (k.indexOf("smart_db") === 0) return "legacy-db";
+    return "other";
+  }
+  function scanDataCenter() {
+    var rows = [];
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (!isSuiteKey(k)) continue;
+        rows.push(inspectKey(k));
+      }
+    } catch (e) {}
+    rows.sort(function (a, b) { return b.bytes - a.bytes; });
+    dcCache = rows;
+    return rows;
+  }
+  function filteredDcRows() {
+    var q = (($("dcSearch") && $("dcSearch").value) || "").trim().toLowerCase();
+    var f = ($("dcFilter") && $("dcFilter").value) || "all";
+    return dcCache.filter(function (r) {
+      if (f === "mod" && r.key.indexOf("smart_mod_") !== 0) return false;
+      if (f === "suite" && r.key.indexOf("suite_") !== 0) return false;
+      if (f === "bad" && r.schemaOk) return false;
+      if (q && (r.key.toLowerCase().indexOf(q) < 0 && String(r.module).toLowerCase().indexOf(q) < 0)) return false;
+      return true;
+    });
+  }
+  function renderDcKpi() {
+    var rows = dcCache;
+    var total = 0, bad = 0;
+    rows.forEach(function (r) {
+      total += r.bytes;
+      if (!r.schemaOk) bad++;
+    });
+    if (!$("dcKpi")) return;
+    $("dcKpi").innerHTML =
+      '<div class="box"><div class="n">' + toFa(rows.length) + '</div><div class="l">کلید مجاز</div></div>' +
+      '<div class="box"><div class="n">' + formatSize(total) + '</div><div class="l">حجم کل</div></div>' +
+      '<div class="box"><div class="n">' + toFa(bad) + '</div><div class="l">JSON نامعتبر</div></div>' +
+      '<div class="box"><div class="n">' + toFa(loadArr(DC_AUDIT_KEY).length) + '</div><div class="l">رویداد لاگ</div></div>';
+  }
+  function renderDcTable() {
+    var box = $("dcKeyTable");
+    if (!box) return;
+    var rows = filteredDcRows();
+    if (!rows.length) {
+      box.innerHTML = '<p class="empty">کلیدی مطابق فیلتر نیست</p>';
+      return;
+    }
+    var html = "<table><thead><tr><th></th><th>کلید</th><th>ماژول</th><th>حجم</th><th>وضعیت</th><th></th></tr></thead><tbody>";
+    rows.forEach(function (r) {
+      html += "<tr>" +
+        '<td><input type="checkbox" class="dc-check" data-k="' + esc(r.key) + '"></td>' +
+        '<td style="direction:ltr;text-align:left;font-size:.65rem">' + esc(r.key) + "</td>" +
+        "<td>" + esc(r.module) + "</td>" +
+        "<td>" + formatSize(r.bytes) + "</td>" +
+        "<td>" + (r.schemaOk ? '<span class="badge badge-ok">سالم</span>' : '<span class="badge badge-b">خراب</span>') +
+        (r.sensitive ? ' <span class="badge badge-w">حساس</span>' : "") + "</td>" +
+        '<td><button type="button" class="btn btn-sm btn-p" data-view-k="' + esc(r.key) + '">مشاهده</button></td>' +
+        "</tr>";
+    });
+    html += "</tbody></table>";
+    box.innerHTML = html;
+    box.querySelectorAll("[data-view-k]").forEach(function (b) {
+      b.onclick = function () { showDcDetail(b.getAttribute("data-view-k")); };
+    });
+  }
+  function showDcDetail(key) {
+    dcSelectedKey = key;
+    var info = inspectKey(key);
+    var raw = "";
+    try { raw = localStorage.getItem(key) || ""; } catch (e) {}
+    var pretty = raw;
+    try { pretty = JSON.stringify(JSON.parse(raw), null, 2); } catch (e) {}
+    if (pretty.length > DETAIL_LIMIT) pretty = pretty.slice(0, DETAIL_LIMIT) + "\n… (بریده شد)";
+    if (info.sensitive) {
+      pretty = "[محتوای حساس — پیش‌نمایش محدود]\n" + pretty.replace(/("pass(?:word)?")\s*:\s*"[^"]*"/gi, '$1:"***"');
+    }
+    var counts = Object.keys(info.recordCounts).map(function (k) {
+      return k + "=" + info.recordCounts[k];
+    }).join(" · ");
+    if ($("dcDetailMeta")) {
+      $("dcDetailMeta").textContent =
+        key + " · " + formatSize(info.bytes) +
+        (counts ? " · " + counts : "") +
+        (info.updated ? " · updated: " + info.updated : "");
+    }
+    if ($("dcDetail")) $("dcDetail").textContent = pretty || "—";
+    if ($("btnDcDownloadOne")) $("btnDcDownloadOne").disabled = false;
+    if ($("btnDcDeleteOne")) $("btnDcDeleteOne").disabled = false;
+  }
+  function renderDcAudit() {
+    var box = $("dcAudit");
+    if (!box) return;
+    var list = loadArr(DC_AUDIT_KEY).slice(0, 60);
+    box.innerHTML = list.map(function (a) {
+      return '<div class="list-item">' + esc((a.t || "").slice(0, 19).replace("T", " ")) +
+        " | " + esc(a.user || "") + " | " + esc(a.action) + " | " + esc(a.detail || "") + "</div>";
+    }).join("") || '<p class="empty">لاگی نیست</p>';
+  }
+  function renderDataCenter() {
+    scanDataCenter();
+    renderDcKpi();
+    renderDcTable();
+    renderDcAudit();
+  }
+  function selectedKeys() {
+    var out = [];
+    document.querySelectorAll(".dc-check:checked").forEach(function (c) {
+      out.push(c.getAttribute("data-k"));
+    });
+    return out;
+  }
+  function buildBackup(keys) {
+    var payload = {
+      format: "suite-backup-v2",
+      exportedAt: now(),
+      by: userName(),
+      app: "suite",
+      keys: {}
+    };
+    keys.forEach(function (k) {
+      if (!isSuiteKey(k)) return;
+      try {
+        var raw = localStorage.getItem(k);
+        try { payload.keys[k] = JSON.parse(raw); }
+        catch (e) { payload.keys[k] = raw; }
+      } catch (e) {}
+    });
+    return payload;
+  }
+  function downloadJson(obj, filename) {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" }));
+    a.download = filename;
+    a.click();
+  }
+  function validateBackup(d) {
+    if (!d || typeof d !== "object") return "فایل شیء JSON نیست";
+    if (d.keys && typeof d.keys === "object") return null;
+    if (d.brain) return null;
+    return "فیلد keys نامعتبر است";
+  }
+  function restoreBackup(d) {
+    var keys = d.keys || {};
+    var names = Object.keys(keys);
+    var ok = 0, fail = 0;
+    names.forEach(function (k) {
+      if (!isSuiteKey(k)) { fail++; return; }
+      try {
+        var val = keys[k];
+        localStorage.setItem(k, typeof val === "string" ? val : JSON.stringify(val));
+        ok++;
+      } catch (e) { fail++; }
+    });
+    return { ok: ok, fail: fail };
+  }
+
+  if ($("btnDcScan")) $("btnDcScan").onclick = function () {
+    ensureBrainAuth(function () {
+      renderDataCenter();
+      dcAudit("scan", "manual");
+      toast("اسکن مرکز داده انجام شد");
+    });
+  };
+  if ($("btnDcRefresh")) $("btnDcRefresh").onclick = function () {
+    ensureBrainAuth(function () { renderDataCenter(); toast("بروزرسانی شد"); });
+  };
+  if ($("dcSearch")) $("dcSearch").oninput = function () { renderDcTable(); };
+  if ($("dcFilter")) $("dcFilter").onchange = function () { renderDcTable(); };
+  if ($("btnDcBackupAll")) $("btnDcBackupAll").onclick = function () {
+    ensureBrainAuth(function () {
+      var keys = dcCache.map(function (r) { return r.key; });
+      var payload = buildBackup(keys);
+      downloadJson(payload, "suite-backup-v2-" + now().slice(0, 10) + ".json");
+      dcAudit("backup-all", "keys=" + keys.length);
+      toast("پشتیبان کامل دانلود شد");
+    });
+  };
+  if ($("btnDcBackupSelected")) $("btnDcBackupSelected").onclick = function () {
+    ensureBrainAuth(function () {
+      var keys = selectedKeys();
+      if (!keys.length) { toast("کلیدی انتخاب نشده", true); return; }
+      var payload = buildBackup(keys);
+      downloadJson(payload, "suite-backup-selected.json");
+      dcAudit("backup-selected", keys.join(",").slice(0, 200));
+      toast("پشتیبان انتخابی دانلود شد");
+    });
+  };
+  if ($("btnDcRestore")) $("btnDcRestore").onclick = function () {
+    ensureBrainAuth(function () {
+      if (!confirm("بازیابی می‌تواند داده‌ها را جایگزین کند. ادامه؟")) return;
+      if (!confirm("تأیید دوم: آیا از صحت فایل پشتیبان مطمئن هستید؟")) return;
+      if ($("dcRestoreFile")) $("dcRestoreFile").click();
+    });
+  };
+  if ($("dcRestoreFile")) $("dcRestoreFile").onchange = function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var d = JSON.parse(r.result);
+        var err = validateBackup(d);
+        if (err) { toast(err, true); dcAudit("restore-fail", err); return; }
+        if (d.keys) {
+          var res = restoreBackup(d);
+          dcAudit("restore", f.name + " ok=" + res.ok + " fail=" + res.fail);
+          pushEvent("restore", "بازیابی مرکز داده · " + res.ok + " کلید");
+          renderDataCenter();
+          toast("بازیابی شد · " + toFa(res.ok) + " کلید");
+        } else {
+          toast("فایل keys ندارد", true);
+          dcAudit("restore-fail", "no-keys");
+        }
+      } catch (err) {
+        toast("فایل نامعتبر", true);
+        dcAudit("restore-fail", "invalid-json");
+      }
+      e.target.value = "";
+    };
+    r.readAsText(f);
+  };
+  if ($("btnDcDownloadOne")) $("btnDcDownloadOne").onclick = function () {
+    if (!dcSelectedKey) return;
+    ensureBrainAuth(function () {
+      var payload = buildBackup([dcSelectedKey]);
+      downloadJson(payload, dcSelectedKey + ".json");
+      dcAudit("download-one", dcSelectedKey);
+      toast("دانلود شد");
+    });
+  };
+  if ($("btnDcDeleteOne")) $("btnDcDeleteOne").onclick = function () {
+    if (!dcSelectedKey) return;
+    ensureBrainAuth(function () {
+      var k = dcSelectedKey;
+      if (!confirm("حذف کلید:\n" + k + "\n؟")) return;
+      if (!confirm("تأیید دوم: این عمل برگشت‌ناپذیر است مگر پشتیبان داشته باشید.")) return;
+      try {
+        localStorage.removeItem(k);
+        dcAudit("delete", k);
+        pushEvent("delete-key", "حذف کلید " + k);
+        dcSelectedKey = null;
+        if ($("dcDetail")) $("dcDetail").textContent = "—";
+        if ($("dcDetailMeta")) $("dcDetailMeta").textContent = "کلید حذف شد.";
+        if ($("btnDcDownloadOne")) $("btnDcDownloadOne").disabled = true;
+        if ($("btnDcDeleteOne")) $("btnDcDeleteOne").disabled = true;
+        renderDataCenter();
+        toast("کلید حذف شد");
+      } catch (e) {
+        toast("خطا در حذف", true);
+      }
+    });
+  };
+/* ---- نماها ---- */
   function showView(id) {
     document.querySelectorAll(".view").forEach(function (v) { v.classList.remove("on"); });
     document.querySelectorAll(".mode-tabs button").forEach(function (b) { b.classList.remove("on"); });
@@ -701,11 +1070,12 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     document.querySelectorAll(".mode-tabs button[data-view]").forEach(function (b) {
       if (b.getAttribute("data-view") === id) b.classList.add("on");
     });
-    if (id === "v-brain" || id === "v-rules" || id === "v-security") {
+    if (id === "v-brain" || id === "v-rules" || id === "v-security" || id === "v-datacenter") {
       ensureBrainAuth(function () {
         if (id === "v-brain") renderBrain();
         if (id === "v-rules") renderRules();
         if (id === "v-security") renderSecurity();
+        if (id === "v-datacenter") renderDataCenter();
       });
     }
     if (id === "v-launch") {
@@ -721,9 +1091,10 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     });
   });
   if ($("btnOpenBrain")) $("btnOpenBrain").onclick = function () { showView("v-brain"); };
+  if ($("btnOpenData")) $("btnOpenData").onclick = function () { showView("v-datacenter"); };
   if ($("modBrainCard")) $("modBrainCard").onclick = function () { showView("v-brain"); };
+  if ($("modDataCard")) $("modDataCard").onclick = function () { showView("v-datacenter"); };
 
-  /* ---- رندر مغز ---- */
   function renderBrain() {
     var rows = scanModules();
     var totalSize = 0, withData = 0;
@@ -794,7 +1165,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     ensureBrainAuth(function () { renderBrain(); toast("بروزرسانی شد"); });
   };
 
-  /* ---- قوانین UI ---- */
   function renderRules() {
     var rules = loadBrain().rules || [];
     var box = $("rulesList");
@@ -888,10 +1258,7 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
         brain: loadBrain(),
         events: loadArr(EVENTS_KEY)
       };
-      var a = document.createElement("a");
-      a.href = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
-      a.download = "suite-brain-backup.json";
-      a.click();
+      downloadJson(payload, "suite-brain-backup.json");
       brainAudit("backup", "");
       toast("دانلود شد");
     });
@@ -922,7 +1289,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     r.readAsText(f);
   };
 
-  /* ---- لانچر ---- */
   function getPrefs() { return loadJSON(PREF_KEY, { cat: "", q: "" }); }
   function savePrefs(p) { saveJSON(PREF_KEY, p); }
   function allMods() { return Array.prototype.slice.call(document.querySelectorAll("a.mod[data-id], button.mod[data-id]")); }
@@ -1012,7 +1378,7 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     allMods().forEach(function (m) {
       m.addEventListener("click", function () {
         var meta = modMeta(m);
-        if (meta.id === "suite-brain") return;
+        if (meta.id === "suite-brain" || meta.id === "datacenter") return;
         var rec = loadArr(REC_KEY).filter(function (x) { return x.id !== meta.id; });
         rec.unshift({ id: meta.id, name: meta.name, href: meta.href, at: now() });
         saveArr(REC_KEY, rec.slice(0, 12));
@@ -1037,7 +1403,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     if ($("catFilter") && p.cat) $("catFilter").value = p.cat;
   }
 
-  /* ---- Boot ---- */
   bindLauncher();
   renderFav();
   renderRecent();
@@ -1045,7 +1410,6 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
   renderStats();
   showView("v-launch");
 
-  /* اجرای آرام قوانین هر ۲ دقیقه وقتی صفحه باز است (بدون eval) */
   setInterval(function () {
     try {
       var a = getAuth();
