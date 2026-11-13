@@ -76,29 +76,35 @@ th,td{border-bottom:1px solid var(--line);padding:4px 3px;text-align:right}th{co
 .chk{display:flex;align-items:center;gap:6px;font-size:.68rem;color:var(--muted);margin:5px 0}
 pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:1px solid var(--line);border-radius:10px;padding:8px;font-size:.64rem;max-height:220px;overflow:auto;color:#cbd5e1;direction:ltr;text-align:left}
 .form-actions{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.gear-btn{position:fixed;bottom:18px;left:18px;z-index:150;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:linear-gradient(135deg,#1e293b,#0f172a);color:#e2e8f0;font-size:1.25rem;cursor:pointer;display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.35);transition:.15s}
+.gear-btn:hover{border-color:var(--pri);transform:scale(1.06)}
+.gear-btn.on{background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-color:transparent;color:#fff}
+.settings-panel{position:fixed;bottom:72px;left:18px;z-index:149;width:min(260px,88vw);background:rgba(15,23,42,.97);border:1px solid var(--line);border-radius:14px;padding:10px;box-shadow:0 8px 28px rgba(0,0,0,.45);display:none}
+.settings-panel.open{display:block}
+.settings-panel h4{font-size:.72rem;color:#c4b5fd;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid rgba(196,181,253,.25)}
+.settings-panel button{display:flex;align-items:center;gap:8px;width:100%;text-align:right;border:1px solid transparent;background:transparent;color:#e2e8f0;border-radius:10px;padding:8px 10px;font-size:.74rem;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:3px}
+.settings-panel button:hover{background:rgba(14,165,233,.15);border-color:rgba(14,165,233,.35)}
+.settings-panel button .ic{font-size:1rem;width:22px;text-align:center}
+.settings-panel .hint{font-size:.6rem;color:var(--muted);margin-top:6px;line-height:1.4}
+.back-to-launch{margin-bottom:8px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="topbar">
-    <div class="brand"><div class="logo">🏛️</div><div><h1>سوییت هوشمند یکپارچه</h1><p>لانچر · مغز قوانین · مرکز داده — Suite v2</p></div></div>
+    <div class="brand"><div class="logo">🏛️</div><div><h1>سوییت هوشمند یکپارچه</h1><p>لانچر ماژول‌ها — Suite v2</p></div></div>
     <div class="clock-box"><div class="j" id="dtJ">—</div><div class="g" id="dtG">—</div><div class="c" id="dtC">—</div></div>
   </div>
-  <div class="mode-tabs">
+  <div class="mode-tabs" id="modeTabs">
     <button type="button" class="on" data-view="v-launch">لانچر ماژول‌ها</button>
-    <button type="button" class="brain-on" data-view="v-brain">مغز سوییت</button>
-    <button type="button" class="data-on" data-view="v-datacenter">مرکز داده</button>
-    <button type="button" data-view="v-rules">قوانین و خودکارسازی</button>
-    <button type="button" data-view="v-security">امنیت و یکپارچگی</button>
   </div>
+
   <div class="view on" id="v-launch">
     <div class="hero"><h2>لانچر سوییت</h2><p>دسترسی سریع به ماژول‌ها</p></div>
     <div class="section"><h3>هسته و مدیریت</h3><div class="grid">
       <a class="mod" href="ceo.html" data-id="ceo" data-n="مدیرعامل"><div class="ic">👔</div><div class="nm">مدیرعامل</div><div class="ds">مجوز</div></a>
       <a class="mod" href="manager.html" data-id="manager" data-n="مدیریت"><div class="ic">📋</div><div class="nm">مدیریت</div><div class="ds">KPI</div></a>
       <a class="mod" href="sysadmin.html" data-id="sysadmin" data-n="مدیر سیستم"><div class="ic">⚙️</div><div class="nm">مدیر سیستم</div><div class="ds">کاربران</div></a>
-      <button type="button" class="mod" id="modDataCard" data-id="datacenter" data-n="مرکز داده"><span class="tag">سیستمی</span><div class="ic">🗄️</div><div class="nm">مرکز داده</div><div class="ds">پشتیبان</div></button>
-      <button type="button" class="mod" id="modBrainCard" data-id="suite-brain" data-n="مغز سوییت"><span class="tag">مرکزی</span><div class="ic">🧠</div><div class="nm">مغز سوییت</div><div class="ds">رصد</div></button>
     </div></div>
     <div class="section"><h3>مالی و حسابداری</h3><div class="grid">
       <a class="mod" href="accounting.html" data-id="accounting" data-n="حسابداری"><div class="ic">📒</div><div class="nm">حسابداری</div><div class="ds">سند</div></a>
@@ -144,6 +150,7 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
     </div></div>
   </div>
   <div class="view" id="v-brain">
+    <div class="form-actions back-to-launch"><button type="button" class="btn btn-sm" data-back>← بازگشت به لانچر</button></div>
     <div class="scope"><b>مغز سوییت</b> — رصد ماژول‌ها · قوانین اعلامی · کارتابل</div>
     <div class="kpi" id="brainKpi"></div>
     <div class="card"><h2>رصد ماژول‌ها</h2>
@@ -158,7 +165,9 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
     <div class="card"><h2>رویدادها</h2><div class="list-box" id="brainEvents"></div></div>
     <div class="card"><h2>کارتابل باز</h2><div class="list-box" id="brainCart"></div></div>
   </div>
+
   <div class="view" id="v-datacenter">
+    <div class="form-actions back-to-launch"><button type="button" class="btn btn-sm" data-back>← بازگشت به لانچر</button></div>
     <div class="info"><b>مرکز داده</b> — smart_* / suite_* · پشتیبان suite-backup-v2</div>
     <div class="warn">حذف و بازیابی خطرناک است؛ قبلش پشتیبان بگیرید.</div>
     <div class="kpi" id="dcKpi"></div>
@@ -187,514 +196,621 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
     <div class="card"><h2>لاگ</h2><div class="list-box" id="dcAudit"></div></div>
   </div>
   <div class="view" id="v-rules">
+    <div class="form-actions back-to-launch"><button type="button" class="btn btn-sm" data-back>← بازگشت به لانچر</button></div>
     <div class="warn">قوانین فقط از قالب امن — بدون eval</div>
     <div class="card"><h2>افزودن قانون</h2>
       <div class="row">
-        <div><label>نام</label><input id="ruleName" placeholder="مثال: هشدار موجودی"></div>
-        <div><label>اولویت</label><select id="rulePrio"><option value="1">بالا</option><option value="2">متوسط</option><option value="3">پایین</option></select></div>
+        <div><label>شرط</label><select id="ruleWhen"><option value="module_has_data">دارای داده</option><option value="module_missing">بدون داده</option><option value="cart_open_gt">کارتابل بیشتر از</option><option value="key_size_gt">حجم بیشتر از</option></select></div>
+        <div><label>هدف</label><select id="ruleTarget"><option value="secretary">منشی</option><option value="secretariat">دبیرخانه</option><option value="manager">مدیریت</option><option value="accounting">حسابداری</option><option value="suite">سوییت</option></select></div>
       </div>
-      <label>شرط (ماژول.کلید)</label><input id="ruleCond" placeholder="warehouse.stock < 10">
-      <label>اقدام</label><select id="ruleAction"><option value="notify">اعلان</option><option value="cartable">کارتابل</option><option value="log">لاگ</option></select>
-      <label>متن</label><textarea id="ruleMsg" rows="2" placeholder="پیام قانون"></textarea>
-      <div class="form-actions" style="margin-top:8px">
-        <button type="button" class="btn btn-ok" id="btnAddRule">افزودن</button>
-        <button type="button" class="btn" id="btnClearRules">پاک‌سازی</button>
+      <div class="row">
+        <div><label>آستانه</label><input id="ruleThreshold" type="number" min="0" value="0"></div>
+        <div><label>اقدام</label><select id="ruleAction"><option value="log">رویداد</option><option value="cart">کارتابل</option><option value="flag">پرچم</option></select></div>
+      </div>
+      <label>عنوان</label><input id="ruleTitle" maxlength="80">
+      <label class="chk"><input type="checkbox" id="ruleEnabled" checked> فعال</label>
+      <div class="form-actions">
+        <button type="button" class="btn btn-v" id="btnAddRule">ثبت</button>
+        <button type="button" class="btn btn-ok" id="btnRunRules2">اجرا</button>
       </div>
     </div>
-    <div class="card"><h2>قوانین فعال</h2><div class="list-box" id="rulesList"></div></div>
+    <div class="card"><h2>قوانین</h2><div class="list-box" id="rulesList"></div></div>
   </div>
+
   <div class="view" id="v-security">
-    <div class="secure"><b>امنیت و یکپارچگی</b> — نقش‌محور · قفل تب · پشتیبان اضطراری · CSP</div>
-    <div class="kpi" id="secKpi"></div>
-    <div class="card"><h2>وضعیت احراز هویت</h2>
-      <p class="note" id="secAuthStatus">—</p>
+    <div class="form-actions back-to-launch"><button type="button" class="btn btn-sm" data-back>← بازگشت به لانچر</button></div>
+    <div class="secure">CSP · بدون eval · ورود سیستمی · لاگ عملیات</div>
+    <div class="card"><h2>کلیدها</h2><p class="note">brain: smart_mod_suite_brain_v2 · audit: suite_datacenter_audit_v1 · cartable: suite_cartable_v1</p></div>
+    <div class="card"><h2>پشتیبان مغز</h2>
       <div class="form-actions">
-        <button type="button" class="btn btn-v" id="btnBrainLogin">ورود مغز (ادمین/مدیرعامل)</button>
-        <button type="button" class="btn btn-b" id="btnBrainLogout">خروج</button>
+        <button type="button" class="btn btn-p" id="btnBrainBackup">دانلود</button>
+        <button type="button" class="btn" id="btnBrainRestore">بازیابی</button>
       </div>
+      <input type="file" id="brainRestoreFile" accept="application/json" hidden>
+      <div class="list-box" id="brainAudit" style="margin-top:8px"></div>
     </div>
-    <div class="card"><h2>قفل تب</h2>
-      <div class="chk"><input type="checkbox" id="chkTabLock"> فعال‌سازی قفل تب (جلوگیری از چند تب همزمان)</div>
-      <p class="note">اگر تب دیگری باز باشد، این تب قفل می‌شود.</p>
-    </div>
-    <div class="card"><h2>پشتیبان اضطراری</h2>
-      <div class="form-actions">
-        <button type="button" class="btn btn-ok" id="btnEmergencyBackup">دانلود پشتیبان اضطراری</button>
-        <button type="button" class="btn btn-w" id="btnEmergencyRestore">بازیابی اضطراری</button>
-      </div>
-      <input type="file" id="emgRestoreFile" accept="application/json,.json" hidden>
-    </div>
-    <div class="card"><h2>لاگ امنیتی</h2><div class="list-box" id="secAudit"></div></div>
   </div>
 </div>
+
+<button type="button" class="gear-btn" id="gearBtn" title="تنظیمات سیستم">⚙️</button>
+<div class="settings-panel" id="settingsPanel">
+  <h4>تنظیمات سیستم (امن)</h4>
+  <button type="button" data-view="v-brain"><span class="ic">🧠</span> مغز سوییت</button>
+  <button type="button" data-view="v-datacenter"><span class="ic">🗄️</span> مرکز داده</button>
+  <button type="button" data-view="v-rules"><span class="ic">⚡</span> قوانین و خودکارسازی</button>
+  <button type="button" data-view="v-security"><span class="ic">🔒</span> امنیت و یکپارچگی</button>
+  <p class="hint">فقط نقش مدیر / مدیرعامل · ورود سیستمی الزامی</p>
+</div>
+
 <div class="toast" id="toast"></div>
-<div class="login-mask" id="loginMask" style="display:none">
-  <div class="login-box">
-    <h2 style="margin-bottom:10px;font-size:.9rem">ورود به مغز سوییت</h2>
-    <label>نقش</label>
-    <select id="loginRole"><option value="admin">ادمین</option><option value="ceo">مدیرعامل</option></select>
-    <label>رمز عبور</label>
-    <input type="password" id="loginPass" placeholder="رمز">
-    <div class="form-actions" style="margin-top:12px">
-      <button type="button" class="btn btn-ok" id="btnDoLogin">ورود</button>
-      <button type="button" class="btn" id="btnCancelLogin">انصراف</button>
-    </div>
-    <p class="note" style="margin-top:8px">پیش‌فرض: admin / 1234 یا ceo / 1234</p>
-  </div>
-</div>
 <script>
-(function(){
+
+(function () {
   "use strict";
-  const FA = "۰۱۲۳۴۵۶۷۸۹";
-  const toFa = n => String(n).replace(/\d/g, d => FA[d]);
-  const toEn = s => String(s).replace(/[۰-۹]/g, d => FA.indexOf(d));
-  const g2j = (gy,gm,gd) => {
-    const g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
-    let jy = (gy <= 1600) ? 0 : 979;
-    let gy2 = (gy > 1600) ? gy - 1600 : gy - 621;
-    let days = (365 * gy2) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) - 80 + gd + g_d_m[gm - 1];
-    jy += 33 * Math.floor(days / 12053); days %= 12053;
-    jy += 4 * Math.floor(days / 1461); days %= 1461;
-    if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
-    let jm = (days < 186) ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
-    let jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
-    return [jy, jm, jd];
+  var FA = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  var BRAIN_KEY = "smart_mod_suite_brain_v2";
+  var BRAIN_BACKUP = "smart_mod_suite_brain_backup_v2";
+  var EVENTS_KEY = "suite_events_v1";
+  var CART_KEY = "suite_cartable_v1";
+  var AUTH_KEY = "smart_users_suite_brain";
+  var DC_AUDIT_KEY = "suite_datacenter_audit_v1";
+  var WHEN_LABELS = {
+    module_has_data: "دارای داده",
+    module_missing: "بدون داده",
+    cart_open_gt: "کارتابل بیشتر از",
+    key_size_gt: "حجم بیشتر از"
   };
-  const j2g = (jy,jm,jd) => {
-    let gy = (jy <= 979) ? 621 : 1600;
-    jy -= (jy <= 979) ? 0 : 979;
-    let days = (365 * jy) + Math.floor(jy / 33) * 8 + Math.floor(((jy % 33) + 3) / 4) + 78 + jd + ((jm < 7) ? (jm - 1) * 31 : ((jm - 7) * 30 + 186));
-    gy += 400 * Math.floor(days / 146097); days %= 146097;
-    if (days > 36524) { gy += 100 * Math.floor(--days / 36524); days %= 36524; if (days >= 365) days++; }
-    gy += 4 * Math.floor(days / 1461); days %= 1461;
-    if (days > 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
-    let gm, gd = days + 1;
-    const sal_a = [0,31,((gy % 4 === 0 && gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28,31,30,31,30,31,31,30,31,30,31];
-    for (gm = 0; gm < 13 && gd > sal_a[gm]; gm++) gd -= sal_a[gm];
-    return [gy, gm, gd];
-  };
-  const nowJ = () => {
-    const d = new Date();
-    const [jy,jm,jd] = g2j(d.getFullYear(), d.getMonth() + 1, d.getDate());
-    return { jy, jm, jd, h: d.getHours(), m: d.getMinutes(), s: d.getSeconds() };
-  };
-  const fmtJ = () => {
-    const n = nowJ();
-    return toFa(n.jy) + "/" + toFa(String(n.jm).padStart(2,"0")) + "/" + toFa(String(n.jd).padStart(2,"0"));
-  };
-  const fmtG = () => {
-    const d = new Date();
-    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
-  };
-  const fmtC = () => {
-    const d = new Date();
-    return toFa(String(d.getHours()).padStart(2,"0")) + ":" + toFa(String(d.getMinutes()).padStart(2,"0")) + ":" + toFa(String(d.getSeconds()).padStart(2,"0"));
-  };
-  const tickClock = () => {
-    document.getElementById("dtJ").textContent = fmtJ();
-    document.getElementById("dtG").textContent = fmtG();
-    document.getElementById("dtC").textContent = fmtC();
-  };
-  setInterval(tickClock, 1000); tickClock();
+  var ACTION_LABELS = { log: "رویداد", cart: "کارتابل", flag: "پرچم" };
+  var toastTimer = null, flags = {}, dcSelectedKey = null, dcCache = [];
 
-  const toast = (msg, err) => {
-    const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.className = "toast show" + (err ? " err" : "");
-    setTimeout(() => t.className = "toast", 2200);
-  };
-
-  const KEYS = {
-    AUTH: "suite_auth_v2",
-    RULES: "suite_rules_v2",
-    EVENTS: "suite_events_v2",
-    CART: "suite_cartable_v2",
-    AUDIT: "suite_audit_v2",
-    TABLOCK: "suite_tablock_v2",
-    META: "suite_meta_v2"
-  };
-  const EVENTS_KEY = KEYS.EVENTS;
-
-  const loadJSON = (k, def) => {
+  function $(id) { return document.getElementById(id); }
+  function toFa(n) {
+    return String(n).replace(/\d/g, function (d) { return FA[+d]; });
+  }
+  function toEn(s) {
+    return String(s).replace(/[۰-۹]/g, function (d) { return "۰۱۲۳۴۵۶۷۸۹".indexOf(d); });
+  }
+  function now() { return new Date().toISOString(); }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">")
+      .replace(/"/g, """);
+  }
+  function loadJSON(k, def) {
     try {
-      const r = localStorage.getItem(k);
+      var r = localStorage.getItem(k);
       return r ? JSON.parse(r) : (def !== undefined ? def : null);
     } catch (e) { return def !== undefined ? def : null; }
-  };
-  const saveJSON = (k, v) => {
+  }
+  function saveJSON(k, v) {
     try { localStorage.setItem(k, JSON.stringify(v)); return true; }
-    catch (e) { toast("خطا در ذخیره", true); return false; }
-  };
-  const saveArr = (k, arr) => saveJSON(k, Array.isArray(arr) ? arr.slice(-500) : []);
+    catch (e) { return false; }
+  }
+  function loadArr(k) {
+    var a = loadJSON(k, []);
+    return Array.isArray(a) ? a : [];
+  }
+  function saveArr(k, a) { return saveJSON(k, Array.isArray(a) ? a : []); }
+  function formatSize(n) {
+    n = +n || 0;
+    if (n < 1024) return toFa(n) + " B";
+    if (n < 1048576) return toFa((n / 1024).toFixed(1)) + " KB";
+    return toFa((n / 1048576).toFixed(2)) + " MB";
+  }
+  function toast(msg, err) {
+    var el = $("toast");
+    if (!el) return;
+    el.textContent = msg;
+    el.className = "toast show" + (err ? " err" : "");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2400);
+  }
 
-  const auditLog = (action, detail) => {
-    const logs = loadJSON(KEYS.AUDIT, []) || [];
-    logs.unshift({ t: Date.now(), a: action, d: detail || "", u: (loadJSON(KEYS.AUTH) || {}).role || "system" });
-    saveArr(KEYS.AUDIT, logs);
-  };
+  // Jalali helpers
+  function g2j(gy, gm, gd) {
+    var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    var jy = (gy <= 1600) ? 0 : 979;
+    gy -= (gy <= 1600) ? 621 : 1600;
+    var gy2 = (gm > 2) ? (gy + 1) : gy;
+    var days = (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) - 80 + gd + g_d_m[gm - 1];
+    jy += 33 * Math.floor(days / 12053);
+    days %= 12053;
+    jy += 4 * Math.floor(days / 1461);
+    days %= 1461;
+    if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+    var jm = (days < 186) ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
+    var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
+    return [jy, jm, jd];
+  }
+  function tick() {
+    var d = new Date();
+    var j = g2j(d.getFullYear(), d.getMonth() + 1, d.getDate());
+    if ($("dtJ")) $("dtJ").textContent = toFa(j[0]) + "/" + toFa(j[1]) + "/" + toFa(j[2]);
+    if ($("dtG")) $("dtG").textContent = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    if ($("dtC")) $("dtC").textContent = toFa(String(d.getHours()).padStart(2, "0")) + ":" + toFa(String(d.getMinutes()).padStart(2, "0")) + ":" + toFa(String(d.getSeconds()).padStart(2, "0"));
+  }
+  tick();
+  setInterval(tick, 1000);
 
-  let brainAuth = loadJSON(KEYS.AUTH);
-  const ensureBrainAuth = (cb) => {
-    if (brainAuth && (brainAuth.role === "admin" || brainAuth.role === "ceo")) {
-      if (cb) cb();
-      return true;
+  function getAuth() {
+    return loadJSON(AUTH_KEY, {
+      users: [{ user: "admin", pass: "admin", name: "مدیر" }],
+      session: null
+    });
+  }
+  function saveAuth(a) { return saveJSON(AUTH_KEY, a); }
+  function userName() {
+    var a = getAuth();
+    return (a.session && (a.session.name || a.session.user)) || "مهمان";
+  }
+  function ensureBrainAuth(cb) {
+    var a = getAuth();
+    if (a.session && a.session.user) { cb(); return; }
+    var m = document.createElement("div");
+    m.className = "login-mask";
+    m.innerHTML =
+      '<div class="login-box">' +
+      '<h2 style="text-align:center;color:#c4b5fd;margin-bottom:8px">ورود سیستمی</h2>' +
+      '<label>کاربری</label><input id="lgU">' +
+      '<label>رمز</label><input id="lgP" type="password">' +
+      '<button type="button" class="btn btn-v" id="lgGo" style="width:100%;margin-top:8px">ورود</button>' +
+      '<button type="button" class="btn" id="lgCancel" style="width:100%;margin-top:5px">بازگشت</button>' +
+      '<p class="empty" style="margin-top:6px;text-align:center">admin / admin</p></div>';
+    document.body.appendChild(m);
+    $("lgGo").onclick = function () {
+      var u = $("lgU").value.trim(), p = $("lgP").value;
+      var f = (a.users || []).find(function (x) { return x.user === u && x.pass === p; });
+      if (!f) { toast("اشتباه", true); return; }
+      a.session = { user: f.user, name: f.name || f.user };
+      saveAuth(a);
+      m.remove();
+      brainAudit("login", f.user);
+      cb();
+    };
+    $("lgCancel").onclick = function () {
+      m.remove();
+      showView("v-launch");
+    };
+  }
+
+  function defBrain() {
+    return { version: 2, rules: [], audit: [], lastScan: null, flags: {}, createdAt: now(), updatedAt: now() };
+  }
+  function loadBrain() {
+    var d = loadJSON(BRAIN_KEY, null);
+    if (!d) {
+      d = defBrain();
+      d.rules = [{
+        id: uid(), title: "کارتابل شلوغ", when: "cart_open_gt", target: "suite",
+        threshold: 5, action: "flag", enabled: true, at: now()
+      }];
+      saveJSON(BRAIN_KEY, d);
     }
-    document.getElementById("loginMask").style.display = "flex";
-    window._authCb = cb;
-    return false;
-  };
-  document.getElementById("btnDoLogin").onclick = () => {
-    const role = document.getElementById("loginRole").value;
-    const pass = document.getElementById("loginPass").value;
-    if ((role === "admin" || role === "ceo") && pass === "1234") {
-      brainAuth = { role, at: Date.now() };
-      saveJSON(KEYS.AUTH, brainAuth);
-      document.getElementById("loginMask").style.display = "none";
-      document.getElementById("loginPass").value = "";
-      auditLog("login", role);
-      toast("ورود موفق");
-      if (window._authCb) { window._authCb(); window._authCb = null; }
-      renderSecurity();
-    } else toast("رمز یا نقش نادرست", true);
-  };
-  document.getElementById("btnCancelLogin").onclick = () => {
-    document.getElementById("loginMask").style.display = "none";
-    window._authCb = null;
-  };
-  document.getElementById("btnBrainLogin").onclick = () => ensureBrainAuth(() => renderSecurity());
-  document.getElementById("btnBrainLogout").onclick = () => {
-    brainAuth = null;
-    localStorage.removeItem(KEYS.AUTH);
-    auditLog("logout");
-    toast("خروج");
-    renderSecurity();
-  };
-
-  // Tab lock
-  const tabId = Math.random().toString(36).slice(2);
-  const checkTabLock = () => {
-    const locked = localStorage.getItem(KEYS.TABLOCK);
-    if (locked && locked !== tabId) {
-      document.body.innerHTML = "<div style='display:flex;align-items:center;justify-content:center;height:100vh;background:#0b1220;color:#fecaca;font-family:Tahoma;text-align:center;padding:20px'><div><h2>تب قفل است</h2><p>یک تب دیگر از سوییت باز است. این تب را ببندید.</p></div></div>";
-      return false;
-    }
-    localStorage.setItem(KEYS.TABLOCK, tabId);
-    return true;
-  };
-  window.addEventListener("beforeunload", () => {
-    if (localStorage.getItem(KEYS.TABLOCK) === tabId) localStorage.removeItem(KEYS.TABLOCK);
-  });
-  document.getElementById("chkTabLock").onchange = (e) => {
-    if (e.target.checked) {
-      if (!checkTabLock()) return;
-      toast("قفل تب فعال");
-    } else {
-      localStorage.removeItem(KEYS.TABLOCK);
-      toast("قفل تب غیرفعال");
-    }
-  };
-  if (localStorage.getItem(KEYS.TABLOCK)) document.getElementById("chkTabLock").checked = true;
-
-  const showView = (id) => {
-    document.querySelectorAll(".view").forEach(v => v.classList.remove("on"));
-    document.querySelectorAll(".mode-tabs button").forEach(b => b.classList.remove("on"));
-    const el = document.getElementById(id);
-    if (el) el.classList.add("on");
-    const btn = document.querySelector(`.mode-tabs button[data-view="${id}"]`);
-    if (btn) btn.classList.add("on");
-    if (id === "v-brain") { if (ensureBrainAuth(() => { renderBrain(); })) renderBrain(); }
-    if (id === "v-datacenter") { if (ensureBrainAuth(() => { renderDataCenter(); })) renderDataCenter(); }
-    if (id === "v-rules") { if (ensureBrainAuth(() => { renderRules(); })) renderRules(); }
-    if (id === "v-security") renderSecurity();
-  };
-  document.querySelectorAll(".mode-tabs button").forEach(b => {
-    b.onclick = () => showView(b.dataset.view);
-  });
-  document.getElementById("modDataCard").onclick = () => showView("v-datacenter");
-  document.getElementById("modBrainCard").onclick = () => showView("v-brain");
-
-  // Brain
-  const scanModules = () => {
-    const mods = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k && k.startsWith("smart_mod_")) {
-        try {
-          const d = JSON.parse(localStorage.getItem(k) || "{}");
-          mods.push({ key: k, name: d.name || k.replace("smart_mod_","").replace("_v2",""), count: Array.isArray(d.items) ? d.items.length : (d.count || 0), updated: d.updated || d.ts || null });
-        } catch (e) {
-          mods.push({ key: k, name: k, count: 0, bad: true });
+    if (!Array.isArray(d.rules)) d.rules = [];
+    if (!Array.isArray(d.audit)) d.audit = [];
+    if (!d.flags) d.flags = {};
+    return d;
+  }
+  function saveBrain(d) {
+    try {
+      var c = localStorage.getItem(BRAIN_KEY);
+      if (c) localStorage.setItem(BRAIN_BACKUP, c);
+    } catch (e) {}
+    d.updatedAt = now();
+    d.version = 2;
+    return saveJSON(BRAIN_KEY, d);
+  }
+  function brainAudit(action, detail) {
+    var d = loadBrain();
+    d.audit.unshift({
+      id: uid(), t: now(), user: userName(),
+      action: String(action || "").slice(0, 40),
+      detail: String(detail || "").slice(0, 200)
+    });
+    if (d.audit.length > 200) d.audit = d.audit.slice(0, 200);
+    saveBrain(d);
+  }
+  function pushEvent(type, message) {
+    var list = loadArr(EVENTS_KEY);
+    list.unshift({
+      id: uid(), t: now(),
+      type: String(type || "info").slice(0, 30),
+      message: String(message || "").slice(0, 240),
+      by: userName()
+    });
+    if (list.length > 300) list = list.slice(0, 300);
+    saveArr(EVENTS_KEY, list);
+  }
+  function isSuiteKey(k) {
+    return !!k && (k.indexOf("smart_") === 0 || k.indexOf("suite_") === 0);
+  }
+  function moduleDataSize(modId) {
+    var total = 0, keys = [];
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i) || "";
+        if (k.indexOf("smart_mod_" + modId) === 0 || (modId === "suite" && isSuiteKey(k))) {
+          var v = localStorage.getItem(k) || "";
+          total += v.length;
+          keys.push(k);
         }
       }
-    }
-    return mods.sort((a,b) => (a.name||"").localeCompare(b.name||""));
-  };
-  const renderListBox = (el, items, fn) => {
-    if (!el) return;
-    if (!items || !items.length) { el.innerHTML = "<div class='empty'>خالی</div>"; return; }
-    el.innerHTML = items.map(fn).join("");
-  };
-  const renderBrain = () => {
-    const mods = scanModules();
-    const events = loadJSON(KEYS.EVENTS, []) || [];
-    const cart = loadJSON(KEYS.CART, []) || [];
-    document.getElementById("brainKpi").innerHTML = `
-      <div class="box"><div class="n">${toFa(mods.length)}</div><div class="l">ماژول</div></div>
-      <div class="box"><div class="n">${toFa(events.length)}</div><div class="l">رویداد</div></div>
-      <div class="box"><div class="n">${toFa(cart.filter(c=>!c.done).length)}</div><div class="l">کارتابل باز</div></div>
-      <div class="box"><div class="n">${toFa((loadJSON(KEYS.RULES,[])||[]).length)}</div><div class="l">قانون</div></div>`;
-    renderListBox(document.getElementById("brainModList"), mods, m =>
-      `<div class="list-item">${m.bad?"⚠️ ":""}<b>${m.name}</b> · ${toFa(m.count)} مورد ${m.updated?"· "+new Date(m.updated).toLocaleString("fa-IR"):""}</div>`);
-    renderListBox(document.getElementById("brainEvents"), events.slice(0,40), e =>
-      `<div class="list-item">${new Date(e.t).toLocaleString("fa-IR")} · ${e.a||e.msg||"—"}</div>`);
-    renderListBox(document.getElementById("brainCart"), cart.filter(c=>!c.done).slice(0,30), c =>
-      `<div class="list-item">${c.msg||c.title||"—"} <button class="btn btn-sm btn-ok" data-id="${c.id}">انجام</button></div>`);
-    document.getElementById("brainMeta").textContent = "آخرین اسکن: " + new Date().toLocaleString("fa-IR");
-    document.querySelectorAll("#brainCart button").forEach(b => {
-      b.onclick = () => {
-        const cart2 = loadJSON(KEYS.CART, []) || [];
-        const it = cart2.find(x => x.id === b.dataset.id);
-        if (it) { it.done = true; saveArr(KEYS.CART, cart2); renderBrain(); toast("انجام شد"); }
-      };
+    } catch (e) {}
+    return { size: total, keys: keys };
+  }
+  function scanModules() {
+    var mods = [
+      { id: "ceo", name: "مدیرعامل" }, { id: "manager", name: "مدیریت" }, { id: "sysadmin", name: "مدیر سیستم" },
+      { id: "accounting", name: "حسابداری" }, { id: "bank", name: "بانک" }, { id: "cashbox", name: "صندوق" },
+      { id: "pettycash", name: "تنخواه" }, { id: "tax", name: "مالیات" }, { id: "budget", name: "بودجه" },
+      { id: "audit", name: "حسابرسی" }, { id: "fixedassets", name: "دارایی ثابت" }, { id: "sales", name: "فروش" },
+      { id: "purchase", name: "خرید" }, { id: "warehouse", name: "انبار" }, { id: "customers", name: "مشتریان" },
+      { id: "production", name: "تولید" }, { id: "contracts", name: "قراردادها" }, { id: "projects", name: "پروژه" },
+      { id: "fleet", name: "ناوگان" }, { id: "personnel", name: "پرسنلی" }, { id: "payroll", name: "حقوق" },
+      { id: "secretariat", name: "دبیرخانه" }, { id: "secretary", name: "منشی" }, { id: "correspondence", name: "مکاتبات" },
+      { id: "archive", name: "بایگانی" }, { id: "documents", name: "اسناد" }, { id: "assistant", name: "دستیار" },
+      { id: "lawyer", name: "وکیل" }, { id: "pr", name: "روابط عمومی" }, { id: "multicompany", name: "چندشرکتی" },
+      { id: "chat", name: "چت" }, { id: "meeting", name: "متینگ" }, { id: "filehub", name: "هاب فایل" }, { id: "suite", name: "سوییت" }
+    ];
+    return mods.map(function (m) {
+      var info = moduleDataSize(m.id);
+      return { id: m.id, name: m.name, size: info.size, hasData: info.size > 20, keys: info.keys };
     });
-  };
-  document.getElementById("btnScanAll").onclick = () => { renderBrain(); toast("اسکن شد"); };
-  document.getElementById("btnRefreshBrain").onclick = () => { renderBrain(); toast("بروزرسانی"); };
-  document.getElementById("btnRunRules").onclick = () => { runAllRules(); renderBrain(); };
-
-  // Rules
-  const runAllRules = () => {
-    const rules = loadJSON(KEYS.RULES, []) || [];
-    const mods = scanModules();
-    let fired = 0;
-    rules.forEach(r => {
-      try {
-        const [mod, rest] = (r.cond || "").split(".");
-        const m = mods.find(x => x.name === mod || x.key.includes(mod));
-        if (!m) return;
-        const val = m.count;
-        let ok = false;
-        if (rest && rest.includes("<")) ok = val < parseFloat(rest.replace("<","").trim());
-        else if (rest && rest.includes(">")) ok = val > parseFloat(rest.replace(">","").trim());
-        else if (rest && rest.includes("=")) ok = val == parseFloat(rest.replace("=","").trim());
-        if (ok) {
-          fired++;
-          const events = loadJSON(KEYS.EVENTS, []) || [];
-          events.unshift({ t: Date.now(), a: "rule:" + (r.name||""), msg: r.msg || r.name });
-          saveArr(KEYS.EVENTS, events);
-          if (r.action === "cartable") {
-            const cart = loadJSON(KEYS.CART, []) || [];
-            cart.unshift({ id: "r" + Date.now() + Math.random().toString(36).slice(2,6), msg: r.msg || r.name, t: Date.now() });
-            saveArr(KEYS.CART, cart);
-          }
-          auditLog("rule_fire", r.name);
+  }
+  function cartOpenCount() {
+    return loadArr(CART_KEY).filter(function (x) { return x && x.status !== "done"; }).length;
+  }
+  function runAllRules() {
+    var d = loadBrain(), ran = 0;
+    (d.rules || []).forEach(function (r) {
+      if (!r || !r.enabled) return;
+      var hit = false;
+      if (r.when === "cart_open_gt") hit = cartOpenCount() > (+r.threshold || 0);
+      else if (r.when === "module_has_data" || r.when === "module_missing") {
+        var m = scanModules().find(function (x) { return x.id === r.target; });
+        if (m) hit = r.when === "module_has_data" ? m.hasData : !m.hasData;
+      } else if (r.when === "key_size_gt") {
+        var info = moduleDataSize(r.target || "suite");
+        hit = info.size > (+r.threshold || 0);
+      }
+      if (hit) {
+        ran++;
+        if (r.action === "log") pushEvent("rule", r.title || r.when);
+        if (r.action === "cart") {
+          var list = loadArr(CART_KEY);
+          list.unshift({ id: uid(), title: r.title || "قانون", status: "open", at: now(), by: userName() });
+          saveArr(CART_KEY, list);
         }
-      } catch (e) {}
+        if (r.action === "flag") {
+          d.flags = d.flags || {};
+          d.flags[r.id] = { at: now(), title: r.title };
+        }
+      }
     });
-    toast(fired ? (toFa(fired) + " قانون اجرا شد") : "هیچ قانونی فعال نشد");
-  };
-  const renderRules = () => {
-    const rules = loadJSON(KEYS.RULES, []) || [];
-    renderListBox(document.getElementById("rulesList"), rules, r =>
-      `<div class="list-item"><b>${r.name||"—"}</b> · ${r.cond||""} → ${r.action||""} <button class="btn btn-sm btn-b" data-id="${r.id}">حذف</button></div>`);
-    document.querySelectorAll("#rulesList button").forEach(b => {
-      b.onclick = () => {
-        let rules2 = loadJSON(KEYS.RULES, []) || [];
-        rules2 = rules2.filter(x => x.id !== b.dataset.id);
-        saveJSON(KEYS.RULES, rules2);
-        renderRules();
-        toast("حذف شد");
-      };
-    });
-  };
-  document.getElementById("btnAddRule").onclick = () => {
-    const name = document.getElementById("ruleName").value.trim();
-    const cond = document.getElementById("ruleCond").value.trim();
-    const action = document.getElementById("ruleAction").value;
-    const msg = document.getElementById("ruleMsg").value.trim();
-    const prio = document.getElementById("rulePrio").value;
-    if (!name || !cond) { toast("نام و شرط لازم است", true); return; }
-    const rules = loadJSON(KEYS.RULES, []) || [];
-    rules.push({ id: "r" + Date.now(), name, cond, action, msg, prio: +prio, t: Date.now() });
-    saveJSON(KEYS.RULES, rules);
-    document.getElementById("ruleName").value = "";
-    document.getElementById("ruleCond").value = "";
-    document.getElementById("ruleMsg").value = "";
-    renderRules();
-    toast("قانون افزوده شد");
-  };
-  document.getElementById("btnClearRules").onclick = () => {
-    if (!confirm("همه قوانین پاک شوند؟")) return;
-    saveJSON(KEYS.RULES, []);
-    renderRules();
-    toast("پاک شد");
-  };
+    d.lastScan = now();
+    saveBrain(d);
+    return ran;
+  }
 
   // Data Center
-  let dcCache = [];
-  let dcSelected = null;
-  const scanKeys = () => {
-    const list = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (!k) continue;
-      if (k.startsWith("smart_") || k.startsWith("suite_")) {
-        let size = 0, valid = true, preview = "";
-        try {
-          const v = localStorage.getItem(k) || "";
-          size = v.length;
-          const p = JSON.parse(v);
-          preview = JSON.stringify(p).slice(0, 120);
-        } catch (e) { valid = false; preview = "(نامعتبر)"; }
-        list.push({ key: k, size, valid, preview });
+  function dcAudit(action, detail) {
+    var list = loadArr(DC_AUDIT_KEY);
+    list.unshift({ id: uid(), t: now(), user: userName(), action: action, detail: String(detail || "").slice(0, 180) });
+    if (list.length > 150) list = list.slice(0, 150);
+    saveArr(DC_AUDIT_KEY, list);
+  }
+  function scanDcKeys() {
+    dcCache = [];
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i) || "";
+        if (!isSuiteKey(k)) continue;
+        var v = localStorage.getItem(k) || "";
+        var ok = true, parsed = null;
+        try { parsed = JSON.parse(v); } catch (e) { ok = false; }
+        dcCache.push({ key: k, size: v.length, ok: ok, sample: v.slice(0, 120) });
       }
-    }
-    return list.sort((a,b) => a.key.localeCompare(b.key));
-  };
-  const renderDataCenter = () => {
-    dcCache = scanKeys();
-    const q = (document.getElementById("dcSearch").value || "").toLowerCase();
-    const f = document.getElementById("dcFilter").value;
-    let list = dcCache.filter(x => {
-      if (q && !x.key.toLowerCase().includes(q)) return false;
-      if (f === "mod" && !x.key.startsWith("smart_mod_")) return false;
-      if (f === "suite" && !x.key.startsWith("suite_")) return false;
-      if (f === "bad" && x.valid) return false;
+    } catch (e) {}
+    dcCache.sort(function (a, b) { return b.size - a.size; });
+    return dcCache;
+  }
+  function renderDataCenter() {
+    var list = scanDcKeys();
+    var q = (($("dcSearch") && $("dcSearch").value) || "").trim().toLowerCase();
+    var f = ($("dcFilter") && $("dcFilter").value) || "all";
+    list = list.filter(function (r) {
+      if (q && r.key.toLowerCase().indexOf(q) < 0) return false;
+      if (f === "mod" && r.key.indexOf("smart_mod_") !== 0) return false;
+      if (f === "suite" && r.key.indexOf("suite_") !== 0) return false;
+      if (f === "bad" && r.ok) return false;
       return true;
     });
-    document.getElementById("dcKpi").innerHTML = `
-      <div class="box"><div class="n">${toFa(dcCache.length)}</div><div class="l">کل کلید</div></div>
-      <div class="box"><div class="n">${toFa(dcCache.filter(x=>x.key.startsWith("smart_mod_")).length)}</div><div class="l">ماژول</div></div>
-      <div class="box"><div class="n">${toFa(dcCache.filter(x=>x.key.startsWith("suite_")).length)}</div><div class="l">سوییت</div></div>
-      <div class="box"><div class="n">${toFa(dcCache.filter(x=>!x.valid).length)}</div><div class="l">نامعتبر</div></div>`;
-    renderListBox(document.getElementById("dcKeyTable"), list, x =>
-      `<div class="list-item" data-k="${x.key}" style="cursor:pointer">${x.valid?"✅":"⚠️"} <b>${x.key}</b> · ${toFa(x.size)} بایت</div>`);
-    document.querySelectorAll("#dcKeyTable .list-item").forEach(el => {
-      el.onclick = () => {
-        dcSelected = el.dataset.k;
-        const it = dcCache.find(x => x.key === dcSelected);
-        document.getElementById("dcDetailMeta").textContent = dcSelected + " · " + (it ? toFa(it.size) + " بایت" : "");
-        try {
-          const raw = localStorage.getItem(dcSelected) || "";
-          document.getElementById("dcDetail").textContent = JSON.stringify(JSON.parse(raw), null, 2);
-        } catch (e) {
-          document.getElementById("dcDetail").textContent = localStorage.getItem(dcSelected) || "";
-        }
-        document.getElementById("btnDcDownloadOne").disabled = false;
-        document.getElementById("btnDcDeleteOne").disabled = false;
-      };
+    var total = list.reduce(function (s, r) { return s + r.size; }, 0);
+    if ($("dcKpi")) {
+      $("dcKpi").innerHTML =
+        '<div class="box"><div class="n">' + toFa(list.length) + '</div><div class="l">کلید</div></div>' +
+        '<div class="box"><div class="n">' + formatSize(total) + '</div><div class="l">حجم</div></div>' +
+        '<div class="box"><div class="n">' + toFa(list.filter(function (r) { return !r.ok; }).length) + '</div><div class="l">نامعتبر</div></div>';
+    }
+    if ($("dcKeyTable")) {
+      var h = "<table><thead><tr><th></th><th>کلید</th><th>حجم</th><th></th></tr></thead><tbody>";
+      list.forEach(function (r) {
+        h += "<tr><td><input type='checkbox' class='dc-chk' data-k='" + esc(r.key) + "'></td><td>" +
+          esc(r.key) + (r.ok ? "" : ' <span class="badge badge-b">نامعتبر</span>') +
+          "</td><td>" + formatSize(r.size) + "</td>" +
+          "<td><button type='button' class='btn btn-sm btn-p' data-view-k='" + esc(r.key) + "'>مشاهده</button></td></tr>";
+      });
+      $("dcKeyTable").innerHTML = h + "</tbody></table>";
+      $("dcKeyTable").querySelectorAll("[data-view-k]").forEach(function (b) {
+        b.onclick = function () { showDcDetail(b.getAttribute("data-view-k")); };
+      });
+    }
+    if ($("dcAudit")) {
+      $("dcAudit").innerHTML = loadArr(DC_AUDIT_KEY).slice(0, 12).map(function (a) {
+        return '<div class="list-item">' + esc(a.action) + " — " + esc(a.detail) + " · " + esc(a.user) + "</div>";
+      }).join("") || '<p class="empty">—</p>';
+    }
+  }
+  function showDcDetail(k) {
+    dcSelectedKey = k;
+    var v = "";
+    try { v = localStorage.getItem(k) || ""; } catch (e) {}
+    if ($("dcDetailMeta")) $("dcDetailMeta").textContent = k + " · " + formatSize(v.length);
+    if ($("dcDetail")) $("dcDetail").textContent = v.slice(0, 4000) || "—";
+    if ($("btnDcDownloadOne")) $("btnDcDownloadOne").disabled = !k;
+    if ($("btnDcDeleteOne")) $("btnDcDeleteOne").disabled = !k;
+  }
+  function buildBackup(keys) {
+    var out = { version: 2, at: now(), by: userName(), keys: {} };
+    (keys || []).forEach(function (k) {
+      try { out.keys[k] = localStorage.getItem(k); } catch (e) {}
     });
-    const audits = loadJSON(KEYS.AUDIT, []) || [];
-    renderListBox(document.getElementById("dcAudit"), audits.slice(0,30), a =>
-      `<div class="list-item">${new Date(a.t).toLocaleString("fa-IR")} · ${a.a} · ${a.d||""}</div>`);
-  };
-  document.getElementById("btnDcScan").onclick = () => { renderDataCenter(); toast("اسکن شد"); };
-  document.getElementById("dcSearch").oninput = () => renderDataCenter();
-  document.getElementById("dcFilter").onchange = () => renderDataCenter();
-  document.getElementById("btnDcBackupAll").onclick = () => {
-    const data = {};
-    dcCache.forEach(x => { data[x.key] = localStorage.getItem(x.key); });
-    const blob = new Blob([JSON.stringify({ v: 2, t: Date.now(), keys: data }, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
+    return out;
+  }
+  function downloadJSON(obj, name) {
+    var blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
+    var a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "suite-backup-v2-" + Date.now() + ".json";
+    a.download = name || "suite-backup.json";
     a.click();
-    auditLog("backup_all", Object.keys(data).length + " keys");
-    toast("پشتیبان دانلود شد");
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1500);
+  }
+
+  if ($("btnDcScan")) $("btnDcScan").onclick = function () {
+    ensureBrainAuth(function () { renderDataCenter(); dcAudit("scan", "manual"); toast("اسکن"); });
   };
-  document.getElementById("btnDcBackupSelected").onclick = () => {
-    if (!dcSelected) { toast("ابتدا یک کلید انتخاب کنید", true); return; }
-    const data = { [dcSelected]: localStorage.getItem(dcSelected) };
-    const blob = new Blob([JSON.stringify({ v: 2, t: Date.now(), keys: data }, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "suite-backup-" + dcSelected + ".json";
-    a.click();
-    auditLog("backup_one", dcSelected);
-    toast("دانلود شد");
+  if ($("btnDcBackupAll")) $("btnDcBackupAll").onclick = function () {
+    ensureBrainAuth(function () {
+      var keys = scanDcKeys().map(function (r) { return r.key; });
+      downloadJSON(buildBackup(keys), "suite-backup-all-" + Date.now() + ".json");
+      dcAudit("backup_all", keys.length + " keys");
+      toast("دانلود");
+    });
   };
-  document.getElementById("btnDcDownloadOne").onclick = () => {
-    if (!dcSelected) return;
-    const blob = new Blob([localStorage.getItem(dcSelected) || ""], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = dcSelected + ".json";
-    a.click();
+  if ($("btnDcBackupSelected")) $("btnDcBackupSelected").onclick = function () {
+    ensureBrainAuth(function () {
+      var k = [];
+      document.querySelectorAll(".dc-chk:checked").forEach(function (c) { k.push(c.getAttribute("data-k")); });
+      if (!k.length) { toast("انتخاب نشده", true); return; }
+      downloadJSON(buildBackup(k), "suite-backup-sel-" + Date.now() + ".json");
+      dcAudit("backup_sel", k.join(","));
+      toast("دانلود");
+    });
   };
-  document.getElementById("btnDcDeleteOne").onclick = () => {
-    if (!dcSelected) return;
-    if (!confirm("حذف «" + dcSelected + "»؟")) return;
-    localStorage.removeItem(dcSelected);
-    auditLog("delete_key", dcSelected);
-    dcSelected = null;
-    document.getElementById("dcDetail").textContent = "—";
-    document.getElementById("dcDetailMeta").textContent = "—";
-    document.getElementById("btnDcDownloadOne").disabled = true;
-    document.getElementById("btnDcDeleteOne").disabled = true;
-    renderDataCenter();
-    toast("حذف شد");
+  if ($("btnDcRestore")) $("btnDcRestore").onclick = function () {
+    ensureBrainAuth(function () { $("dcRestoreFile").click(); });
   };
-  document.getElementById("btnDcRestore").onclick = () => document.getElementById("dcRestoreFile").click();
-  document.getElementById("dcRestoreFile").onchange = (e) => {
-    const f = e.target.files[0];
+  if ($("dcRestoreFile")) $("dcRestoreFile").onchange = function () {
+    var f = this.files && this.files[0];
     if (!f) return;
-    const r = new FileReader();
-    r.onload = () => {
+    var r = new FileReader();
+    r.onload = function () {
       try {
-        const d = JSON.parse(r.result);
-        const keys = d.keys || d;
-        let n = 0;
-        Object.keys(keys).forEach(k => {
-          if (typeof keys[k] === "string") { localStorage.setItem(k, keys[k]); n++; }
+        var d = JSON.parse(r.result);
+        if (!d.keys) { toast("keys نیست", true); return; }
+        var ok = 0;
+        Object.keys(d.keys).forEach(function (k) {
+          if (!isSuiteKey(k)) return;
+          try { localStorage.setItem(k, d.keys[k]); ok++; } catch (e) {}
         });
-        auditLog("restore", n + " keys");
+        dcAudit("restore", ok + " keys");
         renderDataCenter();
-        toast(toFa(n) + " کلید بازیابی شد");
-      } catch (err) { toast("فایل نامعتبر", true); }
+        toast("بازیابی " + toFa(ok));
+      } catch (err) { toast("نامعتبر", true); }
     };
     r.readAsText(f);
-    e.target.value = "";
+  };
+  if ($("btnDcDownloadOne")) $("btnDcDownloadOne").onclick = function () {
+    if (!dcSelectedKey) return;
+    ensureBrainAuth(function () {
+      var v = localStorage.getItem(dcSelectedKey);
+      downloadJSON({ key: dcSelectedKey, value: v, at: now() }, dcSelectedKey + ".json");
+      dcAudit("download_one", dcSelectedKey);
+      toast("دانلود");
+    });
+  };
+  if ($("btnDcDeleteOne")) $("btnDcDeleteOne").onclick = function () {
+    if (!dcSelectedKey) return;
+    if (!confirm("حذف کلید «" + dcSelectedKey + "»؟")) return;
+    ensureBrainAuth(function () {
+      try { localStorage.removeItem(dcSelectedKey); } catch (e) {}
+      dcAudit("delete", dcSelectedKey);
+      dcSelectedKey = null;
+      renderDataCenter();
+      toast("حذف");
+    });
+  };
+  if ($("dcSearch")) $("dcSearch").oninput = function () { renderDataCenter(); };
+  if ($("dcFilter")) $("dcFilter").onchange = function () { renderDataCenter(); };
+
+  function closeSettings() {
+    var p = $("settingsPanel"), g = $("gearBtn");
+    if (p) p.classList.remove("open");
+    if (g) g.classList.remove("on");
+  }
+
+  function showView(id) {
+    closeSettings();
+    document.querySelectorAll(".view").forEach(function (v) { v.classList.remove("on"); });
+    document.querySelectorAll(".mode-tabs button").forEach(function (b) { b.classList.remove("on"); });
+    if ($(id)) $(id).classList.add("on");
+    document.querySelectorAll(".mode-tabs button[data-view]").forEach(function (b) {
+      if (b.getAttribute("data-view") === id) b.classList.add("on");
+    });
+    if (id !== "v-launch" && $("modeTabs")) {
+      var lb = $("modeTabs").querySelector('button[data-view="v-launch"]');
+      if (lb) lb.classList.remove("on");
+    }
+    if (id === "v-brain" || id === "v-rules" || id === "v-security" || id === "v-datacenter") {
+      ensureBrainAuth(function () {
+        if (id === "v-brain") renderBrain();
+        if (id === "v-rules") renderRules();
+        if (id === "v-security") renderSecurity();
+        if (id === "v-datacenter") renderDataCenter();
+      });
+    }
+  }
+
+  document.querySelectorAll(".mode-tabs button[data-view]").forEach(function (b) {
+    b.addEventListener("click", function () { showView(b.getAttribute("data-view")); });
+  });
+
+  // Gear settings menu (secure entry point for advanced panels)
+  if ($("gearBtn") && $("settingsPanel")) {
+    $("gearBtn").onclick = function (e) {
+      e.stopPropagation();
+      var p = $("settingsPanel");
+      var open = p.classList.toggle("open");
+      $("gearBtn").classList.toggle("on", open);
+    };
+    $("settingsPanel").querySelectorAll("button[data-view]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        showView(btn.getAttribute("data-view"));
+      });
+    });
+    document.addEventListener("click", function (e) {
+      if (!$("settingsPanel").contains(e.target) && e.target !== $("gearBtn")) {
+        closeSettings();
+      }
+    });
+  }
+
+  // Back-to-launcher buttons inside advanced views
+  document.querySelectorAll("[data-back]").forEach(function (b) {
+    b.addEventListener("click", function () { showView("v-launch"); });
+  });
+
+  function renderBrain() {
+    var rows = scanModules(), ts = 0, wd = 0;
+    rows.forEach(function (r) { ts += r.size; if (r.hasData) wd++; });
+    if ($("brainKpi")) {
+      $("brainKpi").innerHTML =
+        '<div class="box"><div class="n">' + toFa(rows.length) + '</div><div class="l">هدف</div></div>' +
+        '<div class="box"><div class="n">' + toFa(wd) + '</div><div class="l">داده</div></div>' +
+        '<div class="box"><div class="n">' + formatSize(ts) + '</div><div class="l">حجم</div></div>' +
+        '<div class="box"><div class="n">' + toFa(cartOpenCount()) + '</div><div class="l">کارتابل</div></div>';
+    }
+    if ($("brainModList")) {
+      var h = "<table><thead><tr><th>ماژول</th><th>داده</th><th>حجم</th></tr></thead><tbody>";
+      rows.forEach(function (r) {
+        h += "<tr><td>" + esc(r.name) + "</td><td>" +
+          (r.hasData ? '<span class="badge badge-ok">دارد</span>' : '<span class="badge badge-w">ندارد</span>') +
+          "</td><td>" + formatSize(r.size) + "</td></tr>";
+      });
+      $("brainModList").innerHTML = h + "</tbody></table>";
+    }
+    if ($("brainMeta")) $("brainMeta").textContent = userName();
+    if ($("brainEvents")) {
+      $("brainEvents").innerHTML = loadArr(EVENTS_KEY).slice(0, 20).map(function (e) {
+        return '<div class="list-item">' + esc(e.type) + " — " + esc(e.message) + "</div>";
+      }).join("") || '<p class="empty">—</p>';
+    }
+    if ($("brainCart")) {
+      $("brainCart").innerHTML = loadArr(CART_KEY).filter(function (x) {
+        return x && x.status !== "done";
+      }).slice(0, 15).map(function (x) {
+        return '<div class="list-item">' + esc(x.title || "") + "</div>";
+      }).join("") || '<p class="empty">—</p>';
+    }
+  }
+  if ($("btnScanAll")) $("btnScanAll").onclick = function () {
+    ensureBrainAuth(function () { renderBrain(); toast("اسکن"); });
+  };
+  function doRun() {
+    ensureBrainAuth(function () {
+      toast("قوانین " + toFa(runAllRules()));
+      renderBrain();
+      renderRules();
+    });
+  }
+  if ($("btnRunRules")) $("btnRunRules").onclick = doRun;
+  if ($("btnRunRules2")) $("btnRunRules2").onclick = doRun;
+  if ($("btnRefreshBrain")) $("btnRefreshBrain").onclick = function () {
+    ensureBrainAuth(function () { renderBrain(); toast("بروز"); });
   };
 
-  // Security
-  const renderSecurity = () => {
-    const auth = loadJSON(KEYS.AUTH);
-    document.getElementById("secAuthStatus").textContent = auth ? ("نقش: " + auth.role + " · ورود: " + new Date(auth.at).toLocaleString("fa-IR")) : "خارج از سیستم";
-    const audits = loadJSON(KEYS.AUDIT, []) || [];
-    document.getElementById("secKpi").innerHTML = `
-      <div class="box"><div class="n">${auth ? "✅" : "—"}</div><div class="l">احراز</div></div>
-      <div class="box"><div class="n">${toFa(audits.length)}</div><div class="l">لاگ</div></div>
-      <div class="box"><div class="n">${localStorage.getItem(KEYS.TABLOCK) ? "🔒" : "—"}</div><div class="l">قفل تب</div></div>`;
-    renderListBox(document.getElementById("secAudit"), audits.slice(0,40), a =>
-      `<div class="list-item">${new Date(a.t).toLocaleString("fa-IR")} · ${a.u||""} · ${a.a} · ${a.d||""}</div>`);
-  };
-  document.getElementById("btnEmergencyBackup").onclick = () => {
-    const data = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k && (k.startsWith("smart_") || k.startsWith("suite_"))) data[k] = localStorage.getItem(k);
+  function renderRules() {
+    var d = loadBrain();
+    if ($("rulesList")) {
+      $("rulesList").innerHTML = (d.rules || []).map(function (r) {
+        return '<div class="list-item">' +
+          '<b>' + esc(r.title || "—") + '</b> · ' +
+          esc(WHEN_LABELS[r.when] || r.when) + ' · ' +
+          esc(ACTION_LABELS[r.action] || r.action) +
+          (r.enabled ? ' <span class="badge badge-ok">فعال</span>' : ' <span class="badge badge-w">غیرفعال</span>') +
+          '</div>';
+      }).join("") || '<p class="empty">—</p>';
     }
-    const blob = new Blob([JSON.stringify({ v: 2, emergency: true, t: Date.now(), keys: data }, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "suite-emergency-" + Date.now() + ".json";
-    a.click();
-    auditLog("emergency_backup", Object.keys(data).length);
-    toast("پشتیبان اضطراری");
+  }
+  if ($("btnAddRule")) $("btnAddRule").onclick = function () {
+    ensureBrainAuth(function () {
+      var title = ($("ruleTitle") && $("ruleTitle").value || "").trim();
+      if (!title) { toast("عنوان", true); return; }
+      var d = loadBrain();
+      d.rules.unshift({
+        id: uid(),
+        title: title.slice(0, 80),
+        when: ($("ruleWhen") && $("ruleWhen").value) || "module_has_data",
+        target: ($("ruleTarget") && $("ruleTarget").value) || "suite",
+        threshold: +(($("ruleThreshold") && $("ruleThreshold").value) || 0),
+        action: ($("ruleAction") && $("ruleAction").value) || "log",
+        enabled: !($("ruleEnabled") && !$("ruleEnabled").checked),
+        at: now()
+      });
+      saveBrain(d);
+      if ($("ruleTitle")) $("ruleTitle").value = "";
+      renderRules();
+      toast("ثبت");
+    });
   };
-  document.getElementById("btnEmergencyRestore").onclick = () => document.getElementById("emgRestoreFile").click();
-  document.getElementById("emgRestoreFile").onchange = (e) => {
-    const f = e.target.files[0];
+
+  function renderSecurity() {
+    var d = loadBrain();
+    if ($("brainAudit")) {
+      $("brainAudit").innerHTML = (d.audit || []).slice(0, 20).map(function (a) {
+        return '<div class="list-item">' + esc(a.action) + " — " + esc(a.detail) + " · " + esc(a.user) + "</div>";
+      }).join("") || '<p class="empty">—</p>';
+    }
+  }
+  if ($("btnBrainBackup")) $("btnBrainBackup").onclick = function () {
+    ensureBrainAuth(function () {
+      downloadJSON({ brain: loadBrain(), events: loadArr(EVENTS_KEY), at: now() }, "brain-backup-" + Date.now() + ".json");
+      brainAudit("backup", "manual");
+      toast("دانلود");
+    });
+  };
+  if ($("btnBrainRestore")) $("btnBrainRestore").onclick = function () {
+    ensureBrainAuth(function () { $("brainRestoreFile").click(); });
+  };
+  if ($("brainRestoreFile")) $("brainRestoreFile").onchange = function () {
+    var f = this.files && this.files[0];
     if (!f) return;
-    if (!confirm("بازیابی اضطراری همه کلیدها را بازنویسی می‌کند. ادامه؟")) return;
-    const r = new FileReader();
-    r.onload = () => {
+    var r = new FileReader();
+    r.onload = function () {
       try {
-        const d = JSON.parse(r.result);
-        const keys = d.keys || d;
-        Object.keys(keys).forEach(k => {
-          if (typeof keys[k] === "string") localStorage.setItem(k, keys[k]);
-        });
+        var d = JSON.parse(r.result);
+        if (d.brain) saveBrain(d.brain);
         if (d.events) saveArr(EVENTS_KEY, d.events);
         toast("بازیابی");
       } catch (err) { toast("نامعتبر", true); }
