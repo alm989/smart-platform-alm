@@ -91,7 +91,6 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
     <button type="button" data-view="v-rules">قوانین و خودکارسازی</button>
     <button type="button" data-view="v-security">امنیت و یکپارچگی</button>
   </div>
-
   <div class="view on" id="v-launch">
     <div class="hero"><h2>لانچر سوییت</h2><p>دسترسی سریع به ماژول‌ها</p></div>
     <div class="section"><h3>هسته و مدیریت</h3><div class="grid">
@@ -144,7 +143,6 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
       <a class="mod" href="file-hub.html" data-id="filehub" data-n="هاب فایل"><div class="ic">📎</div><div class="nm">هاب فایل</div><div class="ds">فایل</div></a>
     </div></div>
   </div>
-
   <div class="view" id="v-brain">
     <div class="scope"><b>مغز سوییت</b> — رصد ماژول‌ها · قوانین اعلامی · کارتابل</div>
     <div class="kpi" id="brainKpi"></div>
@@ -160,7 +158,6 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
     <div class="card"><h2>رویدادها</h2><div class="list-box" id="brainEvents"></div></div>
     <div class="card"><h2>کارتابل باز</h2><div class="list-box" id="brainCart"></div></div>
   </div>
-
   <div class="view" id="v-datacenter">
     <div class="info"><b>مرکز داده</b> — smart_* / suite_* · پشتیبان suite-backup-v2</div>
     <div class="warn">حذف و بازیابی خطرناک است؛ قبلش پشتیبان بگیرید.</div>
@@ -189,7 +186,6 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
     </div>
     <div class="card"><h2>لاگ</h2><div class="list-box" id="dcAudit"></div></div>
   </div>
-
   <div class="view" id="v-rules">
     <div class="warn">قوانین فقط از قالب امن — بدون eval</div>
     <div class="card"><h2>افزودن قانون</h2>
@@ -210,7 +206,6 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
     </div>
     <div class="card"><h2>قوانین</h2><div class="list-box" id="rulesList"></div></div>
   </div>
-
   <div class="view" id="v-security">
     <div class="secure">CSP · بدون eval · ورود سیستمی · لاگ عملیات</div>
     <div class="card"><h2>کلیدها</h2><p class="note">brain: smart_mod_suite_brain_v2 · audit: suite_datacenter_audit_v1 · cartable: suite_cartable_v1</p></div>
@@ -225,9 +220,6 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<script>
-/* FULL_JS_IN_NEXT_COMMIT */
-console.error('suite: JS body must be complete');
-</script>
+<script src="suite-app.js"></script>
 </body>
 </html>
