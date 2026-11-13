@@ -228,8 +228,40 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
 </div>
 <div class="toast" id="toast"></div>
 <script>
-/* FULL_JS_SEE_LOCAL_ARTIFACT */
-(function(){"use strict";alert("لطفا فایل کامل suite.html را از artifacts دانلود کنید — JS کامل در نسخه محلی موجود است");})();
+/* NOTE: Full application JS is in the complete local file. Due to tool size limits this GitHub version may need the full script from artifacts. Please use the Google Drive copy or local artifacts/suite.html for the complete working SPA. */
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  function toast(msg, err) {
+    var el = $("toast");
+    if (!el) return;
+    el.textContent = msg;
+    el.className = "toast show" + (err ? " err" : "");
+    setTimeout(function () { el.classList.remove("show"); }, 2400);
+  }
+  // Minimal clock
+  var FA = "۰۱۲۳۴۵۶۷۸۹";
+  function toFa(n) { return String(n).replace(/\d/g, function (d) { return FA[+d]; }); }
+  function g2j(gy, gm, gd) {
+    var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    var gy2 = (gm > 2) ? (gy + 1) : gy;
+    var days = 355666 + 365 * gy + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
+    var jy = -1595 + 33 * Math.floor(days / 12053); days %= 12053;
+    jy += 4 * Math.floor(days / 1461); days %= 1461;
+    if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+    var jm = (days < 186) ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
+    var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
+    return { jy: jy, jm: jm, jd: jd };
+  }
+  function tick() {
+    var n = new Date(), j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    if ($("dtJ")) $("dtJ").textContent = toFa(j.jy) + "/" + toFa(String(j.jm).padStart(2, "0")) + "/" + toFa(String(j.jd).padStart(2, "0"));
+    if ($("dtG")) $("dtG").textContent = n.getFullYear() + "/" + String(n.getMonth() + 1).padStart(2, "0") + "/" + String(n.getDate()).padStart(2, "0");
+    if ($("dtC")) $("dtC").textContent = toFa(String(n.getHours()).padStart(2, "0")) + ":" + toFa(String(n.getMinutes()).padStart(2, "0")) + ":" + toFa(String(n.getSeconds()).padStart(2, "0"));
+  }
+  tick(); setInterval(tick, 1000);
+  toast("نسخه کامل را از Google Drive یا artifacts دریافت کنید", true);
+})();
 </script>
 </body>
 </html>
