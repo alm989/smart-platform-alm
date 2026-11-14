@@ -127,7 +127,6 @@
     return (m && m.title) || id;
   }
 
-  /* ---------- meta (localStorage) ---------- */
   function loadMeta() {
     try {
       var raw = localStorage.getItem(META_KEY);
@@ -150,7 +149,6 @@
     }
   }
 
-  /* ---------- IndexedDB ---------- */
   function openDb() {
     return new Promise(function (resolve, reject) {
       if (state.db) {
@@ -249,7 +247,6 @@
     });
   }
 
-  /* ---------- domain ops ---------- */
   function listForModule(modId) {
     var meta = loadMeta();
     return (meta.items || []).filter(function (it) {
@@ -395,7 +392,6 @@
     });
   }
 
-  /* ---------- UI ---------- */
   function injectStyles() {
     if (document.getElementById("suite-cartable-css")) return;
     var st = document.createElement("style");
@@ -530,24 +526,27 @@
     });
 
     inEl.innerHTML = inItems.length
-      ? inItems.map(function (it) {
-          return itemHtml(it, "in");
-        }).join("")
+      ? inItems
+          .map(function (it) {
+            return itemHtml(it, "in");
+          })
+          .join("")
       : '<div class="sc-empty">صندوق ورودی خالی است</div>';
 
     outEl.innerHTML = outItems.length
-      ? outItems.map(function (it) {
-          return itemHtml(it, "out");
-        }).join("")
+      ? outItems
+          .map(function (it) {
+            return itemHtml(it, "out");
+          })
+          .join("")
       : '<div class="sc-empty">ارسالی ثبت نشده</div>';
 
+    var n = activeInboxCount(state.moduleId);
     var badge = root.querySelector("#scCartBadge");
     if (badge) {
-      var n = activeInboxCount(state.moduleId);
       badge.textContent = n ? String(n) : "0";
       badge.style.display = n ? "inline-block" : "none";
     }
-
     updateSideAlert(n);
   }
 
@@ -685,7 +684,6 @@
         state.lastSeenCount = activeInboxCount(state.moduleId);
         window.addEventListener("storage", onStorage);
 
-        /* وقتی پنل کارتابل باز شد، لیست تازه شود */
         document.addEventListener("click", function (e) {
           var t = e.target.closest("[data-panel]");
           if (t && t.getAttribute("data-panel") === "p-cartable") {
@@ -698,7 +696,6 @@
       .catch(function (err) {
         console.warn("[SuiteCartable]", err);
         toast((err && err.message) || "راه‌اندازی کارتابل ناموفق", true);
-        /* fallback UI بدون فایل باینری */
         state.ready = true;
         mountUi();
       });
@@ -728,7 +725,6 @@
 
   global.SuiteCartable = api;
 
-  /* auto-init: <script src="suite-cartable.js" data-module="bank" data-title="بانک"></script> */
   function auto() {
     try {
       var sc = document.currentScript;
