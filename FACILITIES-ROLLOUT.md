@@ -1,47 +1,46 @@
-# امکانات یکپارچه v2 (تأیید شده)
+# امکانات یکپارچه v2 — اعمال روی همه ماژول‌ها
 
-## فایل اصلی
-- `suite-facilities.js` — یادداشت + یادآوری (محلی) + کارتابل سراسری
-- `facilities-pilot-standalone.html` — نمونه تأییدشده
+## فایل‌های لازم (در ریشه ریپو)
+- `suite-facilities.js` — منطق کامل
+- `facilities-autoload.js` — تشخیص ماژول از نام فایل + init
+- `apply-facilities-to-all.ps1` — پچ یک‌مرحله‌ای ویندوز
+- `apply-facilities-to-all.sh` — پچ یک‌مرحله‌ای لینوکس/مک
 
-## قابلیت‌ها
+## اعمال خودکار (پیشنهادی)
+
+### ویندوز (PowerShell)
+```powershell
+cd مسیر\smart-platform-alm
+.\apply-facilities-to-all.ps1
+git add *.html
+git commit -m "wire suite-facilities into all modules"
+git push
+```
+
+### لینوکس / مک
+```bash
+cd مسیر/smart-platform-alm
+bash apply-facilities-to-all.sh
+git add *.html
+git commit -m "wire suite-facilities into all modules"
+git push
+```
+
+هر اسکریپت برای همه ماژول‌ها:
+1. CSP را به `script-src 'self' 'unsafe-inline'` اصلاح می‌کند
+2. بعد از `core.js` این دو خط را اضافه می‌کند:
+   - `suite-facilities.js` با `data-module` و `data-title` درست
+   - `facilities-autoload.js`
+
+ساختار UI ماژول‌ها عوض نمی‌شود.
+
+## قابلیت‌ها بعد از پچ
+- یادداشت / یادآوری محلی هر ماژول
+- کارتابل سراسری متصل (`suite_cartable_v1`)
 - تقویم شمسی انتخابی
-- شناسه یکتا `sf_...`
-- کارتابل مشترک `suite_cartable_v1` بین همه ماژول‌ها
-- ارسال به **ماژول + کاربر** (یا همه کاربران ماژول)
-- بدون تغییر ساختار UI پنل‌ها
+- شناسه یکتا
+- ارسال به ماژول + کاربر مقصد
 
-## اتصال به هر ماژول (حداقل تغییر)
-
-1) در `<head>` مقدار CSP را به این شکل اصلاح کنید (فقط افزودن `'self'`):
-
-```html
-script-src 'self' 'unsafe-inline'
-```
-
-2) بلافاصله بعد از `core.js`:
-
-```html
-<script src="suite-facilities.js" data-module="bank" data-title="بانک"></script>
-```
-
-`data-module` باید با id ماژول در `core.js` یکی باشد.
-
-### نمونه idها
-| فایل | data-module | data-title |
-|------|-------------|------------|
-| bank.html | bank | بانک |
-| cashbox.html | cashbox | صندوق |
-| accounting.html | accounting | حسابداری |
-| sales.html | sales | فروش |
-| warehouse.html | warehouse | انبار |
-| payroll.html | payroll | حقوق |
-| personnel.html | personnel | پرسنلی |
-| secretariat.html | secretariat | دبیرخانه |
-| purchase.html | purchase | خرید |
-| customers.html | customers | مشتریان |
-
-## نکات
-- یادداشت/یادآوری هر ماژول کلید جدا دارد: `smart_mod_notes_{id}` / `smart_mod_rem_{id}`
-- کارتابل همه به هم وصل‌اند؛ دریافت بر اساس ماژول جاری و کاربر نشست فیلتر می‌شود
-- ساختار منو/پنل موجود دست نخورده می‌ماند؛ کیت فقط داخل `#p-notes` / `#p-rems` / `#p-cartable` mount می‌شود
+## تست
+1. `cashbox.html` را باز کنید → امکانات → یادداشت / یادآوری / کارتابل
+2. به ماژول دیگر ارسال کنید و در آن ماژول دریافت را ببینید
