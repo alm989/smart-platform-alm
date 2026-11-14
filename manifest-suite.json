@@ -1,7 +1,7 @@
 {
   "name": "سامانه هوشمند یکپارچه مالی و اداری",
   "short_name": "سامانه یکپارچه",
-  "start_url": "./index.html",
+  "start_url": "./suite.html",
   "display": "standalone",
   "background_color": "#0b1220",
   "theme_color": "#0b1220",
