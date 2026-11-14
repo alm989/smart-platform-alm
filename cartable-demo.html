@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>آزمایش کارتابل مشترک</title>
+<style>
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#0b1220;color:#e2e8f0;padding:16px}
+.wrap{max-width:1100px;margin:auto}
+.card{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:14px;margin-bottom:12px}
+h1{font-size:1.1rem;margin:0 0 8px;color:#7dd3fc}
+.muted{color:#94a3b8;font-size:.78rem;line-height:1.8}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+button{border:0;border-radius:9px;padding:8px 12px;font:inherit;cursor:pointer;background:#334155;color:#e2e8f0}
+button.on,button.primary{background:#0ea5e9;color:#fff;font-weight:700}
+#p-cartable .card{background:#0f172a}
+</style>
+<script src="core.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>آزمایش کارتابل مشترک (بدون تغییر ماژول‌های اصلی)</h1>
+    <p class="muted">
+      یادداشت و یادآوری هر ماژول محلی است. این صفحه فقط کارتابل سراسری را تست می‌کند:
+      از نقش «بانک» به «حسابداری» ارسال کنید، بعد نقش را عوض کنید و در صندوق ورودی ببینید.
+    </p>
+    <div class="row">
+      <button type="button" id="roleBank" class="on primary">نقش: بانک</button>
+      <button type="button" id="roleAcc">نقش: حسابداری</button>
+      <button type="button" id="roleCash">نقش: صندوق</button>
+    </div>
+    <p class="muted" id="roleHint">ماژول فعال: بانک</p>
+  </div>
+
+  <div class="panel on" id="p-cartable">
+    <div class="card has-exit">
+      <div id="suiteCartRoot"></div>
+    </div>
+  </div>
+</div>
+
+<script src="suite-cartable.js"></script>
+<script>
+(function(){
+  var role = 'bank';
+  var titles = { bank:'بانک', accounting:'حسابداری', cashbox:'صندوق' };
+
+  function boot(id){
+    role = id;
+    document.getElementById('roleHint').textContent = 'ماژول فعال: ' + (titles[id] || id);
+    document.getElementById('roleBank').classList.toggle('on', id==='bank');
+    document.getElementById('roleBank').classList.toggle('primary', id==='bank');
+    document.getElementById('roleAcc').classList.toggle('on', id==='accounting');
+    document.getElementById('roleAcc').classList.toggle('primary', id==='accounting');
+    document.getElementById('roleCash').classList.toggle('on', id==='cashbox');
+    document.getElementById('roleCash').classList.toggle('primary', id==='cashbox');
+    var root = document.getElementById('suiteCartRoot');
+    if(root){ root._scBound = false; root.innerHTML = ''; }
+    SuiteCartable.init({ moduleId: id, moduleTitle: titles[id] || id });
+  }
+
+  document.getElementById('roleBank').onclick = function(){ boot('bank'); };
+  document.getElementById('roleAcc').onclick = function(){ boot('accounting'); };
+  document.getElementById('roleCash').onclick = function(){ boot('cashbox'); };
+  boot('bank');
+})();
+</script>
+</body>
+</html>
