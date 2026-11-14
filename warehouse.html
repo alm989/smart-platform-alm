@@ -82,6 +82,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -593,7 +594,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
   var showDeleted = { wh:false, item:false, req_item:false, req_buy:false, rcv:false, iss:false, ret_wh:false, ret_buy:false };
 
   function onDataChange(fn){ if(typeof fn==="function") listeners.push(fn); }
-  function notifyChange(){ listeners.forEach(function(fn){ try{fn();}catch(e){} }); }
+  function notifyChange(){ listeners.forEach(function(fn){ try{fn();}catch(e){} }); if(window.SmartCore&&SmartCore.emit){try{SmartCore.emit("data:warehouse",{id:"warehouse",action:"change"});}catch(e){}} }
   function $(id){ return document.getElementById(id); }
   function toFa(n){ return String(n).replace(/\d/g,function(d){return FA[+d];}); }
   function toEn(s){ return String(s).replace(/[۰-۹]/g,function(d){return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);}).replace(/,/g,""); }
@@ -622,7 +623,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
   function migrateFromLegacy(){ try{ var leg=loadJSON(LEGACY_KEY,null); if(!leg)return null; var neu=defDB(); if(leg.warehouses||leg.wh) neu.stores.wh=(leg.warehouses||leg.wh||[]).map(mapAny); if(leg.items||leg.item) neu.stores.item=(leg.items||leg.item||[]).map(mapAny); if(leg.req_item) neu.stores.req_item=(leg.req_item||[]).map(mapAny); if(leg.req_buy) neu.stores.req_buy=(leg.req_buy||[]).map(mapAny); if(leg.rcv||leg.receipts) neu.stores.rcv=(leg.rcv||leg.receipts||[]).map(mapAny); if(leg.iss||leg.issues) neu.stores.iss=(leg.iss||leg.issues||[]).map(mapAny); if(leg.ret_wh) neu.stores.ret_wh=(leg.ret_wh||[]).map(mapAny); if(leg.ret_buy) neu.stores.ret_buy=(leg.ret_buy||[]).map(mapAny); neu.migratedFrom=LEGACY_KEY; return neu; }catch(e){return null;} }
   function migrateDB(old){ var neu=old||defDB(); neu.version=CURRENT_VERSION; if(!neu.stores) neu.stores=emptyStores(); STORES.forEach(function(k){ if(!Array.isArray(neu.stores[k])) neu.stores[k]=[]; neu.stores[k].forEach(function(row){ if(row.deleted==null) row.deleted=false; }); }); if(!Array.isArray(neu.audit)) neu.audit=[]; return neu; }
   function loadDB(){ try{ var d=loadJSON(KEY,null); if(!d){ d=migrateFromLegacy()||defDB(); saveJSON(KEY,d); return d; } if(!d.version||d.version<CURRENT_VERSION){ try{localStorage.setItem(BACKUP_KEY,JSON.stringify(d));}catch(e){} d=migrateDB(d); saveJSON(KEY,d); } return migrateDB(d); }catch(e){ return defDB(); } }
-  function saveDB(db){ if(!acquireLock())return false; try{ var cur=localStorage.getItem(KEY); if(cur) localStorage.setItem(BACKUP_KEY,cur); }catch(e){} db.version=CURRENT_VERSION; db.updatedAt=now(); if(!saveJSON(KEY,db))return false; notifyChange(); return true; }
+  function saveDB(db){ if(!acquireLock())return false; try{ var cur=localStorage.getItem(KEY); if(cur) localStorage.setItem(BACKUP_KEY,cur); }catch(e){} db.version=CURRENT_VERSION; db.updatedAt=now(); if(!saveJSON(KEY,db))return false; notifyChange(); if(window.SmartCore){try{if(SmartCore.audit)SmartCore.audit("save","warehouse","warehouse");if(SmartCore.emit)SmartCore.emit("data:warehouse",{id:"warehouse",action:"save"});}catch(e){}} return true; }
   function auditLog(action,detail){ var db=loadDB(); db.audit=db.audit||[]; db.audit.unshift({id:uid(),t:now(),user:userName(),action:action,detail:String(detail||"").slice(0,240)}); if(db.audit.length>400) db.audit=db.audit.slice(0,400); saveDB(db); }
   function activeItems(store){ return (loadDB().stores[store]||[]).filter(function(x){return !x.deleted;}); }
   function softDelete(store,id){ var db=loadDB(),found=false; (db.stores[store]||[]).forEach(function(x){ if(String(x.id)===String(id)){ x.deleted=true; x.deletedAt=now(); x.deletedBy=userName(); found=true; } }); if(!found)return false; if(!saveDB(db))return false; auditLog("soft-delete",store+":"+id); return true; }
@@ -698,6 +699,42 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     if($("activeUser")) $("activeUser").textContent="کاربر فعال: "+userName();
     renderDash(); renderNotes(); renderRems(); renderCart(); showPanel("p-dash");
   });
+
+
+  /* ===== SmartCore intelligence: انبار ===== */
+  function scSmartWarehouse() {
+    var alerts = [];
+    try {
+      var db = loadDB();
+      var items = (db.stores && (db.stores.item || db.stores.goods || db.stores.prod)) || [];
+      if (!items.length && db.stores) {
+        Object.keys(db.stores).forEach(function (k) {
+          if (/item|good|prod|kala|stock/i.test(k) && Array.isArray(db.stores[k])) items = db.stores[k];
+        });
+      }
+      var neg = 0, low = 0;
+      items.forEach(function (it) {
+        if (it.deleted) return;
+        var q = Number(it.qty || it.stock || it.quantity || 0);
+        var min = Number(it.reorder || it.minQty || it.min || 0);
+        if (q < 0) neg++;
+        else if (min > 0 && q <= min) low++;
+      });
+      if (neg) alerts.push(neg + " کالا با موجودی منفی");
+      if (low) alerts.push(low + " کالا زیر نقطه سفارش");
+    } catch (e) {}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) {
+      alerts.slice(0, 5).forEach(function (m) { SmartCore.pushEvent("warehouse:alert", m); });
+    }
+    return alerts;
+  }
+  try {
+    var _whAlerts = scSmartWarehouse();
+    if (_whAlerts.length) {
+      setTimeout(function () { toast("هوش انبار: " + _whAlerts.length + " هشدار", true); }, 800);
+    }
+  } catch (e) {}
+
 })();
 </script>
 </body>

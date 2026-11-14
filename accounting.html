@@ -88,6 +88,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .sheet td input{width:100%;border:none;background:transparent;padding:6px;color:var(--txt);font-family:inherit;font-size:12px}
 .filter-box{margin-bottom:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#0f172a}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -666,7 +667,12 @@ tr.deleted{opacity:.55;text-decoration:line-through}
   var toastTimer = null;
 
   function onDataChange(fn) { if (typeof fn === "function") listeners.push(fn); }
-  function notifyChange() { listeners.forEach(function (fn) { try { fn(); } catch (e) {} }); }
+  function notifyChange() {
+    listeners.forEach(function (fn) { try { fn(); } catch (e) {} });
+    if (window.SmartCore && SmartCore.emit) {
+      try { SmartCore.emit("data:accounting", { id: "accounting", action: "change" }); } catch (e) {}
+    }
+  }
 
   function $(id) { return document.getElementById(id); }
   function toFa(n) {
@@ -911,6 +917,12 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
     notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "accounting", "accounting");
+        if (SmartCore.emit) SmartCore.emit("data:accounting", { id: "accounting", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
   function auditLog(action, detail) {
@@ -2365,6 +2377,51 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     if ($("btnSeedChart")) $("btnSeedChart").onclick = seedChart;
     if ($("btnSeedChart2")) $("btnSeedChart2").onclick = seedChart;
   });
+
+
+  /* ===== SmartCore intelligence: حسابداری ===== */
+  function scSmartAccounting() {
+    var alerts = [];
+    try {
+      var db = loadDB();
+      var vouchers = (db.stores && db.stores.voucher) || [];
+      vouchers.forEach(function (v) {
+        if (v.deleted) return;
+        var lines = v.lines || v.rows || [];
+        var deb = 0, cred = 0;
+        lines.forEach(function (ln) {
+          deb += num(ln.debit || ln.bed || 0);
+          cred += num(ln.credit || ln.bes || 0);
+        });
+        if (lines.length && Math.abs(deb - cred) > 0.5) {
+          alerts.push("سند نامتوازن: " + (v.no || v.id || "") + " (اختلاف " + Math.abs(deb - cred).toFixed(0) + ")");
+        }
+      });
+      var codes = (db.stores && db.stores.code) || [];
+      var seen = {};
+      codes.forEach(function (c) {
+        if (c.deleted) return;
+        var k = String(c.code || c.id || "");
+        if (k && seen[k]) alerts.push("کد حساب تکراری: " + k);
+        if (k) seen[k] = true;
+      });
+    } catch (e) {}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) {
+      alerts.slice(0, 5).forEach(function (m) {
+        SmartCore.pushEvent("accounting:alert", m);
+      });
+    }
+    return alerts;
+  }
+  try {
+    var _accAlerts = scSmartAccounting();
+    if (_accAlerts.length && $("toast")) {
+      setTimeout(function () {
+        toast("هوش حسابداری: " + _accAlerts.length + " هشدار", true);
+      }, 800);
+    }
+  } catch (e) {}
+
 })();
 </script>
 </body>

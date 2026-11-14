@@ -81,6 +81,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -698,7 +699,13 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
-    notifyChange();
+    if (typeof notifyChange === "function") notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "pettycash", "pettycash");
+        if (SmartCore.emit) SmartCore.emit("data:pettycash", { id: "pettycash", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
   function auditLog(action, detail) {
@@ -1541,6 +1548,33 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     renderCart();
     showPanel("p-dash");
   });
+
+  /* ===== SmartCore intelligence: pettycash ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var txs = stores.tx || stores.trans || stores.item || [];
+      Object.keys(stores).forEach(function(k){ if(!txs.length && /tx|trans|item|تنخواه/i.test(k) && Array.isArray(stores[k])) txs=stores[k]; });
+      var open = txs.filter(function(t){ if(t.deleted) return false; var s=String(t.status||"").toLowerCase(); return s==="open"||s==="باز"||s==="pending"; }).length;
+      var big = txs.filter(function(t){ return t&&!t.deleted&&Math.abs(Number(t.amount||t.amt||0))>=20000000; }).length;
+      if (open) alerts.push(open + " تنخواه تسویه‌نشده");
+      if (big) alerts.push(big + " سند تنخواه درشت");
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("pettycash:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش pettycash: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش pettycash: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

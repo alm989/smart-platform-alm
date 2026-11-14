@@ -81,6 +81,7 @@ textarea{min-height:70px;resize:vertical}
 .shortcut-hint{font-size:.65rem;color:var(--muted);margin-top:6px;text-align:right}
 .num{direction:ltr;unicode-bidi:isolate;text-align:left}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -755,7 +756,14 @@ textarea{min-height:70px;resize:vertical}
     } catch (e) {}
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
-    return saveJSON(KEY, db);
+    var ok = saveJSON(KEY, db);
+    if (ok && window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "bank", "bank");
+        if (SmartCore.emit) SmartCore.emit("data:bank", { id: "bank", action: "save" });
+      } catch (e) {}
+    }
+    return ok;
   }
 
   function audit(action, detail) {
@@ -1444,6 +1452,51 @@ textarea{min-height:70px;resize:vertical}
     renderCart();
     showPanel("p-dash");
   });
+
+
+  /* ===== SmartCore intelligence: بانک ===== */
+  function scSmartBank() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var txs = stores.tx || stores.trans || stores.transaction || [];
+      var cheques = stores.cheque || stores.check || stores.cheques || [];
+      var accounts = stores.account || stores.acc || stores.accounts || [];
+      // find cheque store if named differently
+      Object.keys(stores).forEach(function (k) {
+        if (!cheques.length && /cheq|check|چک/i.test(k) && Array.isArray(stores[k])) cheques = stores[k];
+        if (!txs.length && /tx|trans|move|گردش/i.test(k) && Array.isArray(stores[k])) txs = stores[k];
+        if (!accounts.length && /acc|account|حساب/i.test(k) && Array.isArray(stores[k])) accounts = stores[k];
+      });
+      var today = new Date().toISOString().slice(0, 10);
+      var dueSoon = 0, overdue = 0;
+      cheques.forEach(function (c) {
+        if (c.deleted) return;
+        var st = String(c.status || c.state || "").toLowerCase();
+        if (st === "passed" || st === "cleared" || st === "وصول" || st === "باطل") return;
+        var due = String(c.due || c.dueDate || c.date || "").slice(0, 10);
+        if (due && due < today) overdue++;
+        else if (due && due <= today) dueSoon++;
+      });
+      if (overdue) alerts.push(overdue + " چک سررسید گذشته");
+      if (dueSoon) alerts.push(dueSoon + " چک سررسید امروز");
+      // negative balance hint
+      accounts.forEach(function (a) {
+        if (a.deleted) return;
+        var bal = Number(a.balance || a.bal || 0);
+        if (bal < 0) alerts.push("مانده منفی: " + (a.name || a.title || a.code || a.id));
+      });
+    } catch (e) {}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) {
+      alerts.slice(0, 5).forEach(function (m) { SmartCore.pushEvent("bank:alert", m); });
+    }
+    return alerts;
+  }
+  try {
+    var _bankAlerts = scSmartBank();
+    if (_bankAlerts.length) setTimeout(function () { toast("هوش بانک: " + _bankAlerts.length + " هشدار", "err"); }, 800);
+  } catch (e) {}
+
 })();
 </script>
 </body>

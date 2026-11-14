@@ -82,6 +82,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -548,7 +549,13 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
-    notifyChange();
+    if (typeof notifyChange === "function") notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "chat", "chat");
+        if (SmartCore.emit) SmartCore.emit("data:chat", { id: "chat", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
 
@@ -1366,6 +1373,31 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     renderCart();
     showPanel("p-dash");
   });
+
+  /* ===== SmartCore intelligence: chat ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var msgs = stores.msg || stores.message || stores.messages || stores.chat || [];
+      Object.keys(stores).forEach(function(k){ if(!msgs.length && /msg|message|chat|پیام/i.test(k) && Array.isArray(stores[k])) msgs=stores[k]; });
+      var unread = msgs.filter(function(m){ return m&&!m.deleted&&(m.unread||m.read===false); }).length;
+      if (unread) alerts.push(unread + " پیام خوانده‌نشده");
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("chat:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش chat: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش chat: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

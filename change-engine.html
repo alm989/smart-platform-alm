@@ -84,6 +84,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .warn-bar{background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.35);color:#5eead4;border-radius:10px;padding:8px 10px;font-size:.72rem;margin-bottom:10px}
 .snippet{direction:ltr;text-align:left;white-space:pre-wrap;background:#020617;padding:10px;border-radius:10px;border:1px solid var(--line);font-size:.7rem;max-height:200px;overflow:auto;font-family:ui-monospace,Consolas,monospace}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -694,8 +695,14 @@ try {
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
-    publishRegistry(db);
-    notifyChange();
+    if (typeof publishRegistry === "function") publishRegistry(db);
+    if (typeof notifyChange === "function") notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "change", "change");
+        if (SmartCore.emit) SmartCore.emit("data:change", { id: "change", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
   function auditLog(action, detail) {
@@ -1552,6 +1559,31 @@ try {
     renderCart();
     showPanel("p-dash");
   });
+
+  /* ===== SmartCore intelligence: change ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var patches = stores.patch || stores.change || stores.changes || [];
+      Object.keys(stores).forEach(function(k){ if(!patches.length && /patch|change|تغییر/i.test(k) && Array.isArray(stores[k])) patches=stores[k]; });
+      var pending = patches.filter(function(p){ if(p.deleted) return false; var s=String(p.status||"").toLowerCase(); return s==="pending"||s==="draft"||s==="در انتظار"; }).length;
+      if (pending) alerts.push(pending + " تغییر در انتظار اعمال");
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("change:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش change: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش change: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

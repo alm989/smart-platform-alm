@@ -88,6 +88,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .mod-card.on{border-color:#22c55e}.mod-card.off{opacity:.65}
 .warn-bar{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);color:#fbbf24;border-radius:10px;padding:8px 10px;font-size:.72rem;margin-bottom:10px}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -697,7 +698,13 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
-    notifyChange();
+    if (typeof notifyChange === "function") notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "control", "control");
+        if (SmartCore.emit) SmartCore.emit("data:control", { id: "control", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
   function auditLog(action, detail) {
@@ -1639,6 +1646,31 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     renderCart();
     showPanel("p-dash");
   });
+
+  /* ===== SmartCore intelligence: control ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      if (window.SmartCore && SmartCore.scanModules) {
+        var mods = SmartCore.scanModules();
+        var empty = mods.filter(function(m){return !m.hasData;}).length;
+        if (empty) alerts.push(empty + " ماژول بدون داده");
+      }
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("control:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش control: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش control: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

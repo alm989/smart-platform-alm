@@ -65,10 +65,10 @@
   }
   function esc(s) {
     return String(s == null ? "" : s)
-      .replace(/&/g, "&")
-      .replace(/</g, "<")
-      .replace(/>/g, ">")
-      .replace(/"/g, """)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
   }
   function isSuiteKey(k) {
@@ -116,6 +116,7 @@
     try { localStorage.removeItem(key); return true; } catch (e) { return false; }
   }
 
+  /* soft-delete helper for records inside module data */
   function softDelete(list, id, by) {
     if (!Array.isArray(list)) return list;
     return list.map(function (row) {
@@ -197,6 +198,11 @@
     audit("logout", u || "");
     emit("auth:logout", {});
   }
+  /**
+   * ensureAuth(cb, opts)
+   * opts.requireAdmin — فقط admin/ceo
+   * اگر session معتبر باشد cb()؛ وگرنه ماسک ورود نشان می‌دهد
+   */
   function ensureAuth(cb, opts) {
     opts = opts || {};
     if (isLoggedIn()) {
@@ -282,6 +288,7 @@
     list.forEach(function (fn) {
       try { fn(payload || {}); } catch (e) { console.warn("[SmartCore] handler error", e); }
     });
+    /* persist important domain events */
     if (evt && evt.indexOf("data:") === 0) {
       pushEvent(evt, payload && (payload.message || payload.id || ""));
     }
@@ -332,7 +339,7 @@
   }
 
   /* ========== Scan / Backup ========== */
- function scanModules() {
+  function scanModules() {
     return MODULES.map(function (m) {
       var size = 0, found = [];
       (m.keys || []).forEach(function (k) {
@@ -407,7 +414,7 @@
     el._t = setTimeout(function () { el.style.opacity = "0"; }, 2400);
   }
 
-  /* ========== Module helper ========== */
+  /* ========== Module helper: primary key ========== */
   function primaryKey(modId) {
     var m = MODULES.find(function (x) { return x.id === modId; });
     if (!m || !m.keys || !m.keys.length) return "smart_mod_" + modId + "_v2";
@@ -429,10 +436,12 @@
   global.SmartCore = {
     version: CORE_VERSION,
     MODULES: MODULES,
+    /* utils */
     now: now,
     uid: uid,
     esc: esc,
     isSuiteKey: isSuiteKey,
+    /* storage */
     loadJSON: loadJSON,
     saveJSON: saveJSON,
     loadArr: loadArr,
@@ -443,6 +452,7 @@
     loadModuleData: loadModuleData,
     saveModuleData: saveModuleData,
     primaryKey: primaryKey,
+    /* auth */
     getAuth: getAuth,
     login: login,
     logout: logout,
@@ -451,23 +461,28 @@
     isAdmin: isAdmin,
     userName: userName,
     userRole: userRole,
+    /* audit / events */
     audit: audit,
     getAudit: getAudit,
     on: on,
     emit: emit,
     pushEvent: pushEvent,
     getEvents: getEvents,
+    /* locks */
     acquireLock: acquireLock,
     releaseLock: releaseLock,
     heartbeatLock: heartbeatLock,
     tabId: tabId,
+    /* scan / backup */
     scanModules: scanModules,
     exportAll: exportAll,
     importAll: importAll,
     downloadBackup: downloadBackup,
+    /* ui */
     toast: toast
   };
 
+  /* persist registry snapshot */
   try {
     saveJSON(REGISTRY_KEY, {
       version: CORE_VERSION,

@@ -81,6 +81,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -551,7 +552,13 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
-    notifyChange();
+    if (typeof notifyChange === "function") notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "contracts", "contracts");
+        if (SmartCore.emit) SmartCore.emit("data:contracts", { id: "contracts", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
 
@@ -1363,6 +1370,43 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     renderCart();
     showPanel("p-dash");
   });
+
+  /* ===== SmartCore intelligence: contracts ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var list = stores.contract || stores.contracts || stores.item || [];
+      Object.keys(stores).forEach(function(k){ if(!list.length && /contract|قرارداد/i.test(k) && Array.isArray(stores[k])) list=stores[k]; });
+      var today = new Date().toISOString().slice(0,10);
+      var expiring=0, expired=0;
+      list.forEach(function(c){
+        if(c.deleted) return;
+        var end = String(c.end||c.endDate||c.expire||c.to||"").slice(0,10);
+        if(!end) return;
+        if(end < today) expired++;
+        else {
+          var d=(new Date(end)-new Date(today))/(864e5);
+          if(d<=30) expiring++;
+        }
+      });
+      if (expired) alerts.push(expired + " قرارداد منقضی");
+      if (expiring) alerts.push(expiring + " قرارداد در ۳۰ روز آینده تمام می‌شود");
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("contracts:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش contracts: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش contracts: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

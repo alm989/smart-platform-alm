@@ -104,6 +104,7 @@ tr.deleted{opacity:.55;background:rgba(239,68,68,.08)}
 #nav.suite-nav-root{display:block;margin:0;padding:0;background:transparent;position:static}
 @media(max-width:720px){.grid4,.kpi-row{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
 </style>
+<script src="core.js"></script>
 </head>
 <body class="suite-shell">
 <div class="box">
@@ -563,7 +564,13 @@ tr.deleted{opacity:.55;background:rgba(239,68,68,.08)}
       x.version = CURRENT_VERSION;
       x.updatedAt = now();
       localStorage.setItem(CEO_KEY, JSON.stringify(x));
-      notifyChange();
+      if (typeof notifyChange === "function") notifyChange();
+      if (window.SmartCore) {
+        try {
+          if (SmartCore.audit) SmartCore.audit("save", "ceo", "ceo");
+          if (SmartCore.emit) SmartCore.emit("data:ceo", { id: "ceo", action: "save" });
+        } catch (e) {}
+      }
       return true;
     } catch (e) {
       toast("خطای ذخیره — فضای مرورگر پر است", true);
@@ -1545,6 +1552,40 @@ tr.deleted{opacity:.55;background:rgba(239,68,68,.08)}
   if (session) showApp();
   else showLock();
 
+
+  /* ===== SmartCore intelligence: ceo ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      // KPI emptiness
+      var total = 0;
+      Object.keys(stores).forEach(function(k){ if(Array.isArray(stores[k])) total += stores[k].filter(function(x){return x&&!x.deleted;}).length; });
+      if (!total) alerts.push("هنوز داده‌ای برای داشبورد مدیرعامل ثبت نشده");
+      // cross critical modules
+      try {
+        var openInv = 0;
+        var sales = JSON.parse(localStorage.getItem("smart_mod_sales_v2")||"null");
+        if (sales && sales.stores) {
+          (sales.stores.inv||[]).forEach(function(x){ if(!x.deleted && String(x.status||"").indexOf("باز")>=0) openInv++; });
+        }
+        if (openInv) alerts.push(openInv + " فاکتور فروش باز");
+      } catch(e2){}
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("ceo:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش ceo: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش ceo: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

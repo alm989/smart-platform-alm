@@ -81,6 +81,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -732,7 +733,13 @@ html
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
-    notifyChange();
+    if (typeof notifyChange === "function") notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "manager", "manager");
+        if (SmartCore.emit) SmartCore.emit("data:manager", { id: "manager", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
   function auditLog(action, detail) {
@@ -1622,6 +1629,31 @@ html
     renderCart();
     showPanel("p-dash");
   });
+
+  /* ===== SmartCore intelligence: manager ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var tasks = stores.task || stores.tasks || stores.todo || [];
+      Object.keys(stores).forEach(function(k){ if(!tasks.length && /task|todo|کار/i.test(k) && Array.isArray(stores[k])) tasks=stores[k]; });
+      var open = tasks.filter(function(t){ if(t.deleted) return false; var s=String(t.status||"").toLowerCase(); return s!=="done"&&s!=="انجام"&&s!=="closed"; }).length;
+      if (open) alerts.push(open + " کار باز مدیریتی");
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("manager:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش manager: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش manager: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

@@ -81,6 +81,7 @@ textarea{min-height:70px;resize:vertical}
 .shortcut-hint{font-size:.65rem;color:var(--muted);margin-top:6px;text-align:right}
 .num{direction:ltr;unicode-bidi:isolate;text-align:left}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -637,7 +638,14 @@ textarea{min-height:70px;resize:vertical}
     } catch (e) {}
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
-    return saveJSON(KEY, db);
+    var ok = saveJSON(KEY, db);
+    if (ok && window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "payroll", "payroll");
+        if (SmartCore.emit) SmartCore.emit("data:payroll", { id: "payroll", action: "save" });
+      } catch (e) {}
+    }
+    return ok;
   }
 
   function audit(action, detail) {
@@ -1440,6 +1448,44 @@ textarea{min-height:70px;resize:vertical}
     renderCart();
     showPanel("p-dash");
   });
+
+
+  /* ===== SmartCore intelligence: حقوق ===== */
+  function scSmartPayroll() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var staff = stores.staff || stores.employee || stores.emp || stores.person || [];
+      var pays = stores.pay || stores.payroll || stores.salary || stores.slip || [];
+      Object.keys(stores).forEach(function (k) {
+        if (!staff.length && /staff|emp|person|پرسنل|کارمند/i.test(k) && Array.isArray(stores[k])) staff = stores[k];
+        if (!pays.length && /pay|salary|slip|حقوق|فیش/i.test(k) && Array.isArray(stores[k])) pays = stores[k];
+      });
+      var activeStaff = staff.filter(function (s) { return !s.deleted; });
+      var unpaid = 0, noIns = 0;
+      pays.forEach(function (p) {
+        if (p.deleted) return;
+        var st = String(p.status || "").toLowerCase();
+        if (st === "draft" || st === "پیش‌نویس" || st === "open" || st === "باز") unpaid++;
+      });
+      activeStaff.forEach(function (s) {
+        var ins = s.insurance || s.insNo || s.bimeh;
+        if (ins === "" || ins == null) noIns++;
+      });
+      if (unpaid) alerts.push(unpaid + " فیش حقوق تسویه‌نشده");
+      if (noIns) alerts.push(noIns + " پرسنل بدون شماره بیمه");
+      if (activeStaff.length && pays.length === 0) alerts.push("هنوز فیش حقوقی ثبت نشده");
+    } catch (e) {}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) {
+      alerts.slice(0, 5).forEach(function (m) { SmartCore.pushEvent("payroll:alert", m); });
+    }
+    return alerts;
+  }
+  try {
+    var _payAlerts = scSmartPayroll();
+    if (_payAlerts.length) setTimeout(function () { toast("هوش حقوق: " + _payAlerts.length + " هشدار", "err"); }, 800);
+  } catch (e) {}
+
 })();
 </script>
 </body>

@@ -82,6 +82,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -581,7 +582,13 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
-    notifyChange();
+    if (typeof notifyChange === "function") notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "projects", "projects");
+        if (SmartCore.emit) SmartCore.emit("data:projects", { id: "projects", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
 
@@ -1436,6 +1443,37 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     renderCart();
     showPanel("p-dash");
   });
+
+  /* ===== SmartCore intelligence: projects ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var list = stores.project || stores.projects || stores.item || [];
+      Object.keys(stores).forEach(function(k){ if(!list.length && /project|پروژه/i.test(k) && Array.isArray(stores[k])) list=stores[k]; });
+      var delayed = list.filter(function(p){
+        if(p.deleted) return false;
+        var s=String(p.status||"").toLowerCase();
+        return s==="delayed"||s==="تأخیر"||s==="معوق";
+      }).length;
+      var open = list.filter(function(p){ if(p.deleted) return false; var s=String(p.status||"").toLowerCase(); return s!=="done"&&s!=="تمام"&&s!=="closed"; }).length;
+      if (delayed) alerts.push(delayed + " پروژه با تأخیر");
+      if (open) alerts.push(open + " پروژه باز");
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("projects:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش projects: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش projects: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

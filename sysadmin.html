@@ -81,6 +81,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -674,7 +675,13 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
-    notifyChange();
+    if (typeof notifyChange === "function") notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "sysadmin", "sysadmin");
+        if (SmartCore.emit) SmartCore.emit("data:sysadmin", { id: "sysadmin", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
   function auditLog(action, detail) {
@@ -1527,6 +1534,33 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     renderCart();
     showPanel("p-dash");
   });
+
+  /* ===== SmartCore intelligence: sysadmin ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var used = 0;
+      for (var i=0;i<localStorage.length;i++){ var k=localStorage.key(i); if(k&&k.indexOf("smart_")==0) used += (localStorage.getItem(k)||"").length; }
+      if (used > 4*1024*1024) alerts.push("حجم داده localStorage بالا: " + Math.round(used/1024) + " KB");
+      if (window.SmartCore && SmartCore.scanModules) {
+        var sc = SmartCore.scanModules().filter(function(m){return m.hasData;}).length;
+        if (!sc) alerts.push("هیچ ماژولی داده ندارد");
+      }
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("sysadmin:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش sysadmin: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش sysadmin: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

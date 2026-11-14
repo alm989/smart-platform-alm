@@ -77,6 +77,7 @@ textarea{min-height:72px;resize:vertical}
 .shortcut-hint{font-size:.65rem;color:var(--muted);margin-top:6px}
 .template-bar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -823,7 +824,15 @@ textarea{min-height:72px;resize:vertical}
       if (current) localStorage.setItem(BACKUP_KEY, current);
     } catch (e) {}
     var ok = saveJSON(KEY, d);
-    if (ok) notifyChange("*");
+    if (ok) {
+      if (typeof notifyChange === "function") notifyChange("*");
+      if (window.SmartCore) {
+        try {
+          if (SmartCore.audit) SmartCore.audit("save", "lawyer", "lawyer");
+          if (SmartCore.emit) SmartCore.emit("data:lawyer", { id: "lawyer", action: "save" });
+        } catch (e) {}
+      }
+    }
     return ok;
   }
 
@@ -1920,6 +1929,40 @@ textarea{min-height:72px;resize:vertical}
     showPanel("p-dash");
   });
 
+
+  /* ===== SmartCore intelligence: lawyer ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var cases = stores.case || stores.cases || stores.file || stores.lawsuit || [];
+      Object.keys(stores).forEach(function(k){ if(!cases.length && /case|file|lawsuit|پرونده|دعوا/i.test(k) && Array.isArray(stores[k])) cases=stores[k]; });
+      var today = new Date().toISOString().slice(0,10);
+      var hearing=0, open=0;
+      cases.forEach(function(c){
+        if(c.deleted) return;
+        var s=String(c.status||"").toLowerCase();
+        if(s!=="closed"&&s!=="بسته"&&s!=="done") open++;
+        var h=String(c.hearing||c.nextHearing||c.session||"").slice(0,10);
+        if(h && h <= today) hearing++;
+      });
+      if (open) alerts.push(open + " پرونده باز");
+      if (hearing) alerts.push(hearing + " جلسه/مهلت نزدیک یا گذشته");
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("lawyer:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش lawyer: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش lawyer: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

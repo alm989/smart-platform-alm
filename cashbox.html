@@ -81,6 +81,7 @@ textarea{min-height:70px;resize:vertical}
 .shortcut-hint{font-size:.65rem;color:var(--muted);margin-top:6px;text-align:right}
 .num{direction:ltr;unicode-bidi:isolate;text-align:left}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -750,7 +751,14 @@ textarea{min-height:70px;resize:vertical}
     } catch (e) {}
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
-    return saveJSON(KEY, db);
+    var ok = saveJSON(KEY, db);
+    if (ok && window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "cashbox", "cashbox");
+        if (SmartCore.emit) SmartCore.emit("data:cashbox", { id: "cashbox", action: "save" });
+      } catch (e) {}
+    }
+    return ok;
   }
 
   function audit(action, detail) {
@@ -1441,6 +1449,44 @@ textarea{min-height:70px;resize:vertical}
     renderCart();
     showPanel("p-dash");
   });
+
+
+  /* ===== SmartCore intelligence: صندوق ===== */
+  function scSmartCashbox() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var sessions = stores.session || stores.sessions || stores.open || [];
+      var txs = stores.tx || stores.trans || stores.cash || [];
+      Object.keys(stores).forEach(function (k) {
+        if (!sessions.length && /session|shift|نوبت|شیفت/i.test(k) && Array.isArray(stores[k])) sessions = stores[k];
+        if (!txs.length && /tx|trans|move|دریافت|پرداخت/i.test(k) && Array.isArray(stores[k])) txs = stores[k];
+      });
+      var openSessions = sessions.filter(function (s) {
+        if (s.deleted) return false;
+        var st = String(s.status || s.state || "").toLowerCase();
+        return st === "open" || st === "باز" || !s.closedAt;
+      });
+      if (openSessions.length > 1) alerts.push(openSessions.length + " صندوق باز همزمان");
+      // large unexplained cash movement
+      var big = 0;
+      txs.forEach(function (t) {
+        if (t.deleted) return;
+        var amt = Math.abs(Number(t.amount || t.amt || t.value || 0));
+        if (amt >= 50000000) big++; // 50M+
+      });
+      if (big) alerts.push(big + " تراکنش نقدی درشت (≥۵۰م)");
+    } catch (e) {}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) {
+      alerts.slice(0, 5).forEach(function (m) { SmartCore.pushEvent("cashbox:alert", m); });
+    }
+    return alerts;
+  }
+  try {
+    var _cashAlerts = scSmartCashbox();
+    if (_cashAlerts.length) setTimeout(function () { toast("هوش صندوق: " + _cashAlerts.length + " هشدار", "err"); }, 800);
+  } catch (e) {}
+
 })();
 </script>
 </body>

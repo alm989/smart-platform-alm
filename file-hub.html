@@ -98,6 +98,7 @@ table.ex tr:nth-child(even){background:#0f172a}
 .list-box{max-height:240px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:5px;margin:7px 0;background:#0f172a}
 .list-item{padding:7px;border-bottom:1px solid var(--line);font-size:.74rem}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -487,7 +488,13 @@ table.ex tr:nth-child(even){background:#0f172a}
     m.updatedAt = now();
     try {
       localStorage.setItem(META_KEY, JSON.stringify(m));
-      return true;
+      if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "filehub", "filehub");
+        if (SmartCore.emit) SmartCore.emit("data:filehub", { id: "filehub", action: "save" });
+      } catch (e) {}
+    }
+    return true;
     } catch (e) {
       toast("خطا در ذخیره متا", true);
       return false;
@@ -1451,6 +1458,31 @@ table.ex tr:nth-child(even){background:#0f172a}
   /* راه‌اندازی */
   renderKPI();
   showPanel("p-upload");
+
+  /* ===== SmartCore intelligence: filehub ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var files = stores.file || stores.files || stores.doc || [];
+      Object.keys(stores).forEach(function(k){ if(!files.length && /file|doc|فایل/i.test(k) && Array.isArray(stores[k])) files=stores[k]; });
+      var active = files.filter(function(f){return f&&!f.deleted;}).length;
+      if (!active) alerts.push("فایلی در هاب ثبت نشده");
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("filehub:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش filehub: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش filehub: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

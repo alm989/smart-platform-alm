@@ -82,6 +82,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -735,7 +736,13 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
-    notifyChange();
+    if (typeof notifyChange === "function") notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "fixedassets", "fixedassets");
+        if (SmartCore.emit) SmartCore.emit("data:fixedassets", { id: "fixedassets", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
   function auditLog(action, detail) {
@@ -1567,6 +1574,33 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     renderCart();
     showPanel("p-dash");
   });
+
+  /* ===== SmartCore intelligence: fixedassets ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var assets = stores.asset || stores.assets || stores.item || [];
+      Object.keys(stores).forEach(function(k){ if(!assets.length && /asset|دارایی/i.test(k) && Array.isArray(stores[k])) assets=stores[k]; });
+      var noCode=0, active=0;
+      assets.forEach(function(a){ if(a.deleted) return; active++; if(!(a.code||a["کد"])) noCode++; });
+      if (noCode) alerts.push(noCode + " دارایی بدون کد");
+      if (!active) alerts.push("دارایی ثابتی ثبت نشده");
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("fixedassets:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش fixedassets: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش fixedassets: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

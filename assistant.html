@@ -94,6 +94,7 @@ textarea{min-height:80px;resize:vertical}
 table{width:100%;border-collapse:collapse;font-size:.7rem}
 th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{color:#c4b5fd;font-size:.62rem}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -486,7 +487,17 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     catch (e) { return d; }
   }
   function saveJSON(k, v) {
-    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    try {
+      localStorage.setItem(k, JSON.stringify(v));
+      if (window.SmartCore && (String(k).indexOf("smart_")==0 || String(k).indexOf("suite_")==0)) {
+        try {
+          if (SmartCore.audit) SmartCore.audit("save", "assistant", "assistant");
+          if (SmartCore.emit) SmartCore.emit("data:assistant", { id: "assistant", action: "save", key: k });
+        } catch (e) {}
+      }
+      return true;
+    } catch (e) { return false; }
+  }
     catch (e) { toast("خطای ذخیره", true); return false; }
   }
 
@@ -1533,6 +1544,31 @@ th,td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:right}th{co
     renderCart();
     showPanel("p-dash");
   });
+
+  /* ===== SmartCore intelligence: assistant ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var notes = stores.note || stores.notes || stores.task || [];
+      Object.keys(stores).forEach(function(k){ if(!notes.length && /note|task|یادداشت|کار/i.test(k) && Array.isArray(stores[k])) notes=stores[k]; });
+      var open = notes.filter(function(n){ if(n.deleted) return false; var s=String(n.status||"").toLowerCase(); return s!=="done"&&s!=="انجام"; }).length;
+      if (open) alerts.push(open + " مورد باز دستیار");
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("assistant:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش assistant: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش assistant: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

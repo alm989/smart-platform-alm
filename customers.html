@@ -81,6 +81,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -670,7 +671,13 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
-    notifyChange();
+    if (typeof notifyChange === "function") notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "customers", "customers");
+        if (SmartCore.emit) SmartCore.emit("data:customers", { id: "customers", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
   function auditLog(action, detail) {
@@ -1505,6 +1512,57 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     renderCart();
     showPanel("p-dash");
   });
+
+
+  /* ===== SmartCore intelligence: مشتریان ===== */
+  function scSmartCustomers() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var list = stores.cust || stores.customer || stores.customers || stores.client || [];
+      Object.keys(stores).forEach(function (k) {
+        if (!list.length && /cust|client|مشتری/i.test(k) && Array.isArray(stores[k])) list = stores[k];
+      });
+      var noPhone = 0, inactive = 0, noCode = 0, total = 0;
+      list.forEach(function (c) {
+        if (c.deleted) return;
+        total++;
+        var phone = c.mobile || c.phone || c.tel || c["موبایل"] || c["تلفن"] || "";
+        var code = c.code || c["کد"] || "";
+        var st = String(c.status || c.state || c["وضعیت"] || "فعال").toLowerCase();
+        if (!String(phone).trim()) noPhone++;
+        if (!String(code).trim()) noCode++;
+        if (st === "غیرفعال" || st === "inactive" || st === "disabled") inactive++;
+      });
+      if (noPhone) alerts.push(noPhone + " مشتری بدون موبایل/تلفن");
+      if (noCode) alerts.push(noCode + " مشتری بدون کد");
+      if (inactive && inactive === total && total > 0) alerts.push("همه مشتریان غیرفعال‌اند");
+      // cross: open sales invoices for customers
+      try {
+        var sales = JSON.parse(localStorage.getItem("smart_mod_sales_v2") || "null");
+        if (sales && sales.stores) {
+          var invs = sales.stores.inv || sales.stores.invoice || [];
+          var open = invs.filter(function (x) {
+            if (x.deleted) return false;
+            var s = String(x.status || x["وضعیت"] || "").toLowerCase();
+            return s === "باز" || s === "open" || s === "";
+          }).length;
+          if (open) alerts.push(open + " فاکتور باز مرتبط با فروش");
+        }
+      } catch (e2) {}
+    } catch (e) {}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) {
+      alerts.slice(0, 5).forEach(function (m) { SmartCore.pushEvent("customers:alert", m); });
+    }
+    return alerts;
+  }
+  try {
+    var _custAlerts = scSmartCustomers();
+    if (_custAlerts.length) setTimeout(function () {
+      if (typeof toast === "function") toast("هوش مشتریان: " + _custAlerts.length + " هشدار", "err");
+    }, 800);
+  } catch (e) {}
+
 })();
 </script>
 </body>

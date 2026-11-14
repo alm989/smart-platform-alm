@@ -82,6 +82,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -482,6 +483,9 @@ tr.deleted{opacity:.55;text-decoration:line-through}
   function onDataChange(fn) { if (typeof fn === "function") listeners.push(fn); }
   function notifyChange() {
     listeners.forEach(function (fn) { try { fn(); } catch (e) {} });
+    if (window.SmartCore && SmartCore.emit) {
+      try { SmartCore.emit("data:sales", { id: "sales", action: "change" }); } catch (e) {}
+    }
   }
 
   function $(id) { return document.getElementById(id); }
@@ -693,6 +697,12 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
     notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "sales", "sales");
+        if (SmartCore.emit) SmartCore.emit("data:sales", { id: "sales", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
 
@@ -1534,6 +1544,49 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     renderCart();
     showPanel("p-dash");
   });
+
+
+  /* ===== SmartCore intelligence: فروش ===== */
+  function scSmartSales() {
+    var alerts = [];
+    try {
+      var db = loadDB();
+      var invs = (db.stores && (db.stores.inv || db.stores.invoice)) || [];
+      var open = 0, overdue = 0;
+      var today = new Date().toISOString().slice(0, 10);
+      invs.forEach(function (inv) {
+        if (inv.deleted) return;
+        var st = String(inv.status || "").toLowerCase();
+        if (st === "paid" || st === "done" || st === "لغو") return;
+        open++;
+        var due = inv.due || inv.dueDate || inv.date || "";
+        if (due && String(due) < today) overdue++;
+      });
+      if (overdue) alerts.push(overdue + " فاکتور سررسید گذشته");
+      if (open > 20) alerts.push("تعداد فاکتور باز زیاد: " + open);
+      // cross-check warehouse stock if available
+      try {
+        var wh = JSON.parse(localStorage.getItem("smart_mod_warehouse_v2") || "null");
+        if (wh && wh.stores && wh.stores.item) {
+          var low = wh.stores.item.filter(function (it) {
+            return !it.deleted && Number(it.qty || it.stock || 0) <= Number(it.reorder || it.minQty || 0);
+          });
+          if (low.length) alerts.push(low.length + " کالا زیر نقطه سفارش (انبار)");
+        }
+      } catch (e2) {}
+    } catch (e) {}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) {
+      alerts.slice(0, 5).forEach(function (m) { SmartCore.pushEvent("sales:alert", m); });
+    }
+    return alerts;
+  }
+  try {
+    var _salesAlerts = scSmartSales();
+    if (_salesAlerts.length) {
+      setTimeout(function () { toast("هوش فروش: " + _salesAlerts.length + " هشدار", true); }, 800);
+    }
+  } catch (e) {}
+
 })();
 </script>
 </body>

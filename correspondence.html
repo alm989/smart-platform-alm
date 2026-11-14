@@ -82,6 +82,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
+<script src="core.js"></script>
 </head>
 <body>
 <header class="header">
@@ -630,7 +631,13 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     db.version = CURRENT_VERSION;
     db.updatedAt = now();
     if (!saveJSON(KEY, db)) return false;
-    notifyChange();
+    if (typeof notifyChange === "function") notifyChange();
+    if (window.SmartCore) {
+      try {
+        if (SmartCore.audit) SmartCore.audit("save", "correspondence", "correspondence");
+        if (SmartCore.emit) SmartCore.emit("data:correspondence", { id: "correspondence", action: "save" });
+      } catch (e) {}
+    }
     return true;
   }
 
@@ -1462,6 +1469,32 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     renderCart();
     showPanel("p-dash");
   });
+
+  /* ===== SmartCore intelligence: correspondence ===== */
+
+  function scSmartMod() {
+    var alerts = [];
+    try {
+      var stores = (loadDB().stores) || {};
+      var letters = [];
+      Object.keys(stores).forEach(function(k){ if(/letter|mail|corr|نامه/i.test(k) && Array.isArray(stores[k])) letters=letters.concat(stores[k]); });
+      var today = new Date().toISOString().slice(0,10);
+      var overdue = letters.filter(function(l){ if(!l||l.deleted) return false; var due=String(l.due||l.deadline||"").slice(0,10); var s=String(l.status||"").toLowerCase(); if(s==="done"||s==="بایگانی") return false; return due && due < today; }).length;
+      if (overdue) alerts.push(overdue + " نامه با مهلت گذشته");
+    } catch(e){}
+    if (window.SmartCore && SmartCore.pushEvent && alerts.length) alerts.slice(0,5).forEach(function(m){ SmartCore.pushEvent("correspondence:alert", m); });
+    return alerts;
+  }
+
+  try {
+    var _scA = scSmartMod();
+    if (_scA && _scA.length) setTimeout(function () {
+      if (typeof toast === "function") {
+        try { toast("هوش correspondence: " + _scA.length + " هشدار", "err"); }
+        catch (e1) { try { toast("هوش correspondence: " + _scA.length + " هشدار", true); } catch(e2){} }
+      }
+    }, 800);
+  } catch (e) {}
 })();
 </script>
 </body>

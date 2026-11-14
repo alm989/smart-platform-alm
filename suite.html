@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<meta name="description" content="سامانه یکپارچه هوشمند مالی و اداری">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="no-referrer">
+<meta http-equiv="Permissions-Policy" content="microphone=(self), geolocation=()">
+<title>سامانه یکپارچه هوشمند مالی و اداری</title>
+<style>
+:root{--bg:#0b1220;--card:rgba(30,41,59,.94);--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#0ea5e9;--ok:#22c55e;--bad:#ef4444;--warn:#f59e0b;--vio:#8b5cf6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 480px at 85% -10%,#1e3a5f 0%,transparent 55%),linear-gradient(160deg,#0b1220,#0f172a 55%,#111827);color:var(--txt);min-height:100dvh;padding:10px;text-align:right}
+.wrap{max-width:1180px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding:8px 12px;border-radius:12px;background:linear-gradient(90deg,rgba(14,165,233,.12),rgba(139,92,246,.1),rgba(34,197,94,.08));border:1px solid rgba(125,211,252,.22)}
+.brand{display:flex;align-items:center;gap:8px}
+.brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:grid;place-items:center;font-size:15px;flex-shrink:0}
+.brand h1{font-size:.82rem;line-height:1.35;font-weight:800}
+.clock-box{display:flex;flex-direction:column;align-items:flex-start;gap:1px;direction:ltr;background:rgba(15,23,42,.75);border:1px solid rgba(125,211,252,.25);border-radius:10px;padding:5px 10px;min-width:110px}
+.clock-box .j{color:#7dd3fc;font-weight:800;font-size:.72rem;letter-spacing:.3px;line-height:1.3}
+.clock-box .g{color:#94a3b8;font-size:.62rem;line-height:1.3}
+.clock-box .c{color:#86efac;font-weight:700;font-size:.72rem;line-height:1.3}
+.view{display:none}.view.on{display:block}
+.section{margin-bottom:8px}
+.section h3{font-size:.74rem;color:#7dd3fc;margin-bottom:5px;padding-bottom:3px;border-bottom:1px solid rgba(125,211,252,.25)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px}
+.mod{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:7px 5px;text-align:center;transition:.12s;position:relative;font:inherit;cursor:pointer;width:100%}
+.mod:hover{border-color:var(--pri);transform:translateY(-1px)}
+.mod .ic{font-size:1.05rem;margin-bottom:2px;line-height:1}.mod .nm{font-size:.65rem;font-weight:700}.mod .ds{font-size:.52rem;color:var(--muted);margin-top:1px}
+.mod .tag{position:absolute;top:3px;left:3px;font-size:.48rem;padding:1px 4px;border-radius:999px;background:rgba(14,165,233,.18);color:#7dd3fc;font-weight:700}
+.card{background:rgba(15,23,42,.8);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}
+.card h2{font-size:.78rem;color:#c4b5fd;margin-bottom:6px}
+.kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px;margin-bottom:8px}
+.kpi .box{background:rgba(15,23,42,.9);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}
+.kpi .n{font-size:.95rem;font-weight:800;color:#c4b5fd}.kpi .l{font-size:.55rem;color:var(--muted)}
+.list-box{max-height:280px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:5px;background:#0f172a}
+.list-box.tall{max-height:380px}
+.list-item{padding:6px;border-bottom:1px solid var(--line);font-size:.7rem;border-radius:6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+@media(max-width:800px){.row{grid-template-columns:1fr}}
+label{display:block;font-size:.64rem;color:var(--muted);margin:4px 0 2px}
+input,select,textarea{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(15,23,42,.92);color:var(--txt);font-family:inherit;font-size:.78rem}
+.btn{border:none;border-radius:10px;padding:7px 10px;font-weight:700;font-size:.7rem;cursor:pointer;font-family:inherit;background:#1e293b;color:#e2e8f0;border:1px solid var(--line)}
+.btn-p{background:linear-gradient(135deg,#0ea5e9,#2563eb);color:#fff;border:none}
+.btn-ok{background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;border:none}
+.btn-b{background:#7f1d1d;color:#fecaca;border:1px solid #991b1b}
+.btn-w{background:#92400e;color:#fde68a;border:1px solid #b45309}
+.btn-v{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;border:none}
+.btn-sm{padding:4px 7px;font-size:.64rem;border-radius:7px}
+.note{font-size:.66rem;color:var(--muted);line-height:1.4;margin-top:5px}
+.scope{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.35);color:#c4b5fd;border-radius:10px;padding:8px;font-size:.68rem;margin-bottom:8px;line-height:1.5}
+.warn{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);color:#fde68a;border-radius:10px;padding:8px;font-size:.68rem;margin-bottom:8px;line-height:1.45}
+.secure{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#86efac;border-radius:10px;padding:8px;font-size:.68rem;margin-bottom:8px;line-height:1.45}
+.info{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.35);color:#7dd3fc;border-radius:10px;padding:8px;font-size:.68rem;margin-bottom:8px;line-height:1.45}
+.empty{color:var(--muted);font-size:.7rem}
+.toast{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:8px 12px;border-radius:10px;font-weight:700;opacity:0;z-index:200;transition:.15s;font-size:.75rem}
+.toast.show{opacity:1}.toast.err{background:var(--bad)}
+.login-mask{position:fixed;inset:0;background:rgba(2,6,23,.96);z-index:300;display:flex;align-items:center;justify-content:center}
+.login-box{background:#1e293b;border:1px solid var(--line);border-radius:14px;padding:16px;width:min(340px,92vw)}
+table{width:100%;border-collapse:collapse;font-size:.66rem}
+th,td{border-bottom:1px solid var(--line);padding:4px 3px;text-align:right}th{color:#c4b5fd}
+.badge{display:inline-block;padding:1px 6px;border-radius:999px;font-size:.58rem;font-weight:700}
+.badge-ok{background:rgba(34,197,94,.2);color:#86efac}
+.badge-w{background:rgba(245,158,11,.2);color:#fde68a}
+.badge-b{background:rgba(239,68,68,.2);color:#fecaca}
+.chk{display:flex;align-items:center;gap:6px;font-size:.68rem;color:var(--muted);margin:5px 0}
+pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:1px solid var(--line);border-radius:10px;padding:8px;font-size:.64rem;max-height:220px;overflow:auto;color:#cbd5e1;direction:ltr;text-align:left}
+.form-actions{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.gear-btn{position:fixed;bottom:18px;left:18px;z-index:150;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:linear-gradient(135deg,#1e293b,#0f172a);color:#e2e8f0;font-size:1.25rem;cursor:pointer;display:none;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.35);transition:.15s}
+.gear-btn.show{display:grid}
+.gear-btn:hover{border-color:var(--pri);transform:scale(1.06)}
+.gear-btn.on{background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-color:transparent;color:#fff}
+.settings-panel{position:fixed;bottom:72px;left:18px;z-index:149;width:min(260px,88vw);background:rgba(15,23,42,.97);border:1px solid var(--line);border-radius:14px;padding:10px;box-shadow:0 8px 28px rgba(0,0,0,.45);display:none}
+.settings-panel.open{display:block}
+.settings-panel h4{font-size:.72rem;color:#c4b5fd;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid rgba(196,181,253,.25)}
+.settings-panel button{display:flex;align-items:center;gap:8px;width:100%;text-align:right;border:1px solid transparent;background:transparent;color:#e2e8f0;border-radius:10px;padding:8px 10px;font-size:.74rem;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:3px}
+.settings-panel button:hover{background:rgba(14,165,233,.15);border-color:rgba(14,165,233,.35)}
+.settings-panel button .ic{font-size:1rem;width:22px;text-align:center}
+.settings-panel .hint{font-size:.6rem;color:var(--muted);margin-top:6px;line-height:1.4}
+.back-to-launch{margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand"><div class="logo">🏛️</div><h1>سامانه یکپارچه هوشمند مالی و اداری</h1></div>
+    <div class="clock-box"><div class="j" id="dtJ">—</div><div class="g" id="dtG">—</div><div class="c" id="dtC">—</div></div>
+  </div>
+
+  <div class="view on" id="v-launch">
+    <div class="section"><h3>هسته و مدیریت</h3><div class="grid">
+      <a class="mod" href="ceo.html" data-id="ceo" data-n="مدیرعامل"><div class="ic">👔</div><div class="nm">مدیرعامل</div><div class="ds">مجوز</div></a>
+      <a class="mod" href="manager.html" data-id="manager" data-n="مدیریت"><div class="ic">📋</div><div class="nm">مدیریت</div><div class="ds">KPI</div></a>
+      <a class="mod" href="sysadmin.html" data-id="sysadmin" data-n="مدیر سیستم"><div class="ic">⚙️</div><div class="nm">مدیر سیستم</div><div class="ds">کاربران</div></a>
+    </div></div>
+    <div class="section"><h3>مالی و حسابداری</h3><div class="grid">
+      <a class="mod" href="accounting.html" data-id="accounting" data-n="حسابداری"><div class="ic">📒</div><div class="nm">حسابداری</div><div class="ds">سند</div></a>
+      <a class="mod" href="bank.html" data-id="bank" data-n="بانک"><div class="ic">🏦</div><div class="nm">بانک</div><div class="ds">پرداخت</div></a>
+      <a class="mod" href="cashbox.html" data-id="cashbox" data-n="صندوق"><div class="ic">💵</div><div class="nm">صندوق</div><div class="ds">نقد</div></a>
+      <a class="mod" href="pettycash.html" data-id="pettycash" data-n="تنخواه"><div class="ic">🧾</div><div class="nm">تنخواه</div><div class="ds">هزینه</div></a>
+      <a class="mod" href="tax.html" data-id="tax" data-n="مالیات"><div class="ic">📊</div><div class="nm">مالیات</div><div class="ds">اظهار</div></a>
+      <a class="mod" href="budget.html" data-id="budget" data-n="بودجه"><div class="ic">📈</div><div class="nm">بودجه</div><div class="ds">برنامه</div></a>
+      <a class="mod" href="audit.html" data-id="audit" data-n="حسابرسی"><div class="ic">🔍</div><div class="nm">حسابرسی</div><div class="ds">ممیزی</div></a>
+      <a class="mod" href="fixedassets.html" data-id="fixedassets" data-n="دارایی ثابت"><div class="ic">🏢</div><div class="nm">دارایی ثابت</div><div class="ds">استهلاک</div></a>
+    </div></div>
+    <div class="section"><h3>عملیات و بازرگانی</h3><div class="grid">
+      <a class="mod" href="sales.html" data-id="sales" data-n="فروش"><div class="ic">🛒</div><div class="nm">فروش</div><div class="ds">فاکتور</div></a>
+      <a class="mod" href="purchase.html" data-id="purchase" data-n="خرید"><div class="ic">🛍️</div><div class="nm">خرید</div><div class="ds">سفارش</div></a>
+      <a class="mod" href="warehouse.html" data-id="warehouse" data-n="انبار"><div class="ic">📦</div><div class="nm">انبار</div><div class="ds">رسید</div></a>
+      <a class="mod" href="customers.html" data-id="customers" data-n="مشتریان"><div class="ic">👥</div><div class="nm">مشتریان</div><div class="ds">CRM</div></a>
+      <a class="mod" href="production.html" data-id="production" data-n="تولید"><div class="ic">🏭</div><div class="nm">تولید</div><div class="ds">دستور</div></a>
+      <a class="mod" href="contracts.html" data-id="contracts" data-n="قراردادها"><div class="ic">📝</div><div class="nm">قراردادها</div><div class="ds">قرارداد</div></a>
+      <a class="mod" href="projects.html" data-id="projects" data-n="پروژه"><div class="ic">📌</div><div class="nm">پروژه</div><div class="ds">پیشرفت</div></a>
+      <a class="mod" href="fleet.html" data-id="fleet" data-n="ناوگان"><div class="ic">🚚</div><div class="nm">ناوگان</div><div class="ds">حمل</div></a>
+    </div></div>
+    <div class="section"><h3>منابع انسانی</h3><div class="grid">
+      <a class="mod" href="personnel.html" data-id="personnel" data-n="پرسنلی"><div class="ic">👤</div><div class="nm">پرسنلی</div><div class="ds">پرونده</div></a>
+      <a class="mod" href="payroll.html" data-id="payroll" data-n="حقوق"><div class="ic">💰</div><div class="nm">حقوق</div><div class="ds">دستمزد</div></a>
+    </div></div>
+    <div class="section"><h3>اداری و دبیرخانه</h3><div class="grid">
+      <a class="mod" href="secretariat.html" data-id="secretariat" data-n="دبیرخانه"><div class="ic">🗂️</div><div class="nm">دبیرخانه</div><div class="ds">نامه</div></a>
+      <a class="mod" href="secretary.html" data-id="secretary" data-n="منشی"><div class="ic">🗓️</div><div class="nm">منشی</div><div class="ds">جلسه</div></a>
+      <a class="mod" href="correspondence.html" data-id="correspondence" data-n="مکاتبات"><div class="ic">✉️</div><div class="nm">مکاتبات</div><div class="ds">پیگیری</div></a>
+      <a class="mod" href="archive.html" data-id="archive" data-n="بایگانی"><div class="ic">📁</div><div class="nm">بایگانی</div><div class="ds">آرشیو</div></a>
+      <a class="mod" href="documents.html" data-id="documents" data-n="اسناد"><div class="ic">📄</div><div class="nm">اسناد</div><div class="ds">سند</div></a>
+      <a class="mod" href="assistant.html" data-id="assistant" data-n="دستیار"><div class="ic">🤖</div><div class="nm">دستیار</div><div class="ds">یادداشت</div></a>
+    </div></div>
+    <div class="section"><h3>حقوقی و روابط عمومی</h3><div class="grid">
+      <a class="mod" href="lawyer.html" data-id="lawyer" data-n="وکیل"><div class="ic">⚖️</div><div class="nm">وکیل</div><div class="ds">پرونده</div></a>
+      <a class="mod" href="pr.html" data-id="pr" data-n="روابط عمومی"><div class="ic">📢</div><div class="nm">روابط عمومی</div><div class="ds">رسانه</div></a>
+    </div></div>
+    <div class="section"><h3>سازمانی</h3><div class="grid">
+      <a class="mod" href="multicompany.html" data-id="multicompany" data-n="چندشرکتی"><div class="ic">🏛️</div><div class="nm">چندشرکتی</div><div class="ds">هلدینگ</div></a>
+      <a class="mod" href="chat.html" data-id="chat" data-n="چت"><div class="ic">💬</div><div class="nm">چت</div><div class="ds">پیام</div></a>
+      <a class="mod" href="meeting.html" data-id="meeting" data-n="متینگ"><div class="ic">🎥</div><div class="nm">متینگ</div><div class="ds">جلسه</div></a>
+      <a class="mod" href="file-hub.html" data-id="filehub" data-n="هاب فایل"><div class="ic">📎</div><div class="nm">هاب فایل</div><div class="ds">فایل</div></a>
+    </div></div>
+  </div>
+
+  <div class="view" id="v-brain">
+    <div class="form-actions back-to-launch"><button type="button" class="btn btn-sm" data-back>← بازگشت به لانچر</button></div>
+    <div class="scope"><b>مغز سوییت</b> — رصد ماژول‌ها · قوانین اعلامی · کارتابل</div>
+    <div class="kpi" id="brainKpi"></div>
+    <div class="card"><h2>رصد ماژول‌ها</h2>
+      <div class="form-actions">
+        <button type="button" class="btn btn-v" id="btnScanAll">اسکن</button>
+        <button type="button" class="btn btn-ok" id="btnRunRules">اجرای قوانین</button>
+        <button type="button" class="btn btn-p" id="btnRefreshBrain">بروزرسانی</button>
+      </div>
+      <div class="list-box" id="brainModList"></div>
+      <p class="note" id="brainMeta">—</p>
+    </div>
+    <div class="card"><h2>رویدادها</h2><div class="list-box" id="brainEvents"></div></div>
+    <div class="card"><h2>کارتابل باز</h2><div class="list-box" id="brainCart"></div></div>
+  </div>
+
+  <div class="view" id="v-datacenter">
+    <div class="form-actions back-to-launch"><button type="button" class="btn btn-sm" data-back>← بازگشت به لانچر</button></div>
+    <div class="info"><b>مرکز داده</b> — smart_* / suite_* · پشتیبان suite-backup-v2</div>
+    <div class="warn">حذف و بازیابی خطرناک است؛ قبلش پشتیبان بگیرید.</div>
+    <div class="kpi" id="dcKpi"></div>
+    <div class="card"><h2>عملیات</h2>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p" id="btnDcScan">اسکن</button>
+        <button type="button" class="btn btn-ok" id="btnDcBackupAll">پشتیبان کامل</button>
+        <button type="button" class="btn btn-ok" id="btnDcBackupSelected">پشتیبان انتخابی</button>
+        <button type="button" class="btn btn-w" id="btnDcRestore">بازیابی</button>
+      </div>
+      <input type="file" id="dcRestoreFile" accept="application/json,.json" hidden>
+      <div class="row">
+        <div><label>جستجو</label><input id="dcSearch" type="search" autocomplete="off"></div>
+        <div><label>فیلتر</label><select id="dcFilter"><option value="all">همه</option><option value="mod">smart_mod_*</option><option value="suite">suite_*</option><option value="bad">نامعتبر</option></select></div>
+      </div>
+    </div>
+    <div class="card"><h2>مخازن</h2><div class="list-box tall" id="dcKeyTable"></div></div>
+    <div class="card"><h2>جزئیات</h2>
+      <p class="note" id="dcDetailMeta">—</p>
+      <pre class="detail" id="dcDetail">—</pre>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p" id="btnDcDownloadOne" disabled>دانلود</button>
+        <button type="button" class="btn btn-b" id="btnDcDeleteOne" disabled>حذف</button>
+      </div>
+    </div>
+    <div class="card"><h2>لاگ</h2><div class="list-box" id="dcAudit"></div></div>
+  </div>
+
+  <div class="view" id="v-rules">
+    <div class="form-actions back-to-launch"><button type="button" class="btn btn-sm" data-back>← بازگشت به لانچر</button></div>
+    <div class="warn">قوانین فقط از قالب امن — بدون eval</div>
+    <div class="card"><h2>افزودن قانون</h2>
+      <div class="row">
+        <div><label>شرط</label><select id="ruleWhen"><option value="module_has_data">دارای داده</option><option value="module_missing">بدون داده</option><option value="cart_open_gt">کارتابل بیشتر از</option><option value="key_size_gt">حجم بیشتر از</option></select></div>
+        <div><label>هدف</label><select id="ruleTarget"><option value="secretary">منشی</option><option value="secretariat">دبیرخانه</option><option value="manager">مدیریت</option><option value="accounting">حسابداری</option><option value="suite">سوییت</option></select></div>
+      </div>
+      <div class="row">
+        <div><label>آستانه</label><input id="ruleThreshold" type="number" min="0" value="0"></div>
+        <div><label>اقدام</label><select id="ruleAction"><option value="log">رویداد</option><option value="cart">کارتابل</option><option value="flag">پرچم</option></select></div>
+      </div>
+      <label>عنوان</label><input id="ruleTitle" maxlength="80">
+      <label class="chk"><input type="checkbox" id="ruleEnabled" checked> فعال</label>
+      <div class="form-actions">
+        <button type="button" class="btn btn-v" id="btnAddRule">ثبت</button>
+        <button type="button" class="btn btn-ok" id="btnRunRules2">اجرا</button>
+      </div>
+    </div>
+    <div class="card"><h2>قوانین</h2><div class="list-box" id="rulesList"></div></div>
+  </div>
+
+  <div class="view" id="v-security">
+    <div class="form-actions back-to-launch"><button type="button" class="btn btn-sm" data-back>← بازگشت به لانچر</button></div>
+    <div class="secure">CSP · بدون eval · ورود سیستمی · لاگ عملیات</div>
+    <div class="card"><h2>کلیدها</h2><p class="note">brain: smart_mod_suite_brain_v2 · audit: suite_datacenter_audit_v1 · cartable: suite_cartable_v1</p></div>
+    <div class="card"><h2>پشتیبان مغز</h2>
+      <div class="form-actions">
+        <button type="button" class="btn btn-p" id="btnBrainBackup">دانلود</button>
+        <button type="button" class="btn" id="btnBrainRestore">بازیابی</button>
+      </div>
+      <input type="file" id="brainRestoreFile" accept="application/json" hidden>
+      <div class="list-box" id="brainAudit" style="margin-top:8px"></div>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="gear-btn" id="gearBtn" title="تنظیمات سیستم">⚙️</button>
+<div class="settings-panel" id="settingsPanel">
+  <h4>تنظیمات سیستم (امن)</h4>
+  <button type="button" data-view="v-brain"><span class="ic">🧠</span> مغز سوییت</button>
+  <button type="button" data-view="v-datacenter"><span class="ic">🗄️</span> مرکز داده</button>
+  <button type="button" data-view="v-rules"><span class="ic">⚡</span> قوانین و خودکارسازی</button>
+  <button type="button" data-view="v-security"><span class="ic">🔒</span> امنیت و یکپارچگی</button>
+  <p class="hint">فقط مدیر · ورود + پین دوم · برای کاربر عادی مخفی است</p>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+
+(function () {
+  "use strict";
+  var FA = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  var BRAIN_KEY = "smart_mod_suite_brain_v2";
+  var BRAIN_BACKUP = "smart_mod_suite_brain_backup_v2";
+  var EVENTS_KEY = "suite_events_v1";
+  var CART_KEY = "suite_cartable_v1";
+  var AUTH_KEY = "smart_users_suite_brain";
+  var DC_AUDIT_KEY = "suite_datacenter_audit_v1";
+  var WHEN_LABELS = {
+    module_has_data: "دارای داده",
+    module_missing: "بدون داده",
+    cart_open_gt: "کارتابل بیشتر از",
+    key_size_gt: "حجم بیشتر از"
+  };
+  var ACTION_LABELS = { log: "رویداد", cart: "کارتابل", flag: "پرچم" };
+  var toastTimer = null, flags = {}, dcSelectedKey = null, dcCache = [];
+  function $(id) { return document.getElementById(id); }
+  function toFa(n) {
+    return String(n).replace(/\d/g, function (d) { return FA[+d]; });
+  }
+  function esc(s) {
+    var d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
+  function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+  function now() { return new Date().toISOString(); }
+  function loadJSON(k, d) {
+    try { return JSON.parse(localStorage.getItem(k) || "null") || d; }
+    catch (e) { return d; }
+  }
+  function saveJSON(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch (e) { toast("خطای ذخیره", true); return false; }
+  }
+  function loadArr(k) {
+    var a = loadJSON(k, []);
+    return Array.isArray(a) ? a : [];
+  }
+  function saveArr(k, a) { return saveJSON(k, a); }
+  function toast(m, err) {
+    var el = $("toast");
+    if (!el) return;
+    el.textContent = m;
+    el.className = "toast show" + (err ? " err" : "");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2400);
+  }
+  function g2j(gy, gm, gd) {
+    var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    var gy2 = (gm > 2) ? (gy + 1) : gy;
+    var days = 355666 + 365 * gy + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
+    var jy = -1595 + 33 * Math.floor(days / 12053);
+    days %= 12053;
+    jy += 4 * Math.floor(days / 1461);
+    days %= 1461;
+    if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+    var jm = (days < 186) ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
+    var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
+    return { jy: jy, jm: jm, jd: jd };
+  }
+  function tick() {
+    var n = new Date(), j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    if ($("dtJ")) $("dtJ").textContent = toFa(j.jy) + "/" + toFa(String(j.jm).padStart(2, "0")) + "/" + toFa(String(j.jd).padStart(2, "0"));
+    if ($("dtG")) $("dtG").textContent = n.getFullYear() + "/" + String(n.getMonth() + 1).padStart(2, "0") + "/" + String(n.getDate()).padStart(2, "0");
+    if ($("dtC")) $("dtC").textContent = toFa(String(n.getHours()).padStart(2, "0")) + ":" + toFa(String(n.getMinutes()).padStart(2, "0")) + ":" + toFa(String(n.getSeconds()).padStart(2, "0"));
+  }
+  tick();
+  setInterval(tick, 1000);
+  function getAuth() {
+    var a = loadJSON(AUTH_KEY, null);
+    if (!a || !Array.isArray(a.users)) {
+      a = {
+        users: [{ user: "admin", pass: "admin", name: "مدیر", role: "admin" }],
+        pin2: "1234",
+        session: null
+      };
+      saveJSON(AUTH_KEY, a);
+    }
+    if (a.pin2 == null) a.pin2 = "1234";
+    return a;
+  }
+  function saveAuth(a) { return saveJSON(AUTH_KEY, a); }
+  function userName() {
+    var a = getAuth();
+    return (a.session && (a.session.name || a.session.user)) || "مهمان";
+  }
+  function isAdminSession() {
+    var a = getAuth();
+    return !!(a.session && a.session.user);
+  }
+  function updateGearVisibility() {
+    var g = $("gearBtn");
+    if (!g) return;
+    if (isAdminSession()) g.classList.add("show");
+    else {
+      g.classList.remove("show");
+      g.classList.remove("on");
+      if ($("settingsPanel")) $("settingsPanel").classList.remove("open");
+    }
+  }
+  function ensureBrainAuth(cb) {
+    var a = getAuth();
+    if (a.session && a.session.user) {
+      updateGearVisibility();
+      cb();
+      return;
+    }
+    var m = document.createElement("div");
+    m.className = "login-mask";
+    m.innerHTML =
+      '<div class="login-box">' +
+      '<h2 style="text-align:center;color:#c4b5fd;margin-bottom:8px">ورود سیستمی</h2>' +
+      '<label>کاربری</label><input id="lgU" autocomplete="username">' +
+      '<label>رمز</label><input id="lgP" type="password" autocomplete="current-password">' +
+      '<label>پین دوم</label><input id="lgPin" type="password" maxlength="8" inputmode="numeric" placeholder="۴ رقم">' +
+      '<button type="button" class="btn btn-v" id="lgGo" style="width:100%;margin-top:8px">ورود</button>' +
+      '<button type="button" class="btn" id="lgCancel" style="width:100%;margin-top:5px">بازگشت</button>' +
+      '<p class="empty" style="margin-top:6px;text-align:center">admin / admin · پین: ۱۲۳۴</p></div>';
+    document.body.appendChild(m);
+    $("lgGo").onclick = function () {
+      var u = $("lgU").value.trim(), p = $("lgP").value, pin = ($("lgPin").value || "").trim();
+      var f = (a.users || []).find(function (x) { return x.user === u && x.pass === p; });
+      if (!f) { toast("کاربری یا رمز اشتباه", true); return; }
+      if (String(a.pin2 || "") !== pin) { toast("پین دوم اشتباه", true); return; }
+      a.session = { user: f.user, name: f.name || f.user, role: f.role || "admin", pinOk: true };
+      saveAuth(a);
+      m.remove();
+      brainAudit("login", f.user);
+      updateGearVisibility();
+      cb();
+    };
+    $("lgCancel").onclick = function () {
+      m.remove();
+      showView("v-launch");
+    };
+  }
+  function defBrain() {
+    return { version: 2, rules: [], audit: [], lastScan: null, flags: {}, createdAt: now(), updatedAt: now() };
+  }
+  function loadBrain() {
+    var d = loadJSON(BRAIN_KEY, null);
+    if (!d) {
+      d = defBrain();
+      d.rules = [{
+        id: uid(), title: "کارتابل شلوغ", when: "cart_open_gt", target: "suite",
+        threshold: 5, action: "flag", enabled: true, at: now()
+      }];
+      saveJSON(BRAIN_KEY, d);
+    }
+    if (!Array.isArray(d.rules)) d.rules = [];
+    if (!Array.isArray(d.audit)) d.audit = [];
+    if (!d.flags) d.flags = {};
+    return d;
+  }
+  function saveBrain(d) {
+    try {
+      var c = localStorage.getItem(BRAIN_KEY);
+      if (c) localStorage.setItem(BRAIN_BACKUP, c);
+    } catch (e) {}
+    d.updatedAt = now();
+    d.version = 2;
+    return saveJSON(BRAIN_KEY, d);
+  }
+  function brainAudit(action, detail) {
+    var d = loadBrain();
+    d.audit.unshift({
+      id: uid(), t: now(), user: userName(),
+      action: String(action || "").slice(0, 40),
+      detail: String(detail || "").slice(0, 200)
+    });
+    if (d.audit.length > 200) d.audit = d.audit.slice(0, 200);
+    saveBrain(d);
+  }
+  function pushEvent(type, message) {
+    var list = loadArr(EVENTS_KEY);
+    list.unshift({
+      id: uid(), t: now(),
+      type: String(type || "info").slice(0, 30),
+      message: String(message || "").slice(0, 240),
+      by: userName()
+    });
+    if (list.length > 300) list = list.slice(0, 300);
+    saveArr(EVENTS_KEY, list);
+  }
+  function isSuiteKey(k) {
+    return !!k && (k.indexOf("smart_") === 0 || k.indexOf("suite_") === 0);
+  }
+  function moduleDataSize(modId) {
+    var total = 0, keys = [];
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i) || "";
+        if (!isSuiteKey(k)) continue;
+        if (
+          k.indexOf("smart_mod_" + modId) === 0 ||
+          k.indexOf("smart_" + modId) === 0 ||
+          (modId === "suite" && k.indexOf("suite_") === 0)
+        ) {
+          total += (localStorage.getItem(k) || "").length;
+          keys.push(k);
+        }
+      }
+    } catch (e) {}
+    return { size: total, keys: keys, hasData: total > 2 };
+  }
+  function scanModules() {
+    var ids = {};
+    document.querySelectorAll(".mod[data-id]").forEach(function (m) {
+      ids[m.getAttribute("data-id")] = m.getAttribute("data-n") || m.getAttribute("data-id");
+    });
+    ["secretary", "secretariat", "manager", "accounting", "suite"].forEach(function (id) {
+      if (!ids[id]) ids[id] = id;
+    });
+    var rows = [];
+    Object.keys(ids).forEach(function (id) {
+      var info = moduleDataSize(id);
+      rows.push({
+        id: id, name: ids[id], size: info.size, keys: info.keys.length,
+        hasData: info.hasData, flag: !!(flags[id] || (loadBrain().flags || {})[id])
+      });
+    });
+    rows.sort(function (a, b) { return b.size - a.size; });
+    var b = loadBrain();
+    b.lastScan = now();
+    saveBrain(b);
+    return rows;
+  }
+  function cartOpenCount() {
+    try {
+      var all = JSON.parse(localStorage.getItem(CART_KEY) || "[]") || [];
+      return Array.isArray(all) ? all.filter(function (x) { return x && x.status !== "done"; }).length : 0;
+    } catch (e) { return 0; }
+  }
+  function formatSize(b) {
+    b = b || 0;
+    if (b < 1024) return b + " B";
+    if (b < 1048576) return (b / 1024).toFixed(1) + " KB";
+    return (b / 1048576).toFixed(2) + " MB";
+  }
+  function evalWhen(rule) {
+    var th = Number(rule.threshold) || 0, t = rule.target || "";
+    if (rule.when === "module_has_data") return moduleDataSize(t).hasData;
+    if (rule.when === "module_missing") return !moduleDataSize(t).hasData;
+    if (rule.when === "cart_open_gt") return cartOpenCount() > th;
+    if (rule.when === "key_size_gt") return moduleDataSize(t).size > th;
+    return false;
+  }
+  function runAction(rule) {
+    var title = rule.title || "قانون";
+    if (rule.action === "log") { pushEvent("rule", title); return; }
+    if (rule.action === "flag") {
+      var b = loadBrain();
+      b.flags = b.flags || {};
+      b.flags[rule.target || "suite"] = title;
+      flags[rule.target || "suite"] = title;
+      saveBrain(b);
+      pushEvent("flag", title);
+      return;
+    }
+    if (rule.action === "cart") {
+      var all = loadArr(CART_KEY);
+      all.unshift({
+        id: uid(), from: "suite-brain",
+        to: rule.target === "suite" ? "manager" : rule.target,
+        title: "قانون: " + title,
+        body: WHEN_LABELS[rule.when] || "",
+        status: "new",
+        at: new Date().toLocaleString("fa-IR")
+      });
+      saveArr(CART_KEY, all.slice(0, 500));
+      pushEvent("cart", title);
+    }
+  }
+  function runAllRules() {
+    var fired = 0;
+    (loadBrain().rules || []).filter(function (r) { return r && r.enabled; }).forEach(function (rule) {
+      if (WHEN_LABELS[rule.when] && ACTION_LABELS[rule.action] && evalWhen(rule)) {
+        runAction(rule);
+        fired++;
+      }
+    });
+    brainAudit("run-rules", "fired=" + fired);
+    return fired;
+  }
+  function dcAudit(a, d) {
+    var list = loadArr(DC_AUDIT_KEY);
+    list.unshift({
+      id: uid(), t: now(), user: userName(),
+      action: String(a || "").slice(0, 40),
+      detail: String(d || "").slice(0, 240)
+    });
+    saveArr(DC_AUDIT_KEY, list.slice(0, 300));
+  }
+  function inspectKey(k) {
+    var raw = "";
+    try { raw = localStorage.getItem(k) || ""; } catch (e) {}
+    var ok = true;
+    try { JSON.parse(raw); } catch (e) { ok = false; }
+    var mod = "other", m = k.match(/^smart_mod_([a-z0-9_]+)_v\d+/i);
+    if (m) mod = m[1];
+    else if (k.indexOf("suite_") === 0) mod = "suite";
+    return { key: k, bytes: raw.length, schemaOk: ok, module: mod };
+  }
+  function scanDataCenter() {
+    var rows = [];
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (isSuiteKey(k)) rows.push(inspectKey(k));
+      }
+    } catch (e) {}
+    rows.sort(function (a, b) { return b.bytes - a.bytes; });
+    dcCache = rows;
+    return rows;
+  }
+  function filteredDcRows() {
+    var q = (($("dcSearch") && $("dcSearch").value) || "").trim().toLowerCase();
+    var f = ($("dcFilter") && $("dcFilter").value) || "all";
+    return dcCache.filter(function (r) {
+      if (f === "mod" && r.key.indexOf("smart_mod_") !== 0) return false;
+      if (f === "suite" && r.key.indexOf("suite_") !== 0) return false;
+      if (f === "bad" && r.schemaOk) return false;
+      if (q && r.key.toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+  }
+  function renderDcKpi() {
+    var t = 0, b = 0;
+    dcCache.forEach(function (r) { t += r.bytes; if (!r.schemaOk) b++; });
+    if ($("dcKpi")) {
+      $("dcKpi").innerHTML =
+        '<div class="box"><div class="n">' + toFa(dcCache.length) + '</div><div class="l">کلید</div></div>' +
+        '<div class="box"><div class="n">' + formatSize(t) + '</div><div class="l">حجم</div></div>' +
+        '<div class="box"><div class="n">' + toFa(b) + '</div><div class="l">خراب</div></div>';
+    }
+  }
+  function renderDcTable() {
+    var box = $("dcKeyTable");
+    if (!box) return;
+    var rows = filteredDcRows();
+    if (!rows.length) { box.innerHTML = '<p class="empty">—</p>'; return; }
+    var h = "<table><thead><tr><th></th><th>کلید</th><th>ماژول</th><th>حجم</th><th></th></tr></thead><tbody>";
+    rows.forEach(function (r) {
+      h += "<tr><td><input type='checkbox' class='dc-check' data-k='" + esc(r.key) + "'></td>" +
+        "<td style='direction:ltr;text-align:left;font-size:.58rem'>" + esc(r.key) + "</td>" +
+        "<td>" + esc(r.module) + "</td><td>" + formatSize(r.bytes) + "</td>" +
+        "<td><button type='button' class='btn btn-sm btn-p' data-view-k='" + esc(r.key) + "'>مشاهده</button></td></tr>";
+    });
+    box.innerHTML = h + "</tbody></table>";
+    box.querySelectorAll("[data-view-k]").forEach(function (b) {
+      b.onclick = function () { showDcDetail(b.getAttribute("data-view-k")); };
+    });
+  }
+  function showDcDetail(key) {
+    dcSelectedKey = key;
+    var raw = "";
+    try { raw = localStorage.getItem(key) || ""; } catch (e) {}
+    var pretty = raw;
+    try { pretty = JSON.stringify(JSON.parse(raw), null, 2); } catch (e) {}
+    if (pretty.length > 8000) pretty = pretty.slice(0, 8000) + "\n…";
+    if ($("dcDetailMeta")) $("dcDetailMeta").textContent = key;
+    if ($("dcDetail")) $("dcDetail").textContent = pretty || "—";
+    if ($("btnDcDownloadOne")) $("btnDcDownloadOne").disabled = false;
+    if ($("btnDcDeleteOne")) $("btnDcDeleteOne").disabled = false;
+  }
+  function renderDcAudit() {
+    var box = $("dcAudit");
+    if (!box) return;
+    box.innerHTML = loadArr(DC_AUDIT_KEY).slice(0, 40).map(function (a) {
+      return '<div class="list-item">' + esc((a.t || "").slice(0, 19).replace("T", " ")) +
+        " | " + esc(a.action) + " | " + esc(a.detail || "") + "</div>";
+    }).join("") || '<p class="empty">—</p>';
+  }
+  function renderDataCenter() {
+    scanDataCenter();
+    renderDcKpi();
+    renderDcTable();
+    renderDcAudit();
+  }
+  function selectedKeys() {
+    var o = [];
+    document.querySelectorAll(".dc-check:checked").forEach(function (c) {
+      o.push(c.getAttribute("data-k"));
+    });
+    return o;
+  }
+  function buildBackup(keys) {
+    var p = { format: "suite-backup-v2", exportedAt: now(), by: userName(), keys: {} };
+    keys.forEach(function (k) {
+      if (!isSuiteKey(k)) return;
+      try {
+        var r = localStorage.getItem(k);
+        try { p.keys[k] = JSON.parse(r); } catch (e) { p.keys[k] = r; }
+      } catch (e) {}
+    });
+    return p;
+  }
+  function downloadJson(obj, name) {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" }));
+    a.download = name;
+    a.click();
+  }
+  if ($("btnDcScan")) $("btnDcScan").onclick = function () {
+    ensureBrainAuth(function () { renderDataCenter(); dcAudit("scan", "manual"); toast("اسکن"); });
+  };
+  if ($("dcSearch")) $("dcSearch").oninput = function () { renderDcTable(); };
+  if ($("dcFilter")) $("dcFilter").onchange = function () { renderDcTable(); };
+  if ($("btnDcBackupAll")) $("btnDcBackupAll").onclick = function () {
+    ensureBrainAuth(function () {
+      downloadJson(buildBackup(dcCache.map(function (r) { return r.key; })), "suite-backup-v2.json");
+      dcAudit("backup-all", "");
+      toast("دانلود");
+    });
+  };
+  if ($("btnDcBackupSelected")) $("btnDcBackupSelected").onclick = function () {
+    ensureBrainAuth(function () {
+      var k = selectedKeys();
+      if (!k.length) { toast("انتخاب نشده", true); return; }
+      downloadJson(buildBackup(k), "suite-backup-selected.json");
+      dcAudit("backup-sel", "");
+      toast("دانلود");
+    });
+  };
+  if ($("btnDcRestore")) $("btnDcRestore").onclick = function () {
+    ensureBrainAuth(function () {
+      if (!confirm("بازیابی؟") || !confirm("تأیید دوم؟")) return;
+      $("dcRestoreFile").click();
+    });
+  };
+  if ($("dcRestoreFile")) $("dcRestoreFile").onchange = function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var d = JSON.parse(r.result);
+        if (!d.keys) { toast("keys نیست", true); return; }
+        var ok = 0;
+        Object.keys(d.keys).forEach(function (k) {
+          if (!isSuiteKey(k)) return;
+          try {
+            var v = d.keys[k];
+            localStorage.setItem(k, typeof v === "string" ? v : JSON.stringify(v));
+            ok++;
+          } catch (e) {}
+        });
+        dcAudit("restore", f.name);
+        renderDataCenter();
+        toast("بازیابی " + toFa(ok));
+      } catch (err) { toast("نامعتبر", true); }
+      e.target.value = "";
+    };
+    r.readAsText(f);
+  };
+  if ($("btnDcDownloadOne")) $("btnDcDownloadOne").onclick = function () {
+    if (!dcSelectedKey) return;
+    ensureBrainAuth(function () {
+      downloadJson(buildBackup([dcSelectedKey]), dcSelectedKey + ".json");
+      dcAudit("download-one", dcSelectedKey);
+      toast("دانلود");
+    });
+  };
+  if ($("btnDcDeleteOne")) $("btnDcDeleteOne").onclick = function () {
+    if (!dcSelectedKey) return;
+    ensureBrainAuth(function () {
+      if (!confirm("حذف؟") || !confirm("تأیید دوم؟")) return;
+      localStorage.removeItem(dcSelectedKey);
+      dcAudit("delete", dcSelectedKey);
+      dcSelectedKey = null;
+      renderDataCenter();
+      toast("حذف");
+    });
+  };
+  function closeSettings() {
+    var p = $("settingsPanel"), g = $("gearBtn");
+    if (p) p.classList.remove("open");
+    if (g) g.classList.remove("on");
+  }
+  function showView(id) {
+    closeSettings();
+    document.querySelectorAll(".view").forEach(function (v) { v.classList.remove("on"); });
+    if ($(id)) $(id).classList.add("on");
+    if (id === "v-brain" || id === "v-rules" || id === "v-security" || id === "v-datacenter") {
+      ensureBrainAuth(function () {
+        if (id === "v-brain") renderBrain();
+        if (id === "v-rules") renderRules();
+        if (id === "v-security") renderSecurity();
+        if (id === "v-datacenter") renderDataCenter();
+      });
+    } else {
+      updateGearVisibility();
+    }
+  }
+  // Gear: visible only after admin login; fixed open/close
+  (function initGear() {
+    var gear = $("gearBtn"), panel = $("settingsPanel");
+    if (!gear || !panel) return;
+    gear.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!isAdminSession()) {
+        ensureBrainAuth(function () {
+          panel.classList.add("open");
+          gear.classList.add("on");
+        });
+        return;
+      }
+      if (panel.classList.contains("open")) {
+        closeSettings();
+      } else {
+        panel.classList.add("open");
+        gear.classList.add("on");
+      }
+    });
+    panel.querySelectorAll("button[data-view]").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        showView(btn.getAttribute("data-view"));
+      });
+    });
+    document.addEventListener("click", function (e) {
+      if (!panel.classList.contains("open")) return;
+      if (panel.contains(e.target) || gear.contains(e.target)) return;
+      closeSettings();
+    });
+  })();
+  // Back-to-launcher buttons inside advanced views
+  document.querySelectorAll("[data-back]").forEach(function (b) {
+    b.addEventListener("click", function () { showView("v-launch"); });
+  });
+  updateGearVisibility();
+  function renderBrain() {
+    var rows = scanModules(), ts = 0, wd = 0;
+    rows.forEach(function (r) { ts += r.size; if (r.hasData) wd++; });
+    if ($("brainKpi")) {
+      $("brainKpi").innerHTML =
+        '<div class="box"><div class="n">' + toFa(rows.length) + '</div><div class="l">هدف</div></div>' +
+        '<div class="box"><div class="n">' + toFa(wd) + '</div><div class="l">داده</div></div>' +
+        '<div class="box"><div class="n">' + formatSize(ts) + '</div><div class="l">حجم</div></div>' +
+        '<div class="box"><div class="n">' + toFa(cartOpenCount()) + '</div><div class="l">کارتابل</div></div>';
+    }
+    if ($("brainModList")) {
+      var h = "<table><thead><tr><th>ماژول</th><th>داده</th><th>حجم</th></tr></thead><tbody>";
+      rows.forEach(function (r) {
+        h += "<tr><td>" + esc(r.name) + "</td><td>" +
+          (r.hasData ? '<span class="badge badge-ok">دارد</span>' : '<span class="badge badge-w">ندارد</span>') +
+          "</td><td>" + formatSize(r.size) + "</td></tr>";
+      });
+      $("brainModList").innerHTML = h + "</tbody></table>";
+    }
+    if ($("brainMeta")) $("brainMeta").textContent = userName();
+    if ($("brainEvents")) {
+      $("brainEvents").innerHTML = loadArr(EVENTS_KEY).slice(0, 20).map(function (e) {
+        return '<div class="list-item">' + esc(e.type) + " — " + esc(e.message) + "</div>";
+      }).join("") || '<p class="empty">—</p>';
+    }
+    if ($("brainCart")) {
+      $("brainCart").innerHTML = loadArr(CART_KEY).filter(function (x) {
+        return x && x.status !== "done";
+      }).slice(0, 15).map(function (x) {
+        return '<div class="list-item">' + esc(x.title || "") + "</div>";
+      }).join("") || '<p class="empty">—</p>';
+    }
+  }
+  if ($("btnScanAll")) $("btnScanAll").onclick = function () {
+    ensureBrainAuth(function () { renderBrain(); toast("اسکن"); });
+  };
+  function doRun() {
+    ensureBrainAuth(function () {
+      toast("قوانین " + toFa(runAllRules()));
+      renderBrain();
+      renderRules();
+    });
+  }
+  if ($("btnRunRules")) $("btnRunRules").onclick = doRun;
+  if ($("btnRunRules2")) $("btnRunRules2").onclick = doRun;
+  if ($("btnRefreshBrain")) $("btnRefreshBrain").onclick = function () {
+    ensureBrainAuth(function () { renderBrain(); });
+  };
+  function renderRules() {
+    var box = $("rulesList");
+    if (!box) return;
+    var rules = loadBrain().rules || [];
+    box.innerHTML = rules.map(function (r) {
+      return '<div class="list-item">' +
+        (r.enabled ? '<span class="badge badge-ok">فعال</span> ' : '<span class="badge badge-w">خاموش</span> ') +
+        esc(r.title) +
+        ' <button type="button" class="btn btn-sm" data-toggle="' + esc(r.id) + '">' +
+        (r.enabled ? "خاموش" : "روشن") + '</button> ' +
+        '<button type="button" class="btn btn-sm btn-b" data-del="' + esc(r.id) + '">حذف</button></div>';
+    }).join("") || '<p class="empty">—</p>';
+    box.querySelectorAll("[data-toggle]").forEach(function (b) {
+      b.onclick = function () {
+        var d = loadBrain();
+        d.rules.forEach(function (r) {
+          if (r.id === b.getAttribute("data-toggle")) r.enabled = !r.enabled;
+        });
+        saveBrain(d);
+        renderRules();
+      };
+    });
+    box.querySelectorAll("[data-del]").forEach(function (b) {
+      b.onclick = function () {
+        if (!confirm("حذف؟")) return;
+        var d = loadBrain();
+        d.rules = d.rules.filter(function (r) { return r.id !== b.getAttribute("data-del"); });
+        saveBrain(d);
+        renderRules();
+      };
+    });
+  }
+  if ($("btnAddRule")) $("btnAddRule").onclick = function () {
+    ensureBrainAuth(function () {
+      var title = ($("ruleTitle").value || "").trim();
+      if (!title) { toast("عنوان", true); return; }
+      var d = loadBrain();
+      d.rules.unshift({
+        id: uid(), title: title,
+        when: $("ruleWhen").value, target: $("ruleTarget").value,
+        threshold: parseInt($("ruleThreshold").value, 10) || 0,
+        action: $("ruleAction").value,
+        enabled: !!$("ruleEnabled").checked,
+        at: now()
+      });
+      saveBrain(d);
+      $("ruleTitle").value = "";
+      renderRules();
+      toast("ثبت");
+    });
+  };
+  function renderSecurity() {
+    if ($("brainAudit")) {
+      $("brainAudit").innerHTML = (loadBrain().audit || []).slice(0, 30).map(function (a) {
+        return '<div class="list-item">' + esc((a.t || "").slice(0, 19)) + " | " + esc(a.action) + "</div>";
+      }).join("") || '<p class="empty">—</p>';
+    }
+  }
+  if ($("btnBrainBackup")) $("btnBrainBackup").onclick = function () {
+    ensureBrainAuth(function () {
+      downloadJson({ brain: loadBrain(), events: loadArr(EVENTS_KEY) }, "suite-brain.json");
+      toast("دانلود");
+    });
+  };
+  if ($("btnBrainRestore")) $("btnBrainRestore").onclick = function () {
+    ensureBrainAuth(function () { $("brainRestoreFile").click(); });
+  };
+  if ($("brainRestoreFile")) $("brainRestoreFile").onchange = function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var d = JSON.parse(r.result);
+        if (d.brain) saveBrain(d.brain);
+        if (d.events) saveArr(EVENTS_KEY, d.events);
+        toast("بازیابی");
+      } catch (err) { toast("نامعتبر", true); }
+    };
+    r.readAsText(f);
+  };
+  showView("v-launch");
+})();
+</script>
+</body>
+</html>
