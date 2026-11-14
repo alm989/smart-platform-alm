@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>پایلوت امکانات — یادداشت / یادآوری / کارتابل</title>
+<style>
+:root{--bg:#0b1220;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#0ea5e9;--ok:#16a34a;--bad:#dc2626}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--txt);min-height:100dvh;padding:14px}
+.wrap{max-width:1100px;margin:auto}
+h1{font-size:1rem;color:#7dd3fc;margin-bottom:8px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tabs button{border:1px solid var(--line);background:#1e293b;color:#cbd5e1;border-radius:999px;padding:8px 14px;font:inherit;font-size:.75rem;font-weight:700;cursor:pointer}
+.tabs button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+label{display:block;font-size:.7rem;color:var(--muted);margin:6px 0 3px}
+input,select,textarea{width:100%;padding:8px;border-radius:9px;border:1px solid var(--line);background:#020617;color:var(--txt);font:inherit;font-size:13px}
+textarea{min-height:90px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row3{display:grid;grid-template-columns:1.2fr .8fr .7fr;gap:8px}
+@media(max-width:700px){.row,.row3{grid-template-columns:1fr}}
+.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.btn{border:0;border-radius:9px;padding:8px 12px;font:inherit;font-size:.75rem;font-weight:700;cursor:pointer}
+.btn-p{background:var(--pri);color:#fff}.btn-g{background:#334155;color:#e2e8f0}
+.btn-ok{background:#166534;color:#bbf7d0}.btn-b{background:#7f1d1d;color:#fecaca}.btn-w{background:#854d0e;color:#fef3c7}
+.item{background:#0f172a;border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0}
+.item .t{font-weight:800;font-size:.8rem;margin-bottom:4px}
+.item .m{font-size:.7rem;color:var(--muted);line-height:1.8}
+.item .a{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+.badge{display:inline-block;border-radius:999px;padding:1px 8px;font-size:.62rem;background:var(--pri);color:#fff;margin-right:6px}
+.badge.ok{background:var(--ok)}.badge.bad{background:var(--bad)}.badge.warn{background:#ca8a04}
+.empty{text-align:center;color:#64748b;padding:16px;font-size:.78rem}
+.hint{font-size:.7rem;color:var(--muted);margin-top:8px;line-height:1.7}
+.okbar{background:#14532d;border:1px solid #166534;color:#bbf7d0;border-radius:10px;padding:8px;font-size:.72rem;margin-top:8px;display:none}
+.lists{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:900px){.lists{grid-template-columns:1fr}}
+#toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);padding:9px 14px;border-radius:12px;font-weight:700;font-size:.8rem;z-index:99;opacity:0;transition:.15s;color:#fff;pointer-events:none}
+.status{font-size:.7rem;color:#94a3b8;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>پایلوت امکانات (تک‌فایل — بدون وابستگی)</h1>
+  <p class="status" id="statusLine">وضعیت: در حال آماده‌سازی…</p>
+  <div class="tabs">
+    <button type="button" class="on" data-tab="notes">یادداشت</button>
+    <button type="button" data-tab="rems">یادآوری</button>
+    <button type="button" data-tab="cart">کارتابل</button>
+  </div>
+
+  <div class="panel on" id="tab-notes">
+    <div class="card">
+      <label>متن یادداشت (محلی این پایلوت)</label>
+      <textarea id="noteText" placeholder="متن را بنویسید"></textarea>
+      <div class="actions"><button type="button" class="btn btn-p" id="btnNoteSave">ذخیره یادداشت</button></div>
+      <p class="hint">کلید ذخیره: smart_mod_notes_cashbox</p>
+    </div>
+    <div class="card" id="notesList"></div>
+  </div>
+
+  <div class="panel" id="tab-rems">
+    <div class="card">
+      <div class="row3">
+        <div><label>عنوان</label><input id="remTitle" placeholder="جلسه مدیران"></div>
+        <div><label>تاریخ</label><input id="remDate" placeholder="1405/08/25"></div>
+        <div><label>ساعت</label><input id="remTime" placeholder="10:30"></div>
+      </div>
+      <label>توضیح</label><input id="remNote" placeholder="اختیاری">
+      <div class="actions"><button type="button" class="btn btn-p" id="btnRemAdd">افزودن یادآوری</button></div>
+      <p class="hint">کلید ذخیره: smart_mod_rem_cashbox</p>
+    </div>
+    <div class="card" id="remsList"></div>
+  </div>
+
+  <div class="panel" id="tab-cart">
+    <div class="card">
+      <div class="row">
+        <div><label>عنوان</label><input id="cartSubject" placeholder="عنوان فایل یا درخواست"></div>
+        <div><label>ارسال به ماژول</label>
+          <select id="cartTo">
+            <option value="bank">بانک</option>
+            <option value="accounting">حسابداری</option>
+            <option value="cashbox">صندوق</option>
+            <option value="payroll">حقوق</option>
+          </select>
+        </div>
+      </div>
+      <label>توضیح</label><input id="cartBody" placeholder="اختیاری">
+      <label>فایل (اختیاری تا ۲٫۵MB)</label><input id="cartFile" type="file">
+      <div class="actions">
+        <button type="button" class="btn btn-p" id="btnCartSend">ارسال</button>
+        <button type="button" class="btn btn-g" id="btnCartRefresh">بروزرسانی</button>
+      </div>
+      <div class="okbar" id="cartMsg"></div>
+      <p class="hint">مبدأ این پایلوت: صندوق · کارتابل سراسری (suite_cartable_v1)</p>
+    </div>
+    <div class="lists">
+      <div class="card"><b>ارسالی‌ها</b><div id="cartOut"></div></div>
+      <div class="card"><b>دریافتی‌ها (به صندوق)</b><div id="cartIn"></div></div>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+(function () {
+  var NOTES_KEY = "smart_mod_notes_cashbox";
+  var REMS_KEY = "smart_mod_rem_cashbox";
+  var CART_KEY = "suite_cartable_v1";
+  var MOD = "cashbox";
+  var MOD_TITLE = "صندوق";
+  var MAX = 2.5 * 1024 * 1024;
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&" + "amp;")
+      .replace(/</g, "&" + "lt;")
+      .replace(/>/g, "&" + "gt;")
+      .replace(/"/g, "&" + "quot;")
+      .replace(/'/g, "&#39;");
+  }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+  function now() { return new Date().toISOString(); }
+  function toast(msg, err) {
+    var el = document.getElementById("toast");
+    el.textContent = msg;
+    el.style.background = err ? "#ef4444" : "#22c55e";
+    el.style.opacity = "1";
+    clearTimeout(el._t);
+    el._t = setTimeout(function () { el.style.opacity = "0"; }, 2200);
+  }
+  function load(key) {
+    try {
+      var a = JSON.parse(localStorage.getItem(key) || "[]");
+      return Array.isArray(a) ? a : [];
+    } catch (e) { return []; }
+  }
+  function save(key, arr) {
+    try {
+      localStorage.setItem(key, JSON.stringify(arr));
+      return true;
+    } catch (e) {
+      toast("ذخیره ناموفق: " + (e.message || e), true);
+      return false;
+    }
+  }
+  function loadCart() {
+    try {
+      var o = JSON.parse(localStorage.getItem(CART_KEY) || "{\"items\":[]}");
+      if (!o || !Array.isArray(o.items)) return { items: [] };
+      return o;
+    } catch (e) { return { items: [] }; }
+  }
+  function saveCart(o) {
+    try { localStorage.setItem(CART_KEY, JSON.stringify(o)); return true; }
+    catch (e) { toast("ذخیره کارتابل ناموفق", true); return false; }
+  }
+
+  /* tabs */
+  document.querySelectorAll(".tabs button").forEach(function (b) {
+    b.onclick = function () {
+      document.querySelectorAll(".tabs button").forEach(function (x) { x.classList.remove("on"); });
+      document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("on"); });
+      b.classList.add("on");
+      document.getElementById("tab-" + b.getAttribute("data-tab")).classList.add("on");
+    };
+  });
+
+  /* notes */
+  function renderNotes() {
+    var list = load(NOTES_KEY).filter(function (x) { return x && !x.deleted; });
+    var box = document.getElementById("notesList");
+    if (!list.length) { box.innerHTML = "<div class='empty'>یادداشتی نیست</div>"; return; }
+    box.innerHTML = list.map(function (n) {
+      var st = n.status || "active";
+      var lab = st === "active" ? "فعال" : st === "saved" ? "ذخیره" : "ابطال";
+      var cls = st === "saved" ? "ok" : st === "void" ? "bad" : "";
+      return "<div class='item'><div class='t'>" + esc((n.text || "").slice(0, 60)) +
+        " <span class='badge " + cls + "'>" + lab + "</span></div>" +
+        "<div class='m'>" + esc(n.text || "") + "<br>" + esc(n.at || "").replace("T", " ").slice(0, 16) + "</div>" +
+        "<div class='a'>" +
+        "<button type='button' class='btn btn-ok' data-n='active' data-id='" + esc(n.id) + "'>فعال</button>" +
+        "<button type='button' class='btn btn-g' data-n='saved' data-id='" + esc(n.id) + "'>ذخیره</button>" +
+        "<button type='button' class='btn btn-b' data-n='void' data-id='" + esc(n.id) + "'>ابطال</button>" +
+        "<button type='button' class='btn btn-b' data-n='del' data-id='" + esc(n.id) + "'>حذف</button>" +
+        "</div></div>";
+    }).join("");
+  }
+  document.getElementById("btnNoteSave").onclick = function () {
+    var t = (document.getElementById("noteText").value || "").trim();
+    if (!t) return toast("متن خالی است", true);
+    var list = load(NOTES_KEY);
+    list.unshift({ id: uid(), text: t, status: "active", at: now(), deleted: false });
+    if (!save(NOTES_KEY, list)) return;
+    document.getElementById("noteText").value = "";
+    renderNotes();
+    toast("یادداشت ذخیره شد");
+  };
+  document.getElementById("notesList").onclick = function (e) {
+    var b = e.target.closest("[data-n]");
+    if (!b) return;
+    var id = b.getAttribute("data-id");
+    var act = b.getAttribute("data-n");
+    var list = load(NOTES_KEY).map(function (n) {
+      if (!n || n.id !== id) return n;
+      if (act === "del") return Object.assign({}, n, { deleted: true });
+      return Object.assign({}, n, { status: act });
+    });
+    save(NOTES_KEY, list);
+    renderNotes();
+  };
+
+  /* reminders */
+  function renderRems() {
+    var list = load(REMS_KEY).filter(function (x) { return x && !x.deleted; });
+    var box = document.getElementById("remsList");
+    if (!list.length) { box.innerHTML = "<div class='empty'>یادآوری نیست</div>"; return; }
+    box.innerHTML = list.map(function (r) {
+      var st = r.status || "open";
+      var lab = { open: "در حال انجام", doing: "در حال انجام", done: "انجام شد", saved: "ذخیره", void: "ابطال" }[st] || st;
+      var cls = (st === "done" || st === "saved") ? "ok" : st === "void" ? "bad" : "warn";
+      return "<div class='item'><div class='t'>" + esc(r.title || "—") +
+        " <span class='badge " + cls + "'>" + lab + "</span></div>" +
+        "<div class='m'>تاریخ: " + esc(r.date || "—") + " · ساعت: " + esc(r.time || "—") +
+        (r.note ? " · " + esc(r.note) : "") + "</div>" +
+        "<div class='a'>" +
+        "<button type='button' class='btn btn-w' data-r='doing' data-id='" + esc(r.id) + "'>در حال انجام</button>" +
+        "<button type='button' class='btn btn-ok' data-r='done' data-id='" + esc(r.id) + "'>انجام شد</button>" +
+        "<button type='button' class='btn btn-g' data-r='saved' data-id='" + esc(r.id) + "'>ذخیره</button>" +
+        "<button type='button' class='btn btn-b' data-r='void' data-id='" + esc(r.id) + "'>ابطال</button>" +
+        "</div></div>";
+    }).join("");
+  }
+  document.getElementById("btnRemAdd").onclick = function () {
+    var title = (document.getElementById("remTitle").value || "").trim();
+    if (!title) return toast("عنوان لازم است", true);
+    var list = load(REMS_KEY);
+    list.unshift({
+      id: uid(),
+      title: title,
+      date: (document.getElementById("remDate").value || "").trim(),
+      time: (document.getElementById("remTime").value || "").trim(),
+      note: (document.getElementById("remNote").value || "").trim(),
+      status: "open",
+      at: now(),
+      deleted: false
+    });
+    if (!save(REMS_KEY, list)) return;
+    document.getElementById("remTitle").value = "";
+    document.getElementById("remNote").value = "";
+    renderRems();
+    toast("یادآوری ثبت شد");
+  };
+  document.getElementById("remsList").onclick = function (e) {
+    var b = e.target.closest("[data-r]");
+    if (!b) return;
+    var id = b.getAttribute("data-id");
+    var act = b.getAttribute("data-r");
+    var list = load(REMS_KEY).map(function (r) {
+      if (!r || r.id !== id) return r;
+      return Object.assign({}, r, { status: act });
+    });
+    save(REMS_KEY, list);
+    renderRems();
+  };
+
+  /* cartable — metadata in localStorage; small files as dataURL in item (standalone simplicity) */
+  function renderCart() {
+    var items = loadCart().items.filter(function (x) { return x && !x.deleted; });
+    var out = items.filter(function (x) { return x.from === MOD; });
+    var inn = items.filter(function (x) { return x.to === MOD; });
+    function block(arr, role) {
+      if (!arr.length) return "<div class='empty'>خالی</div>";
+      return arr.map(function (it) {
+        var st = it.status || "active";
+        var lab = st === "saved" ? "ذخیره" : "فعال";
+        var h = "<div class='item'><div class='t'>" + esc(it.subject || "—") +
+          " <span class='badge'>" + lab + "</span></div><div class='m'>";
+        h += role === "out"
+          ? ("به: " + esc(it.to) + " · " + esc((it.createdAt || "").replace("T", " ").slice(0, 16)))
+          : ("از: " + esc(it.from) + " · " + esc((it.createdAt || "").replace("T", " ").slice(0, 16)));
+        if (it.fileName) h += " · فایل: " + esc(it.fileName);
+        if (it.body) h += "<br>" + esc(it.body).slice(0, 180);
+        h += "</div><div class='a'>";
+        if (it.dataUrl) h += "<button type='button' class='btn btn-p' data-c='dl' data-id='" + esc(it.id) + "'>دریافت فایل</button>";
+        if (role === "in") {
+          h += "<button type='button' class='btn btn-ok' data-c='active' data-id='" + esc(it.id) + "'>فعال</button>";
+          h += "<button type='button' class='btn btn-g' data-c='saved' data-id='" + esc(it.id) + "'>ذخیره</button>";
+        }
+        h += "<button type='button' class='btn btn-b' data-c='del' data-id='" + esc(it.id) + "'>حذف</button></div></div>";
+        return h;
+      }).join("");
+    }
+    document.getElementById("cartOut").innerHTML = block(out, "out");
+    document.getElementById("cartIn").innerHTML = block(inn, "in");
+  }
+  document.getElementById("btnCartSend").onclick = function () {
+    var to = document.getElementById("cartTo").value;
+    var subject = (document.getElementById("cartSubject").value || "").trim();
+    var body = (document.getElementById("cartBody").value || "").trim();
+    var file = document.getElementById("cartFile").files[0];
+    if (!subject && !file) return toast("عنوان یا فایل لازم است", true);
+
+    function finish(dataUrl, fileName, fileSize) {
+      var meta = loadCart();
+      meta.items.unshift({
+        id: uid(),
+        from: MOD,
+        fromTitle: MOD_TITLE,
+        to: to,
+        toTitle: to,
+        subject: subject || fileName || "بدون عنوان",
+        body: body,
+        status: "active",
+        hasFile: !!dataUrl,
+        fileName: fileName || "",
+        fileSize: fileSize || 0,
+        dataUrl: dataUrl || "",
+        createdAt: now(),
+        deleted: false
+      });
+      if (meta.items.length > 500) meta.items = meta.items.slice(0, 500);
+      if (!saveCart(meta)) return;
+      document.getElementById("cartSubject").value = "";
+      document.getElementById("cartBody").value = "";
+      document.getElementById("cartFile").value = "";
+      var msg = document.getElementById("cartMsg");
+      msg.style.display = "block";
+      msg.textContent = "در فهرست ارسالی ثبت شد.";
+      renderCart();
+      toast("ارسال شد");
+    }
+
+    if (!file) return finish("", "", 0);
+    if (file.size > MAX) return toast("حجم بیش از ۲٫۵MB", true);
+    var fr = new FileReader();
+    fr.onload = function () { finish(fr.result, file.name, file.size); };
+    fr.onerror = function () { toast("خواندن فایل ناموفق", true); };
+    fr.readAsDataURL(file);
+  };
+  document.getElementById("btnCartRefresh").onclick = function () { renderCart(); toast("بروزرسانی شد"); };
+  document.getElementById("cartOut").onclick = cartClick;
+  document.getElementById("cartIn").onclick = cartClick;
+  function cartClick(e) {
+    var b = e.target.closest("[data-c]");
+    if (!b) return;
+    var id = b.getAttribute("data-id");
+    var act = b.getAttribute("data-c");
+    var meta = loadCart();
+    if (act === "dl") {
+      var it = meta.items.find(function (x) { return x && x.id === id; });
+      if (!it || !it.dataUrl) return toast("فایل نیست", true);
+      var a = document.createElement("a");
+      a.href = it.dataUrl;
+      a.download = it.fileName || "file";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      return;
+    }
+    meta.items = meta.items.map(function (x) {
+      if (!x || x.id !== id) return x;
+      if (act === "del") return Object.assign({}, x, { deleted: true });
+      return Object.assign({}, x, { status: act });
+    });
+    saveCart(meta);
+    renderCart();
+  }
+
+  /* boot */
+  try {
+    localStorage.setItem("__sf_probe", "1");
+    localStorage.removeItem("__sf_probe");
+    document.getElementById("statusLine").textContent = "وضعیت: آماده — localStorage فعال است";
+  } catch (e) {
+    document.getElementById("statusLine").textContent = "وضعیت: localStorage مسدود است — در مرورگر عادی (نه حالت خصوصی سخت) باز کنید";
+    toast("localStorage در دسترس نیست", true);
+  }
+  renderNotes();
+  renderRems();
+  renderCart();
+})();
+</script>
+</body>
+</html>
