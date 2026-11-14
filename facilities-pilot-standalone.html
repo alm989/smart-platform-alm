@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>پایلوت امکانات — یادداشت / یادآوری / کارتابل</title>
+<title>پایلوت امکانات v2 — تقویم · کاربر · کارتابل سراسری</title>
 <style>
 :root{--bg:#0b1220;--card:#1e293b;--line:#334155;--txt:#e2e8f0;--muted:#94a3b8;--pri:#0ea5e9;--ok:#16a34a;--bad:#dc2626}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--txt);min-height:100dvh;padding:14px}
 .wrap{max-width:1100px;margin:auto}
-h1{font-size:1rem;color:#7dd3fc;margin-bottom:8px}
+h1{font-size:1rem;color:#7dd3fc;margin-bottom:6px}
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
 .tabs button{border:1px solid var(--line);background:#1e293b;color:#cbd5e1;border-radius:999px;padding:8px 14px;font:inherit;font-size:.75rem;font-weight:700;cursor:pointer}
 .tabs button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
@@ -19,7 +19,7 @@ label{display:block;font-size:.7rem;color:var(--muted);margin:6px 0 3px}
 input,select,textarea{width:100%;padding:8px;border-radius:9px;border:1px solid var(--line);background:#020617;color:var(--txt);font:inherit;font-size:13px}
 textarea{min-height:90px;resize:vertical}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.row3{display:grid;grid-template-columns:1.2fr .8fr .7fr;gap:8px}
+.row3{display:grid;grid-template-columns:1.2fr .9fr .7fr;gap:8px}
 @media(max-width:700px){.row,.row3{grid-template-columns:1fr}}
 .actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .btn{border:0;border-radius:9px;padding:8px 12px;font:inherit;font-size:.75rem;font-weight:700;cursor:pointer}
@@ -38,12 +38,33 @@ textarea{min-height:90px;resize:vertical}
 @media(max-width:900px){.lists{grid-template-columns:1fr}}
 #toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);padding:9px 14px;border-radius:12px;font-weight:700;font-size:.8rem;z-index:99;opacity:0;transition:.15s;color:#fff;pointer-events:none}
 .status{font-size:.7rem;color:#94a3b8;margin-bottom:8px}
+.date-wrap{position:relative}
+.jcal{position:absolute;z-index:50;right:0;top:calc(100% + 4px);background:#1e293b;border:1px solid #334155;border-radius:12px;padding:10px;width:280px;box-shadow:0 12px 28px rgba(0,0,0,.45)}
+.jcal-h{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-bottom:6px}
+.jcal-h button{width:28px;height:28px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff;cursor:pointer}
+.jcal-h .ttl{flex:1;text-align:center;font-size:.78rem;font-weight:800;color:#7dd3fc}
+.jcal-w,.jcal-d{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.jcal-w span{text-align:center;font-size:.55rem;color:#94a3b8}
+.jcal-d button{border:0;background:transparent;color:#e2e8f0;border-radius:8px;min-height:32px;cursor:pointer;font:inherit;font-size:.75rem}
+.jcal-d button:hover{background:rgba(14,165,233,.25)}
+.jcal-d button.on{background:#0ea5e9;color:#fff}
+.userbar{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:10px}
+.userbar > div{min-width:160px;flex:1}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>پایلوت امکانات (تک‌فایل — بدون وابستگی)</h1>
-  <p class="status" id="statusLine">وضعیت: در حال آماده‌سازی…</p>
+  <h1>پایلوت امکانات v2</h1>
+  <p class="status" id="statusLine">آماده‌سازی…</p>
+
+  <div class="card userbar">
+    <div>
+      <label>کاربر فعال این نشست (برای دریافت شخصی)</label>
+      <select id="activeUser"></select>
+    </div>
+    <div class="hint" style="margin:0;align-self:center">ارسال می‌تواند به «همه کاربران ماژول» یا یک کاربر مشخص باشد. شناسه هر رکورد یکتاست.</div>
+  </div>
+
   <div class="tabs">
     <button type="button" class="on" data-tab="notes">یادداشت</button>
     <button type="button" data-tab="rems">یادآوری</button>
@@ -52,10 +73,9 @@ textarea{min-height:90px;resize:vertical}
 
   <div class="panel on" id="tab-notes">
     <div class="card">
-      <label>متن یادداشت (محلی این پایلوت)</label>
-      <textarea id="noteText" placeholder="متن را بنویسید"></textarea>
+      <label>متن یادداشت</label>
+      <textarea id="noteText" placeholder="متن یادداشت محلی ماژول"></textarea>
       <div class="actions"><button type="button" class="btn btn-p" id="btnNoteSave">ذخیره یادداشت</button></div>
-      <p class="hint">کلید ذخیره: smart_mod_notes_cashbox</p>
     </div>
     <div class="card" id="notesList"></div>
   </div>
@@ -64,12 +84,12 @@ textarea{min-height:90px;resize:vertical}
     <div class="card">
       <div class="row3">
         <div><label>عنوان</label><input id="remTitle" placeholder="جلسه مدیران"></div>
-        <div><label>تاریخ</label><input id="remDate" placeholder="1405/08/25"></div>
+        <div><label>تاریخ</label><div class="date-wrap"><input id="remDate" class="jdate" placeholder="انتخاب از تقویم" readonly></div></div>
         <div><label>ساعت</label><input id="remTime" placeholder="10:30"></div>
       </div>
       <label>توضیح</label><input id="remNote" placeholder="اختیاری">
       <div class="actions"><button type="button" class="btn btn-p" id="btnRemAdd">افزودن یادآوری</button></div>
-      <p class="hint">کلید ذخیره: smart_mod_rem_cashbox</p>
+      <p class="hint">روی فیلد تاریخ کلیک کنید تا تقویم شمسی باز شود.</p>
     </div>
     <div class="card" id="remsList"></div>
   </div>
@@ -77,28 +97,36 @@ textarea{min-height:90px;resize:vertical}
   <div class="panel" id="tab-cart">
     <div class="card">
       <div class="row">
-        <div><label>عنوان</label><input id="cartSubject" placeholder="عنوان فایل یا درخواست"></div>
+        <div><label>عنوان</label><input id="cartSubject" placeholder="عنوان درخواست / فایل"></div>
+        <div><label>تاریخ</label><div class="date-wrap"><input id="cartDate" class="jdate" readonly></div></div>
+      </div>
+      <div class="row">
         <div><label>ارسال به ماژول</label>
           <select id="cartTo">
             <option value="bank">بانک</option>
             <option value="accounting">حسابداری</option>
             <option value="cashbox">صندوق</option>
             <option value="payroll">حقوق</option>
+            <option value="personnel">پرسنلی</option>
+            <option value="secretariat">دبیرخانه</option>
           </select>
+        </div>
+        <div><label>کاربر مقصد در آن ماژول</label>
+          <select id="cartToUser"></select>
         </div>
       </div>
       <label>توضیح</label><input id="cartBody" placeholder="اختیاری">
-      <label>فایل (اختیاری تا ۲٫۵MB)</label><input id="cartFile" type="file">
+      <label>فایل (اختیاری · حداکثر ۲٫۵MB)</label><input id="cartFile" type="file">
       <div class="actions">
         <button type="button" class="btn btn-p" id="btnCartSend">ارسال</button>
         <button type="button" class="btn btn-g" id="btnCartRefresh">بروزرسانی</button>
       </div>
       <div class="okbar" id="cartMsg"></div>
-      <p class="hint">مبدأ این پایلوت: صندوق · کارتابل سراسری (suite_cartable_v1)</p>
+      <p class="hint">کارتابل سراسری است (suite_cartable_v1). هر ارسال id یکتا دارد. دریافت بر اساس ماژول + کاربر فیلتر می‌شود.</p>
     </div>
     <div class="lists">
       <div class="card"><b>ارسالی‌ها</b><div id="cartOut"></div></div>
-      <div class="card"><b>دریافتی‌ها (به صندوق)</b><div id="cartIn"></div></div>
+      <div class="card"><b>دریافتی‌های من / عمومی ماژول</b><div id="cartIn"></div></div>
     </div>
   </div>
 </div>
@@ -112,6 +140,17 @@ textarea{min-height:90px;resize:vertical}
   var MOD = "cashbox";
   var MOD_TITLE = "صندوق";
   var MAX = 2.5 * 1024 * 1024;
+  var SEQ = 0;
+  var JM = ["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"];
+  var JW = ["ش","ی","د","س","چ","پ","ج"];
+
+  var USERS = [
+    { user: "admin", name: "مدیر" },
+    { user: "acc1", name: "حسابدار ۱" },
+    { user: "bank1", name: "اپراتور بانک" },
+    { user: "cash1", name: "صندوق‌دار" },
+    { user: "hr1", name: "کارشناس پرسنلی" }
+  ];
 
   function esc(s) {
     return String(s == null ? "" : s)
@@ -121,7 +160,10 @@ textarea{min-height:90px;resize:vertical}
       .replace(/"/g, "&" + "quot;")
       .replace(/'/g, "&#39;");
   }
-  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+  function uid() {
+    SEQ += 1;
+    return "sf_" + Date.now().toString(36) + "_" + SEQ.toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+  }
   function now() { return new Date().toISOString(); }
   function toast(msg, err) {
     var el = document.getElementById("toast");
@@ -138,13 +180,8 @@ textarea{min-height:90px;resize:vertical}
     } catch (e) { return []; }
   }
   function save(key, arr) {
-    try {
-      localStorage.setItem(key, JSON.stringify(arr));
-      return true;
-    } catch (e) {
-      toast("ذخیره ناموفق: " + (e.message || e), true);
-      return false;
-    }
+    try { localStorage.setItem(key, JSON.stringify(arr)); return true; }
+    catch (e) { toast("ذخیره ناموفق: " + (e.message || e), true); return false; }
   }
   function loadCart() {
     try {
@@ -157,6 +194,141 @@ textarea{min-height:90px;resize:vertical}
     try { localStorage.setItem(CART_KEY, JSON.stringify(o)); return true; }
     catch (e) { toast("ذخیره کارتابل ناموفق", true); return false; }
   }
+  function activeUser() {
+    return document.getElementById("activeUser").value || "admin";
+  }
+  function activeName() {
+    var u = activeUser();
+    var f = USERS.find(function (x) { return x.user === u; });
+    return (f && f.name) || u;
+  }
+
+  /* ----- Jalali ----- */
+  function g2j(gy, gm, gd) {
+    var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    var gy2 = gm > 2 ? gy + 1 : gy;
+    var days = 355666 + 365 * gy + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
+    var jy = -1595 + 33 * Math.floor(days / 12053);
+    days %= 12053;
+    jy += 4 * Math.floor(days / 1461);
+    days %= 1461;
+    if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+    var jm = days < 186 ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
+    var jd = 1 + (days < 186 ? days % 31 : (days - 186) % 30);
+    return { jy: jy, jm: jm, jd: jd };
+  }
+  function j2g(jy, jm, jd) {
+    var jy2 = jy - 979, jm2 = jm - 1, jd2 = jd - 1;
+    var days = 365 * jy2 + Math.floor(jy2 / 33) * 8 + Math.floor(((jy2 % 33) + 3) / 4);
+    for (var i = 0; i < jm2; ++i) days += i < 6 ? 31 : 30;
+    days += jd2;
+    var gy = 1600 + 400 * Math.floor(days / 146097);
+    days %= 146097;
+    var leap = true;
+    if (days >= 36525) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days >= 365) leap = false; else days++; }
+    gy += 4 * Math.floor(days / 1461); days %= 1461;
+    if (days >= 366) { leap = false; days--; gy += Math.floor(days / 365); days %= 365; }
+    var gd = days + 1, sal_a = [0, 31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], gm;
+    for (gm = 1; gm <= 12 && gd > sal_a[gm]; gm++) gd -= sal_a[gm];
+    return { gy: gy, gm: gm, gd: gd };
+  }
+  function jML(jy, jm) {
+    if (jm <= 6) return 31;
+    if (jm <= 11) return 30;
+    var a = j2g(jy, 12, 30), b = g2j(a.gy, a.gm, a.gd);
+    return b.jy === jy && b.jm === 12 && b.jd === 30 ? 30 : 29;
+  }
+  function toFa(n) { return String(n).replace(/\d/g, function (d) { return "۰۱۲۳۴۵۶۷۸۹"[+d]; }); }
+  function toEn(s) { return String(s).replace(/[۰-۹]/g, function (d) { return "۰۱۲۳۴۵۶۷۸۹".indexOf(d); }); }
+  function fmtJ(jy, jm, jd) {
+    return toFa(jy) + "/" + toFa(String(jm).padStart(2, "0")) + "/" + toFa(String(jd).padStart(2, "0"));
+  }
+  function todayJ() {
+    var n = new Date(), j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    return fmtJ(j.jy, j.jm, j.jd);
+  }
+  function attachJDate(input) {
+    if (!input || input._j) return;
+    input._j = true;
+    input.readOnly = true;
+    if (!input.value) input.value = todayJ();
+    var wrap = input.parentNode;
+    if (!wrap.classList.contains("date-wrap")) {
+      var d = document.createElement("div");
+      d.className = "date-wrap";
+      wrap.insertBefore(d, input);
+      d.appendChild(input);
+      wrap = d;
+    }
+    var pop = null, vy, vm;
+    function close() {
+      if (pop) { pop.remove(); pop = null; }
+      document.removeEventListener("click", outside);
+    }
+    function outside(e) {
+      if (pop && !pop.contains(e.target) && e.target !== input) close();
+    }
+    function open() {
+      close();
+      var n = new Date(), j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
+      var m = toEn(input.value || "").match(/^(\d{4})[\/\-](\d{1,2})/);
+      vy = m ? +m[1] : j.jy;
+      vm = m ? +m[2] : j.jm;
+      pop = document.createElement("div");
+      pop.className = "jcal";
+      wrap.appendChild(pop);
+      render();
+      setTimeout(function () { document.addEventListener("click", outside); }, 0);
+    }
+    function render() {
+      if (!pop) return;
+      pop.innerHTML = "";
+      var h = document.createElement("div");
+      h.className = "jcal-h";
+      h.innerHTML = '<button type="button" data-a="py">«</button><button type="button" data-a="pm">‹</button><span class="ttl">' +
+        JM[vm - 1] + " " + toFa(vy) + '</span><button type="button" data-a="nm">›</button><button type="button" data-a="ny">»</button>';
+      var w = document.createElement("div");
+      w.className = "jcal-w";
+      JW.forEach(function (x) { var s = document.createElement("span"); s.textContent = x; w.appendChild(s); });
+      var days = document.createElement("div");
+      days.className = "jcal-d";
+      var dim = jML(vy, vm), fg = j2g(vy, vm, 1), st = (new Date(fg.gy, fg.gm - 1, fg.gd).getDay() + 1) % 7;
+      var i, day;
+      for (i = 0; i < st; i++) {
+        var em = document.createElement("button");
+        em.type = "button"; em.disabled = true; em.style.visibility = "hidden";
+        days.appendChild(em);
+      }
+      for (day = 1; day <= dim; day++) {
+        (function (d0) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.textContent = toFa(d0);
+          b.onclick = function (ev) {
+            ev.stopPropagation();
+            input.value = fmtJ(vy, vm, d0);
+            close();
+            input.dispatchEvent(new Event("change", { bubbles: true }));
+          };
+          days.appendChild(b);
+        })(day);
+      }
+      pop.appendChild(h); pop.appendChild(w); pop.appendChild(days);
+      h.querySelectorAll("button").forEach(function (b) {
+        b.onclick = function (ev) {
+          ev.stopPropagation();
+          var a = b.getAttribute("data-a");
+          if (a === "pm") { vm--; if (vm < 1) { vm = 12; vy--; } }
+          if (a === "nm") { vm++; if (vm > 12) { vm = 1; vy++; } }
+          if (a === "py") vy--;
+          if (a === "ny") vy++;
+          render();
+        };
+      });
+    }
+    input.addEventListener("click", open);
+    input.addEventListener("focus", open);
+  }
 
   /* tabs */
   document.querySelectorAll(".tabs button").forEach(function (b) {
@@ -167,6 +339,20 @@ textarea{min-height:90px;resize:vertical}
       document.getElementById("tab-" + b.getAttribute("data-tab")).classList.add("on");
     };
   });
+
+  /* users UI */
+  function fillUsers() {
+    var a = document.getElementById("activeUser");
+    var t = document.getElementById("cartToUser");
+    a.innerHTML = USERS.map(function (u) {
+      return "<option value='" + esc(u.user) + "'>" + esc(u.name + " (" + u.user + ")") + "</option>";
+    }).join("");
+    t.innerHTML = "<option value='*'>همه کاربران ماژول مقصد</option>" +
+      USERS.map(function (u) {
+        return "<option value='" + esc(u.user) + "'>" + esc(u.name + " (" + u.user + ")") + "</option>";
+      }).join("");
+  }
+  document.getElementById("activeUser").onchange = function () { renderCart(); };
 
   /* notes */
   function renderNotes() {
@@ -179,24 +365,25 @@ textarea{min-height:90px;resize:vertical}
       var cls = st === "saved" ? "ok" : st === "void" ? "bad" : "";
       return "<div class='item'><div class='t'>" + esc((n.text || "").slice(0, 60)) +
         " <span class='badge " + cls + "'>" + lab + "</span></div>" +
-        "<div class='m'>" + esc(n.text || "") + "<br>" + esc(n.at || "").replace("T", " ").slice(0, 16) + "</div>" +
+        "<div class='m'>id: " + esc(n.id) + "<br>" + esc(n.text || "") + "<br>" +
+        esc(n.by || "") + " · " + esc(n.at || "").replace("T", " ").slice(0, 16) + "</div>" +
         "<div class='a'>" +
         "<button type='button' class='btn btn-ok' data-n='active' data-id='" + esc(n.id) + "'>فعال</button>" +
         "<button type='button' class='btn btn-g' data-n='saved' data-id='" + esc(n.id) + "'>ذخیره</button>" +
         "<button type='button' class='btn btn-b' data-n='void' data-id='" + esc(n.id) + "'>ابطال</button>" +
-        "<button type='button' class='btn btn-b' data-n='del' data-id='" + esc(n.id) + "'>حذف</button>" +
-        "</div></div>";
+        "<button type='button' class='btn btn-b' data-n='del' data-id='" + esc(n.id) + "'>حذف</button></div></div>";
     }).join("");
   }
   document.getElementById("btnNoteSave").onclick = function () {
     var t = (document.getElementById("noteText").value || "").trim();
     if (!t) return toast("متن خالی است", true);
     var list = load(NOTES_KEY);
-    list.unshift({ id: uid(), text: t, status: "active", at: now(), deleted: false });
+    var id = uid();
+    list.unshift({ id: id, text: t, status: "active", at: now(), by: activeName(), deleted: false });
     if (!save(NOTES_KEY, list)) return;
     document.getElementById("noteText").value = "";
     renderNotes();
-    toast("یادداشت ذخیره شد");
+    toast("ذخیره شد · " + id);
   };
   document.getElementById("notesList").onclick = function (e) {
     var b = e.target.closest("[data-n]");
@@ -223,35 +410,36 @@ textarea{min-height:90px;resize:vertical}
       var cls = (st === "done" || st === "saved") ? "ok" : st === "void" ? "bad" : "warn";
       return "<div class='item'><div class='t'>" + esc(r.title || "—") +
         " <span class='badge " + cls + "'>" + lab + "</span></div>" +
-        "<div class='m'>تاریخ: " + esc(r.date || "—") + " · ساعت: " + esc(r.time || "—") +
+        "<div class='m'>id: " + esc(r.id) + " · تاریخ: " + esc(r.date || "—") + " · ساعت: " + esc(r.time || "—") +
         (r.note ? " · " + esc(r.note) : "") + "</div>" +
         "<div class='a'>" +
         "<button type='button' class='btn btn-w' data-r='doing' data-id='" + esc(r.id) + "'>در حال انجام</button>" +
         "<button type='button' class='btn btn-ok' data-r='done' data-id='" + esc(r.id) + "'>انجام شد</button>" +
         "<button type='button' class='btn btn-g' data-r='saved' data-id='" + esc(r.id) + "'>ذخیره</button>" +
-        "<button type='button' class='btn btn-b' data-r='void' data-id='" + esc(r.id) + "'>ابطال</button>" +
-        "</div></div>";
+        "<button type='button' class='btn btn-b' data-r='void' data-id='" + esc(r.id) + "'>ابطال</button></div></div>";
     }).join("");
   }
   document.getElementById("btnRemAdd").onclick = function () {
     var title = (document.getElementById("remTitle").value || "").trim();
     if (!title) return toast("عنوان لازم است", true);
     var list = load(REMS_KEY);
+    var id = uid();
     list.unshift({
-      id: uid(),
+      id: id,
       title: title,
       date: (document.getElementById("remDate").value || "").trim(),
       time: (document.getElementById("remTime").value || "").trim(),
       note: (document.getElementById("remNote").value || "").trim(),
       status: "open",
       at: now(),
+      by: activeName(),
       deleted: false
     });
     if (!save(REMS_KEY, list)) return;
     document.getElementById("remTitle").value = "";
     document.getElementById("remNote").value = "";
     renderRems();
-    toast("یادآوری ثبت شد");
+    toast("یادآوری ثبت شد · " + id);
   };
   document.getElementById("remsList").onclick = function (e) {
     var b = e.target.closest("[data-r]");
@@ -266,11 +454,19 @@ textarea{min-height:90px;resize:vertical}
     renderRems();
   };
 
-  /* cartable — metadata in localStorage; small files as dataURL in item (standalone simplicity) */
+  /* cartable */
+  function visibleInbox(items) {
+    var me = activeUser();
+    return items.filter(function (x) {
+      if (!x || x.deleted || x.to !== MOD) return false;
+      var tu = x.toUser || "*";
+      return tu === "*" || tu === "" || tu === me;
+    });
+  }
   function renderCart() {
-    var items = loadCart().items.filter(function (x) { return x && !x.deleted; });
-    var out = items.filter(function (x) { return x.from === MOD; });
-    var inn = items.filter(function (x) { return x.to === MOD; });
+    var items = loadCart().items || [];
+    var out = items.filter(function (x) { return x && !x.deleted && x.from === MOD; });
+    var inn = visibleInbox(items);
     function block(arr, role) {
       if (!arr.length) return "<div class='empty'>خالی</div>";
       return arr.map(function (it) {
@@ -278,9 +474,14 @@ textarea{min-height:90px;resize:vertical}
         var lab = st === "saved" ? "ذخیره" : "فعال";
         var h = "<div class='item'><div class='t'>" + esc(it.subject || "—") +
           " <span class='badge'>" + lab + "</span></div><div class='m'>";
-        h += role === "out"
-          ? ("به: " + esc(it.to) + " · " + esc((it.createdAt || "").replace("T", " ").slice(0, 16)))
-          : ("از: " + esc(it.from) + " · " + esc((it.createdAt || "").replace("T", " ").slice(0, 16)));
+        h += "id: " + esc(it.id) + "<br>";
+        if (role === "out") {
+          h += "به ماژول: " + esc(it.to) + " · کاربر مقصد: " + esc(it.toUserName || it.toUser || "همه");
+        } else {
+          h += "از: " + esc(it.fromTitle || it.from) + " / " + esc(it.fromUserName || it.fromUser || "—");
+        }
+        h += " · " + esc((it.createdAt || "").replace("T", " ").slice(0, 16));
+        if (it.date) h += " · تاریخ سند: " + esc(it.date);
         if (it.fileName) h += " · فایل: " + esc(it.fileName);
         if (it.body) h += "<br>" + esc(it.body).slice(0, 180);
         h += "</div><div class='a'>";
@@ -298,21 +499,36 @@ textarea{min-height:90px;resize:vertical}
   }
   document.getElementById("btnCartSend").onclick = function () {
     var to = document.getElementById("cartTo").value;
+    var toUser = document.getElementById("cartToUser").value || "*";
     var subject = (document.getElementById("cartSubject").value || "").trim();
     var body = (document.getElementById("cartBody").value || "").trim();
+    var date = (document.getElementById("cartDate").value || "").trim();
     var file = document.getElementById("cartFile").files[0];
     if (!subject && !file) return toast("عنوان یا فایل لازم است", true);
+    if (to === MOD && (toUser === activeUser())) {
+      /* allowed but warn */
+    }
+    var toUserName = toUser === "*" ? "همه کاربران" : ((USERS.find(function (u) { return u.user === toUser; }) || {}).name || toUser);
 
     function finish(dataUrl, fileName, fileSize) {
       var meta = loadCart();
+      var id = uid();
+      /* جلوگیری از دوباره‌کاری id */
+      if ((meta.items || []).some(function (x) { return x && x.id === id; })) {
+        id = uid();
+      }
       meta.items.unshift({
-        id: uid(),
+        id: id,
         from: MOD,
         fromTitle: MOD_TITLE,
+        fromUser: activeUser(),
+        fromUserName: activeName(),
         to: to,
-        toTitle: to,
+        toUser: toUser,
+        toUserName: toUserName,
         subject: subject || fileName || "بدون عنوان",
         body: body,
+        date: date,
         status: "active",
         hasFile: !!dataUrl,
         fileName: fileName || "",
@@ -321,14 +537,15 @@ textarea{min-height:90px;resize:vertical}
         createdAt: now(),
         deleted: false
       });
-      if (meta.items.length > 500) meta.items = meta.items.slice(0, 500);
+      if (meta.items.length > 800) meta.items = meta.items.slice(0, 800);
       if (!saveCart(meta)) return;
+      try { localStorage.setItem("suite_cartable_ping", String(Date.now())); } catch (e) {}
       document.getElementById("cartSubject").value = "";
       document.getElementById("cartBody").value = "";
       document.getElementById("cartFile").value = "";
       var msg = document.getElementById("cartMsg");
       msg.style.display = "block";
-      msg.textContent = "در فهرست ارسالی ثبت شد.";
+      msg.textContent = "ارسال شد · شناسه: " + id + " · مقصد: " + to + " / " + toUserName;
       renderCart();
       toast("ارسال شد");
     }
@@ -341,8 +558,6 @@ textarea{min-height:90px;resize:vertical}
     fr.readAsDataURL(file);
   };
   document.getElementById("btnCartRefresh").onclick = function () { renderCart(); toast("بروزرسانی شد"); };
-  document.getElementById("cartOut").onclick = cartClick;
-  document.getElementById("cartIn").onclick = cartClick;
   function cartClick(e) {
     var b = e.target.closest("[data-c]");
     if (!b) return;
@@ -350,7 +565,7 @@ textarea{min-height:90px;resize:vertical}
     var act = b.getAttribute("data-c");
     var meta = loadCart();
     if (act === "dl") {
-      var it = meta.items.find(function (x) { return x && x.id === id; });
+      var it = (meta.items || []).find(function (x) { return x && x.id === id; });
       if (!it || !it.dataUrl) return toast("فایل نیست", true);
       var a = document.createElement("a");
       a.href = it.dataUrl;
@@ -360,22 +575,26 @@ textarea{min-height:90px;resize:vertical}
       a.remove();
       return;
     }
-    meta.items = meta.items.map(function (x) {
+    meta.items = (meta.items || []).map(function (x) {
       if (!x || x.id !== id) return x;
-      if (act === "del") return Object.assign({}, x, { deleted: true });
-      return Object.assign({}, x, { status: act });
+      if (act === "del") return Object.assign({}, x, { deleted: true, deletedAt: now() });
+      return Object.assign({}, x, { status: act, updatedAt: now() });
     });
     saveCart(meta);
     renderCart();
   }
+  document.getElementById("cartOut").onclick = cartClick;
+  document.getElementById("cartIn").onclick = cartClick;
 
   /* boot */
+  fillUsers();
+  document.querySelectorAll(".jdate").forEach(attachJDate);
   try {
     localStorage.setItem("__sf_probe", "1");
     localStorage.removeItem("__sf_probe");
-    document.getElementById("statusLine").textContent = "وضعیت: آماده — localStorage فعال است";
+    document.getElementById("statusLine").textContent = "آماده · تقویم شمسی فعال · کارتابل سراسری با انتخاب کاربر";
   } catch (e) {
-    document.getElementById("statusLine").textContent = "وضعیت: localStorage مسدود است — در مرورگر عادی (نه حالت خصوصی سخت) باز کنید";
+    document.getElementById("statusLine").textContent = "localStorage مسدود است";
     toast("localStorage در دسترس نیست", true);
   }
   renderNotes();
