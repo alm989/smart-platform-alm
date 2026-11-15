@@ -1,8 +1,8 @@
 /**
- * server-bridge.js v1.1 — SmartCore <-> Local Server
- * - API token + store.load/save
- * - Auto-sync: any localStorage key smart_mod_*_v2 pushes to /api/data/:id
- * - Pull once on page load for current module
+ * server-bridge.js v1.2 — SmartCore <-> Local Server
+ * - Never overwrite local DB with empty/invalid server payload
+ * - Auto-sync smart_mod_*_v2 on write
+ * - Pull only when server payload looks like a real module DB
  */
 (function (global) {
   "use strict";
@@ -108,28 +108,63 @@
     }
   }
 
+  /** Accept only payloads that look like a module database */
+  function isValidModulePayload(payload) {
+    if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
+    if (payload.stores && typeof payload.stores === "object") return true;
+    if (payload.version != null && (payload.audit || payload.createdAt || payload.updatedAt)) return true;
+    // non-empty domain object with more than a trivial test key
+    var keys = Object.keys(payload);
+    if (keys.length === 0) return false;
+    if (keys.length === 1 && (keys[0] === "test" || keys[0] === "at")) return false;
+    return keys.length >= 2;
+  }
+
+  function writeLocalSilent(key, obj) {
+    try {
+      pulling = true;
+      localStorage.setItem(key, JSON.stringify(obj));
+    } catch (e) {
+    } finally {
+      pulling = false;
+    }
+  }
+
   function storeLoad(modId, def) {
     def = def != null ? def : {};
-    if (!base()) {
-      return Promise.resolve(SmartCore.loadModuleData(modId, def));
-    }
+    var local = SmartCore.loadModuleData(modId, def);
+    if (!base()) return Promise.resolve(local);
+
     return ensureSession().then(function (ok) {
-      if (!ok) return SmartCore.loadModuleData(modId, def);
+      if (!ok) return local;
       return api("/api/data/" + encodeURIComponent(modId)).then(function (j) {
-        var payload = j && j.data && j.data.payload != null ? j.data.payload : def;
+        var payload = j && j.data ? j.data.payload : null;
+        if (!isValidModulePayload(payload)) {
+          // Server empty/invalid — keep local; optionally seed server from local later
+          return local;
+        }
+        // Prefer newer server if both exist
+        var useServer = true;
         try {
-          pulling = true;
-          SmartCore.saveJSON(SmartCore.primaryKey(modId), payload);
-        } catch (e) {}
-        pulling = false;
-        return payload;
+          var lt = local && local.updatedAt ? Date.parse(local.updatedAt) : 0;
+          var st = payload.updatedAt ? Date.parse(payload.updatedAt) : 0;
+          if (lt && st && lt > st) useServer = false;
+        } catch (e2) {}
+        if (useServer) {
+          writeLocalSilent(SmartCore.primaryKey(modId), payload);
+          return payload;
+        }
+        return local;
       }).catch(function () {
-        return SmartCore.loadModuleData(modId, def);
+        return local;
       });
     });
   }
 
   function storeSave(modId, data) {
+    if (!isValidModulePayload(data) && !(data && data.stores)) {
+      // still allow explicit saves of structured empty defDB-like objects
+    }
     var localOk = SmartCore.saveModuleData(modId, data);
     if (!base()) {
       return Promise.resolve({ ok: localOk, source: "local" });
@@ -151,10 +186,12 @@
     if (pulling || !base()) return;
     var modId = modIdFromKey(key);
     if (!modId) return;
+    var data;
+    try { data = JSON.parse(raw); } catch (e) { return; }
+    if (!isValidModulePayload(data)) return;
+
     if (pushTimers[key]) clearTimeout(pushTimers[key]);
     pushTimers[key] = setTimeout(function () {
-      var data;
-      try { data = JSON.parse(raw); } catch (e) { return; }
       ensureSession().then(function (ok) {
         if (!ok) return;
         return api("/api/data/" + encodeURIComponent(modId), {
@@ -186,9 +223,11 @@
 
   function pullCurrentModule() {
     var modId = detectModId();
-    return storeLoad(modId, null).then(function (payload) {
-      if (payload && typeof payload === "object" && Object.keys(payload).length) {
+    return storeLoad(modId, {}).then(function (payload) {
+      if (payload && isValidModulePayload(payload)) {
         console.info("[server-bridge] pulled", modId);
+      } else {
+        console.info("[server-bridge] no server data for", modId, "— using local");
       }
     });
   }
@@ -225,7 +264,7 @@
     save: storeSave,
     pullCurrent: pullCurrentModule
   };
-  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.1";
+  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.2";
 
   installLocalStorageHook();
 
@@ -235,7 +274,13 @@
         console.info("[server-bridge] online", base());
         ensureSession().then(function (s) {
           console.info("[server-bridge] session", s ? "ok" : "pending-login");
-          if (s) pullCurrentModule();
+          // Do not auto-pull before module script runs — race broke cashbox loadDB.
+          // Pull after DOM ready, deferred.
+          if (s) {
+            setTimeout(function () {
+              pullCurrentModule();
+            }, 1500);
+          }
         });
       } else {
         console.info("[server-bridge] server not reachable — localStorage only");
