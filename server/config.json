@@ -6,6 +6,8 @@
   "backupDir": "backups",
   "sessionHours": 12,
   "maxBodyMb": 8,
+  "backupRetainDays": 30,
+  "dailyBackupHour": 2,
   "defaultAdmin": {
     "user": "admin",
     "pass": "admin",
