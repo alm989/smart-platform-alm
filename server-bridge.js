@@ -1,9 +1,8 @@
 /**
- * server-bridge.js — SmartCore <-> Local Server
- * Load after core.js when pages are served from http://127.0.0.1:8787
- * - Login token
- * - store.load / store.save -> /api/data/:moduleId
- * - Fallback to localStorage if server unavailable
+ * server-bridge.js v1.1 — SmartCore <-> Local Server
+ * - API token + store.load/save
+ * - Auto-sync: any localStorage key smart_mod_*_v2 pushes to /api/data/:id
+ * - Pull once on page load for current module
  */
 (function (global) {
   "use strict";
@@ -15,6 +14,8 @@
 
   var TOKEN_KEY = "smart_suite_api_token";
   var online = null;
+  var pushTimers = {};
+  var pulling = false;
 
   function base() {
     try {
@@ -91,6 +92,22 @@
     return serverLogin(user, pass, pin).then(function () { return true; }).catch(function () { return false; });
   }
 
+  function modIdFromKey(key) {
+    var m = String(key || "").match(/^smart_mod_([a-z0-9_]+)_v2$/i);
+    return m ? m[1] : null;
+  }
+
+  function detectModId() {
+    try {
+      var path = (location.pathname || "").split("/").pop() || "";
+      path = decodeURIComponent(path).replace(/\.html?$/i, "");
+      var aliases = { "file-hub": "filehub", "pr-media": "pr" };
+      return aliases[path] || path || "cashbox";
+    } catch (e) {
+      return "cashbox";
+    }
+  }
+
   function storeLoad(modId, def) {
     def = def != null ? def : {};
     if (!base()) {
@@ -100,7 +117,11 @@
       if (!ok) return SmartCore.loadModuleData(modId, def);
       return api("/api/data/" + encodeURIComponent(modId)).then(function (j) {
         var payload = j && j.data && j.data.payload != null ? j.data.payload : def;
-        try { SmartCore.saveJSON(SmartCore.primaryKey(modId), payload); } catch (e) {}
+        try {
+          pulling = true;
+          SmartCore.saveJSON(SmartCore.primaryKey(modId), payload);
+        } catch (e) {}
+        pulling = false;
         return payload;
       }).catch(function () {
         return SmartCore.loadModuleData(modId, def);
@@ -126,7 +147,52 @@
     });
   }
 
-  // Hook local login -> also obtain server token
+  function schedulePush(key, raw) {
+    if (pulling || !base()) return;
+    var modId = modIdFromKey(key);
+    if (!modId) return;
+    if (pushTimers[key]) clearTimeout(pushTimers[key]);
+    pushTimers[key] = setTimeout(function () {
+      var data;
+      try { data = JSON.parse(raw); } catch (e) { return; }
+      ensureSession().then(function (ok) {
+        if (!ok) return;
+        return api("/api/data/" + encodeURIComponent(modId), {
+          method: "PUT",
+          body: { payload: data }
+        }).then(function (j) {
+          console.info("[server-bridge] synced", modId, "v" + (j.version || "?"));
+        }).catch(function (err) {
+          console.warn("[server-bridge] sync fail", modId, err && err.message);
+        });
+      });
+    }, 400);
+  }
+
+  function installLocalStorageHook() {
+    try {
+      var proto = Storage.prototype;
+      if (proto._sfBridged) return;
+      var rawSet = proto.setItem;
+      proto.setItem = function (k, v) {
+        rawSet.call(this, k, v);
+        if (this === localStorage) schedulePush(k, v);
+      };
+      proto._sfBridged = true;
+    } catch (e) {
+      console.warn("[server-bridge] cannot hook localStorage", e);
+    }
+  }
+
+  function pullCurrentModule() {
+    var modId = detectModId();
+    return storeLoad(modId, null).then(function (payload) {
+      if (payload && typeof payload === "object" && Object.keys(payload).length) {
+        console.info("[server-bridge] pulled", modId);
+      }
+    });
+  }
+
   var _login = SmartCore.login;
   SmartCore.login = function (user, pass, pin) {
     var res = _login(user, pass, pin);
@@ -137,8 +203,9 @@
   };
   var _logout = SmartCore.logout;
   SmartCore.logout = function () {
+    var t = getToken();
     setToken("");
-    if (base() && getToken()) {
+    if (base() && t) {
       api("/api/auth/logout", { method: "POST" }).catch(function () {});
     }
     return _logout();
@@ -155,9 +222,12 @@
   SmartCore.store = {
     _bridged: true,
     load: storeLoad,
-    save: storeSave
+    save: storeSave,
+    pullCurrent: pullCurrentModule
   };
-  SmartCore.version = String(SmartCore.version) + "+bridge";
+  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.1";
+
+  installLocalStorageHook();
 
   if (base()) {
     health().then(function (ok) {
@@ -165,6 +235,7 @@
         console.info("[server-bridge] online", base());
         ensureSession().then(function (s) {
           console.info("[server-bridge] session", s ? "ok" : "pending-login");
+          if (s) pullCurrentModule();
         });
       } else {
         console.info("[server-bridge] server not reachable — localStorage only");
