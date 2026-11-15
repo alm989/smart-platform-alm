@@ -1,5 +1,4 @@
 @echo off
-chcp 65001 >nul
 cd /d "%~dp0"
 
 set SRC=%~dp0..
@@ -17,6 +16,6 @@ if exist "%SRC%\facilities-autoload.js" copy /Y "%SRC%\facilities-autoload.js" "
 if exist "%SRC%\module-kit.css" copy /Y "%SRC%\module-kit.css" "public\" >nul
 if exist "%SRC%\module-kit.js" copy /Y "%SRC%\module-kit.js" "public\" >nul
 
-echo Done. Files in public:
-dir /b public\*.html | find /c /v ""
+echo Done. HTML count in public:
+dir /b public\*.html 2>nul | find /c /v ""
 pause
