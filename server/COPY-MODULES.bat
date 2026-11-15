@@ -13,6 +13,7 @@ copy /Y "%SRC%\*.html" "public\" >nul
 copy /Y "%SRC%\core.js" "public\" >nul
 if exist "%SRC%\suite-facilities.js" copy /Y "%SRC%\suite-facilities.js" "public\" >nul
 if exist "%SRC%\facilities-autoload.js" copy /Y "%SRC%\facilities-autoload.js" "public\" >nul
+if exist "%SRC%\server-bridge.js" copy /Y "%SRC%\server-bridge.js" "public\" >nul
 if exist "%SRC%\module-kit.css" copy /Y "%SRC%\module-kit.css" "public\" >nul
 if exist "%SRC%\module-kit.js" copy /Y "%SRC%\module-kit.js" "public\" >nul
 
