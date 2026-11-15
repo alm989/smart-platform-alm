@@ -4,8 +4,8 @@
   "platform": "smart-platform-alm",
   "title": "سامانه یکپارچه هوشمند مالی و اداری",
   "components": {
-    "server": "1.2.0",
-    "server-bridge": "1.5",
+    "server": "1.2.1",
+    "server-bridge": "1.6",
     "core": "3.1",
     "suite-facilities": "1.0"
   },
