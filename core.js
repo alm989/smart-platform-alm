@@ -1,17 +1,18 @@
 /**
- * Smart Suite Core v3 — هسته یکپارچه و امن
+ * Smart Suite Core v3.1 — هسته یکپارچه و امن
  * سامانه یکپارچه هوشمند مالی و اداری
  * - Registry یکسان با suite.html
  * - Storage امن + namespace
  * - Auth + PIN2
  * - Audit + Event bus
  * - XSS escape + Tab lock
+ * - Auto-boot: suite-facilities.js
  * - بدون eval
  */
 (function (global) {
   "use strict";
 
-  var CORE_VERSION = 3;
+  var CORE_VERSION = 3.1;
   var AUTH_KEY = "smart_users_suite_brain";
   var AUDIT_KEY = "suite_core_audit_v3";
   var EVENTS_KEY = "suite_events_v1";
@@ -20,7 +21,6 @@
   var MAX_AUDIT = 300;
   var MAX_EVENTS = 400;
 
-  /* ========== Registry (هم‌راستا با suite.html) ========== */
   var MODULES = [
     { id: "ceo", file: "ceo.html", title: "مدیرعامل", icon: "👔", keys: ["smart_mod_ceo_v2", "smart_ceo_v1"] },
     { id: "manager", file: "manager.html", title: "مدیریت", icon: "📋", keys: ["smart_mod_manager_v2", "smart_mgmt_v1"] },
@@ -47,10 +47,9 @@
     { id: "secretary", file: "secretary.html", title: "منشی", icon: "🗓️", keys: ["smart_mod_secretary_v2", "smart_secretary_v1"] },
     { id: "correspondence", file: "correspondence.html", title: "مکاتبات", icon: "✉️", keys: ["smart_mod_correspondence_v2"] },
     { id: "archive", file: "archive.html", title: "بایگانی", icon: "📁", keys: ["smart_mod_archive_v2"] },
-    { id: "documents", file: "documents.html", title: "اسناد", icon: "📄", keys: ["smart_mod_documents_v2", "smart_docs_v1"] },
     { id: "assistant", file: "assistant.html", title: "دستیار", icon: "🤖", keys: ["smart_mod_assistant_v2", "smart_assistant_v1"] },
     { id: "lawyer", file: "lawyer.html", title: "وکیل", icon: "⚖️", keys: ["smart_mod_lawyer_v2", "smart_lawyer_v1"] },
-    { id: "pr", file: "pr.html", title: "روابط عمومی", icon: "📢", keys: ["smart_mod_pr_v2", "smart_pr_v1"] },
+    { id: "pr", file: "pr-media.html", title: "روابط عمومی", icon: "📢", keys: ["smart_mod_pr_v2", "smart_pr_v1"] },
     { id: "multicompany", file: "multicompany.html", title: "چندشرکتی", icon: "🏛️", keys: ["smart_mod_multicompany_v2", "smart_multicompany_v1"] },
     { id: "chat", file: "chat.html", title: "چت", icon: "💬", keys: ["smart_mod_chat_v2"] },
     { id: "meeting", file: "meeting.html", title: "متینگ", icon: "🎥", keys: ["smart_mod_meeting_v2"] },
@@ -58,17 +57,16 @@
     { id: "suite", file: "suite.html", title: "سوییت", icon: "🏛️", keys: ["smart_mod_suite_brain_v2"] }
   ];
 
-  /* ========== Utils ========== */
   function now() { return new Date().toISOString(); }
   function uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
   }
   function esc(s) {
     return String(s == null ? "" : s)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
+      .replace(/&/g, "&")
+      .replace(/</g, "<")
+      .replace(/>/g, ">")
+      .replace(/"/g, """)
       .replace(/'/g, "&#39;");
   }
   function isSuiteKey(k) {
@@ -79,7 +77,6 @@
     try { return JSON.parse(raw); } catch (e) { return def; }
   }
 
-  /* ========== Storage ========== */
   function loadJSON(key, def) {
     if (!isSuiteKey(key) && key.indexOf("smart_") !== 0) {
       console.warn("[SmartCore] blocked non-suite key read:", key);
@@ -116,7 +113,6 @@
     try { localStorage.removeItem(key); return true; } catch (e) { return false; }
   }
 
-  /* soft-delete helper for records inside module data */
   function softDelete(list, id, by) {
     if (!Array.isArray(list)) return list;
     return list.map(function (row) {
@@ -135,7 +131,6 @@
     return list.filter(function (r) { return r && !r.deleted; });
   }
 
-  /* ========== Auth + PIN2 ========== */
   function defaultAuth() {
     return {
       users: [{ user: "admin", pass: "admin", name: "مدیر", role: "admin" }],
@@ -198,11 +193,6 @@
     audit("logout", u || "");
     emit("auth:logout", {});
   }
-  /**
-   * ensureAuth(cb, opts)
-   * opts.requireAdmin — فقط admin/ceo
-   * اگر session معتبر باشد cb()؛ وگرنه ماسک ورود نشان می‌دهد
-   */
   function ensureAuth(cb, opts) {
     opts = opts || {};
     if (isLoggedIn()) {
@@ -255,7 +245,6 @@
     m.querySelector("#scLgCancel").onclick = close;
   }
 
-  /* ========== Audit ========== */
   function audit(action, detail, mod) {
     var list = loadArr(AUDIT_KEY);
     list.unshift({
@@ -273,7 +262,6 @@
     return loadArr(AUDIT_KEY).slice(0, limit || 50);
   }
 
-  /* ========== Event bus ========== */
   var _handlers = {};
   function on(evt, fn) {
     if (!evt || typeof fn !== "function") return function () {};
@@ -288,7 +276,6 @@
     list.forEach(function (fn) {
       try { fn(payload || {}); } catch (e) { console.warn("[SmartCore] handler error", e); }
     });
-    /* persist important domain events */
     if (evt && evt.indexOf("data:") === 0) {
       pushEvent(evt, payload && (payload.message || payload.id || ""));
     }
@@ -309,7 +296,6 @@
     return loadArr(EVENTS_KEY).slice(0, limit || 30);
   }
 
-  /* ========== Tab lock ========== */
   function tabId() {
     if (!sessionStorage.getItem("_sc_tab")) {
       sessionStorage.setItem("_sc_tab", uid());
@@ -338,7 +324,6 @@
     return acquireLock(resource, ttlMs || 8000);
   }
 
-  /* ========== Scan / Backup ========== */
   function scanModules() {
     return MODULES.map(function (m) {
       var size = 0, found = [];
@@ -394,7 +379,6 @@
     audit("backup", "download");
   }
 
-  /* ========== Toast ========== */
   function toast(msg, err) {
     var el = document.getElementById("sc-toast");
     if (!el) {
@@ -414,7 +398,6 @@
     el._t = setTimeout(function () { el.style.opacity = "0"; }, 2400);
   }
 
-  /* ========== Module helper: primary key ========== */
   function primaryKey(modId) {
     var m = MODULES.find(function (x) { return x.id === modId; });
     if (!m || !m.keys || !m.keys.length) return "smart_mod_" + modId + "_v2";
@@ -432,16 +415,13 @@
     return ok;
   }
 
-  /* ========== Public API ========== */
   global.SmartCore = {
     version: CORE_VERSION,
     MODULES: MODULES,
-    /* utils */
     now: now,
     uid: uid,
     esc: esc,
     isSuiteKey: isSuiteKey,
-    /* storage */
     loadJSON: loadJSON,
     saveJSON: saveJSON,
     loadArr: loadArr,
@@ -452,7 +432,6 @@
     loadModuleData: loadModuleData,
     saveModuleData: saveModuleData,
     primaryKey: primaryKey,
-    /* auth */
     getAuth: getAuth,
     login: login,
     logout: logout,
@@ -461,28 +440,23 @@
     isAdmin: isAdmin,
     userName: userName,
     userRole: userRole,
-    /* audit / events */
     audit: audit,
     getAudit: getAudit,
     on: on,
     emit: emit,
     pushEvent: pushEvent,
     getEvents: getEvents,
-    /* locks */
     acquireLock: acquireLock,
     releaseLock: releaseLock,
     heartbeatLock: heartbeatLock,
     tabId: tabId,
-    /* scan / backup */
     scanModules: scanModules,
     exportAll: exportAll,
     importAll: importAll,
     downloadBackup: downloadBackup,
-    /* ui */
     toast: toast
   };
 
-  /* persist registry snapshot */
   try {
     saveJSON(REGISTRY_KEY, {
       version: CORE_VERSION,
@@ -491,3 +465,73 @@
     });
   } catch (e) {}
 })(typeof window !== "undefined" ? window : this);
+
+/* ========== Auto facilities bootstrap (all modules with core.js) ========== */
+(function () {
+  "use strict";
+  function detectMod() {
+    var path = (location.pathname || "").split("/").pop() || "";
+    try { path = decodeURIComponent(path); } catch (e) {}
+    path = path.replace(/\.html?$/i, "");
+    var aliases = { "file-hub": "filehub", "pr-media": "pr" };
+    var id = aliases[path] || path || "cashbox";
+    var title = id;
+    try {
+      if (window.SmartCore && Array.isArray(SmartCore.MODULES)) {
+        var m = SmartCore.MODULES.find(function (x) {
+          return x.id === id || x.file === path + ".html" || x.file === id + ".html";
+        });
+        if (m) { id = m.id; title = m.title || m.id; }
+      }
+    } catch (e2) {}
+    return { id: id, title: title };
+  }
+  function hasPanels() {
+    return !!(document.getElementById("p-notes") || document.getElementById("p-rems") || document.getElementById("p-cartable"));
+  }
+  function initFacilities() {
+    if (!hasPanels() || window.__sfFacilitiesInited) return;
+    if (!window.SuiteFacilities || typeof SuiteFacilities.init !== "function") return;
+    window.__sfFacilitiesInited = true;
+    var d = detectMod();
+    try {
+      SuiteFacilities.init({ moduleId: d.id, moduleTitle: d.title });
+    } catch (e) {
+      console.warn("[SmartCore] facilities init", e);
+      window.__sfFacilitiesInited = false;
+    }
+  }
+  function loadFacilities() {
+    if (!hasPanels()) return;
+    if (window.SuiteFacilities) { initFacilities(); return; }
+    if (document.querySelector('script[src*="suite-facilities.js"]')) {
+      var tries = 0;
+      var t = setInterval(function () {
+        tries++;
+        if (window.SuiteFacilities || tries > 50) {
+          clearInterval(t);
+          initFacilities();
+        }
+      }, 40);
+      return;
+    }
+    var d = detectMod();
+    var s = document.createElement("script");
+    s.src = "suite-facilities.js";
+    s.setAttribute("data-module", d.id);
+    s.setAttribute("data-title", d.title);
+    s.onload = function () { initFacilities(); };
+    s.onerror = function () {
+      console.warn("[SmartCore] suite-facilities.js failed — set CSP script-src 'self' 'unsafe-inline'");
+    };
+    (document.head || document.documentElement).appendChild(s);
+  }
+  function start() {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", loadFacilities);
+    } else {
+      setTimeout(loadFacilities, 0);
+    }
+  }
+  start();
+})();
