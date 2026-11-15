@@ -1,9 +1,8 @@
 /**
- * server-bridge.js v1.5
- * - module + cartable sync
- * - suite backup button
- * - gear visible only if server role is admin or ceo
- * - version badge from /api/versions
+ * server-bridge.js v1.6
+ * A) RBAC UI for cashbox/bank (admin panels)
+ * B) Cartable pull on panel open + stronger sync
+ * C) Works with server host 127.0.0.1
  */
 (function (global) {
   "use strict";
@@ -11,7 +10,7 @@
     console.warn("[server-bridge] SmartCore missing");
     return;
   }
-  if (global.SmartCore.store && global.SmartCore.store._bridged15) return;
+  if (global.SmartCore.store && global.SmartCore.store._bridged16) return;
 
   var TOKEN_KEY = "smart_suite_api_token";
   var CART_KEY = "suite_cartable_v1";
@@ -152,9 +151,22 @@
       .catch(function () { return forceLogin(); });
   }
 
+  function role() {
+    return (serverUser && serverUser.role) || "user";
+  }
+
   function isServerElevated() {
-    var r = (serverUser && serverUser.role) || "";
+    var r = role();
     return r === "admin" || r === "ceo";
+  }
+
+  function canManageUsers() {
+    return isServerElevated();
+  }
+
+  function canBackupRestore() {
+    var r = role();
+    return r === "admin" || r === "ceo" || r === "manager";
   }
 
   function applyGearPolicy() {
@@ -165,15 +177,77 @@
     if (isServerElevated()) {
       g.classList.add("show");
       g.style.display = "grid";
-      g.title = "تنظیمات سیستم (" + (serverUser.role || "") + ")";
-      console.info("[server-bridge] gear unlocked for", serverUser.role);
+      g.title = "تنظیمات سیستم (" + role() + ")";
     } else {
       g.classList.remove("show");
       g.classList.remove("on");
       g.style.display = "none";
       if (panel) panel.classList.remove("open");
-      console.info("[server-bridge] gear locked — need admin/ceo server role");
     }
+  }
+
+  /** A) Hide admin-only UI in cashbox / bank */
+  function applyFinanceRbac() {
+    var mod = detectModId();
+    if (mod !== "cashbox" && mod !== "bank" && mod !== "accounting") return;
+
+    var r = role();
+    var elevated = isServerElevated();
+    var managerPlus = canBackupRestore();
+
+    // role chip
+    var chip = document.getElementById("sfRoleChip");
+    if (!chip) {
+      chip = document.createElement("div");
+      chip.id = "sfRoleChip";
+      chip.setAttribute("style",
+        "position:fixed;top:10px;right:10px;z-index:120;font:11px Tahoma,sans-serif;" +
+        "background:rgba(15,23,42,.9);color:#e2e8f0;border:1px solid #334155;" +
+        "border-radius:8px;padding:5px 9px");
+      document.body.appendChild(chip);
+    }
+    chip.textContent = "نقش سرور: " + r +
+      (serverUser && serverUser.user ? " (" + serverUser.user + ")" : "");
+
+    function hideEl(el) {
+      if (!el) return;
+      el.style.display = "none";
+      el.setAttribute("data-rbac-hidden", "1");
+    }
+
+    // users panel / nav
+    if (!canManageUsers()) {
+      hideEl(document.getElementById("p-users"));
+      document.querySelectorAll("[data-panel='p-users'], a[href='#p-users']").forEach(hideEl);
+      document.querySelectorAll("nav button, .nav button, .side button, [data-panel]").forEach(function (b) {
+        var t = (b.textContent || "") + (b.getAttribute("data-panel") || "");
+        if (/کاربر|users|p-users/i.test(t)) hideEl(b);
+      });
+    }
+
+    // restore / dangerous
+    if (!managerPlus) {
+      ["btnRestoreEmergency", "btnRestoreLocal", "btnBackupLocal", "restoreFile"].forEach(function (id) {
+        hideEl(document.getElementById(id));
+      });
+      document.querySelectorAll("button").forEach(function (b) {
+        var t = b.textContent || "";
+        if (/بازیابی اضطراری|بازیابی از فایل|پشتیبان محلی/i.test(t)) hideEl(b);
+      });
+    }
+
+    // guest: block primary save buttons lightly
+    if (r === "guest") {
+      document.querySelectorAll("button.btn-p, button.primary, .btn-ok").forEach(function (b) {
+        var t = b.textContent || "";
+        if (/ثبت|ذخیره|ارسال/i.test(t)) {
+          b.disabled = true;
+          b.title = "نقش guest اجازه ثبت ندارد";
+        }
+      });
+    }
+
+    console.info("[server-bridge] finance RBAC applied", mod, r);
   }
 
   function modIdFromKey(key) {
@@ -324,10 +398,21 @@
           cartPulling = false;
         }
         console.info("[server-bridge] cartable pulled", merged.length);
+        if (global.SuiteFacilities && typeof SuiteFacilities.renderCart === "function") {
+          try { SuiteFacilities.renderCart(); } catch (e3) {}
+        }
       }).catch(function (err) {
         console.warn("[server-bridge] cartable pull fail", err && err.message);
       });
     });
+  }
+
+  function installCartablePanelHook() {
+    document.addEventListener("click", function (e) {
+      var t = e.target.closest("[data-panel='p-cartable'], #sfCartRefresh");
+      if (!t) return;
+      pullCartable();
+    }, true);
   }
 
   function installLocalStorageHook() {
@@ -378,105 +463,16 @@
         runServerBackup()
           .then(function (j) {
             if (SmartCore.toast) SmartCore.toast("پشتیبان سرور: " + (j.backup || "ok"));
-            else alert("پشتیبان: " + (j.backup || "ok"));
           })
           .catch(function (e) {
             if (SmartCore.toast) SmartCore.toast(e.message || "خطا", true);
-            else alert(e.message || "خطا");
           })
           .then(function () { btn.disabled = false; });
       };
       var hint = panel.querySelector(".hint");
       if (hint) panel.insertBefore(btn, hint);
       else panel.appendChild(btn);
-
-      var verBtn = document.createElement("button");
-      verBtn.type = "button";
-      verBtn.id = "btnShowVersions";
-      verBtn.innerHTML = '<span class="ic">🏷️</span> نسخه‌ها';
-      verBtn.onclick = function () { showVersionsModal(); };
-      if (hint) panel.insertBefore(verBtn, hint);
-      else panel.appendChild(verBtn);
-
-      var ops = document.getElementById("btnDcBackupAll");
-      if (ops && ops.parentNode && !document.getElementById("btnServerBackup2")) {
-        var b2 = document.createElement("button");
-        b2.type = "button";
-        b2.id = "btnServerBackup2";
-        b2.className = "btn btn-v";
-        b2.textContent = "پشتیبان سرور (دیسک)";
-        b2.onclick = function () {
-          runServerBackup()
-            .then(function (j) {
-              if (SmartCore.toast) SmartCore.toast("پشتیبان: " + (j.backup || "ok"));
-            })
-            .catch(function (e) {
-              if (SmartCore.toast) SmartCore.toast(e.message || "خطا", true);
-            });
-        };
-        ops.parentNode.appendChild(b2);
-      }
-    } catch (e) {
-      console.warn("[server-bridge] inject suite controls", e);
-    }
-  }
-
-  function showVersionBadge(report) {
-    if (detectModId() !== "suite") return;
-    var el = document.getElementById("sfVersionBadge");
-    if (!el) {
-      el = document.createElement("div");
-      el.id = "sfVersionBadge";
-      el.setAttribute("style",
-        "position:fixed;top:10px;left:10px;z-index:120;font:11px Tahoma,sans-serif;" +
-        "background:rgba(15,23,42,.92);color:#c4b5fd;border:1px solid #334155;" +
-        "border-radius:8px;padding:6px 10px;max-width:280px;line-height:1.5;cursor:pointer");
-      el.title = "کلیک: گزارش نسخه‌ها";
-      el.onclick = function () { showVersionsModal(); };
-      document.body.appendChild(el);
-    }
-    var c = (report && report.registry && report.registry.components) || {};
-    var miss = (report && report.missing && report.missing.length) || 0;
-    var present = (report && report.present && report.present.length) || 0;
-    el.innerHTML =
-      "سرور " + (report.serverRuntime || c.server || "?") +
-      " · پل 1.5" +
-      "<br>ماژول ثبت‌شده: " + present + (miss ? " · ناقص: " + miss : "");
-  }
-
-  function showVersionsModal() {
-    api("/api/versions").then(function (rep) {
-      var old = document.getElementById("sfVerModal");
-      if (old) old.remove();
-      var m = document.createElement("div");
-      m.id = "sfVerModal";
-      m.setAttribute("style",
-        "position:fixed;inset:0;background:rgba(2,6,23,.85);z-index:400;" +
-        "display:flex;align-items:center;justify-content:center;padding:16px");
-      var c = (rep.registry && rep.registry.components) || {};
-      var lines = Object.keys(c).map(function (k) {
-        return "<div>" + k + ": <b>" + c[k] + "</b></div>";
-      }).join("");
-      var miss = (rep.missing || []).map(function (x) {
-        return "<div style='color:#fca5a5'>" + x.id + " → " + x.file + "</div>";
-      }).join("") || "<div style='color:#86efac'>همه فایل‌های ثبت‌شده در public هستند</div>";
-      m.innerHTML =
-        '<div style="background:#1e293b;border:1px solid #334155;border-radius:14px;padding:16px;' +
-        'width:min(420px,96vw);color:#e2e8f0;font:13px Tahoma,sans-serif;max-height:80vh;overflow:auto">' +
-        "<h3 style='margin:0 0 10px;color:#c4b5fd'>گزارش نسخه</h3>" +
-        "<div style='margin-bottom:8px'>Runtime سرور: <b>" + (rep.serverRuntime || "?") + "</b></div>" +
-        lines +
-        "<div style='margin-top:10px'>HTML در public: <b>" + (rep.publicHtmlCount || 0) + "</b></div>" +
-        "<div>موجود در رجیستری: <b>" + ((rep.present || []).length) + "</b></div>" +
-        "<h4 style='margin:12px 0 6px;color:#93c5fd'>ناقص</h4>" + miss +
-        '<button type="button" id="sfVerClose" style="margin-top:12px;width:100%;padding:8px;' +
-        'border:0;border-radius:10px;background:#8b5cf6;color:#fff;font:inherit;cursor:pointer">بستن</button></div>';
-      document.body.appendChild(m);
-      m.querySelector("#sfVerClose").onclick = function () { m.remove(); };
-      m.onclick = function (e) { if (e.target === m) m.remove(); };
-    }).catch(function (e) {
-      if (SmartCore.toast) SmartCore.toast(e.message || "خطا", true);
-    });
+    } catch (e) {}
   }
 
   var _login = SmartCore.login;
@@ -486,9 +482,15 @@
       serverLogin(user, pass, pin || "1234")
         .then(function () {
           applyGearPolicy();
+          applyFinanceRbac();
           injectSuiteBackupButton();
         })
-        .catch(function () { forceLogin().then(function () { applyGearPolicy(); }); });
+        .catch(function () {
+          forceLogin().then(function () {
+            applyGearPolicy();
+            applyFinanceRbac();
+          });
+        });
     }
     return res;
   };
@@ -513,42 +515,41 @@
     pullCartable: pullCartable,
     serverUser: function () { return serverUser; },
     isElevated: isServerElevated,
+    role: role,
     isOnline: function () { return !!online; }
   };
   SmartCore.store = {
     _bridged: true,
-    _bridged15: true,
+    _bridged16: true,
     load: storeLoad,
     save: storeSave,
     pullCurrent: pullCurrentModule
   };
-  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.5";
+  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.6";
 
   installLocalStorageHook();
+  installCartablePanelHook();
 
   if (base()) {
     health().then(function (ok) {
       if (ok) {
         console.info("[server-bridge] online", base());
         ensureSession().then(function (s) {
-          console.info("[server-bridge] session", s ? "ok" : "pending-login",
+          console.info("[server-bridge] session", s ? "ok" : "pending",
             serverUser ? serverUser.role : "");
           applyGearPolicy();
+          applyFinanceRbac();
           if (s) {
             setTimeout(function () {
               pullCurrentModule();
               pullCartable();
               injectSuiteBackupButton();
-            }, 600);
-            api("/api/versions").then(showVersionBadge).catch(function () {});
+              applyFinanceRbac();
+            }, 700);
+            setTimeout(applyFinanceRbac, 2000);
             setInterval(function () { pullCartable(); }, 30000);
-            // re-assert gear after suite local scripts finish
-            setTimeout(applyGearPolicy, 1500);
-            setTimeout(applyGearPolicy, 3000);
           }
         });
-      } else {
-        console.info("[server-bridge] offline — local only");
       }
     });
   }
