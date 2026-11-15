@@ -1,9 +1,8 @@
 /**
- * Smart Suite Local Server v1.2
- * - scrypt password hashes (auto-migrate plain)
- * - RBAC roles: admin, ceo, manager, user
- * - Cartable GET/POST/PUT/PATCH
- * - Daily backup + retention
+ * Smart Suite Local Server v1.2.1
+ * - scrypt + RBAC
+ * - VERSIONS.json registry + /api/versions
+ * - Cartable + backup
  * - Zero npm deps (Node 18+)
  */
 'use strict';
@@ -43,6 +42,11 @@ const ROLE_PERMS = {
   guest: ['read']
 };
 
+const MODULE_FILE = {
+  filehub: 'file-hub.html',
+  pr: 'pr-media.html'
+};
+
 ensureDirs();
 seedUsers();
 migrateAllPasswords();
@@ -68,6 +72,68 @@ function loadJson(p, def) {
 
 function saveJson(p, obj) {
   fs.writeFileSync(p, JSON.stringify(obj, null, 2), 'utf8');
+}
+
+function loadVersions() {
+  const candidates = [
+    path.join(ROOT, 'VERSIONS.json'),
+    path.join(ROOT, '..', 'VERSIONS.json'),
+    path.join(PUBLIC, 'VERSIONS.json')
+  ];
+  for (let i = 0; i < candidates.length; i++) {
+    const v = loadJson(candidates[i], null);
+    if (v && typeof v === 'object') {
+      v._source = candidates[i];
+      return v;
+    }
+  }
+  return {
+    schema: 1,
+    components: { server: '1.2.1', 'server-bridge': '1.5', core: '3.1' },
+    modules: {},
+    _source: null
+  };
+}
+
+function moduleHtmlName(id) {
+  if (MODULE_FILE[id]) return MODULE_FILE[id];
+  return id + '.html';
+}
+
+function buildVersionReport() {
+  const reg = loadVersions();
+  const modules = reg.modules || {};
+  const present = [];
+  const missing = [];
+  Object.keys(modules).forEach((id) => {
+    const file = moduleHtmlName(id);
+    const fp = path.join(PUBLIC, file);
+    const row = { id: id, file: file, registry: modules[id] };
+    if (fs.existsSync(fp) && fs.statSync(fp).isFile()) {
+      row.bytes = fs.statSync(fp).size;
+      row.mtime = fs.statSync(fp).mtime.toISOString();
+      present.push(row);
+    } else {
+      missing.push(row);
+    }
+  });
+  let htmlCount = 0;
+  try {
+    htmlCount = fs.readdirSync(PUBLIC).filter((f) => /\.html$/i.test(f)).length;
+  } catch (e) {}
+  return {
+    ok: true,
+    registry: {
+      updatedAt: reg.updatedAt || null,
+      components: reg.components || {},
+      moduleCount: Object.keys(modules).length,
+      source: reg._source
+    },
+    publicHtmlCount: htmlCount,
+    present: present,
+    missing: missing,
+    serverRuntime: '1.2.1'
+  };
 }
 
 function hashPass(pass) {
@@ -361,11 +427,14 @@ async function handleApi(req, res, url) {
     try {
       backups = fs.readdirSync(BACKUP, { withFileTypes: true }).filter((e) => e.isDirectory()).length;
     } catch (e) {}
+    const reg = loadVersions();
     return send(res, 200, {
       ok: true,
-      version: '1.2.0',
+      version: '1.2.1',
       auth: 'scrypt',
       rbac: Object.keys(ROLE_PERMS),
+      components: (reg && reg.components) || {},
+      moduleRegistryCount: reg && reg.modules ? Object.keys(reg.modules).length : 0,
       time: new Date().toISOString(),
       publicExists: fs.existsSync(PUBLIC),
       modules: fs.existsSync(path.join(DATA, 'modules'))
@@ -374,6 +443,10 @@ async function handleApi(req, res, url) {
       backups,
       dailyBackupHour: BACKUP_HOUR
     });
+  }
+
+  if (pathname === '/api/versions' && method === 'GET') {
+    return send(res, 200, buildVersionReport());
   }
 
   if (pathname === '/api/auth/login' && method === 'POST') {
@@ -394,7 +467,6 @@ async function handleApi(req, res, url) {
     if (String(db.pin2 || '') !== pin) {
       return send(res, 401, { ok: false, error: 'پین دوم اشتباه' });
     }
-    // upgrade plain password to scrypt after successful login
     if (!isHashed(found.pass)) {
       found.pass = hashPass(p);
       saveUsers(db);
@@ -434,18 +506,6 @@ async function handleApi(req, res, url) {
   if (pathname === '/api/users' && method === 'GET') {
     const s = tokenGet(req);
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
-    if (!can(s, 'users') && !can(s, '*')) {
-      // still allow listing usernames for cartable targeting
-      const db = usersDb();
-      return send(res, 200, {
-        ok: true,
-        users: (db.users || []).map((u) => ({
-          user: u.user,
-          name: u.name || u.user,
-          role: u.role || 'user'
-        }))
-      });
-    }
     const db = usersDb();
     return send(res, 200, {
       ok: true,
@@ -488,7 +548,6 @@ async function handleApi(req, res, url) {
     }
   }
 
-  // Cartable
   if (pathname === '/api/cartable') {
     const s = tokenGet(req);
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
@@ -530,7 +589,6 @@ async function handleApi(req, res, url) {
       return send(res, 200, { ok: true, item });
     }
     if (method === 'PUT') {
-      // full replace / merge from client
       const body = await readBody(req);
       const items = Array.isArray(body.items) ? body.items : [];
       const trimmed = items.slice(0, 2000);
@@ -612,11 +670,10 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(cfg.port, cfg.host, () => {
   console.log('========================================');
-  console.log(' Smart Suite Local Server v1.2');
-  console.log(' Auth: scrypt + RBAC');
+  console.log(' Smart Suite Local Server v1.2.1');
+  console.log(' Auth: scrypt + RBAC | Versions API');
   console.log(' http://127.0.0.1:' + cfg.port + '/suite.html');
-  console.log(' API health: http://127.0.0.1:' + cfg.port + '/api/health');
-  console.log(' Daily backup hour: ' + BACKUP_HOUR + ':00');
+  console.log(' /api/health  /api/versions');
   console.log(' Login: admin / admin  pin: 1234');
   console.log('========================================');
   try {
