@@ -1,13 +1,6 @@
 /**
  * Smart Suite Core v3.1 — هسته یکپارچه و امن
  * سامانه یکپارچه هوشمند مالی و اداری
- * - Registry یکسان با suite.html
- * - Storage امن + namespace
- * - Auth + PIN2
- * - Audit + Event bus
- * - XSS escape + Tab lock
- * - Auto-boot: suite-facilities.js
- * - بدون eval
  */
 (function (global) {
   "use strict";
@@ -61,12 +54,13 @@
   function uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
   }
+  /* entities split so HTML/XML pipelines cannot corrupt the source */
   function esc(s) {
     return String(s == null ? "" : s)
-      .replace(/&/g, "&")
-      .replace(/</g, "<")
-      .replace(/>/g, ">")
-      .replace(/"/g, """)
+      .replace(/&/g, "&" + "amp;")
+      .replace(/</g, "&" + "lt;")
+      .replace(/>/g, "&" + "gt;")
+      .replace(/"/g, "&" + "quot;")
       .replace(/'/g, "&#39;");
   }
   function isSuiteKey(k) {
@@ -466,7 +460,7 @@
   } catch (e) {}
 })(typeof window !== "undefined" ? window : this);
 
-/* ========== Auto facilities bootstrap (all modules with core.js) ========== */
+/* ========== Auto facilities bootstrap ========== */
 (function () {
   "use strict";
   function detectMod() {
@@ -522,16 +516,13 @@
     s.setAttribute("data-title", d.title);
     s.onload = function () { initFacilities(); };
     s.onerror = function () {
-      console.warn("[SmartCore] suite-facilities.js failed — set CSP script-src 'self' 'unsafe-inline'");
+      console.warn("[SmartCore] suite-facilities.js failed — CSP: script-src 'self' 'unsafe-inline'");
     };
     (document.head || document.documentElement).appendChild(s);
   }
-  function start() {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", loadFacilities);
-    } else {
-      setTimeout(loadFacilities, 0);
-    }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadFacilities);
+  } else {
+    setTimeout(loadFacilities, 0);
   }
-  start();
 })();
