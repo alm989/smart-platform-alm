@@ -1,0 +1,14 @@
+{
+  "name": "smart-suite-local-server",
+  "version": "1.0.0",
+  "description": "Local server for Smart Integrated Financial & Admin Suite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "init": "node scripts/init-data.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {}
+}
