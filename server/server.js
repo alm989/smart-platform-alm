@@ -1,7 +1,9 @@
 /**
- * Smart Suite Local Server v1.0
- * - Serves HTML modules from ./public
- * - JSON API for auth + module data + cartable
+ * Smart Suite Local Server v1.1
+ * - Static modules from ./public
+ * - Auth + module JSON + cartable API
+ * - Daily auto-backup + retention
+ * - Login rate limit
  * - Zero npm deps (Node 18+)
  */
 'use strict';
@@ -21,6 +23,8 @@ const cfg = loadJson(path.join(ROOT, 'config.json'), {
   backupDir: 'backups',
   sessionHours: 12,
   maxBodyMb: 8,
+  backupRetainDays: 30,
+  dailyBackupHour: 2,
   defaultAdmin: { user: 'admin', pass: 'admin', name: 'مدیر', role: 'admin' }
 });
 
@@ -28,11 +32,15 @@ const PUBLIC = path.resolve(ROOT, cfg.publicDir);
 const DATA = path.resolve(ROOT, cfg.dataDir);
 const BACKUP = path.resolve(ROOT, cfg.backupDir);
 const MAX_BODY = (cfg.maxBodyMb || 8) * 1024 * 1024;
+const RETAIN_DAYS = cfg.backupRetainDays || 30;
+const BACKUP_HOUR = Number.isInteger(cfg.dailyBackupHour) ? cfg.dailyBackupHour : 2;
 
 ensureDirs();
 seedUsers();
 
-const sessions = new Map(); // token -> { user, name, role, exp }
+const sessions = new Map();
+const loginAttempts = new Map(); // key -> { count, until }
+let lastDailyBackupDay = '';
 
 function ensureDirs() {
   [PUBLIC, DATA, BACKUP, path.join(DATA, 'modules'), path.join(DATA, 'files')].forEach((d) => {
@@ -75,10 +83,6 @@ function usersDb() {
   return loadJson(path.join(DATA, 'users.json'), { pin2: '1234', users: [] });
 }
 
-function saveUsers(db) {
-  saveJson(path.join(DATA, 'users.json'), db);
-}
-
 function modPath(id) {
   const safe = String(id || '').replace(/[^a-zA-Z0-9_-]/g, '');
   return path.join(DATA, 'modules', safe + '.json');
@@ -113,12 +117,78 @@ function tokenGet(req) {
   return s;
 }
 
+function rateLimitLogin(key) {
+  const now = Date.now();
+  let item = loginAttempts.get(key);
+  if (!item || now > item.until) {
+    item = { count: 0, until: now + 60000 };
+  }
+  item.count += 1;
+  loginAttempts.set(key, item);
+  return item.count <= 10;
+}
+
+function runBackup(label) {
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const dir = path.join(BACKUP, stamp + (label ? '_' + label : ''));
+  fs.mkdirSync(dir, { recursive: true });
+  const mods = path.join(DATA, 'modules');
+  if (fs.existsSync(mods)) {
+    fs.readdirSync(mods).forEach((f) => {
+      fs.copyFileSync(path.join(mods, f), path.join(dir, f));
+    });
+  }
+  const users = path.join(DATA, 'users.json');
+  if (fs.existsSync(users)) fs.copyFileSync(users, path.join(dir, 'users.json'));
+  if (fs.existsSync(cartPath())) fs.copyFileSync(cartPath(), path.join(dir, 'cartable.json'));
+  saveJson(path.join(dir, '_meta.json'), {
+    at: new Date().toISOString(),
+    label: label || 'manual',
+    modules: fs.existsSync(mods) ? fs.readdirSync(mods).length : 0
+  });
+  pruneBackups();
+  console.log('[backup]', dir);
+  return stamp;
+}
+
+function pruneBackups() {
+  try {
+    const cutoff = Date.now() - RETAIN_DAYS * 86400000;
+    fs.readdirSync(BACKUP, { withFileTypes: true }).forEach((ent) => {
+      if (!ent.isDirectory()) return;
+      const full = path.join(BACKUP, ent.name);
+      const st = fs.statSync(full);
+      if (st.mtimeMs < cutoff) {
+        fs.rmSync(full, { recursive: true, force: true });
+        console.log('[backup] pruned', ent.name);
+      }
+    });
+  } catch (e) {
+    console.warn('[backup] prune error', e.message);
+  }
+}
+
+function tickDailyBackup() {
+  const now = new Date();
+  const day = now.toISOString().slice(0, 10);
+  if (now.getHours() === BACKUP_HOUR && lastDailyBackupDay !== day) {
+    lastDailyBackupDay = day;
+    try {
+      runBackup('daily');
+    } catch (e) {
+      console.warn('[backup] daily failed', e.message);
+    }
+  }
+}
+
 function send(res, code, obj) {
   const body = JSON.stringify(obj);
   res.writeHead(code, {
     'Content-Type': 'application/json; charset=utf-8',
     'Content-Length': Buffer.byteLength(body),
     'Cache-Control': 'no-store',
+    'X-Content-Type-Options': 'nosniff',
+    'Referrer-Policy': 'no-referrer',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Session-Token',
     'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS'
@@ -173,13 +243,18 @@ function mime(file) {
 
 function safeJoin(root, reqPath) {
   const decoded = decodeURIComponent(reqPath.split('?')[0]);
-  const clean = path.normalize(decoded).replace(/^(\.\.[/\\])+/, '');
+  const clean = path.normalize(decoded).replace(/^(\.[\/\\])+/, '');
   const full = path.join(root, clean);
   if (!full.startsWith(root)) return null;
   return full;
 }
 
 function serveStatic(req, res, urlPath) {
+  if (urlPath === '/favicon.ico') {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
   let p = urlPath === '/' ? '/suite.html' : urlPath;
   let file = safeJoin(PUBLIC, p);
   if (!file) return send(res, 400, { ok: false, error: 'bad path' });
@@ -195,7 +270,8 @@ function serveStatic(req, res, urlPath) {
   res.writeHead(200, {
     'Content-Type': mime(file),
     'Content-Length': data.length,
-    'Cache-Control': 'no-cache'
+    'Cache-Control': 'no-cache',
+    'X-Content-Type-Options': 'nosniff'
   });
   res.end(data);
 }
@@ -214,29 +290,39 @@ async function handleApi(req, res, url) {
     return;
   }
 
-  // Health
   if (pathname === '/api/health' && method === 'GET') {
+    let backups = 0;
+    try {
+      backups = fs.readdirSync(BACKUP, { withFileTypes: true }).filter((e) => e.isDirectory()).length;
+    } catch (e) {}
     return send(res, 200, {
       ok: true,
-      version: '1.0.0',
+      version: '1.1.0',
       time: new Date().toISOString(),
       publicExists: fs.existsSync(PUBLIC),
       modules: fs.existsSync(path.join(DATA, 'modules'))
         ? fs.readdirSync(path.join(DATA, 'modules')).length
-        : 0
+        : 0,
+      backups,
+      dailyBackupHour: BACKUP_HOUR
     });
   }
 
-  // Login
   if (pathname === '/api/auth/login' && method === 'POST') {
+    const ip = (req.socket && req.socket.remoteAddress) || 'unknown';
     const body = await readBody(req);
-    const db = usersDb();
     const u = String(body.user || '').trim();
+    const rlKey = ip + ':' + u.toLowerCase();
+    if (!rateLimitLogin(rlKey)) {
+      return send(res, 429, { ok: false, error: 'تعداد تلاش زیاد — یک دقیقه صبر کنید' });
+    }
+    const db = usersDb();
     const p = String(body.pass || '');
     const pin = String(body.pin || '').trim();
     const found = (db.users || []).find((x) => x.user === u && x.pass === p);
     if (!found) return send(res, 401, { ok: false, error: 'کاربری یا رمز اشتباه' });
     if (String(db.pin2 || '') !== pin) return send(res, 401, { ok: false, error: 'پین دوم اشتباه' });
+    loginAttempts.delete(rlKey);
     const session = {
       user: found.user,
       name: found.name || found.user,
@@ -246,7 +332,6 @@ async function handleApi(req, res, url) {
     return send(res, 200, { ok: true, token, user: session });
   }
 
-  // Logout
   if (pathname === '/api/auth/logout' && method === 'POST') {
     const h = req.headers['authorization'] || '';
     const m = h.match(/^Bearer\s+(.+)$/i);
@@ -254,25 +339,26 @@ async function handleApi(req, res, url) {
     return send(res, 200, { ok: true });
   }
 
-  // Me
   if (pathname === '/api/me' && method === 'GET') {
     const s = tokenGet(req);
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
     return send(res, 200, { ok: true, user: { user: s.user, name: s.name, role: s.role } });
   }
 
-  // Users list (auth)
   if (pathname === '/api/users' && method === 'GET') {
     const s = tokenGet(req);
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
     const db = usersDb();
     return send(res, 200, {
       ok: true,
-      users: (db.users || []).map((u) => ({ user: u.user, name: u.name || u.user, role: u.role || 'user' }))
+      users: (db.users || []).map((u) => ({
+        user: u.user,
+        name: u.name || u.user,
+        role: u.role || 'user'
+      }))
     });
   }
 
-  // Module data
   const modMatch = pathname.match(/^\/api\/data\/([a-zA-Z0-9_-]+)$/);
   if (modMatch) {
     const id = modMatch[1];
@@ -293,11 +379,15 @@ async function handleApi(req, res, url) {
         payload: body.payload != null ? body.payload : body
       };
       saveJson(fp, next);
-      return send(res, 200, { ok: true, moduleId: id, version: next.version, updatedAt: next.updatedAt });
+      return send(res, 200, {
+        ok: true,
+        moduleId: id,
+        version: next.version,
+        updatedAt: next.updatedAt
+      });
     }
   }
 
-  // Cartable
   if (pathname === '/api/cartable' && method === 'GET') {
     const s = tokenGet(req);
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
@@ -335,25 +425,32 @@ async function handleApi(req, res, url) {
     return send(res, 200, { ok: true, item });
   }
 
-  // Backup snapshot of all module json
   if (pathname === '/api/backup' && method === 'POST') {
     const s = tokenGet(req);
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
     if (s.role !== 'admin' && s.role !== 'ceo') {
       return send(res, 403, { ok: false, error: 'فقط مدیر' });
     }
-    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const dir = path.join(BACKUP, stamp);
-    fs.mkdirSync(dir, { recursive: true });
-    const mods = path.join(DATA, 'modules');
-    if (fs.existsSync(mods)) {
-      fs.readdirSync(mods).forEach((f) => {
-        fs.copyFileSync(path.join(mods, f), path.join(dir, f));
-      });
-    }
-    fs.copyFileSync(path.join(DATA, 'users.json'), path.join(dir, 'users.json'));
-    if (fs.existsSync(cartPath())) fs.copyFileSync(cartPath(), path.join(dir, 'cartable.json'));
+    const stamp = runBackup('manual');
     return send(res, 200, { ok: true, backup: stamp });
+  }
+
+  if (pathname === '/api/backup' && method === 'GET') {
+    const s = tokenGet(req);
+    if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
+    let list = [];
+    try {
+      list = fs
+        .readdirSync(BACKUP, { withFileTypes: true })
+        .filter((e) => e.isDirectory())
+        .map((e) => {
+          const meta = loadJson(path.join(BACKUP, e.name, '_meta.json'), null);
+          return { id: e.name, meta };
+        })
+        .sort((a, b) => (a.id < b.id ? 1 : -1))
+        .slice(0, 50);
+    } catch (e) {}
+    return send(res, 200, { ok: true, backups: list });
   }
 
   return send(res, 404, { ok: false, error: 'api not found' });
@@ -375,15 +472,22 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(cfg.port, cfg.host, () => {
   console.log('========================================');
-  console.log(' Smart Suite Local Server');
+  console.log(' Smart Suite Local Server v1.1');
   console.log(' http://127.0.0.1:' + cfg.port + '/suite.html');
   console.log(' API health: http://127.0.0.1:' + cfg.port + '/api/health');
-  console.log(' Public folder: ' + PUBLIC);
-  console.log(' Data folder:   ' + DATA);
+  console.log(' Daily backup hour: ' + BACKUP_HOUR + ':00 (local)');
+  console.log(' Retain backups: ' + RETAIN_DAYS + ' days');
+  console.log(' Public: ' + PUBLIC);
+  console.log(' Data:   ' + DATA);
   console.log(' Login: admin / admin  pin: 1234');
   console.log('========================================');
-  if (!fs.existsSync(path.join(PUBLIC, 'suite.html')) && !fs.existsSync(path.join(PUBLIC, 'cashbox.html'))) {
-    console.log('WARNING: public/ is empty.');
-    console.log('Copy your module HTML/JS files into: ' + PUBLIC);
+  if (!fs.existsSync(path.join(PUBLIC, 'suite.html'))) {
+    console.log('WARNING: public/ may be incomplete — run COPY-MODULES.bat');
   }
+  try {
+    runBackup('startup');
+  } catch (e) {
+    console.warn('[backup] startup skipped', e.message);
+  }
+  setInterval(tickDailyBackup, 5 * 60 * 1000);
 });
