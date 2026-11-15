@@ -1,9 +1,9 @@
 /**
- * Smart Suite Local Server v1.1
- * - Static modules from ./public
- * - Auth + module JSON + cartable API
- * - Daily auto-backup + retention
- * - Login rate limit
+ * Smart Suite Local Server v1.2
+ * - scrypt password hashes (auto-migrate plain)
+ * - RBAC roles: admin, ceo, manager, user
+ * - Cartable GET/POST/PUT/PATCH
+ * - Daily backup + retention
  * - Zero npm deps (Node 18+)
  */
 'use strict';
@@ -35,11 +35,20 @@ const MAX_BODY = (cfg.maxBodyMb || 8) * 1024 * 1024;
 const RETAIN_DAYS = cfg.backupRetainDays || 30;
 const BACKUP_HOUR = Number.isInteger(cfg.dailyBackupHour) ? cfg.dailyBackupHour : 2;
 
+const ROLE_PERMS = {
+  admin: ['*'],
+  ceo: ['*'],
+  manager: ['read', 'write', 'cartable', 'backup', 'users'],
+  user: ['read', 'write', 'cartable'],
+  guest: ['read']
+};
+
 ensureDirs();
 seedUsers();
+migrateAllPasswords();
 
 const sessions = new Map();
-const loginAttempts = new Map(); // key -> { count, until }
+const loginAttempts = new Map();
 let lastDailyBackupDay = '';
 
 function ensureDirs() {
@@ -61,6 +70,34 @@ function saveJson(p, obj) {
   fs.writeFileSync(p, JSON.stringify(obj, null, 2), 'utf8');
 }
 
+function hashPass(pass) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(String(pass), salt, 32).toString('hex');
+  return 'scrypt$' + salt + '$' + hash;
+}
+
+function verifyPass(pass, stored) {
+  if (stored == null || stored === '') return false;
+  const s = String(stored);
+  if (s.startsWith('scrypt$')) {
+    const parts = s.split('$');
+    if (parts.length < 3) return false;
+    const salt = parts[1];
+    const hash = parts[2];
+    const h = crypto.scryptSync(String(pass), salt, 32).toString('hex');
+    try {
+      return crypto.timingSafeEqual(Buffer.from(h, 'hex'), Buffer.from(hash, 'hex'));
+    } catch (e) {
+      return false;
+    }
+  }
+  return s === String(pass);
+}
+
+function isHashed(stored) {
+  return String(stored || '').startsWith('scrypt$');
+}
+
 function seedUsers() {
   const p = path.join(DATA, 'users.json');
   if (!fs.existsSync(p)) {
@@ -70,7 +107,7 @@ function seedUsers() {
       users: [
         {
           user: a.user || 'admin',
-          pass: a.pass || 'admin',
+          pass: hashPass(a.pass || 'admin'),
           name: a.name || 'مدیر',
           role: a.role || 'admin'
         }
@@ -79,8 +116,37 @@ function seedUsers() {
   }
 }
 
+function migrateAllPasswords() {
+  const p = path.join(DATA, 'users.json');
+  const db = loadJson(p, null);
+  if (!db || !Array.isArray(db.users)) return;
+  let changed = false;
+  db.users = db.users.map((u) => {
+    if (u && u.pass && !isHashed(u.pass)) {
+      changed = true;
+      return Object.assign({}, u, { pass: hashPass(u.pass) });
+    }
+    return u;
+  });
+  if (changed) {
+    saveJson(p, db);
+    console.log('[auth] migrated plain passwords to scrypt');
+  }
+}
+
 function usersDb() {
   return loadJson(path.join(DATA, 'users.json'), { pin2: '1234', users: [] });
+}
+
+function saveUsers(db) {
+  saveJson(path.join(DATA, 'users.json'), db);
+}
+
+function can(session, perm) {
+  if (!session) return false;
+  const role = session.role || 'user';
+  const list = ROLE_PERMS[role] || ROLE_PERMS.user;
+  return list.indexOf('*') >= 0 || list.indexOf(perm) >= 0;
 }
 
 function modPath(id) {
@@ -191,7 +257,7 @@ function send(res, code, obj) {
     'Referrer-Policy': 'no-referrer',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Session-Token',
-    'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS'
+    'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS'
   });
   res.end(body);
 }
@@ -284,7 +350,7 @@ async function handleApi(req, res, url) {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Session-Token',
-      'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS'
+      'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS'
     });
     res.end();
     return;
@@ -297,7 +363,9 @@ async function handleApi(req, res, url) {
     } catch (e) {}
     return send(res, 200, {
       ok: true,
-      version: '1.1.0',
+      version: '1.2.0',
+      auth: 'scrypt',
+      rbac: Object.keys(ROLE_PERMS),
       time: new Date().toISOString(),
       publicExists: fs.existsSync(PUBLIC),
       modules: fs.existsSync(path.join(DATA, 'modules'))
@@ -319,14 +387,24 @@ async function handleApi(req, res, url) {
     const db = usersDb();
     const p = String(body.pass || '');
     const pin = String(body.pin || '').trim();
-    const found = (db.users || []).find((x) => x.user === u && x.pass === p);
-    if (!found) return send(res, 401, { ok: false, error: 'کاربری یا رمز اشتباه' });
-    if (String(db.pin2 || '') !== pin) return send(res, 401, { ok: false, error: 'پین دوم اشتباه' });
+    const found = (db.users || []).find((x) => x.user === u);
+    if (!found || !verifyPass(p, found.pass)) {
+      return send(res, 401, { ok: false, error: 'کاربری یا رمز اشتباه' });
+    }
+    if (String(db.pin2 || '') !== pin) {
+      return send(res, 401, { ok: false, error: 'پین دوم اشتباه' });
+    }
+    // upgrade plain password to scrypt after successful login
+    if (!isHashed(found.pass)) {
+      found.pass = hashPass(p);
+      saveUsers(db);
+    }
     loginAttempts.delete(rlKey);
     const session = {
       user: found.user,
       name: found.name || found.user,
-      role: found.role || 'user'
+      role: found.role || 'user',
+      perms: ROLE_PERMS[found.role || 'user'] || ROLE_PERMS.user
     };
     const token = tokenNew(session);
     return send(res, 200, { ok: true, token, user: session });
@@ -342,12 +420,32 @@ async function handleApi(req, res, url) {
   if (pathname === '/api/me' && method === 'GET') {
     const s = tokenGet(req);
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
-    return send(res, 200, { ok: true, user: { user: s.user, name: s.name, role: s.role } });
+    return send(res, 200, {
+      ok: true,
+      user: {
+        user: s.user,
+        name: s.name,
+        role: s.role,
+        perms: ROLE_PERMS[s.role] || ROLE_PERMS.user
+      }
+    });
   }
 
   if (pathname === '/api/users' && method === 'GET') {
     const s = tokenGet(req);
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
+    if (!can(s, 'users') && !can(s, '*')) {
+      // still allow listing usernames for cartable targeting
+      const db = usersDb();
+      return send(res, 200, {
+        ok: true,
+        users: (db.users || []).map((u) => ({
+          user: u.user,
+          name: u.name || u.user,
+          role: u.role || 'user'
+        }))
+      });
+    }
     const db = usersDb();
     return send(res, 200, {
       ok: true,
@@ -366,10 +464,12 @@ async function handleApi(req, res, url) {
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
     const fp = modPath(id);
     if (method === 'GET') {
+      if (!can(s, 'read')) return send(res, 403, { ok: false, error: 'دسترسی خواندن نیست' });
       const data = loadJson(fp, { version: 1, updatedAt: null, payload: {} });
       return send(res, 200, { ok: true, moduleId: id, data });
     }
     if (method === 'PUT' || method === 'POST') {
+      if (!can(s, 'write')) return send(res, 403, { ok: false, error: 'دسترسی نوشتن نیست' });
       const body = await readBody(req);
       const prev = loadJson(fp, { version: 0, payload: {} });
       const next = {
@@ -388,48 +488,88 @@ async function handleApi(req, res, url) {
     }
   }
 
-  if (pathname === '/api/cartable' && method === 'GET') {
+  // Cartable
+  if (pathname === '/api/cartable') {
     const s = tokenGet(req);
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
-    const all = loadJson(cartPath(), { items: [] });
-    return send(res, 200, { ok: true, items: all.items || [] });
+    if (!can(s, 'cartable') && !can(s, '*')) {
+      return send(res, 403, { ok: false, error: 'دسترسی کارتابل نیست' });
+    }
+    if (method === 'GET') {
+      const all = loadJson(cartPath(), { items: [] });
+      return send(res, 200, { ok: true, items: all.items || [] });
+    }
+    if (method === 'POST') {
+      const body = await readBody(req);
+      const all = loadJson(cartPath(), { items: [] });
+      const item = {
+        id: body.id || 'sf_' + uid(),
+        from: body.from || '',
+        fromTitle: body.fromTitle || '',
+        fromUser: body.fromUser || s.user,
+        fromUserName: body.fromUserName || s.name,
+        to: body.to || '',
+        toTitle: body.toTitle || '',
+        toUser: body.toUser || '*',
+        toUserName: body.toUserName || '',
+        subject: body.subject || '',
+        body: body.body || '',
+        date: body.date || '',
+        status: body.status || 'active',
+        hasFile: !!body.dataUrl,
+        fileName: body.fileName || '',
+        fileSize: body.fileSize || 0,
+        dataUrl: body.dataUrl || '',
+        createdAt: body.createdAt || new Date().toISOString(),
+        deleted: !!body.deleted
+      };
+      all.items = all.items || [];
+      all.items.unshift(item);
+      if (all.items.length > 2000) all.items = all.items.slice(0, 2000);
+      saveJson(cartPath(), all);
+      return send(res, 200, { ok: true, item });
+    }
+    if (method === 'PUT') {
+      // full replace / merge from client
+      const body = await readBody(req);
+      const items = Array.isArray(body.items) ? body.items : [];
+      const trimmed = items.slice(0, 2000);
+      saveJson(cartPath(), { items: trimmed, updatedAt: new Date().toISOString(), updatedBy: s.user });
+      return send(res, 200, { ok: true, count: trimmed.length });
+    }
   }
-  if (pathname === '/api/cartable' && method === 'POST') {
+
+  const cartItemMatch = pathname.match(/^\/api\/cartable\/([a-zA-Z0-9_\-]+)$/);
+  if (cartItemMatch && method === 'PATCH') {
     const s = tokenGet(req);
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
+    if (!can(s, 'cartable') && !can(s, '*')) {
+      return send(res, 403, { ok: false, error: 'دسترسی کارتابل نیست' });
+    }
+    const id = cartItemMatch[1];
     const body = await readBody(req);
     const all = loadJson(cartPath(), { items: [] });
-    const item = {
-      id: 'sf_' + uid(),
-      from: body.from || '',
-      fromTitle: body.fromTitle || '',
-      fromUser: s.user,
-      fromUserName: s.name,
-      to: body.to || '',
-      toTitle: body.toTitle || '',
-      toUser: body.toUser || '*',
-      subject: body.subject || '',
-      body: body.body || '',
-      date: body.date || '',
-      status: 'active',
-      hasFile: !!body.dataUrl,
-      fileName: body.fileName || '',
-      dataUrl: body.dataUrl || '',
-      createdAt: new Date().toISOString(),
-      deleted: false
-    };
-    all.items = all.items || [];
-    all.items.unshift(item);
-    if (all.items.length > 2000) all.items = all.items.slice(0, 2000);
+    let found = false;
+    all.items = (all.items || []).map((x) => {
+      if (!x || x.id !== id) return x;
+      found = true;
+      const next = Object.assign({}, x);
+      if (body.status != null) next.status = body.status;
+      if (body.deleted != null) next.deleted = !!body.deleted;
+      next.updatedAt = new Date().toISOString();
+      next.updatedBy = s.user;
+      return next;
+    });
+    if (!found) return send(res, 404, { ok: false, error: 'یافت نشد' });
     saveJson(cartPath(), all);
-    return send(res, 200, { ok: true, item });
+    return send(res, 200, { ok: true });
   }
 
   if (pathname === '/api/backup' && method === 'POST') {
     const s = tokenGet(req);
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
-    if (s.role !== 'admin' && s.role !== 'ceo') {
-      return send(res, 403, { ok: false, error: 'فقط مدیر' });
+    if (!can(s, 'backup') && !can(s, '*')) {
+      return send(res, 403, { ok: false, error: 'فقط مدیر / مدیرعامل / مدیر' });
     }
     const stamp = runBackup('manual');
     return send(res, 200, { ok: true, backup: stamp });
@@ -472,18 +612,13 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(cfg.port, cfg.host, () => {
   console.log('========================================');
-  console.log(' Smart Suite Local Server v1.1');
+  console.log(' Smart Suite Local Server v1.2');
+  console.log(' Auth: scrypt + RBAC');
   console.log(' http://127.0.0.1:' + cfg.port + '/suite.html');
   console.log(' API health: http://127.0.0.1:' + cfg.port + '/api/health');
-  console.log(' Daily backup hour: ' + BACKUP_HOUR + ':00 (local)');
-  console.log(' Retain backups: ' + RETAIN_DAYS + ' days');
-  console.log(' Public: ' + PUBLIC);
-  console.log(' Data:   ' + DATA);
+  console.log(' Daily backup hour: ' + BACKUP_HOUR + ':00');
   console.log(' Login: admin / admin  pin: 1234');
   console.log('========================================');
-  if (!fs.existsSync(path.join(PUBLIC, 'suite.html'))) {
-    console.log('WARNING: public/ may be incomplete — run COPY-MODULES.bat');
-  }
   try {
     runBackup('startup');
   } catch (e) {
