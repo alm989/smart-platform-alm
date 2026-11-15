@@ -1,8 +1,7 @@
 /**
- * server-bridge.js v1.2 — SmartCore <-> Local Server
- * - Never overwrite local DB with empty/invalid server payload
- * - Auto-sync smart_mod_*_v2 on write
- * - Pull only when server payload looks like a real module DB
+ * server-bridge.js v1.3 — SmartCore <-> Local Server
+ * - Validate token via /api/me; re-login on 401 (server restart)
+ * - Auto-sync smart_mod_*_v2; never overwrite local with empty payload
  */
 (function (global) {
   "use strict";
@@ -16,6 +15,7 @@
   var online = null;
   var pushTimers = {};
   var pulling = false;
+  var loginInflight = null;
 
   function base() {
     try {
@@ -70,26 +70,66 @@
     });
   }
 
-  function serverLogin(user, pass, pin) {
-    return api("/api/auth/login", {
-      method: "POST",
-      body: { user: user, pass: pass, pin: pin }
-    }).then(function (j) {
-      if (j && j.token) setToken(j.token);
-      return j;
-    });
-  }
-
-  function ensureSession() {
-    if (!base()) return Promise.resolve(false);
-    if (getToken()) return Promise.resolve(true);
+  function credentials() {
     var a = SmartCore.getAuth();
     var user = (a.session && a.session.user) || "admin";
     var pass = "admin";
     var pin = a.pin2 || "1234";
     var found = (a.users || []).find(function (x) { return x.user === user; });
     if (found && found.pass) pass = found.pass;
-    return serverLogin(user, pass, pin).then(function () { return true; }).catch(function () { return false; });
+    // module-local auth fallback (cashbox/bank often use smart_users_*)
+    try {
+      var mod = detectModId();
+      var local = JSON.parse(localStorage.getItem("smart_users_" + mod) || "null");
+      if (local && local.session && local.session.user) {
+        user = local.session.user;
+        var fu = (local.users || []).find(function (x) { return x.user === user; });
+        if (fu && fu.pass) pass = fu.pass;
+      }
+    } catch (e) {}
+    return { user: user, pass: pass, pin: pin };
+  }
+
+  function serverLogin(user, pass, pin) {
+    return api("/api/auth/login", {
+      method: "POST",
+      body: { user: user, pass: pass, pin: pin }
+    }).then(function (j) {
+      if (j && j.token) setToken(j.token);
+      else throw new Error((j && j.error) || "no token");
+      return j;
+    });
+  }
+
+  function forceLogin() {
+    if (loginInflight) return loginInflight;
+    setToken("");
+    var c = credentials();
+    loginInflight = serverLogin(c.user, c.pass, c.pin)
+      .then(function (j) {
+        loginInflight = null;
+        return true;
+      })
+      .catch(function (err) {
+        loginInflight = null;
+        // last resort default admin
+        return serverLogin("admin", "admin", "1234")
+          .then(function () { return true; })
+          .catch(function () { return false; });
+      });
+    return loginInflight;
+  }
+
+  function ensureSession() {
+    if (!base()) return Promise.resolve(false);
+    var tok = getToken();
+    if (!tok) return forceLogin();
+    return api("/api/me")
+      .then(function () { return true; })
+      .catch(function (err) {
+        if (err && err.status === 401) return forceLogin();
+        return forceLogin();
+      });
   }
 
   function modIdFromKey(key) {
@@ -108,12 +148,10 @@
     }
   }
 
-  /** Accept only payloads that look like a module database */
   function isValidModulePayload(payload) {
     if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
     if (payload.stores && typeof payload.stores === "object") return true;
     if (payload.version != null && (payload.audit || payload.createdAt || payload.updatedAt)) return true;
-    // non-empty domain object with more than a trivial test key
     var keys = Object.keys(payload);
     if (keys.length === 0) return false;
     if (keys.length === 1 && (keys[0] === "test" || keys[0] === "at")) return false;
@@ -139,11 +177,7 @@
       if (!ok) return local;
       return api("/api/data/" + encodeURIComponent(modId)).then(function (j) {
         var payload = j && j.data ? j.data.payload : null;
-        if (!isValidModulePayload(payload)) {
-          // Server empty/invalid — keep local; optionally seed server from local later
-          return local;
-        }
-        // Prefer newer server if both exist
+        if (!isValidModulePayload(payload)) return local;
         var useServer = true;
         try {
           var lt = local && local.updatedAt ? Date.parse(local.updatedAt) : 0;
@@ -162,9 +196,6 @@
   }
 
   function storeSave(modId, data) {
-    if (!isValidModulePayload(data) && !(data && data.stores)) {
-      // still allow explicit saves of structured empty defDB-like objects
-    }
     var localOk = SmartCore.saveModuleData(modId, data);
     if (!base()) {
       return Promise.resolve({ ok: localOk, source: "local" });
@@ -176,7 +207,20 @@
         body: { payload: data }
       }).then(function (j) {
         return { ok: true, source: "server", version: j.version, updatedAt: j.updatedAt };
-      }).catch(function () {
+      }).catch(function (err) {
+        if (err && err.status === 401) {
+          return forceLogin().then(function (ok2) {
+            if (!ok2) return { ok: localOk, source: "local-fallback" };
+            return api("/api/data/" + encodeURIComponent(modId), {
+              method: "PUT",
+              body: { payload: data }
+            }).then(function (j) {
+              return { ok: true, source: "server", version: j.version };
+            }).catch(function () {
+              return { ok: localOk, source: "local-fallback" };
+            });
+          });
+        }
         return { ok: localOk, source: "local-fallback" };
       });
     });
@@ -193,13 +237,27 @@
     if (pushTimers[key]) clearTimeout(pushTimers[key]);
     pushTimers[key] = setTimeout(function () {
       ensureSession().then(function (ok) {
-        if (!ok) return;
+        if (!ok) {
+          console.warn("[server-bridge] sync fail", modId, "no session");
+          return;
+        }
         return api("/api/data/" + encodeURIComponent(modId), {
           method: "PUT",
           body: { payload: data }
         }).then(function (j) {
           console.info("[server-bridge] synced", modId, "v" + (j.version || "?"));
         }).catch(function (err) {
+          if (err && err.status === 401) {
+            return forceLogin().then(function (ok2) {
+              if (!ok2) return;
+              return api("/api/data/" + encodeURIComponent(modId), {
+                method: "PUT",
+                body: { payload: data }
+              }).then(function (j) {
+                console.info("[server-bridge] synced", modId, "v" + (j.version || "?"));
+              });
+            });
+          }
           console.warn("[server-bridge] sync fail", modId, err && err.message);
         });
       });
@@ -236,7 +294,9 @@
   SmartCore.login = function (user, pass, pin) {
     var res = _login(user, pass, pin);
     if (res && res.ok && base()) {
-      serverLogin(user, pass, pin).catch(function () {});
+      serverLogin(user, pass, pin || "1234").catch(function () {
+        forceLogin();
+      });
     }
     return res;
   };
@@ -256,6 +316,7 @@
     login: serverLogin,
     getToken: getToken,
     fetch: api,
+    ensureSession: ensureSession,
     isOnline: function () { return !!online; }
   };
   SmartCore.store = {
@@ -264,7 +325,7 @@
     save: storeSave,
     pullCurrent: pullCurrentModule
   };
-  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.2";
+  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.3";
 
   installLocalStorageHook();
 
@@ -274,13 +335,7 @@
         console.info("[server-bridge] online", base());
         ensureSession().then(function (s) {
           console.info("[server-bridge] session", s ? "ok" : "pending-login");
-          // Do not auto-pull before module script runs — race broke cashbox loadDB.
-          // Pull after DOM ready, deferred.
-          if (s) {
-            setTimeout(function () {
-              pullCurrentModule();
-            }, 1500);
-          }
+          if (s) setTimeout(function () { pullCurrentModule(); }, 800);
         });
       } else {
         console.info("[server-bridge] server not reachable — localStorage only");
