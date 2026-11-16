@@ -1,7 +1,6 @@
 /**
  * facilities-autoload.js
- * بعد از core.js و suite-facilities.js لود شود، یا فقط بعد از core.js
- * (در صورت لود شدن suite-facilities.js آن را init می‌کند؛ وگرنه خودش لود می‌کند)
+ * بعد از core.js — suite-facilities را init می‌کند و cartable-api را لود می‌کند
  */
 (function () {
   "use strict";
@@ -36,18 +35,29 @@
     return !!(document.getElementById("p-notes") || document.getElementById("p-rems") || document.getElementById("p-cartable"));
   }
 
+  function loadCartableApi() {
+    if (window.CartableAPI || document.querySelector('script[src*="cartable-api.js"]')) return;
+    var s = document.createElement("script");
+    s.src = "cartable-api.js";
+    s.onload = function () { console.info("[facilities-autoload] cartable-api loaded"); };
+    s.onerror = function () { console.warn("[facilities-autoload] cartable-api.js missing"); };
+    (document.body || document.documentElement).appendChild(s);
+  }
+
   function initNow() {
     if (!hasPanels()) return;
     if (!window.SuiteFacilities || typeof SuiteFacilities.init !== "function") return;
-    if (window.__sfFacilitiesInited) return;
-    window.__sfFacilitiesInited = true;
-    var d = detectMod();
-    try {
-      SuiteFacilities.init({ moduleId: d.id, moduleTitle: d.title });
-    } catch (e) {
-      console.warn("[facilities-autoload] init error", e);
-      window.__sfFacilitiesInited = false;
+    if (!window.__sfFacilitiesInited) {
+      window.__sfFacilitiesInited = true;
+      var d = detectMod();
+      try {
+        SuiteFacilities.init({ moduleId: d.id, moduleTitle: d.title });
+      } catch (e) {
+        console.warn("[facilities-autoload] init error", e);
+        window.__sfFacilitiesInited = false;
+      }
     }
+    loadCartableApi();
   }
 
   function loadScriptThenInit() {
@@ -72,7 +82,7 @@
     s.setAttribute("data-module", d.id);
     s.setAttribute("data-title", d.title);
     s.onload = function () { initNow(); };
-    s.onerror = function () { console.warn("[facilities-autoload] suite-facilities.js load failed — CSP را به script-src 'self' 'unsafe-inline' تغییر دهید"); };
+    s.onerror = function () { console.warn("[facilities-autoload] suite-facilities.js load failed"); };
     (document.body || document.documentElement).appendChild(s);
   }
 
