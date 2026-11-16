@@ -1,8 +1,8 @@
 /**
- * server-bridge.js v1.6
- * A) RBAC UI for cashbox/bank (admin panels)
- * B) Cartable pull on panel open + stronger sync
- * C) Works with server host 127.0.0.1
+ * server-bridge.js v1.7
+ * - RBAC UI: cashbox, bank, accounting, sales, warehouse, payroll, personnel, purchase
+ * - Cartable server sync
+ * - Suite gear/backup for admin/ceo
  */
 (function (global) {
   "use strict";
@@ -10,10 +10,14 @@
     console.warn("[server-bridge] SmartCore missing");
     return;
   }
-  if (global.SmartCore.store && global.SmartCore.store._bridged16) return;
+  if (global.SmartCore.store && global.SmartCore.store._bridged17) return;
 
   var TOKEN_KEY = "smart_suite_api_token";
   var CART_KEY = "suite_cartable_v1";
+  var RBAC_MODS = {
+    cashbox: 1, bank: 1, accounting: 1, sales: 1, warehouse: 1,
+    payroll: 1, personnel: 1, purchase: 1, pettycash: 1
+  };
   var online = null;
   var pushTimers = {};
   var pulling = false;
@@ -126,7 +130,8 @@
         return true;
       })
       .catch(function () {
-        return serverLogin("admin", "admin", "1234")
+        // last resort defaults (change via secure-setup.js)
+        return serverLogin("admin", "admin", c.pin || "1234")
           .then(function () {
             loginInflight = null;
             return true;
@@ -186,16 +191,13 @@
     }
   }
 
-  /** A) Hide admin-only UI in cashbox / bank */
-  function applyFinanceRbac() {
+  function applyModuleRbac() {
     var mod = detectModId();
-    if (mod !== "cashbox" && mod !== "bank" && mod !== "accounting") return;
+    if (!RBAC_MODS[mod]) return;
 
     var r = role();
-    var elevated = isServerElevated();
     var managerPlus = canBackupRestore();
 
-    // role chip
     var chip = document.getElementById("sfRoleChip");
     if (!chip) {
       chip = document.createElement("div");
@@ -215,7 +217,6 @@
       el.setAttribute("data-rbac-hidden", "1");
     }
 
-    // users panel / nav
     if (!canManageUsers()) {
       hideEl(document.getElementById("p-users"));
       document.querySelectorAll("[data-panel='p-users'], a[href='#p-users']").forEach(hideEl);
@@ -225,7 +226,6 @@
       });
     }
 
-    // restore / dangerous
     if (!managerPlus) {
       ["btnRestoreEmergency", "btnRestoreLocal", "btnBackupLocal", "restoreFile"].forEach(function (id) {
         hideEl(document.getElementById(id));
@@ -236,7 +236,6 @@
       });
     }
 
-    // guest: block primary save buttons lightly
     if (r === "guest") {
       document.querySelectorAll("button.btn-p, button.primary, .btn-ok").forEach(function (b) {
         var t = b.textContent || "";
@@ -247,7 +246,7 @@
       });
     }
 
-    console.info("[server-bridge] finance RBAC applied", mod, r);
+    console.info("[server-bridge] RBAC applied", mod, r);
   }
 
   function modIdFromKey(key) {
@@ -453,7 +452,6 @@
       var panel = document.getElementById("settingsPanel");
       if (!panel || document.getElementById("btnServerBackup")) return;
       if (!isServerElevated()) return;
-
       var btn = document.createElement("button");
       btn.type = "button";
       btn.id = "btnServerBackup";
@@ -482,13 +480,13 @@
       serverLogin(user, pass, pin || "1234")
         .then(function () {
           applyGearPolicy();
-          applyFinanceRbac();
+          applyModuleRbac();
           injectSuiteBackupButton();
         })
         .catch(function () {
           forceLogin().then(function () {
             applyGearPolicy();
-            applyFinanceRbac();
+            applyModuleRbac();
           });
         });
     }
@@ -520,12 +518,12 @@
   };
   SmartCore.store = {
     _bridged: true,
-    _bridged16: true,
+    _bridged17: true,
     load: storeLoad,
     save: storeSave,
     pullCurrent: pullCurrentModule
   };
-  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.6";
+  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.7";
 
   installLocalStorageHook();
   installCartablePanelHook();
@@ -538,15 +536,15 @@
           console.info("[server-bridge] session", s ? "ok" : "pending",
             serverUser ? serverUser.role : "");
           applyGearPolicy();
-          applyFinanceRbac();
+          applyModuleRbac();
           if (s) {
             setTimeout(function () {
               pullCurrentModule();
               pullCartable();
               injectSuiteBackupButton();
-              applyFinanceRbac();
+              applyModuleRbac();
             }, 700);
-            setTimeout(applyFinanceRbac, 2000);
+            setTimeout(applyModuleRbac, 2000);
             setInterval(function () { pullCartable(); }, 30000);
           }
         });
