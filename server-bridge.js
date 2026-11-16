@@ -1,8 +1,8 @@
 /**
- * server-bridge.js v1.7
- * - RBAC UI: cashbox, bank, accounting, sales, warehouse, payroll, personnel, purchase
- * - Cartable server sync
- * - Suite gear/backup for admin/ceo
+ * server-bridge.js v1.8
+ * - Optimistic lock: send baseVersion on PUT; handle 409
+ * - RBAC UI for finance modules
+ * - Seed-aware pull; role chip
  */
 (function (global) {
   "use strict";
@@ -10,7 +10,7 @@
     console.warn("[server-bridge] SmartCore missing");
     return;
   }
-  if (global.SmartCore.store && global.SmartCore.store._bridged17) return;
+  if (global.SmartCore.store && global.SmartCore.store._bridged18) return;
 
   var TOKEN_KEY = "smart_suite_api_token";
   var CART_KEY = "suite_cartable_v1";
@@ -24,6 +24,7 @@
   var cartPulling = false;
   var loginInflight = null;
   var serverUser = null;
+  var modVersions = {};
 
   function base() {
     try {
@@ -130,7 +131,6 @@
         return true;
       })
       .catch(function () {
-        // last resort defaults (change via secure-setup.js)
         return serverLogin("admin", "admin", c.pin || "1234")
           .then(function () {
             loginInflight = null;
@@ -194,7 +194,6 @@
   function applyModuleRbac() {
     var mod = detectModId();
     if (!RBAC_MODS[mod]) return;
-
     var r = role();
     var managerPlus = canBackupRestore();
 
@@ -245,7 +244,6 @@
         }
       });
     }
-
     console.info("[server-bridge] RBAC applied", mod, r);
   }
 
@@ -257,7 +255,9 @@
   function isValidModulePayload(payload) {
     if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
     if (payload.stores && typeof payload.stores === "object") return true;
+    if (payload.funds && Array.isArray(payload.funds)) return true;
     if (payload.version != null && (payload.audit || payload.createdAt || payload.updatedAt)) return true;
+    if (payload.meta && payload.meta.seeded) return true;
     var keys = Object.keys(payload);
     if (keys.length === 0) return false;
     if (keys.length === 1 && (keys[0] === "test" || keys[0] === "at")) return false;
@@ -281,6 +281,7 @@
     return ensureSession().then(function (ok) {
       if (!ok) return local;
       return api("/api/data/" + encodeURIComponent(modId)).then(function (j) {
+        if (j && j.data && j.data.version != null) modVersions[modId] = j.data.version;
         var payload = j && j.data ? j.data.payload : null;
         if (!isValidModulePayload(payload)) return local;
         var useServer = true;
@@ -298,15 +299,38 @@
     });
   }
 
+  function pushModule(modId, data, baseVersion) {
+    var body = { payload: data };
+    if (baseVersion != null) body.baseVersion = baseVersion;
+    else if (modVersions[modId] != null) body.baseVersion = modVersions[modId];
+    return api("/api/data/" + encodeURIComponent(modId), {
+      method: "PUT",
+      body: body
+    }).then(function (j) {
+      if (j && j.version != null) modVersions[modId] = j.version;
+      return j;
+    }).catch(function (err) {
+      if (err && err.status === 409 && err.body && err.body.data) {
+        console.warn("[server-bridge] version conflict", modId, err.body.serverVersion);
+        modVersions[modId] = err.body.serverVersion;
+        var payload = err.body.data.payload;
+        if (isValidModulePayload(payload)) {
+          writeLocalSilent(SmartCore.primaryKey(modId), payload);
+        }
+        if (SmartCore.toast) {
+          SmartCore.toast("تداخل نسخه — داده سرور بارگذاری شد", true);
+        }
+      }
+      throw err;
+    });
+  }
+
   function storeSave(modId, data) {
     var localOk = SmartCore.saveModuleData(modId, data);
     if (!base()) return Promise.resolve({ ok: localOk, source: "local" });
     return ensureSession().then(function (ok) {
       if (!ok) return { ok: localOk, source: "local" };
-      return api("/api/data/" + encodeURIComponent(modId), {
-        method: "PUT",
-        body: { payload: data }
-      }).then(function (j) {
+      return pushModule(modId, data).then(function (j) {
         return { ok: true, source: "server", version: j.version };
       }).catch(function () {
         return { ok: localOk, source: "local-fallback" };
@@ -329,10 +353,7 @@
     pushTimers[key] = setTimeout(function () {
       ensureSession().then(function (ok) {
         if (!ok) return;
-        return api("/api/data/" + encodeURIComponent(modId), {
-          method: "PUT",
-          body: { payload: data }
-        }).then(function (j) {
+        return pushModule(modId, data).then(function (j) {
           console.info("[server-bridge] synced", modId, "v" + (j.version || "?"));
         }).catch(function (err) {
           console.warn("[server-bridge] sync fail", modId, err && err.message);
@@ -434,7 +455,7 @@
     if (modId === "suite") return Promise.resolve();
     return storeLoad(modId, {}).then(function (payload) {
       if (payload && isValidModulePayload(payload)) {
-        console.info("[server-bridge] pulled", modId);
+        console.info("[server-bridge] pulled", modId, "v" + (modVersions[modId] || "?"));
       }
     });
   }
@@ -443,6 +464,16 @@
     return ensureSession().then(function (ok) {
       if (!ok) throw new Error("ورود سرور ناموفق");
       return api("/api/backup", { method: "POST" });
+    });
+  }
+
+  /** Login as specific server user (for RBAC test) */
+  function switchServerUser(user, pass, pin) {
+    setToken("");
+    return serverLogin(user, pass, pin || "5678").then(function () {
+      applyGearPolicy();
+      applyModuleRbac();
+      return serverUser;
     });
   }
 
@@ -477,7 +508,7 @@
   SmartCore.login = function (user, pass, pin) {
     var res = _login(user, pass, pin);
     if (res && res.ok && base()) {
-      serverLogin(user, pass, pin || "1234")
+      serverLogin(user, pass, pin || "5678")
         .then(function () {
           applyGearPolicy();
           applyModuleRbac();
@@ -506,6 +537,7 @@
     base: base,
     health: health,
     login: serverLogin,
+    switchUser: switchServerUser,
     getToken: getToken,
     fetch: api,
     ensureSession: ensureSession,
@@ -514,16 +546,17 @@
     serverUser: function () { return serverUser; },
     isElevated: isServerElevated,
     role: role,
+    modVersion: function (id) { return modVersions[id]; },
     isOnline: function () { return !!online; }
   };
   SmartCore.store = {
     _bridged: true,
-    _bridged17: true,
+    _bridged18: true,
     load: storeLoad,
     save: storeSave,
     pullCurrent: pullCurrentModule
   };
-  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.7";
+  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.8";
 
   installLocalStorageHook();
   installCartablePanelHook();
