@@ -1,8 +1,8 @@
 /**
- * server-bridge.js v1.8
- * - Optimistic lock: send baseVersion on PUT; handle 409
- * - RBAC UI for finance modules
- * - Seed-aware pull; role chip
+ * server-bridge.js v1.9
+ * - RBAC UI on ALL modules (except suite)
+ * - Optimistic lock baseVersion + 409
+ * - Cartable sync + role chip
  */
 (function (global) {
   "use strict";
@@ -10,14 +10,10 @@
     console.warn("[server-bridge] SmartCore missing");
     return;
   }
-  if (global.SmartCore.store && global.SmartCore.store._bridged18) return;
+  if (global.SmartCore.store && global.SmartCore.store._bridged19) return;
 
   var TOKEN_KEY = "smart_suite_api_token";
   var CART_KEY = "suite_cartable_v1";
-  var RBAC_MODS = {
-    cashbox: 1, bank: 1, accounting: 1, sales: 1, warehouse: 1,
-    payroll: 1, personnel: 1, purchase: 1, pettycash: 1
-  };
   var online = null;
   var pushTimers = {};
   var pulling = false;
@@ -191,9 +187,11 @@
     }
   }
 
+  /** RBAC on every module page except suite launcher */
   function applyModuleRbac() {
     var mod = detectModId();
-    if (!RBAC_MODS[mod]) return;
+    if (mod === "suite" || mod === "index" || !mod) return;
+
     var r = role();
     var managerPlus = canBackupRestore();
 
@@ -232,6 +230,17 @@
       document.querySelectorAll("button").forEach(function (b) {
         var t = b.textContent || "";
         if (/بازیابی اضطراری|بازیابی از فایل|پشتیبان محلی/i.test(t)) hideEl(b);
+      });
+    }
+
+    // sensitive admin panels (common ids across suite modules)
+    if (!isServerElevated()) {
+      ["p-sys", "p-admin", "p-security", "p-audit-admin"].forEach(function (id) {
+        hideEl(document.getElementById(id));
+      });
+      document.querySelectorAll("[data-panel]").forEach(function (b) {
+        var p = b.getAttribute("data-panel") || "";
+        if (/p-sys|p-admin|p-security|security|sysadmin/i.test(p)) hideEl(b);
       });
     }
 
@@ -467,7 +476,6 @@
     });
   }
 
-  /** Login as specific server user (for RBAC test) */
   function switchServerUser(user, pass, pin) {
     setToken("");
     return serverLogin(user, pass, pin || "5678").then(function () {
@@ -551,12 +559,12 @@
   };
   SmartCore.store = {
     _bridged: true,
-    _bridged18: true,
+    _bridged19: true,
     load: storeLoad,
     save: storeSave,
     pullCurrent: pullCurrentModule
   };
-  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.8";
+  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.9";
 
   installLocalStorageHook();
   installCartablePanelHook();
