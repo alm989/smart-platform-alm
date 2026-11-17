@@ -4,6 +4,7 @@
   "publicDir": "public",
   "dataDir": "data",
   "backupDir": "backups",
+  "backupExtraDir": "D:/smart-platform-backups",
   "sessionHours": 12,
   "maxBodyMb": 8,
   "backupRetainDays": 30,
