@@ -1,8 +1,8 @@
 /**
- * server-bridge.js v1.9
- * - RBAC UI on ALL modules (except suite)
- * - Optimistic lock baseVersion + 409
- * - Cartable sync + role chip
+ * server-bridge.js v2.0
+ * - Remember last successful server login (sessionStorage)
+ * - Fewer 401 loops after password change
+ * - RBAC all modules · cartable · optimistic lock
  */
 (function (global) {
   "use strict";
@@ -10,9 +10,10 @@
     console.warn("[server-bridge] SmartCore missing");
     return;
   }
-  if (global.SmartCore.store && global.SmartCore.store._bridged19) return;
+  if (global.SmartCore.store && global.SmartCore.store._bridged20) return;
 
   var TOKEN_KEY = "smart_suite_api_token";
+  var LAST_KEY = "smart_suite_last_login";
   var CART_KEY = "suite_cartable_v1";
   var online = null;
   var pushTimers = {};
@@ -38,6 +39,24 @@
     try {
       if (t) sessionStorage.setItem(TOKEN_KEY, t);
       else sessionStorage.removeItem(TOKEN_KEY);
+    } catch (e) {}
+  }
+
+  function getLastLogin() {
+    try {
+      var o = JSON.parse(sessionStorage.getItem(LAST_KEY) || "null");
+      if (o && o.user && o.pass) return o;
+    } catch (e) {}
+    return null;
+  }
+  function setLastLogin(user, pass, pin) {
+    try {
+      sessionStorage.setItem(LAST_KEY, JSON.stringify({
+        user: user,
+        pass: pass,
+        pin: pin || "5678",
+        at: Date.now()
+      }));
     } catch (e) {}
   }
 
@@ -87,10 +106,13 @@
   }
 
   function credentials() {
+    var last = getLastLogin();
+    if (last) return { user: last.user, pass: last.pass, pin: last.pin || "5678" };
+
     var a = SmartCore.getAuth();
     var user = (a.session && a.session.user) || "admin";
     var pass = "admin";
-    var pin = a.pin2 || "1234";
+    var pin = a.pin2 || "5678";
     var found = (a.users || []).find(function (x) { return x.user === user; });
     if (found && found.pass) pass = found.pass;
     try {
@@ -106,37 +128,54 @@
   }
 
   function serverLogin(user, pass, pin) {
+    var p = pin || "5678";
     return api("/api/auth/login", {
       method: "POST",
-      body: { user: user, pass: pass, pin: pin }
+      body: { user: user, pass: pass, pin: p }
     }).then(function (j) {
       if (j && j.token) setToken(j.token);
-      if (j && j.user) serverUser = j.user;
-      else throw new Error((j && j.error) || "no token");
+      if (j && j.user) {
+        serverUser = j.user;
+        setLastLogin(user, pass, p);
+      } else throw new Error((j && j.error) || "no token");
       return j;
     });
+  }
+
+  function tryLoginSeq(list) {
+    var i = 0;
+    function next() {
+      if (i >= list.length) return Promise.resolve(false);
+      var c = list[i++];
+      return serverLogin(c.user, c.pass, c.pin).then(function () {
+        return true;
+      }).catch(function () {
+        return next();
+      });
+    }
+    return next();
   }
 
   function forceLogin() {
     if (loginInflight) return loginInflight;
     setToken("");
     var c = credentials();
-    loginInflight = serverLogin(c.user, c.pass, c.pin)
-      .then(function () {
-        loginInflight = null;
-        return true;
-      })
-      .catch(function () {
-        return serverLogin("admin", "admin", c.pin || "1234")
-          .then(function () {
-            loginInflight = null;
-            return true;
-          })
-          .catch(function () {
-            loginInflight = null;
-            return false;
-          });
-      });
+    var last = getLastLogin();
+    var attempts = [];
+    if (last) attempts.push({ user: last.user, pass: last.pass, pin: last.pin || "5678" });
+    attempts.push({ user: c.user, pass: c.pass, pin: c.pin || "5678" });
+    if (c.pin !== "5678") attempts.push({ user: c.user, pass: c.pass, pin: "5678" });
+    // do NOT blindly try admin/admin after password change — only if no last login
+    if (!last) {
+      attempts.push({ user: "admin", pass: "admin", pin: "5678" });
+      attempts.push({ user: "admin", pass: "admin", pin: "1234" });
+    }
+
+    loginInflight = tryLoginSeq(attempts).then(function (ok) {
+      loginInflight = null;
+      if (!ok) console.warn("[server-bridge] login failed — SmartCore.api.login(user,pass,pin)");
+      return ok;
+    });
     return loginInflight;
   }
 
@@ -187,7 +226,6 @@
     }
   }
 
-  /** RBAC on every module page except suite launcher */
   function applyModuleRbac() {
     var mod = detectModId();
     if (mod === "suite" || mod === "index" || !mod) return;
@@ -233,7 +271,6 @@
       });
     }
 
-    // sensitive admin panels (common ids across suite modules)
     if (!isServerElevated()) {
       ["p-sys", "p-admin", "p-security", "p-audit-admin"].forEach(function (id) {
         hideEl(document.getElementById(id));
@@ -535,6 +572,7 @@
   SmartCore.logout = function () {
     var t = getToken();
     setToken("");
+    try { sessionStorage.removeItem(LAST_KEY); } catch (e) {}
     serverUser = null;
     if (base() && t) api("/api/auth/logout", { method: "POST" }).catch(function () {});
     applyGearPolicy();
@@ -559,12 +597,12 @@
   };
   SmartCore.store = {
     _bridged: true,
-    _bridged19: true,
+    _bridged20: true,
     load: storeLoad,
     save: storeSave,
     pullCurrent: pullCurrentModule
   };
-  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge1.9";
+  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge2.0";
 
   installLocalStorageHook();
   installCartablePanelHook();
@@ -574,7 +612,7 @@
       if (ok) {
         console.info("[server-bridge] online", base());
         ensureSession().then(function (s) {
-          console.info("[server-bridge] session", s ? "ok" : "pending",
+          console.info("[server-bridge] session", s ? "ok" : "need-login",
             serverUser ? serverUser.role : "");
           applyGearPolicy();
           applyModuleRbac();
