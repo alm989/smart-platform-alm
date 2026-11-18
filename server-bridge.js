@@ -1,8 +1,7 @@
 /**
- * server-bridge.js v2.0
- * - Remember last successful server login (sessionStorage)
- * - Fewer 401 loops after password change
- * - RBAC all modules · cartable · optimistic lock
+ * server-bridge.js v2.1
+ * - Suite launcher filter by JWT modules[]
+ * - Remember login · RBAC UI · cartable · optimistic lock
  */
 (function (global) {
   "use strict";
@@ -10,7 +9,7 @@
     console.warn("[server-bridge] SmartCore missing");
     return;
   }
-  if (global.SmartCore.store && global.SmartCore.store._bridged20) return;
+  if (global.SmartCore.store && global.SmartCore.store._bridged21) return;
 
   var TOKEN_KEY = "smart_suite_api_token";
   var LAST_KEY = "smart_suite_last_login";
@@ -52,10 +51,7 @@
   function setLastLogin(user, pass, pin) {
     try {
       sessionStorage.setItem(LAST_KEY, JSON.stringify({
-        user: user,
-        pass: pass,
-        pin: pin || "5678",
-        at: Date.now()
+        user: user, pass: pass, pin: pin || "5678", at: Date.now()
       }));
     } catch (e) {}
   }
@@ -108,7 +104,6 @@
   function credentials() {
     var last = getLastLogin();
     if (last) return { user: last.user, pass: last.pass, pin: last.pin || "5678" };
-
     var a = SmartCore.getAuth();
     var user = (a.session && a.session.user) || "admin";
     var pass = "admin";
@@ -147,11 +142,8 @@
     function next() {
       if (i >= list.length) return Promise.resolve(false);
       var c = list[i++];
-      return serverLogin(c.user, c.pass, c.pin).then(function () {
-        return true;
-      }).catch(function () {
-        return next();
-      });
+      return serverLogin(c.user, c.pass, c.pin).then(function () { return true; })
+        .catch(function () { return next(); });
     }
     return next();
   }
@@ -165,12 +157,10 @@
     if (last) attempts.push({ user: last.user, pass: last.pass, pin: last.pin || "5678" });
     attempts.push({ user: c.user, pass: c.pass, pin: c.pin || "5678" });
     if (c.pin !== "5678") attempts.push({ user: c.user, pass: c.pass, pin: "5678" });
-    // do NOT blindly try admin/admin after password change — only if no last login
     if (!last) {
       attempts.push({ user: "admin", pass: "admin", pin: "5678" });
       attempts.push({ user: "admin", pass: "admin", pin: "1234" });
     }
-
     loginInflight = tryLoginSeq(attempts).then(function (ok) {
       loginInflight = null;
       if (!ok) console.warn("[server-bridge] login failed — SmartCore.api.login(user,pass,pin)");
@@ -195,15 +185,27 @@
     return (serverUser && serverUser.role) || "user";
   }
 
+  function allowedModules() {
+    var r = role();
+    if (r === "admin" || r === "ceo") return null; // null = all
+    var list = (serverUser && serverUser.modules) || [];
+    if (!list.length) return [];
+    return list.map(function (x) { return String(x).toLowerCase(); });
+  }
+
+  function canAccessMod(id) {
+    var allow = allowedModules();
+    if (allow === null) return true;
+    id = String(id || "").toLowerCase();
+    if (id === "suite" || id === "index") return true;
+    return allow.indexOf(id) >= 0;
+  }
+
   function isServerElevated() {
     var r = role();
     return r === "admin" || r === "ceo";
   }
-
-  function canManageUsers() {
-    return isServerElevated();
-  }
-
+  function canManageUsers() { return isServerElevated(); }
   function canBackupRestore() {
     var r = role();
     return r === "admin" || r === "ceo" || r === "manager";
@@ -226,9 +228,88 @@
     }
   }
 
+  /** Hide suite tiles not in JWT modules[] */
+  function applySuiteLauncherFilter() {
+    if (detectModId() !== "suite") return;
+    var allow = allowedModules();
+    var tiles = document.querySelectorAll("a.mod[data-id], a.mod[href]");
+    var hidden = 0;
+    var shown = 0;
+
+    tiles.forEach(function (a) {
+      var id = (a.getAttribute("data-id") || "").toLowerCase();
+      if (!id) {
+        var href = a.getAttribute("href") || "";
+        var m = href.match(/([^\/\\]+)\.html?/i);
+        if (m) {
+          id = m[1].toLowerCase();
+          if (id === "file-hub") id = "filehub";
+          if (id === "pr-media") id = "pr";
+        }
+      }
+      if (!id) return;
+
+      if (allow === null || allow.indexOf(id) >= 0) {
+        a.style.display = "";
+        a.removeAttribute("data-rbac-mod-hidden");
+        shown++;
+      } else {
+        a.style.display = "none";
+        a.setAttribute("data-rbac-mod-hidden", "1");
+        hidden++;
+      }
+    });
+
+    // hide empty sections
+    document.querySelectorAll(".section").forEach(function (sec) {
+      var grid = sec.querySelector(".grid");
+      if (!grid) return;
+      var any = false;
+      grid.querySelectorAll("a.mod").forEach(function (a) {
+        if (a.style.display !== "none") any = true;
+      });
+      sec.style.display = any ? "" : "none";
+    });
+
+    var chip = document.getElementById("sfRoleChip");
+    if (!chip) {
+      chip = document.createElement("div");
+      chip.id = "sfRoleChip";
+      chip.setAttribute("style",
+        "position:fixed;top:10px;right:10px;z-index:120;font:11px Tahoma,sans-serif;" +
+        "background:rgba(15,23,42,.9);color:#e2e8f0;border:1px solid #334155;" +
+        "border-radius:8px;padding:5px 9px");
+      document.body.appendChild(chip);
+    }
+    chip.textContent = "نقش: " + role() +
+      (serverUser && serverUser.user ? " (" + serverUser.user + ")" : "") +
+      " · ماژول " + shown;
+
+    console.info("[server-bridge] suite filter", role(), "shown", shown, "hidden", hidden);
+  }
+
+  /** Block direct URL to forbidden module */
+  function guardCurrentModule() {
+    var mod = detectModId();
+    if (mod === "suite" || mod === "index") return;
+    if (canAccessMod(mod)) return;
+    console.warn("[server-bridge] module forbidden", mod, role());
+    if (SmartCore.toast) SmartCore.toast("دسترسی به این ماژول مجاز نیست", true);
+    setTimeout(function () {
+      location.href = (base() || "") + "/suite.html";
+    }, 600);
+  }
+
   function applyModuleRbac() {
     var mod = detectModId();
-    if (mod === "suite" || mod === "index" || !mod) return;
+    if (mod === "suite") {
+      applySuiteLauncherFilter();
+      applyGearPolicy();
+      return;
+    }
+    if (!mod || mod === "index") return;
+
+    guardCurrentModule();
 
     var r = role();
     var managerPlus = canBackupRestore();
@@ -274,10 +355,6 @@
     if (!isServerElevated()) {
       ["p-sys", "p-admin", "p-security", "p-audit-admin"].forEach(function (id) {
         hideEl(document.getElementById(id));
-      });
-      document.querySelectorAll("[data-panel]").forEach(function (b) {
-        var p = b.getAttribute("data-panel") || "";
-        if (/p-sys|p-admin|p-security|security|sysadmin/i.test(p)) hideEl(b);
       });
     }
 
@@ -363,9 +440,7 @@
         if (isValidModulePayload(payload)) {
           writeLocalSilent(SmartCore.primaryKey(modId), payload);
         }
-        if (SmartCore.toast) {
-          SmartCore.toast("تداخل نسخه — داده سرور بارگذاری شد", true);
-        }
+        if (SmartCore.toast) SmartCore.toast("تداخل نسخه — داده سرور بارگذاری شد", true);
       }
       throw err;
     });
@@ -417,10 +492,7 @@
       if (!items) return;
       ensureSession().then(function (ok) {
         if (!ok) return;
-        return api("/api/cartable", {
-          method: "PUT",
-          body: { items: items }
-        }).then(function (j) {
+        return api("/api/cartable", { method: "PUT", body: { items: items } }).then(function (j) {
           console.info("[server-bridge] cartable synced", j.count);
         }).catch(function (err) {
           console.warn("[server-bridge] cartable sync fail", err && err.message);
@@ -445,12 +517,8 @@
           }
         } catch (e) {}
         var map = {};
-        local.items.forEach(function (x) {
-          if (x && x.id) map[x.id] = x;
-        });
-        items.forEach(function (x) {
-          if (x && x.id) map[x.id] = x;
-        });
+        local.items.forEach(function (x) { if (x && x.id) map[x.id] = x; });
+        items.forEach(function (x) { if (x && x.id) map[x.id] = x; });
         var merged = Object.keys(map).map(function (k) { return map[k]; });
         merged.sort(function (a, b) {
           return String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
@@ -516,9 +584,11 @@
   function switchServerUser(user, pass, pin) {
     setToken("");
     return serverLogin(user, pass, pin || "5678").then(function () {
-      applyGearPolicy();
-      applyModuleRbac();
-      return serverUser;
+      return ensureSession().then(function () {
+        applyGearPolicy();
+        applyModuleRbac();
+        return serverUser;
+      });
     });
   }
 
@@ -554,6 +624,9 @@
     var res = _login(user, pass, pin);
     if (res && res.ok && base()) {
       serverLogin(user, pass, pin || "5678")
+        .then(function () {
+          return ensureSession();
+        })
         .then(function () {
           applyGearPolicy();
           applyModuleRbac();
@@ -592,17 +665,19 @@
     serverUser: function () { return serverUser; },
     isElevated: isServerElevated,
     role: role,
+    canAccessMod: canAccessMod,
+    allowedModules: allowedModules,
     modVersion: function (id) { return modVersions[id]; },
     isOnline: function () { return !!online; }
   };
   SmartCore.store = {
     _bridged: true,
-    _bridged20: true,
+    _bridged21: true,
     load: storeLoad,
     save: storeSave,
     pullCurrent: pullCurrentModule
   };
-  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge2.0";
+  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge2.1";
 
   installLocalStorageHook();
   installCartablePanelHook();
