@@ -1,86 +1,81 @@
-# Sync-From-GitHub.ps1
-# One-click sync from GitHub → local smart-platform-alm
-# Run in PowerShell:
-#   cd D:\smart-platform-alm
-#   powershell -ExecutionPolicy Bypass -File .\Sync-From-GitHub.ps1
-#
-# Does NOT overwrite: server\data\  server\backups\  users.json
+# Sync-From-GitHub.ps1 — GitHub to D:\smart-platform-alm
+# powershell -ExecutionPolicy Bypass -File .\Sync-From-GitHub.ps1
+# Does NOT touch: server\data  server\backups
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 $Root = "D:\smart-platform-alm"
-$RepoRaw = "https://raw.githubusercontent.com/alm989/smart-platform-alm/main"
+$Base = "https://raw.githubusercontent.com/alm989/smart-platform-alm/main"
 $Server = Join-Path $Root "server"
 $Public = Join-Path $Server "public"
 
-function Ensure-Dir([string]$p) {
-  if (-not (Test-Path $p)) { New-Item -ItemType Directory -Path $p -Force | Out-Null }
+function EnsureDir($p) {
+  if (-not (Test-Path -LiteralPath $p)) {
+    New-Item -ItemType Directory -Path $p -Force | Out-Null
+  }
 }
 
-function Get-Raw([string]$rel, [string]$dest) {
-  $url = "$RepoRaw/$($rel -replace '\\','/')"
-  $dir = Split-Path -Parent $dest
-  Ensure-Dir $dir
+function Dl($relPath, $destPath) {
+  $url = $Base + "/" + ($relPath -replace "\\", "/")
+  $parent = Split-Path -Parent $destPath
+  EnsureDir $parent
   try {
-    Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing -TimeoutSec 60
-    Write-Host "  OK  $rel"
+    Invoke-WebRequest -Uri $url -OutFile $destPath -UseBasicParsing -TimeoutSec 90
+    Write-Host ("  OK  " + $relPath)
     return $true
   } catch {
-    Write-Host "  SKIP $rel  ($($_.Exception.Message))"
+    Write-Host ("  SKIP " + $relPath)
     return $false
   }
 }
 
 Write-Host "========================================"
-Write-Host " Smart Suite — Sync from GitHub"
-Write-Host " Target: $Root"
+Write-Host " Smart Suite - Sync from GitHub"
+Write-Host (" Target: " + $Root)
 Write-Host "========================================"
 
-Ensure-Dir $Root
-Ensure-Dir $Server
-Ensure-Dir $Public
-Ensure-Dir (Join-Path $Server "scripts")
-Ensure-Dir (Join-Path $Server "lib")
-Ensure-Dir (Join-Path $Server "docs")
-Ensure-Dir (Join-Path $Server "data")
-Ensure-Dir (Join-Path $Server "data\modules")
-Ensure-Dir (Join-Path $Server "backups")
+EnsureDir $Root
+EnsureDir $Server
+EnsureDir $Public
+EnsureDir (Join-Path $Server "scripts")
+EnsureDir (Join-Path $Server "lib")
+EnsureDir (Join-Path $Server "docs")
+EnsureDir (Join-Path $Server "data")
+EnsureDir (Join-Path $Server "data\modules")
+EnsureDir (Join-Path $Server "backups")
 
-# --- core client files (repo root → root + public) ---
-$clientFiles = @(
-  "core.js",
-  "server-bridge.js",
-  "suite-facilities.js",
-  "facilities-autoload.js",
-  "cartable-api.js"
-)
-
-Write-Host "`n[1] Client core"
-foreach ($f in $clientFiles) {
-  $local = Join-Path $Root $f
-  if (Get-Raw $f $local) {
-    Copy-Item $local (Join-Path $Public $f) -Force
+Write-Host ""
+Write-Host "[1] Client core"
+$client = @("core.js","server-bridge.js","suite-facilities.js","facilities-autoload.js","cartable-api.js")
+foreach ($name in $client) {
+  $local = Join-Path $Root $name
+  if (Dl $name $local) {
+    Copy-Item -LiteralPath $local -Destination (Join-Path $Public $name) -Force
   }
 }
 
-# --- server runtime ---
-Write-Host "`n[2] Server runtime"
-$serverFiles = @(
-  "server/server.js",
-  "server/config.json",
-  "server/START.bat",
-  "server/BACKUP-MIRROR.bat",
-  "server/COPY-MODULES.bat",
-  "server/OPS-CHECKLIST.md",
-  "server/SECURITY-HARDENING.md"
+Write-Host ""
+Write-Host "[2] Server runtime"
+$srv = @(
+  @{ r = "server/server.js"; d = "server.js" },
+  @{ r = "server/START.bat"; d = "START.bat" },
+  @{ r = "server/BACKUP-MIRROR.bat"; d = "BACKUP-MIRROR.bat" },
+  @{ r = "server/COPY-MODULES.bat"; d = "COPY-MODULES.bat" },
+  @{ r = "server/OPS-CHECKLIST.md"; d = "OPS-CHECKLIST.md" },
+  @{ r = "server/SECURITY-HARDENING.md"; d = "SECURITY-HARDENING.md" }
 )
-foreach ($f in $serverFiles) {
-  $name = Split-Path $f -Leaf
-  Get-Raw $f (Join-Path $Server $name) | Out-Null
+foreach ($item in $srv) {
+  Dl $item.r (Join-Path $Server $item.d) | Out-Null
 }
-# keep host localhost if config was overwritten with wrong host — user can edit
+# config.json: only download if missing (protect local host/jwtSecret/pass settings)
+$cfg = Join-Path $Server "config.json"
+if (-not (Test-Path -LiteralPath $cfg)) {
+  Dl "server/config.json" $cfg | Out-Null
+} else {
+  Write-Host "  KEEP server/config.json (local)"
+}
 
-# --- server scripts / lib / docs ---
-Write-Host "`n[3] Scripts / lib / docs"
+Write-Host ""
+Write-Host "[3] Scripts / lib / docs"
 $extra = @(
   "server/scripts/secure-setup.js",
   "server/scripts/seed-modules.js",
@@ -88,58 +83,41 @@ $extra = @(
   "server/scripts/apply-extra-backup-hook.js",
   "server/scripts/apply-jwt-auth.js",
   "server/scripts/apply-optimistic-lock.js",
+  "server/scripts/apply-module-rbac-jwt.js",
   "server/scripts/register-daily-mirror.ps1",
   "server/lib/jwt.js",
+  "server/lib/rbac-modules.js",
   "server/docs/ARCHITECTURE-API-SECURITY.md"
 )
-foreach ($f in $extra) {
-  $rel = $f -replace '^server/', ''
-  Get-Raw $f (Join-Path $Server $rel) | Out-Null
+foreach ($rel in $extra) {
+  $tail = $rel.Substring("server/".Length)
+  Dl $rel (Join-Path $Server $tail) | Out-Null
 }
 
-# --- suite + common modules into public (best-effort) ---
-Write-Host "`n[4] HTML modules → public (best-effort)"
-$htmlList = @(
-  "suite.html",
-  "cashbox.html",
-  "bank.html",
-  "accounting.html",
-  "sales.html",
-  "warehouse.html",
-  "payroll.html",
-  "personnel.html",
-  "purchase.html",
-  "customers.html",
-  "secretariat.html",
-  "secretary.html",
-  "ceo.html",
-  "manager.html"
+Write-Host ""
+Write-Host "[4] HTML modules to public"
+$html = @(
+  "suite.html","cashbox.html","bank.html","accounting.html","sales.html",
+  "warehouse.html","payroll.html","personnel.html","purchase.html",
+  "customers.html","secretariat.html","secretary.html","ceo.html","manager.html"
 )
-foreach ($h in $htmlList) {
+foreach ($h in $html) {
   $dest = Join-Path $Public $h
-  # prefer root path on github
-  if (-not (Get-Raw $h $dest)) {
-    Get-Raw "server/public/$h" $dest | Out-Null
-  }
-  # also keep a copy at repo root if download worked
-  if (Test-Path $dest) {
-    Copy-Item $dest (Join-Path $Root $h) -Force -ErrorAction SilentlyContinue
+  if (Dl $h $dest) {
+    Copy-Item -LiteralPath $dest -Destination (Join-Path $Root $h) -Force -ErrorAction SilentlyContinue
   }
 }
 
-# --- self-update this script ---
-Write-Host "`n[5] Sync script"
-Get-Raw "Sync-From-GitHub.ps1" (Join-Path $Root "Sync-From-GitHub.ps1") | Out-Null
+Write-Host ""
+Write-Host "[5] Sync script self-update"
+Dl "Sync-From-GitHub.ps1" (Join-Path $Root "Sync-From-GitHub.ps1") | Out-Null
 
-Write-Host "`n========================================"
-Write-Host " Done. Protected (not touched):"
-Write-Host "   server\data\"
-Write-Host "   server\backups\"
+Write-Host ""
 Write-Host "========================================"
-Write-Host ""
-Write-Host "Next:"
-Write-Host "  cd D:\smart-platform-alm\server"
-Write-Host "  node scripts\apply-jwt-auth.js   # if not yet applied"
-Write-Host "  node server.js"
-Write-Host "  http://127.0.0.1:8787/suite.html"
-Write-Host ""
+Write-Host " Done. Not touched: server\data  server\backups"
+Write-Host " Next:"
+Write-Host "   cd D:\smart-platform-alm\server"
+Write-Host "   node scripts\apply-jwt-auth.js"
+Write-Host "   node scripts\apply-module-rbac-jwt.js"
+Write-Host "   node server.js"
+Write-Host "========================================"
