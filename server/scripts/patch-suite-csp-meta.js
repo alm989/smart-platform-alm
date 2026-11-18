@@ -1,9 +1,5 @@
 /**
- * Clean suite.html meta CSP:
- *  - script-src 'self' 'unsafe-inline'
- *  - remove frame-ancestors (use HTTP header instead)
- *  - ensure core.js + server-bridge.js before </body>
- *
+ * Clean suite.html meta CSP + inject scripts
  *   node scripts/patch-suite-csp-meta.js
  */
 'use strict';
@@ -17,7 +13,8 @@ const files = [
 
 const inject =
   '<script src="core.js"></script>\n' +
-  '<script src="server-bridge.js"></script>\n';
+  '<script src="server-bridge.js"></script>\n' +
+  '<script src="suite-jwt-gate.js"></script>\n';
 
 files.forEach((fp) => {
   if (!fs.existsSync(fp)) {
@@ -31,8 +28,16 @@ files.forEach((fp) => {
   s = s.replace(/\s*frame-ancestors 'none';?/g, '');
   s = s.replace(/\s*upgrade-insecure-requests/g, '');
 
-  if (s.indexOf('src="server-bridge.js"') === -1 && s.indexOf("src='server-bridge.js'") === -1) {
-    s = s.replace('</body>', inject + '</body>');
+  if (s.indexOf('suite-jwt-gate.js') === -1) {
+    // remove partial inject if only bridge present, re-add full set
+    if (s.indexOf('server-bridge.js') === -1) {
+      s = s.replace('</body>', inject + '</body>');
+    } else if (s.indexOf('suite-jwt-gate.js') === -1) {
+      s = s.replace(
+        /<script src="server-bridge\.js"><\/script>/,
+        '<script src="server-bridge.js"></script>\n<script src="suite-jwt-gate.js"></script>'
+      );
+    }
   }
 
   if (s !== orig) {
