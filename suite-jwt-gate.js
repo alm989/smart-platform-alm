@@ -1,11 +1,10 @@
 /**
- * suite-jwt-gate.js v2 — JWT login gate + role bar + logout
- * Load after core.js and server-bridge.js on suite.html
+ * suite-jwt-gate.js v2.1 — JWT gate + role bar (top-right) + logout
  */
 (function (global) {
   "use strict";
-  if (global.__SUITE_JWT_GATE_V2__) return;
-  global.__SUITE_JWT_GATE_V2__ = true;
+  if (global.__SUITE_JWT_GATE_V21__) return;
+  global.__SUITE_JWT_GATE_V21__ = true;
 
   function isSuite() {
     try {
@@ -27,33 +26,41 @@
   }
 
   function ensureRoleBar(user) {
+    // hide bridge chip on suite to avoid duplicate
+    var chip = document.getElementById("sfRoleChip");
+    if (chip) chip.style.display = "none";
+
     var bar = document.getElementById("suiteJwtBar");
     if (!bar) {
       bar = document.createElement("div");
       bar.id = "suiteJwtBar";
+      // top-right — away from clock (clock sits on the left in RTL topbar)
       bar.setAttribute("style",
-        "position:fixed;top:10px;left:10px;z-index:160;display:flex;gap:8px;align-items:center;" +
-        "font:12px Tahoma,sans-serif;background:rgba(15,23,42,.92);color:#e2e8f0;" +
-        "border:1px solid #334155;border-radius:10px;padding:6px 10px");
+        "position:fixed;top:12px;right:12px;left:auto;z-index:160;display:flex;gap:8px;align-items:center;" +
+        "flex-direction:row-reverse;font:12px Tahoma,sans-serif;background:rgba(15,23,42,.94);color:#e2e8f0;" +
+        "border:1px solid #334155;border-radius:10px;padding:6px 10px;max-width:min(320px,70vw);" +
+        "box-shadow:0 4px 14px rgba(0,0,0,.35)");
       document.body.appendChild(bar);
     }
     var role = (user && user.role) || "?";
     var name = (user && (user.name || user.user)) || "";
     bar.innerHTML =
-      "<span>نقش: <b style=\"color:#7dd3fc\">" + role + "</b>" +
-      (name ? " · " + name : "") + "</span>" +
       "<button type=\"button\" id=\"suiteJwtLogout\" style=\"border:1px solid #475569;background:#1e293b;" +
-      "color:#fecaca;border-radius:8px;padding:4px 10px;cursor:pointer;font:inherit;font-size:11px\">" +
-      "خروج سرور</button>";
+      "color:#fecaca;border-radius:8px;padding:4px 10px;cursor:pointer;font:inherit;font-size:11px;flex-shrink:0\">" +
+      "خروج سرور</button>" +
+      "<span style=\"text-align:right\">نقش: <b style=\"color:#7dd3fc\">" + role + "</b>" +
+      (name ? " · " + name : "") + "</span>";
     var btn = document.getElementById("suiteJwtLogout");
     if (btn) {
       btn.onclick = function () {
         try {
           if (SmartCore.logout) SmartCore.logout();
-          else if (SmartCore.api && SmartCore.api.fetch) {
+          else {
             sessionStorage.removeItem("smart_suite_api_token");
             sessionStorage.removeItem("smart_suite_last_login");
-            SmartCore.api.fetch("/api/auth/logout", { method: "POST" }).catch(function () {});
+            if (SmartCore.api && SmartCore.api.fetch) {
+              SmartCore.api.fetch("/api/auth/logout", { method: "POST" }).catch(function () {});
+            }
           }
         } catch (e) {}
         toast("خروج از سرور");
