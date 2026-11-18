@@ -1,11 +1,11 @@
 /**
- * suite-jwt-gate.js — ورود یکپارچه JWT روی لانچر سوئیت
- * بعد از core.js و server-bridge.js لود شود.
+ * suite-jwt-gate.js v2 — JWT login gate + role bar + logout
+ * Load after core.js and server-bridge.js on suite.html
  */
 (function (global) {
   "use strict";
-  if (global.__SUITE_JWT_GATE__) return;
-  global.__SUITE_JWT_GATE__ = true;
+  if (global.__SUITE_JWT_GATE_V2__) return;
+  global.__SUITE_JWT_GATE_V2__ = true;
 
   function isSuite() {
     try {
@@ -26,8 +26,47 @@
     if (el) el.remove();
   }
 
+  function ensureRoleBar(user) {
+    var bar = document.getElementById("suiteJwtBar");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "suiteJwtBar";
+      bar.setAttribute("style",
+        "position:fixed;top:10px;left:10px;z-index:160;display:flex;gap:8px;align-items:center;" +
+        "font:12px Tahoma,sans-serif;background:rgba(15,23,42,.92);color:#e2e8f0;" +
+        "border:1px solid #334155;border-radius:10px;padding:6px 10px");
+      document.body.appendChild(bar);
+    }
+    var role = (user && user.role) || "?";
+    var name = (user && (user.name || user.user)) || "";
+    bar.innerHTML =
+      "<span>نقش: <b style=\"color:#7dd3fc\">" + role + "</b>" +
+      (name ? " · " + name : "") + "</span>" +
+      "<button type=\"button\" id=\"suiteJwtLogout\" style=\"border:1px solid #475569;background:#1e293b;" +
+      "color:#fecaca;border-radius:8px;padding:4px 10px;cursor:pointer;font:inherit;font-size:11px\">" +
+      "خروج سرور</button>";
+    var btn = document.getElementById("suiteJwtLogout");
+    if (btn) {
+      btn.onclick = function () {
+        try {
+          if (SmartCore.logout) SmartCore.logout();
+          else if (SmartCore.api && SmartCore.api.fetch) {
+            sessionStorage.removeItem("smart_suite_api_token");
+            sessionStorage.removeItem("smart_suite_last_login");
+            SmartCore.api.fetch("/api/auth/logout", { method: "POST" }).catch(function () {});
+          }
+        } catch (e) {}
+        toast("خروج از سرور");
+        setTimeout(function () { location.reload(); }, 300);
+      };
+    }
+  }
+
   function showGate() {
     if (document.getElementById("suiteJwtGate")) return;
+    var bar = document.getElementById("suiteJwtBar");
+    if (bar) bar.remove();
+
     var m = document.createElement("div");
     m.id = "suiteJwtGate";
     m.setAttribute("style",
@@ -74,13 +113,9 @@
         .then(function (j) {
           toast("ورود موفق: " + ((j.user && j.user.role) || u));
           removeGate();
-          if (SmartCore.api.ensureSession) {
-            return SmartCore.api.ensureSession();
-          }
+          if (SmartCore.api.ensureSession) return SmartCore.api.ensureSession();
         })
-        .then(function () {
-          location.reload();
-        })
+        .then(function () { location.reload(); })
         .catch(function (e) {
           err.textContent = (e && e.message) || "ورود ناموفق";
           document.getElementById("jwtGo").disabled = false;
@@ -102,6 +137,8 @@
     SmartCore.api.ensureSession().then(function (ok) {
       if (ok) {
         removeGate();
+        var u = SmartCore.api.serverUser ? SmartCore.api.serverUser() : null;
+        ensureRoleBar(u || { role: SmartCore.api.role && SmartCore.api.role() });
         console.info("[suite-jwt-gate] session ok");
       } else {
         showGate();
