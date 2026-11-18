@@ -1,10 +1,10 @@
 /**
  * Module-level access policy for Smart Suite JWT RBAC
- * Roles:
- *   admin, ceo  → all modules
- *   manager     → finance + ops core
- *   user        → day-to-day modules (no sysadmin)
- *   guest       → read-only limited set
+ *
+ * admin / ceo  → ALL modules
+ * manager      → finance + ops (no sysadmin)
+ * user         → ~15 day-to-day modules
+ * guest        → minimal read set
  */
 'use strict';
 
@@ -27,6 +27,7 @@ const MANAGER_SET = [
   'meeting', 'chat'
 ];
 
+/** Day-to-day operator — ~15 tiles on suite launcher */
 const USER_SET = [
   'suite', 'cashbox', 'bank', 'sales', 'warehouse', 'purchase',
   'customers', 'pettycash', 'secretariat', 'secretary',
@@ -49,12 +50,14 @@ function canAccessModule(role, moduleId) {
   const id = String(moduleId || '').toLowerCase();
   if (!id) return true;
   const list = modulesForRole(role);
-  if (list.indexOf('*') >= 0) return true;
   return list.indexOf(id) >= 0;
 }
 
 module.exports = {
   ALL,
+  MANAGER_SET,
+  USER_SET,
+  GUEST_SET,
   modulesForRole,
   canAccessModule
 };
