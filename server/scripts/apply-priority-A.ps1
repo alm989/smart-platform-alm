@@ -1,84 +1,108 @@
-# Priority A — IAM harden, audit, backup control, accounting separators
-# Run from: D:\smart-platform-alm\server
+# Priority A - fixed quoting for PowerShell 5+
 $ErrorActionPreference = 'Stop'
-$root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
-if (!(Test-Path (Join-Path $root 'server\server.js'))) {
+
+$candidates = @(
+  (Join-Path $PSScriptRoot '..\server.js'),
+  'D:\smart-platform-alm\server\server.js'
+)
+$serverJs = $null
+foreach ($c in $candidates) {
+  if (Test-Path $c) { $serverJs = (Resolve-Path $c).Path; break }
+}
+if (-not $serverJs) { throw 'server.js not found' }
+
+$root = Split-Path (Split-Path $serverJs -Parent) -Parent
+if (-not (Test-Path (Join-Path $root 'accounting.html'))) {
   $root = 'D:\smart-platform-alm'
 }
-$serverJs = Join-Path $root 'server\server.js'
-if (!(Test-Path $serverJs)) { throw "server.js not found: $serverJs" }
+
+Write-Host "server: $serverJs"
+Write-Host "root:   $root"
 
 Copy-Item $serverJs ($serverJs + '.bak-priorityA') -Force
-$t = [IO.File]::ReadAllText($serverJs)
+$t = [System.IO.File]::ReadAllText($serverJs)
 
 if ($t -match 'PriorityA-IAM') {
-  Write-Host 'Priority A server block already present'
+  Write-Host 'Server already has PriorityA-IAM'
 } else {
 
-# --- audit helper ---
-$auditFn = @'
+  # 1) inject audit helpers before function can(
+  $auditFn = @'
 
-/* PriorityA-IAM: central audit + stricter users API */
+/* PriorityA-IAM */
 function auditPath() { return path.join(DATA, 'audit.json'); }
 function appendAudit(ev) {
   try {
     const p = auditPath();
     const db = loadJson(p, { items: [] });
     db.items = db.items || [];
-    db.items.unshift(Object.assign({
-      id: 'au_' + uid(),
-      at: new Date().toISOString()
-    }, ev || {}));
+    db.items.unshift(Object.assign({ id: 'au_' + uid(), at: new Date().toISOString() }, ev || {}));
     if (db.items.length > 5000) db.items = db.items.slice(0, 5000);
     saveJson(p, db);
-  } catch (e) {
-    console.warn('[audit]', e.message);
-  }
+  } catch (e) { console.warn('[audit]', e.message); }
 }
+
 '@
+  if ($t -notmatch 'function appendAudit') {
+    if ($t -match 'function can\(session, perm\)') {
+      $t = $t.Replace('function can(session, perm)', ($auditFn + 'function can(session, perm)'))
+    } else {
+      throw 'function can not found'
+    }
+  }
 
-if ($t -notmatch 'function appendAudit') {
-  $t = $t.Replace('function can(session, perm) {', $auditFn + "`r`nfunction can(session, perm) {")
-}
+  # 2) login audit - several line-ending variants
+  $loginOld1 = "const token = tokenNew(session);`r`n    return send(res, 200, { ok: true, token, user: session });"
+  $loginNew1 = "const token = tokenNew(session);`r`n    appendAudit({ action: 'login', user: session.user, role: session.role });`r`n    return send(res, 200, { ok: true, token, user: session });"
+  $loginOld2 = "const token = tokenNew(session);`n    return send(res, 200, { ok: true, token, user: session });"
+  $loginNew2 = "const token = tokenNew(session);`n    appendAudit({ action: 'login', user: session.user, role: session.role });`n    return send(res, 200, { ok: true, token, user: session });"
+  if ($t.Contains($loginOld1)) { $t = $t.Replace($loginOld1, $loginNew1) }
+  elseif ($t.Contains($loginOld2)) { $t = $t.Replace($loginOld2, $loginNew2) }
+  else { Write-Host 'WARN: login hook pattern not found' }
 
-# login audit
-$t = $t.Replace(
-  'const token = tokenNew(session);`r`n    return send(res, 200, { ok: true, token, user: session });',
-  "const token = tokenNew(session);`r`n    appendAudit({ action: 'login', user: session.user, role: session.role, ip: ip });`r`n    return send(res, 200, { ok: true, token, user: session });"
-)
-if ($t -notmatch "appendAudit\(\{ action: 'login'") {
-  $t = $t.Replace(
-    'const token = tokenNew(session);`n    return send(res, 200, { ok: true, token, user: session });',
-    "const token = tokenNew(session);`n    appendAudit({ action: 'login', user: session.user, role: session.role, ip: ip });`n    return send(res, 200, { ok: true, token, user: session });"
-  )
-}
+  # 3) users GET permission
+  $usersOld1 = @"
+if (pathname === '/api/users' && method === 'GET') {
+    const s = tokenGet(req);
+    if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
+    const db = usersDb();
+"@
+  $usersNew1 = @"
+if (pathname === '/api/users' && method === 'GET') {
+    const s = tokenGet(req);
+    if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
+    if (!can(s, 'users') && !can(s, '*')) return send(res, 403, { ok: false, error: 'دسترسی کاربران نیست' });
+    const db = usersDb();
+"@
+  if ($t.Contains($usersOld1)) { $t = $t.Replace($usersOld1, $usersNew1) }
+  else { Write-Host 'WARN: users GET pattern not found (maybe already patched)' }
 
-# logout audit
-$t = $t.Replace(
-  "if (pathname === '/api/auth/logout' && method === 'POST') {`r`n    const h = req.headers['authorization'] || '';`r`n    const m = h.match(/^Bearer\s+(.+)$/i);`r`n    if (m) sessions.delete(m[1].trim());`r`n    return send(res, 200, { ok: true });`r`n  }",
-  "if (pathname === '/api/auth/logout' && method === 'POST') {`r`n    const h = req.headers['authorization'] || '';`r`n    const m = h.match(/^Bearer\s+(.+)$/i);`r`n    const sOut = tokenGet(req);`r`n    if (m) sessions.delete(m[1].trim());`r`n    appendAudit({ action: 'logout', user: sOut && sOut.user, role: sOut && sOut.role });`r`n    return send(res, 200, { ok: true });`r`n  }"
-)
+  # 4) module save audit
+  $modOld = @"
+saveJson(fp, next);
+      return send(res, 200, {
+        ok: true,
+        moduleId: id,
+        version: next.version,
+        updatedAt: next.updatedAt
+      });
+"@
+  $modNew = @"
+saveJson(fp, next);
+      appendAudit({ action: 'module_save', user: s.user, role: s.role, moduleId: id, version: next.version });
+      return send(res, 200, {
+        ok: true,
+        moduleId: id,
+        version: next.version,
+        updatedAt: next.updatedAt
+      });
+"@
+  if ($t.Contains($modOld)) { $t = $t.Replace($modOld, $modNew) }
+  else { Write-Host 'WARN: module save pattern not found' }
 
-# users GET requires users or *
-$t = $t.Replace(
-  "if (pathname === '/api/users' && method === 'GET') {`r`n    const s = tokenGet(req);`r`n    if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });`r`n    const db = usersDb();",
-  "if (pathname === '/api/users' && method === 'GET') {`r`n    const s = tokenGet(req);`r`n    if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });`r`n    if (!can(s, 'users') && !can(s, '*')) return send(res, 403, { ok: false, error: 'دسترسی کاربران نیست' });`r`n    const db = usersDb();"
-)
-
-# module write audit
-$t = $t.Replace(
-  'saveJson(fp, next);`r`n      return send(res, 200, {`r`n        ok: true,`r`n        moduleId: id,`r`n        version: next.version,`r`n        updatedAt: next.updatedAt`r`n      });',
-  "saveJson(fp, next);`r`n      appendAudit({ action: 'module_save', user: s.user, role: s.role, moduleId: id, version: next.version });`r`n      return send(res, 200, {`r`n        ok: true,`r`n        moduleId: id,`r`n        version: next.version,`r`n        updatedAt: next.updatedAt`r`n      });"
-)
-
-# backup POST audit if simple pattern
-if ($t -match "runBackup\('manual'\)" -or $t -match 'runBackup\("manual"\)') {
-  $t = [regex]::Replace($t, "(const id = runBackup\(['\"]manual['\"]\);)", "`$1`r`n    appendAudit({ action: 'backup', user: s.user, role: s.role, backup: id });")
-}
-
-# GET /api/audit
-if ($t -notmatch "pathname === '/api/audit'") {
-  $auditApi = @'
+  # 5) /api/audit endpoint - insert before last 404
+  if ($t -notmatch "pathname === '/api/audit'") {
+    $auditApi = @'
 
   if (pathname === '/api/audit' && method === 'GET') {
     const s = tokenGet(req);
@@ -92,24 +116,21 @@ if ($t -notmatch "pathname === '/api/audit'") {
   }
 
 '@
-  if ($t -match "return send\(res, 404, \{ ok: false, error: 'api not found' \}\);") {
-    $t = $t.Replace("return send(res, 404, { ok: false, error: 'api not found' });", $auditApi + "`r`n  return send(res, 404, { ok: false, error: 'api not found' });")
-  } else {
-    $idx = $t.LastIndexOf('return send(res, 404')
-    if ($idx -gt 0) { $t = $t.Insert($idx, $auditApi + "`r`n  ") }
+    $needle = "return send(res, 404, { ok: false, error: 'api not found' });"
+    if ($t.Contains($needle)) {
+      $t = $t.Replace($needle, ($auditApi + "`r`n  " + $needle))
+    } else {
+      $idx = $t.LastIndexOf('return send(res, 404')
+      if ($idx -gt 0) { $t = $t.Insert($idx, $auditApi + "`r`n  ") }
+      else { Write-Host 'WARN: could not insert /api/audit' }
+    }
   }
+
+  [System.IO.File]::WriteAllText($serverJs, $t, [System.Text.UTF8Encoding]::new($false))
+  Write-Host 'OK server.js patched'
 }
 
-# ensure backup restore needs backup perm + audit (if restore exists)
-if ($t -match 'backup/restore' -and $t -notmatch "appendAudit\(\{ action: 'restore'") {
-  $t = [regex]::Replace($t, '(runRestore\([^)]+\);|restoreBackup\([^)]+\);)', "`$1`r`n      appendAudit({ action: 'restore', user: s.user, role: s.role });")
-}
-
-[IO.File]::WriteAllText($serverJs, $t, [Text.UTF8Encoding]::new($false))
-Write-Host "OK server.js Priority A"
-}
-
-# --- accounting amount separators ---
+# --- accounting separators (here-string is single-quoted: safe) ---
 $accSnip = @'
 
 <script>
@@ -174,18 +195,19 @@ foreach ($f in @(
   (Join-Path $root 'accounting.html'),
   (Join-Path $root 'server\public\accounting.html')
 )) {
-  if (!(Test-Path $f)) { continue }
-  $html = [IO.File]::ReadAllText($f)
-  if ($html -match '__sfAccSep') { Write-Host "acc sep already $f"; continue }
+  if (-not (Test-Path $f)) { Write-Host "skip missing $f"; continue }
+  $html = [System.IO.File]::ReadAllText($f)
+  if ($html -match '__sfAccSep') { Write-Host "acc already $f"; continue }
   if ($html -match '</body>') {
-    $html = $html.Replace('</body>', $accSnip + "`r`n</body>")
-  } else { $html = $html + $accSnip }
-  [IO.File]::WriteAllText($f, $html, [Text.UTF8Encoding]::new($false))
-  Write-Host "OK accounting sep $f"
+    $html = $html.Replace('</body>', ($accSnip + "`r`n</body>"))
+  } else {
+    $html = $html + $accSnip
+  }
+  [System.IO.File]::WriteAllText($f, $html, [System.Text.UTF8Encoding]::new($false))
+  Write-Host "OK accounting $f"
 }
 
 Write-Host ''
-Write-Host '=== Priority A applied ==='
-Write-Host '1) Restart server: node server.js'
-Write-Host '2) Test login then: fetch("/api/audit",{headers:{Authorization:"Bearer "+sessionStorage.getItem("smart_suite_api_token")}}).then(r=>r.json()).then(console.log)'
-Write-Host '3) Accounting voucher: debit/credit blur -> 1,000,000'
+Write-Host '=== DONE Priority A ==='
+Write-Host 'Restart: node server.js'
+Write-Host 'Test audit after login in browser console.'
