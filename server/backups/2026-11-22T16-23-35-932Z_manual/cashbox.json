@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "updatedAt": "2026-11-17T13:30:37.350Z",
+  "updatedBy": "admin",
+  "payload": {
+    "version": 2,
+    "updatedAt": "2026-11-16T15:08:42.364Z",
+    "createdAt": "2026-11-16T15:08:42.364Z",
+    "stores": {
+      "main": {
+        "name": "صندوق اصلی",
+        "balance": 0
+      },
+      "funds": [],
+      "cin": [],
+      "cout": [],
+      "copen": []
+    },
+    "txs": [],
+    "funds": [],
+    "meta": {
+      "seeded": true
+    },
+    "audit": []
+  }
+}

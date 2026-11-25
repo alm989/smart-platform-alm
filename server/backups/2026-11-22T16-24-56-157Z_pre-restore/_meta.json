@@ -1,0 +1,16 @@
+{
+  "at": "2026-11-22T16:24:56.449Z",
+  "label": "pre-restore",
+  "modules": 5,
+  "files": [
+    "accounting.json",
+    "bank.json",
+    "cashbox.json",
+    "sales.json",
+    "warehouse.json"
+  ],
+  "users": true,
+  "cartable": true,
+  "audit": false,
+  "phase": "2C"
+}

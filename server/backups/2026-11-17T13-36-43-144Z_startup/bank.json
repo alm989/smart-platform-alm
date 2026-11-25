@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-16T15:08:42.364Z",
+  "updatedBy": "seed",
+  "payload": {
+    "version": 1,
+    "updatedAt": "2026-11-16T15:08:42.364Z",
+    "createdAt": "2026-11-16T15:08:42.364Z",
+    "accounts": [],
+    "txs": [],
+    "meta": {
+      "seeded": true
+    }
+  }
+}

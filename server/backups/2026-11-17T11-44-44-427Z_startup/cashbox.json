@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-16T15:08:42.364Z",
+  "updatedBy": "seed",
+  "payload": {
+    "version": 1,
+    "updatedAt": "2026-11-16T15:08:42.364Z",
+    "createdAt": "2026-11-16T15:08:42.364Z",
+    "stores": {
+      "main": {
+        "name": "صندوق اصلی",
+        "balance": 0
+      }
+    },
+    "txs": [],
+    "funds": [],
+    "meta": {
+      "seeded": true
+    }
+  }
+}

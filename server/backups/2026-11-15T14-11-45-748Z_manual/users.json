@@ -1,0 +1,11 @@
+{
+  "pin2": "1234",
+  "users": [
+    {
+      "user": "admin",
+      "pass": "admin",
+      "name": "مدیر سیستم",
+      "role": "admin"
+    }
+  ]
+}

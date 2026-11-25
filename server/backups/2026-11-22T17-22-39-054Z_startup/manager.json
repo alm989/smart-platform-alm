@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "updatedAt": "2026-11-22T17:01:00.928Z",
+  "updatedBy": "admin",
+  "payload": {
+    "version": 2,
+    "stores": {
+      "task": [],
+      "meet": [],
+      "goal": [],
+      "decision": []
+    },
+    "audit": [
+      {
+        "id": "mws32ndlafnzws",
+        "t": "2026-11-22T17:01:00.249Z",
+        "user": "مدیر",
+        "action": "login",
+        "detail": "admin"
+      }
+    ],
+    "createdAt": "2026-11-22T17:00:35.877Z",
+    "updatedAt": "2026-11-22T17:01:00.251Z"
+  }
+}

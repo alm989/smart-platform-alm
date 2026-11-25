@@ -1,0 +1,23 @@
+{
+  "pin2": "5678",
+  "users": [
+    {
+      "user": "admin",
+      "pass": "scrypt$94906dcbdc80f18464ad7a33a827cc0a$4fa9af43cfc27d46d1778d014767360d2517ff2f53461147d1e3cad2230ca1f5",
+      "name": "مدیر سیستم",
+      "role": "admin"
+    },
+    {
+      "user": "user",
+      "pass": "scrypt$4db17966250c333d189ce29d29c17f3f$e5d6bd6cd97d9bc524c45093bae4c32accbdabd90f8ce7cf44fd29df23b6a3f8",
+      "name": "کاربر عادی",
+      "role": "user"
+    },
+    {
+      "user": "manager1",
+      "pass": "scrypt$2414aa1faf1c2ad0f27cce17f61bca62$c4300dc2f417d46d4358d5cdc68b51febbf144e3c1dcdbbeda00c847fad9b095",
+      "name": "مدیر میانی",
+      "role": "manager"
+    }
+  ]
+}

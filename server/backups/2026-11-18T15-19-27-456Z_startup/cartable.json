@@ -1,0 +1,48 @@
+{
+  "items": [
+    {
+      "id": "sf_mwhz3ap3_1_19rff6",
+      "from": "bank",
+      "fromTitle": "bank",
+      "fromUser": "admin",
+      "fromUserName": "مدیر",
+      "to": "cashbox",
+      "toTitle": "صندوق",
+      "toUser": "*",
+      "toUserName": "همه کاربران",
+      "subject": "تست سرور",
+      "body": "بررسی کنیم",
+      "date": "۱۴۰۵/۰۸/۲۴",
+      "status": "active",
+      "hasFile": false,
+      "fileName": "",
+      "fileSize": 0,
+      "dataUrl": "",
+      "createdAt": "2026-11-15T15:11:50.248Z",
+      "deleted": false
+    },
+    {
+      "id": "sf_mwhxnkrj_1_1h9yk3",
+      "from": "bank",
+      "fromTitle": "bank",
+      "fromUser": "admin",
+      "fromUserName": "مهمان",
+      "to": "cashbox",
+      "toTitle": "صندوق",
+      "toUser": "*",
+      "toUserName": "همه کاربران",
+      "subject": "پیام به صندوق",
+      "body": "بررسی کن",
+      "date": "۱۴۰۵/۰۸/۲۴",
+      "status": "active",
+      "hasFile": false,
+      "fileName": "",
+      "fileSize": 0,
+      "dataUrl": "",
+      "createdAt": "2026-11-15T14:31:37.183Z",
+      "deleted": false
+    }
+  ],
+  "updatedAt": "2026-11-17T13:30:37.791Z",
+  "updatedBy": "admin"
+}

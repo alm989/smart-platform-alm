@@ -1,0 +1,17 @@
+{
+  "version": 3,
+  "updatedAt": "2026-11-23T18:35:14.095Z",
+  "updatedBy": "admin",
+  "payload": {
+    "version": 2,
+    "stores": {
+      "task": [],
+      "meet": [],
+      "goal": [],
+      "decision": []
+    },
+    "audit": [],
+    "createdAt": "2026-11-23T18:35:13.418Z",
+    "updatedAt": "2026-11-23T18:35:13.418Z"
+  }
+}

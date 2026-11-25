@@ -1,0 +1,19 @@
+{
+  "port": 8787,
+  "host": "127.0.0.1",
+  "publicDir": "public",
+  "dataDir": "data",
+  "backupDir": "backups",
+  "backupExtraDir": "D:/smart-platform-backups",
+  "sessionHours": 12,
+  "maxBodyMb": 8,
+  "backupRetainDays": 30,
+  "dailyBackupHour": 2,
+  "defaultAdmin": {
+    "user": "admin",
+    "pass": "admin",
+    "name": "مدیر سیستم",
+    "role": "admin"
+  },
+  "jwtSecret": "724f3ec98a50c8c3d88ee5917c6afff78724ee1bf8872b83bacc07cdb8b558a1"
+}

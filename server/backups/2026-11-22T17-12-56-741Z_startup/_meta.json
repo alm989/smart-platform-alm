@@ -1,0 +1,17 @@
+{
+  "at": "2026-11-22T17:12:56.819Z",
+  "label": "startup",
+  "modules": 6,
+  "files": [
+    "accounting.json",
+    "bank.json",
+    "cashbox.json",
+    "manager.json",
+    "sales.json",
+    "warehouse.json"
+  ],
+  "users": true,
+  "cartable": true,
+  "audit": false,
+  "phase": "2C"
+}
