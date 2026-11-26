@@ -5,11 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1220">
 <meta name="description" content="روابط عمومی — محتوا، بیانیه، رسانه، کمپین، وب‌سایت">
-<<<<<<< HEAD
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
-=======
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
 <title>روابط عمومی | سامانه هوشمند</title>
@@ -80,22 +76,15 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 .jcal-w,.jcal-d{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
 .jcal-w span{text-align:center;font-size:.52rem;color:var(--muted)}
 .jcal-d button{border:none;background:transparent;color:#fff;border-radius:6px;padding:2px;cursor:pointer;font-family:inherit;min-height:34px;width:100%}
-<<<<<<< HEAD
 .jcal-d button .jd{display:block;font-size:.7rem;font-weight:700}.jcal-d button .gd{display:block;font-size:.65rem;color:#94a3b8;font-weight:600;margin-top:1px}.jcal-d button .jd{display:block;font-size:.7rem;font-weight:700}.jcal-d button{min-height:40px}
-=======
-.jcal-d button .jd{display:block;font-size:.7rem;font-weight:700}.jcal-d button .gd{display:block;font-size:.4rem;color:var(--muted)}
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 .form-actions{margin-top:8px}
 .note{font-size:.7rem;color:var(--muted);margin-top:6px;line-height:1.45}
 .chk{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);margin:6px 0}
 </style>
 <script src="core.js"></script>
-<<<<<<< HEAD
 <script src="server-bridge.js"></script>
 <script src="suite-facilities.js" data-module="pr" data-title="pr"></script>
 <script src="facilities-autoload.js"></script>
-=======
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 </head>
 <body>
 <header class="header">
@@ -584,11 +573,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
 
   var FA = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
   var JM = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
-<<<<<<< HEAD
   var JW = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
-=======
-  var JW = ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنجشنبه", "جمعه"];
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 
   var listeners = [];
   var selId = {};
@@ -653,7 +638,6 @@ tr.deleted{opacity:.55;text-decoration:line-through}
     var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
     return { jy: jy, jm: jm, jd: jd };
   }
-<<<<<<< HEAD
 
   /* __sfDateHook: use accurate core calendar when available */
   if (window.SmartCore && SmartCore.date) {
@@ -665,8 +649,6 @@ tr.deleted{opacity:.55;text-decoration:line-through}
       toFa = function (n) { return SmartCore.date.toFa(n); };
     }
   }
-=======
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
   function j2g(jy, jm, jd) {
     var jy2 = jy - 979, jm2 = jm - 1, jd2 = jd - 1;
     var days = 365 * jy2 + Math.floor(jy2 / 33) * 8 + Math.floor(((jy2 % 33) + 3) / 4);
@@ -916,11 +898,7 @@ tr.deleted{opacity:.55;text-decoration:line-through}
       '<label>نام کاربری</label><input id="lgU">' +
       '<label>رمز</label><input id="lgP" type="password">' +
       '<button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button>' +
-<<<<<<< HEAD
       '<p class="empty" style="margin-top:8px">حساب مجاز را وارد کنید</p></div>';
-=======
-      '<p class="empty" style="margin-top:8px">admin / admin</p></div>';
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     document.body.appendChild(m);
     $("lgGo").onclick = function () {
       var u = $("lgU").value.trim(), p = $("lgP").value;
@@ -1344,20 +1322,12 @@ tr.deleted{opacity:.55;text-decoration:line-through}
   };
 
   function getCartAll() {
-<<<<<<< HEAD
     try { var _c = JSON.parse(localStorage.getItem(CART_KEY) || "[]"); if (Array.isArray(_c)) return _c; if (_c && Array.isArray(_c.items)) return _c.items; return []; }
-=======
-    try { return JSON.parse(localStorage.getItem(CART_KEY) || "[]") || []; }
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     catch (e) { return []; }
   }
   function saveCartAll(list) {
     try {
-<<<<<<< HEAD
       localStorage.setItem(CART_KEY, JSON.stringify({ items: Array.isArray(list) ? list : [], updatedAt: new Date().toISOString() }));
-=======
-      localStorage.setItem(CART_KEY, JSON.stringify(list));
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
       return true;
     } catch (e) {
       toast("خطا در ذخیره کارتابل", true);

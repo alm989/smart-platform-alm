@@ -14,11 +14,6 @@
     "pass": "admin",
     "name": "مدیر سیستم",
     "role": "admin"
-<<<<<<< HEAD
   },
   "jwtSecret": "724f3ec98a50c8c3d88ee5917c6afff78724ee1bf8872b83bacc07cdb8b558a1"
 }
-=======
-  }
-}
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509

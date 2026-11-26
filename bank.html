@@ -4,11 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1220">
-<<<<<<< HEAD
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
-=======
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
 <title>بانک هوشمند</title>
@@ -78,11 +74,7 @@ textarea{min-height:70px;resize:vertical}
 .jcal-w,.jcal-d{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
 .jcal-w span{text-align:center;font-size:.52rem;color:var(--muted)}
 .jcal-d button{border:none;background:transparent;color:#fff;border-radius:6px;padding:2px;cursor:pointer;font-family:inherit;min-height:34px;width:100%}
-<<<<<<< HEAD
 .jcal-d button .jd{display:block;font-size:.7rem;font-weight:700}.jcal-d button .gd{display:block;font-size:.65rem;color:#94a3b8;font-weight:600;margin-top:1px}.jcal-d button .jd{display:block;font-size:.7rem;font-weight:700}.jcal-d button{min-height:40px}
-=======
-.jcal-d button .jd{display:block;font-size:.7rem;font-weight:700}.jcal-d button .gd{display:block;font-size:.4rem;color:var(--muted)}
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 .form-actions{margin-top:8px;display:flex;flex-wrap:wrap;gap:4px}
 .note-box{font-size:.72rem;color:var(--muted);margin:6px 0;line-height:1.7;background:#0f172a;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:right}
 .show-deleted-bar{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.75rem}
@@ -90,12 +82,9 @@ textarea{min-height:70px;resize:vertical}
 .num{direction:ltr;unicode-bidi:isolate;text-align:left}
 </style>
 <script src="core.js"></script>
-<<<<<<< HEAD
 <script src="server-bridge.js"></script>
 <script src="suite-facilities.js" data-module="bank" data-title="bank"></script>
 <script src="facilities-autoload.js"></script>
-=======
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 </head>
 <body>
 <header class="header">
@@ -564,7 +553,6 @@ textarea{min-height:70px;resize:vertical}
     var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
     return { jy: jy, jm: jm, jd: jd };
   }
-<<<<<<< HEAD
 
   /* __sfDateHook: use accurate core calendar when available */
   if (window.SmartCore && SmartCore.date) {
@@ -576,8 +564,6 @@ textarea{min-height:70px;resize:vertical}
       toFa = function (n) { return SmartCore.date.toFa(n); };
     }
   }
-=======
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
   function j2g(jy, jm, jd) {
     var jy2 = jy - 979, jm2 = jm - 1, jd2 = jd - 1;
     var days = 365 * jy2 + Math.floor(jy2 / 33) * 8 + Math.floor(((jy2 % 33) + 3) / 4);
@@ -824,11 +810,7 @@ textarea{min-height:70px;resize:vertical}
     if (a.session && a.session.user) { cb(); return; }
     var m = document.createElement("div");
     m.className = "login-mask";
-<<<<<<< HEAD
     m.innerHTML = '<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود — بانک</h2><label>نام کاربری</label><input id="lgU"><label>رمز</label><input id="lgP" type="password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty" style="margin-top:8px">حساب مجاز را وارد کنید</p></div>';
-=======
-    m.innerHTML = '<div class="login-box"><h2 style="text-align:center;color:#7dd3fc;margin-bottom:10px">ورود — بانک</h2><label>نام کاربری</label><input id="lgU"><label>رمز</label><input id="lgP" type="password"><button type="button" class="btn btn-p" id="lgGo" style="width:100%;margin-top:10px">ورود</button><p class="empty" style="margin-top:8px">admin / admin</p></div>';
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     document.body.appendChild(m);
     $("lgGo").onclick = function () {
       var u = $("lgU").value.trim(), p = $("lgP").value;
@@ -1265,17 +1247,10 @@ textarea{min-height:70px;resize:vertical}
 
   /* کارتابل */
   function getCart() {
-<<<<<<< HEAD
     try { var _c = JSON.parse(localStorage.getItem(CART_KEY) || "[]"); if (Array.isArray(_c)) return _c; if (_c && Array.isArray(_c.items)) return _c.items; return []; } catch (e) { return []; }
   }
   function saveCart(list) {
     try { localStorage.setItem(CART_KEY, JSON.stringify({ items: Array.isArray(list) ? list : [], updatedAt: new Date().toISOString() })); return true; }
-=======
-    try { return JSON.parse(localStorage.getItem(CART_KEY) || "[]") || []; } catch (e) { return []; }
-  }
-  function saveCart(list) {
-    try { localStorage.setItem(CART_KEY, JSON.stringify(list)); return true; }
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     catch (e) { toast("خطای کارتابل", "err"); return false; }
   }
   function renderCart() {
@@ -1538,7 +1513,6 @@ textarea{min-height:70px;resize:vertical}
 
 })();
 </script>
-<<<<<<< HEAD
 
 <script>
 /* __sfAmtSep — thousand separators for amount fields only */
@@ -1669,7 +1643,5 @@ textarea{min-height:70px;resize:vertical}
   setInterval(bind, 2500);
 })();
 </script>
-=======
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 </body>
 </html>

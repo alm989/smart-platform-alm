@@ -5,11 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1220">
 <meta name="description" content="سامانه یکپارچه هوشمند مالی و اداری">
-<<<<<<< HEAD
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';">
-=======
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests">
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="no-referrer">
 <meta http-equiv="Permissions-Policy" content="microphone=(self), geolocation=()">
@@ -305,7 +301,6 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
     var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
     return { jy: jy, jm: jm, jd: jd };
   }
-<<<<<<< HEAD
 
   /* __sfDateHook: use accurate core calendar when available */
   if (window.SmartCore && SmartCore.date) {
@@ -317,8 +312,6 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
       toFa = function (n) { return SmartCore.date.toFa(n); };
     }
   }
-=======
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
   function tick() {
     var n = new Date(), j = g2j(n.getFullYear(), n.getMonth() + 1, n.getDate());
     if ($("dtJ")) $("dtJ").textContent = toFa(j.jy) + "/" + toFa(String(j.jm).padStart(2, "0")) + "/" + toFa(String(j.jd).padStart(2, "0"));
@@ -376,11 +369,7 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
       '<label>پین دوم</label><input id="lgPin" type="password" maxlength="8" inputmode="numeric" placeholder="۴ رقم">' +
       '<button type="button" class="btn btn-v" id="lgGo" style="width:100%;margin-top:8px">ورود</button>' +
       '<button type="button" class="btn" id="lgCancel" style="width:100%;margin-top:5px">بازگشت</button>' +
-<<<<<<< HEAD
       '<p class="empty" style="margin-top:6px;text-align:center">از حساب سرور استفاده کنید</p></div>';
-=======
-      '<p class="empty" style="margin-top:6px;text-align:center">admin / admin · پین: ۱۲۳۴</p></div>';
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     document.body.appendChild(m);
     $("lgGo").onclick = function () {
       var u = $("lgU").value.trim(), p = $("lgP").value, pin = ($("lgPin").value || "").trim();
@@ -927,7 +916,6 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
   showView("v-launch");
 })();
 </script>
-<<<<<<< HEAD
 <script src="core.js"></script>
 <script src="server-bridge.js"></script>
 <script src="suite-jwt-gate.js"></script>
@@ -1114,7 +1102,5 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
   setTimeout(boot, 800);
 })();
 </script>
-=======
->>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 </body>
 </html>
