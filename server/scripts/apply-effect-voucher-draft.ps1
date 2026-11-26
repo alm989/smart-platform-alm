@@ -1,4 +1,4 @@
-# UTF-8 safe: Persian UI via \u escapes — no literal Persian in this file
+# Effect posted -> form draft + AUTO-SAVE temp voucher (unicode-safe)
 # powershell -ExecutionPolicy Bypass -File .\server\scripts\apply-effect-voucher-draft.ps1
 $ErrorActionPreference = 'Stop'
 $root = 'D:\smart-platform-alm'
@@ -8,13 +8,12 @@ if (-not (Test-Path (Join-Path $root 'accounting.html'))) {
 
 $newBlock = @'
 <script>
-/* __sfAccEffectsV2 — pending effects + voucher draft (unicode-safe UI) */
+/* __sfAccEffectsV2 — pending effects + draft form + auto temp voucher */
 (function () {
   if (window.__sfAccEffectsV2) return;
   window.__sfAccEffectsV2 = true;
   window.__sfAccEffects = true;
 
-  // Persian UI without literal non-ASCII in patch source
   var U = {
     title: "\u0622\u062b\u0627\u0631 \u0645\u0627\u0644\u06cc \u062f\u0631 \u0627\u0646\u062a\u0638\u0627\u0631",
     refresh: "\u0628\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06cc",
@@ -22,16 +21,19 @@ $newBlock = @'
     login: "\u0627\u0628\u062a\u062f\u0627 \u0648\u0627\u0631\u062f \u0633\u0631\u0648\u0631 \u0634\u0648\u06cc\u062f",
     loading: "\u062f\u0631 \u062d\u0627\u0644 \u0628\u0627\u0631\u06af\u0630\u0627\u0631\u06cc\u2026",
     errLoad: "\u062e\u0637\u0627 \u062f\u0631 \u062f\u0631\u06cc\u0627\u0641\u062a \u0622\u062b\u0627\u0631",
-    post: "\u062b\u0628\u062a\u200c\u0634\u062f\u0647 + \u067e\u06cc\u0634\u200c\u0646\u0648\u06cc\u0633 \u0633\u0646\u062f",
+    post: "\u062b\u0628\u062a\u200c\u0634\u062f\u0647 + \u0633\u0646\u062f \u0645\u0648\u0642\u062a",
     rej: "\u0631\u062f",
     errNet: "\u062e\u0637\u0627\u06cc \u0634\u0628\u06a9\u0647",
     err: "\u062e\u0637\u0627",
-    counter: "\u0637\u0631\u0641 \u0645\u0642\u0627\u0628\u0644 (\u062a\u06a9\u0645\u06cc\u0644 \u06a9\u062f \u062d\u0633\u0627\u0628)",
-    draftOk: "\u067e\u06cc\u0634\u200c\u0646\u0648\u06cc\u0633 \u0633\u0646\u062f \u0633\u0627\u062e\u062a\u0647 \u0634\u062f \u2014 \u06a9\u062f \u062d\u0633\u0627\u0628 \u0631\u0627 \u062a\u06a9\u0645\u06cc\u0644 \u06a9\u0646\u06cc\u062f",
+    counter: "\u0637\u0631\u0641 \u0645\u0642\u0627\u0628\u0644 (\u062a\u06a9\u0645\u06cc\u0644 \u06a9\u062f)",
+    draftOk: "\u0633\u0646\u062f \u0645\u0648\u0642\u062a \u0630\u062e\u06cc\u0631\u0647 \u0634\u062f",
     src: "\u0645\u0646\u0628\u0639",
     effect: "\u0627\u062b\u0631 \u0645\u0627\u0644\u06cc",
-    acct: "\u062d\u0633\u0627\u0628"
+    acct: "\u062d\u0633\u0627\u0628",
+    tempCode: "TEMP"
   };
+
+  var ACCT_KEY = "smart_mod_accounting_v2";
 
   function tok() {
     return sessionStorage.getItem("smart_suite_api_token") || "";
@@ -43,6 +45,95 @@ $newBlock = @'
   function esc(s) {
     return String(s == null ? "" : s)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+  }
+  function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+  function todayJ() {
+    try {
+      if (window.SmartCore && SmartCore.date && SmartCore.date.todayJ) return SmartCore.date.todayJ();
+    } catch (e) {}
+    var n = new Date();
+    return n.getFullYear() + "/" + String(n.getMonth() + 1).padStart(2, "0") + "/" + String(n.getDate()).padStart(2, "0");
+  }
+  function loadAcctDb() {
+    try {
+      var raw = localStorage.getItem(ACCT_KEY);
+      if (!raw) return { version: 3, stores: { voucher: [] }, audit: [] };
+      var db = JSON.parse(raw);
+      if (!db.stores) db.stores = {};
+      if (!Array.isArray(db.stores.voucher)) db.stores.voucher = [];
+      return db;
+    } catch (e) {
+      return { version: 3, stores: { voucher: [] }, audit: [] };
+    }
+  }
+  function saveAcctDb(db) {
+    db.updatedAt = new Date().toISOString();
+    localStorage.setItem(ACCT_KEY, JSON.stringify(db));
+    try {
+      if (window.SmartCore && SmartCore.api && typeof SmartCore.api.syncState === "function") {
+        SmartCore.api.syncState();
+      }
+    } catch (e) {}
+  }
+  function nextNo(db) {
+    var max = 0;
+    (db.stores.voucher || []).forEach(function (v) {
+      if (v && !v.deleted) {
+        var n = parseInt(String(v["\u0634\u0645\u0627\u0631\u0647"] || v.no || "0").replace(/\D/g, ""), 10);
+        if (n > max) max = n;
+      }
+    });
+    return max + 1;
+  }
+  function persistTempVoucher(fx) {
+    var amt = Number(fx.amount) || 0;
+    if (!amt) return null;
+    var isDebit = String(fx.side || "debit").toLowerCase() !== "credit";
+    var db = loadAcctDb();
+    db.stores.voucher = (db.stores.voucher || []).filter(function (v) {
+      return !(v && v.effectId === fx.id && !v.deleted);
+    });
+    var no = nextNo(db);
+    var date = fx.date || todayJ();
+    var desc = (fx.desc || U.effect) + " · " + U.src + ": " + (fx.source || "") +
+      (fx.sourceId ? " #" + fx.sourceId : "") + " [" + fx.id + "]";
+    var lines = [
+      {
+        code: U.tempCode,
+        desc: (fx.accountHint || fx.source || U.acct) + " — " + (fx.desc || ""),
+        debit: isDebit ? amt : 0,
+        credit: isDebit ? 0 : amt
+      },
+      {
+        code: U.tempCode,
+        desc: U.counter,
+        debit: isDebit ? 0 : amt,
+        credit: isDebit ? amt : 0
+      }
+    ];
+    var typeMap = { cashbox: "\u0635\u0646\u062f\u0648\u0642", bank: "\u0628\u0627\u0646\u06a9", tankhah: "\u062a\u0646\u062e\u0648\u0627\u0647", pettycash: "\u062a\u0646\u062e\u0648\u0627\u0647" };
+    var rec = {
+      id: "fxv_" + (fx.id || uid()),
+      at: new Date().toISOString(),
+      by: "effect-auto",
+      deleted: false,
+      effectId: fx.id,
+      "\u0634\u0645\u0627\u0631\u0647": String(no),
+      "\u062a\u0627\u0631\u06cc\u062e": date,
+      "\u0646\u0648\u0639": typeMap[fx.source] || "\u0639\u0645\u0648\u0645\u06cc",
+      "\u0648\u0636\u0639\u06cc\u062a": "\u0645\u0648\u0642\u062a",
+      "\u0634\u0631\u062d": desc,
+      "\u0628\u062f\u0647\u06a9\u0627\u0631": String(amt),
+      "\u0628\u0633\u062a\u0627\u0646\u06a9\u0627\u0631": String(amt),
+      "\u06a9\u062f \u062d\u0633\u0627\u0628": U.tempCode + "\u060c " + U.tempCode,
+      "\u0631\u062f\u06cc\u0641\u200c\u0647\u0627": lines
+    };
+    db.stores.voucher.unshift(rec);
+    saveAcctDb(db);
+    console.log("[effect\u2192temp-voucher]", rec.id, no);
+    return rec;
   }
   function ensurePanel() {
     if (document.getElementById("sfFxPanel")) return document.getElementById("sfFxPanel");
@@ -89,61 +180,50 @@ $newBlock = @'
     var tr = document.createElement("tr");
     tr.innerHTML =
       '<td style="text-align:center;color:#94a3b8;padding:6px">' + n + "</td>" +
-      '<td><input class="vl-code" list="codeList" placeholder="code" value="' + esc(data && data.code || "") + '"></td>' +
+      '<td><input class="vl-code" list="codeList" value="' + esc(data && data.code || "") + '"></td>' +
       '<td><input class="vl-desc" value="' + esc(data && data.desc || "") + '"></td>' +
       '<td><input class="vl-debit" inputmode="decimal" value="' + esc(deb) + '"></td>' +
       '<td><input class="vl-credit" inputmode="decimal" value="' + esc(cre) + '"></td>' +
       '<td><button type="button" class="btn btn-b vl-del" style="padding:4px 8px">\u00d7</button></td>';
     body.appendChild(tr);
     var del = tr.querySelector(".vl-del");
-    if (del) del.onclick = function () {
-      tr.remove();
-      try { if (typeof calcVoucherBal === "function") calcVoucherBal(); } catch (e) {}
-    };
-    function recalc() { try { if (typeof calcVoucherBal === "function") calcVoucherBal(); } catch (e) {} }
-    tr.querySelector(".vl-debit").oninput = recalc;
-    tr.querySelector(".vl-credit").oninput = recalc;
+    if (del) del.onclick = function () { tr.remove(); };
   }
-  function draftVoucherFromEffect(fx) {
+  function fillFormFromEffect(fx, rec) {
     openVoucherPanel();
     setTimeout(function () {
       try {
         var amt = Number(fx.amount) || 0;
-        if (!amt) return;
         var isDebit = String(fx.side || "debit").toLowerCase() !== "credit";
-        var vDesc = document.getElementById("vDesc");
-        if (vDesc) {
-          vDesc.value = (fx.desc || U.effect) + " · " + U.src + ": " + (fx.source || "") +
-            (fx.sourceId ? " #" + fx.sourceId : "") + " [" + fx.id + "]";
-        }
+        var vNo = document.getElementById("vNo");
+        if (vNo && rec) vNo.value = String(rec["\u0634\u0645\u0627\u0631\u0647"] || "");
         var vDate = document.getElementById("vDate");
-        if (vDate && fx.date) vDate.value = fx.date;
+        if (vDate) vDate.value = fx.date || todayJ();
+        var vStatus = document.getElementById("vStatus");
+        if (vStatus) vStatus.value = "\u0645\u0648\u0642\u062a";
+        var vDesc = document.getElementById("vDesc");
+        if (vDesc) vDesc.value = (rec && rec["\u0634\u0631\u062d"]) || fx.desc || "";
         var body = document.getElementById("vBody");
         if (body) {
-          Array.prototype.slice.call(body.querySelectorAll("tr")).forEach(function (tr) {
-            var c = (tr.querySelector(".vl-code") && tr.querySelector(".vl-code").value) || "";
-            var d = (tr.querySelector(".vl-desc") && tr.querySelector(".vl-desc").value) || "";
-            var deb = (tr.querySelector(".vl-debit") && tr.querySelector(".vl-debit").value) || "";
-            var cre = (tr.querySelector(".vl-credit") && tr.querySelector(".vl-credit").value) || "";
-            if (!c && !d && !deb && !cre) tr.remove();
+          body.innerHTML = "";
+          appendSheetLine({
+            code: U.tempCode,
+            desc: (fx.accountHint || fx.source || U.acct) + " — " + (fx.desc || ""),
+            debit: isDebit ? amt : 0,
+            credit: isDebit ? 0 : amt
+          });
+          appendSheetLine({
+            code: U.tempCode,
+            desc: U.counter,
+            debit: isDebit ? 0 : amt,
+            credit: isDebit ? amt : 0
           });
         }
-        appendSheetLine({
-          code: "",
-          desc: (fx.accountHint || fx.source || U.acct) + " — " + (fx.desc || ""),
-          debit: isDebit ? amt : 0,
-          credit: isDebit ? 0 : amt
-        });
-        appendSheetLine({
-          code: "",
-          desc: U.counter,
-          debit: isDebit ? 0 : amt,
-          credit: isDebit ? amt : 0
-        });
         try { if (typeof calcVoucherBal === "function") calcVoucherBal(); } catch (e2) {}
+        try { if (typeof renderDash === "function") renderDash(); } catch (e3) {}
         if (window.SmartCore && SmartCore.toast) SmartCore.toast(U.draftOk);
-      } catch (err) { console.warn("[effect-voucher]", err); }
-    }, 280);
+      } catch (err) { console.warn(err); }
+    }, 300);
   }
   function render(items) {
     var body = document.getElementById("sfFxBody");
@@ -185,10 +265,14 @@ $newBlock = @'
         try { fx = JSON.parse(card.getAttribute("data-json") || "null"); } catch (e) {}
         b.disabled = true;
         var payload = { status: act };
-        if (act === "posted") payload.voucherRef = "draft:" + id;
+        var rec = null;
+        if (act === "posted" && fx) {
+          rec = persistTempVoucher(fx);
+          payload.voucherRef = rec ? ("temp:" + rec.id) : ("draft:" + id);
+        }
         patch(id, payload).then(function (j) {
           if (j && j.ok) {
-            if (act === "posted" && fx) draftVoucherFromEffect(fx);
+            if (act === "posted" && fx) fillFormFromEffect(fx, rec);
             load();
           } else {
             alert((j && j.error) || U.err);
@@ -234,7 +318,6 @@ function Patch-File([string]$path) {
   if (-not (Test-Path $path)) { Write-Host "skip $path"; return }
   $utf8 = New-Object System.Text.UTF8Encoding $false
   $t = [IO.File]::ReadAllText($path, $utf8)
-  # restore from git if file already has classic mojibake markers in head title area
   if ($t -match '__sfAccEffectsV2') {
     $t = [regex]::Replace($t, '(?s)<script>\s*/\* __sfAccEffectsV2.*?</script>\s*', '')
   }
@@ -250,18 +333,6 @@ function Patch-File([string]$path) {
   Write-Host "OK $path"
 }
 
-# If whole accounting Persian is broken, restore clean copy first
-$acc = Join-Path $root 'accounting.html'
-if (Test-Path $acc) {
-  $sample = [IO.File]::ReadAllText($acc, [Text.UTF8Encoding]::new($false)).Substring(0, [Math]::Min(2500, (Get-Item $acc).Length))
-  if ($sample -match 'Ã|Â|Ø§Ø|Ù¾') {
-    Write-Host 'Detected mojibake — restoring accounting.html from origin/main...'
-    Push-Location $root
-    git checkout origin/main -- accounting.html server/public/accounting.html 2>$null
-    Pop-Location
-  }
-}
-
 Patch-File (Join-Path $root 'accounting.html')
 Patch-File (Join-Path $root 'server\public\accounting.html')
-Write-Host 'Done. Hard-refresh accounting (Ctrl+Shift+R).'
+Write-Host 'Step1 OK: temp voucher auto-save on posted.'
