@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 /* Phase3-A3 */
 /**
  * server-bridge.js v2.3 Phase2-B
+=======
+/**
+ * server-bridge.js v2.1
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
  * - Suite launcher filter by JWT modules[]
  * - Remember login · RBAC UI · cartable · optimistic lock
  */
@@ -22,6 +27,7 @@
   var loginInflight = null;
   var serverUser = null;
   var modVersions = {};
+<<<<<<< HEAD
   /* ===== Phase2-A/B sync-queue ===== */
   var SYNC_Q_KEY = "suite_sync_queue_v1";
   var syncState = { status: "offline", pending: 0, lastError: "" };
@@ -101,6 +107,8 @@
   }
   /* ===== end Phase2-A ===== */
 
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 
   function base() {
     try {
@@ -124,13 +132,23 @@
   function getLastLogin() {
     try {
       var o = JSON.parse(sessionStorage.getItem(LAST_KEY) || "null");
+<<<<<<< HEAD
       if (o && o.user) return { user: o.user, at: o.at || null };
+=======
+      if (o && o.user && o.pass) return o;
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     } catch (e) {}
     return null;
   }
   function setLastLogin(user, pass, pin) {
     try {
+<<<<<<< HEAD
       sessionStorage.setItem(LAST_KEY, JSON.stringify({ user: user, at: Date.now() }));
+=======
+      sessionStorage.setItem(LAST_KEY, JSON.stringify({
+        user: user, pass: pass, pin: pin || "5678", at: Date.now()
+      }));
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     } catch (e) {}
   }
 
@@ -183,9 +201,15 @@
     var last = getLastLogin();
     if (last) return { user: last.user, pass: last.pass, pin: last.pin || "5678" };
     var a = SmartCore.getAuth();
+<<<<<<< HEAD
     var user = (a.session && a.session.user) || "";
     var pass = "";
     var pin = "";
+=======
+    var user = (a.session && a.session.user) || "admin";
+    var pass = "admin";
+    var pin = a.pin2 || "5678";
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     var found = (a.users || []).find(function (x) { return x.user === user; });
     if (found && found.pass) pass = found.pass;
     try {
@@ -201,7 +225,11 @@
   }
 
   function serverLogin(user, pass, pin) {
+<<<<<<< HEAD
     var p = String(pin || "").trim(); if (!user || !pass || !p) return Promise.reject(new Error("credentials required"));
+=======
+    var p = pin || "5678";
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     return api("/api/auth/login", {
       method: "POST",
       body: { user: user, pass: pass, pin: p }
@@ -226,12 +254,34 @@
     return next();
   }
 
+<<<<<<< HEAD
     function forceLogin() {
     /* Phase1-A: never auto-login with stored/default passwords */
     setToken("");
     serverUser = null;
     console.info("[server-bridge] session required — use login form");
     return Promise.resolve(false);
+=======
+  function forceLogin() {
+    if (loginInflight) return loginInflight;
+    setToken("");
+    var c = credentials();
+    var last = getLastLogin();
+    var attempts = [];
+    if (last) attempts.push({ user: last.user, pass: last.pass, pin: last.pin || "5678" });
+    attempts.push({ user: c.user, pass: c.pass, pin: c.pin || "5678" });
+    if (c.pin !== "5678") attempts.push({ user: c.user, pass: c.pass, pin: "5678" });
+    if (!last) {
+      attempts.push({ user: "admin", pass: "admin", pin: "5678" });
+      attempts.push({ user: "admin", pass: "admin", pin: "1234" });
+    }
+    loginInflight = tryLoginSeq(attempts).then(function (ok) {
+      loginInflight = null;
+      if (!ok) console.warn("[server-bridge] login failed — SmartCore.api.login(user,pass,pin)");
+      return ok;
+    });
+    return loginInflight;
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
   }
 
   function ensureSession() {
@@ -344,7 +394,11 @@
         "position:fixed;top:10px;right:10px;z-index:120;font:11px Tahoma,sans-serif;" +
         "background:rgba(15,23,42,.9);color:#e2e8f0;border:1px solid #334155;" +
         "border-radius:8px;padding:5px 9px");
+<<<<<<< HEAD
       (document.body || document.documentElement).appendChild(chip);
+=======
+      document.body.appendChild(chip);
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     }
     chip.textContent = "نقش: " + role() +
       (serverUser && serverUser.user ? " (" + serverUser.user + ")" : "") +
@@ -366,8 +420,11 @@
   }
 
   function applyModuleRbac() {
+<<<<<<< HEAD
     /* Phase3-A3-domguard */
     if (!document.body) { setTimeout(applyModuleRbac, 50); return; }
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     var mod = detectModId();
     if (mod === "suite") {
       applySuiteLauncherFilter();
@@ -389,7 +446,11 @@
         "position:fixed;top:10px;right:10px;z-index:120;font:11px Tahoma,sans-serif;" +
         "background:rgba(15,23,42,.9);color:#e2e8f0;border:1px solid #334155;" +
         "border-radius:8px;padding:5px 9px");
+<<<<<<< HEAD
       (document.body || document.documentElement).appendChild(chip);
+=======
+      document.body.appendChild(chip);
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     }
     chip.textContent = "نقش سرور: " + r +
       (serverUser && serverUser.user ? " (" + serverUser.user + ")" : "");
@@ -442,6 +503,7 @@
     return m ? m[1] : null;
   }
 
+<<<<<<< HEAD
     function isValidModulePayload(payload) {
     /* Phase2-A: accept real module objects */
     if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
@@ -449,6 +511,18 @@
     if (keys.length === 0) return false;
     if (keys.length === 1 && (keys[0] === "test" || keys[0] === "at")) return false;
     return true;
+=======
+  function isValidModulePayload(payload) {
+    if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
+    if (payload.stores && typeof payload.stores === "object") return true;
+    if (payload.funds && Array.isArray(payload.funds)) return true;
+    if (payload.version != null && (payload.audit || payload.createdAt || payload.updatedAt)) return true;
+    if (payload.meta && payload.meta.seeded) return true;
+    var keys = Object.keys(payload);
+    if (keys.length === 0) return false;
+    if (keys.length === 1 && (keys[0] === "test" || keys[0] === "at")) return false;
+    return keys.length >= 2;
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
   }
 
   function writeLocalSilent(key, obj) {
@@ -511,16 +585,20 @@
   }
 
   function storeSave(modId, data) {
+<<<<<<< HEAD
     try {
       if (data && typeof data === "object" && !Array.isArray(data) && !data.updatedAt) {
         data.updatedAt = new Date().toISOString();
       }
     } catch (e0) {}
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     var localOk = SmartCore.saveModuleData(modId, data);
     if (!base()) return Promise.resolve({ ok: localOk, source: "local" });
     return ensureSession().then(function (ok) {
       if (!ok) return { ok: localOk, source: "local" };
       return pushModule(modId, data).then(function (j) {
+<<<<<<< HEAD
         syncState.status = "synced";
         renderSyncChip();
         try {
@@ -530,6 +608,10 @@
         return { ok: true, source: "server", version: j.version };
       }).catch(function () {
         enqueueSync(modId, data);
+=======
+        return { ok: true, source: "server", version: j.version };
+      }).catch(function () {
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
         return { ok: localOk, source: "local-fallback" };
       });
     });
@@ -550,6 +632,7 @@
     pushTimers[key] = setTimeout(function () {
       ensureSession().then(function (ok) {
         if (!ok) return;
+<<<<<<< HEAD
         syncState.status = "syncing"; syncState.lastMod = modId; renderSyncChip();
         return pushModule(modId, data).then(function (j) {
           console.info("[server-bridge] synced", modId, "v" + (j.version || "?"));
@@ -565,6 +648,12 @@
         }).catch(function (err) {
           console.warn("[server-bridge] sync fail", modId, err && err.message);
           try { enqueueSync(modId, data); } catch (e2) { syncState.status = "pending"; renderSyncChip(); }
+=======
+        return pushModule(modId, data).then(function (j) {
+          console.info("[server-bridge] synced", modId, "v" + (j.version || "?"));
+        }).catch(function (err) {
+          console.warn("[server-bridge] sync fail", modId, err && err.message);
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
         });
       });
     }, 400);
@@ -612,7 +701,11 @@
         });
         try {
           cartPulling = true;
+<<<<<<< HEAD
           localStorage.setItem(CART_KEY, JSON.stringify({ items: merged, updatedAt: new Date().toISOString() }));
+=======
+          localStorage.setItem(CART_KEY, JSON.stringify({ items: merged }));
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
           localStorage.setItem("suite_cartable_ping", String(Date.now()));
         } catch (e2) {
         } finally {
@@ -755,9 +848,13 @@
     canAccessMod: canAccessMod,
     allowedModules: allowedModules,
     modVersion: function (id) { return modVersions[id]; },
+<<<<<<< HEAD
     isOnline: function () { return !!online; },
     flushSync: flushSyncQueue,
     syncState: function () { return { status: syncState.status, pending: syncState.pending }; }
+=======
+    isOnline: function () { return !!online; }
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
   };
   SmartCore.store = {
     _bridged: true,
@@ -766,7 +863,11 @@
     save: storeSave,
     pullCurrent: pullCurrentModule
   };
+<<<<<<< HEAD
   SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge2.3-p2a";
+=======
+  SmartCore.version = String(SmartCore.version).replace(/\+bridge.*/, "") + "+bridge2.1";
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 
   installLocalStorageHook();
   installCartablePanelHook();
@@ -775,6 +876,7 @@
     health().then(function (ok) {
       if (ok) {
         console.info("[server-bridge] online", base());
+<<<<<<< HEAD
         window.__sfOnline = true;
         try { if (typeof renderSyncChip === "function") renderSyncChip(); } catch (eR) {}
         ensureSession().then(function (s) {
@@ -789,12 +891,19 @@
       }
     } } catch (eChip) {}
         console.info("[server-bridge] session", s ? "ok" : "need-login",
+=======
+        ensureSession().then(function (s) {
+          console.info("[server-bridge] session", s ? "ok" : "need-login",
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
             serverUser ? serverUser.role : "");
           applyGearPolicy();
           applyModuleRbac();
           if (s) {
             setTimeout(function () {
+<<<<<<< HEAD
               flushSyncQueue();
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
               pullCurrentModule();
               pullCartable();
               injectSuiteBackupButton();

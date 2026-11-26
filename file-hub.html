@@ -5,7 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1220">
 <meta name="description" content="هاب فایل — بارگذاری، ترجمه، OCR، اکسل">
+<<<<<<< HEAD
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://api.mymemory.translated.net https://*.tessdata.projectnaptha.com https://tessdata.projectnaptha.com; worker-src 'self' blob: https://cdn.jsdelivr.net; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+=======
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://api.mymemory.translated.net https://*.tessdata.projectnaptha.com https://tessdata.projectnaptha.com; worker-src 'self' blob: https://cdn.jsdelivr.net; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
 <title>هاب فایل | سامانه هوشمند</title>
@@ -99,9 +103,12 @@ table.ex tr:nth-child(even){background:#0f172a}
 .list-item{padding:7px;border-bottom:1px solid var(--line);font-size:.74rem}
 </style>
 <script src="core.js"></script>
+<<<<<<< HEAD
 <script src="server-bridge.js"></script>
 <script src="suite-facilities.js" data-module="filehub" data-title="filehub"></script>
 <script src="facilities-autoload.js"></script>
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 </head>
 <body>
 <header class="header">
@@ -566,6 +573,7 @@ table.ex tr:nth-child(even){background:#0f172a}
     var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>' +
       esc(safeTitle) + '</title><style>body{font-family:Tahoma,Arial;font-size:14pt;direction:rtl;line-height:1.8}h1{font-size:16pt;color:#0ea5e9}</style></head><body dir="rtl"><h1>' +
       esc(safeTitle) + '</h1><p style="color:#64748b;font-size:10pt">تاریخ: ' + new Date().toLocaleString("fa-IR") +
+<<<<<<< HEAD
       '</p><hr><div style="white-space:pre-wrap">' + esc(t).replace(/\n/g, "<br>") + "</div>
 <script>
 /* __sfAmtSep — thousand separators for amount fields only */
@@ -630,6 +638,9 @@ table.ex tr:nth-child(even){background:#0f172a}
 })();
 </script>
 </body></html>";
+=======
+      '</p><hr><div style="white-space:pre-wrap">' + esc(t).replace(/\n/g, "<br>") + "</div></body></html>";
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     var blob = new Blob(["\ufeff" + html], { type: "application/msword" });
     var name = (fileName || ("translate-" + Date.now())) + ".doc";
     var a = document.createElement("a");
@@ -643,7 +654,11 @@ table.ex tr:nth-child(even){background:#0f172a}
 
   /* کارتابل */
   function loadCart() {
+<<<<<<< HEAD
     try { var _c = JSON.parse(localStorage.getItem(CART_KEY) || "[]"); if (Array.isArray(_c)) return _c; if (_c && Array.isArray(_c.items)) return _c.items; return []; }
+=======
+    try { return JSON.parse(localStorage.getItem(CART_KEY) || "[]") || []; }
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     catch (e) { return []; }
   }
   function saveCart(arr) {
@@ -1551,6 +1566,7 @@ table.ex tr:nth-child(even){background:#0f172a}
   } catch (e) {}
 })();
 </script>
+<<<<<<< HEAD
 
 <script>
 /* __sfAmtSep — thousand separators for amount fields only */
@@ -1614,5 +1630,7 @@ table.ex tr:nth-child(even){background:#0f172a}
   setInterval(scan, 2000);
 })();
 </script>
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 </body>
 </html>

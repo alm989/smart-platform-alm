@@ -224,7 +224,11 @@
       '<input id="scLgPin" type="password" maxlength="8" inputmode="numeric" placeholder="۴ رقم" style="width:100%;padding:8px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-family:inherit;box-sizing:border-box">' +
       '<button type="button" id="scLgGo" style="width:100%;margin-top:12px;padding:9px;border:none;border-radius:10px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:700;cursor:pointer;font-family:inherit">ورود</button>' +
       '<button type="button" id="scLgCancel" style="width:100%;margin-top:6px;padding:8px;border:1px solid #334155;border-radius:10px;background:#1e293b;color:#cbd5e1;cursor:pointer;font-family:inherit">انصراف</button>' +
+<<<<<<< HEAD
       '<p style="margin:10px 0 0;text-align:center;font-size:.65rem;color:#64748b">از حساب سرور استفاده کنید</p></div>';
+=======
+      '<p style="margin:10px 0 0;text-align:center;font-size:.65rem;color:#64748b">admin / admin · پین: ۱۲۳۴</p></div>';
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     document.body.appendChild(m);
     function close() { m.remove(); }
     m.querySelector("#scLgGo").onclick = function () {
@@ -526,6 +530,7 @@
     setTimeout(loadFacilities, 0);
   }
 })();
+<<<<<<< HEAD
 
 
 
@@ -548,3 +553,5 @@
 
 
 
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509

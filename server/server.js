@@ -1,5 +1,9 @@
 /**
+<<<<<<< HEAD
  * Smart Suite Local Server v1.5.1 (headers+JWT)
+=======
+ * Smart Suite Local Server v1.2.1
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
  * - scrypt + RBAC
  * - VERSIONS.json registry + /api/versions
  * - Cartable + backup
@@ -11,8 +15,11 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+<<<<<<< HEAD
 const jwtLib = require('./lib/jwt');
 const { modulesForRole, canAccessModule } = require('./lib/rbac-modules');
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 const { URL } = require('url');
 
 const ROOT = __dirname;
@@ -35,8 +42,11 @@ const BACKUP = path.resolve(ROOT, cfg.backupDir);
 const MAX_BODY = (cfg.maxBodyMb || 8) * 1024 * 1024;
 const RETAIN_DAYS = cfg.backupRetainDays || 30;
 const BACKUP_HOUR = Number.isInteger(cfg.dailyBackupHour) ? cfg.dailyBackupHour : 2;
+<<<<<<< HEAD
 const JWT_SECRET = cfg.jwtSecret || 'change-me-in-config';
 const revokedJti = new Set();
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 
 const ROLE_PERMS = {
   admin: ['*'],
@@ -136,7 +146,11 @@ function buildVersionReport() {
     publicHtmlCount: htmlCount,
     present: present,
     missing: missing,
+<<<<<<< HEAD
     serverRuntime: '1.5.0'
+=======
+    serverRuntime: '1.2.1'
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
   };
 }
 
@@ -211,6 +225,7 @@ function usersDb() {
 function saveUsers(db) {
   saveJson(path.join(DATA, 'users.json'), db);
 }
+<<<<<<< HEAD
 /* ===== Phase1-B auth-admin helpers ===== */
 function auditPath() { return path.join(DATA, 'audit.json'); }
 function appendAudit(entry) {
@@ -229,6 +244,8 @@ function isAdminSession(s) {
 }
 /* ===== end Phase1-B helpers ===== */
 
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 
 function can(session, perm) {
   if (!session) return false;
@@ -246,6 +263,7 @@ function cartPath() {
   return path.join(DATA, 'cartable.json');
 }
 
+<<<<<<< HEAD
 
 function securityHeaders() {
   return {
@@ -257,11 +275,14 @@ function securityHeaders() {
   };
 }
 
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 function uid() {
   return Date.now().toString(36) + crypto.randomBytes(4).toString('hex');
 }
 
 function tokenNew(session) {
+<<<<<<< HEAD
   const role = session.role || 'user';
   const perms = ROLE_PERMS[role] || ROLE_PERMS.user;
   return jwtLib.sign(
@@ -275,6 +296,12 @@ function tokenNew(session) {
     JWT_SECRET,
     { hours: cfg.sessionHours || 12 }
   );
+=======
+  const t = crypto.randomBytes(24).toString('hex');
+  const exp = Date.now() + (cfg.sessionHours || 12) * 3600 * 1000;
+  sessions.set(t, Object.assign({}, session, { exp }));
+  return t;
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 }
 
 function tokenGet(req) {
@@ -282,6 +309,7 @@ function tokenGet(req) {
   const m = h.match(/^Bearer\s+(.+)$/i);
   const t = m ? m[1].trim() : (req.headers['x-session-token'] || '').trim();
   if (!t) return null;
+<<<<<<< HEAD
   // legacy RAM session (pre-JWT)
   if (sessions.has(t)) {
     const s0 = sessions.get(t);
@@ -303,6 +331,15 @@ function tokenGet(req) {
     jti: payload.jti,
     exp: payload.exp ? payload.exp * 1000 : Date.now() + 3600000
   };
+=======
+  const s = sessions.get(t);
+  if (!s) return null;
+  if (s.exp < Date.now()) {
+    sessions.delete(t);
+    return null;
+  }
+  return s;
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 }
 
 function rateLimitLogin(key) {
@@ -329,6 +366,7 @@ function runBackup(label) {
   const users = path.join(DATA, 'users.json');
   if (fs.existsSync(users)) fs.copyFileSync(users, path.join(dir, 'users.json'));
   if (fs.existsSync(cartPath())) fs.copyFileSync(cartPath(), path.join(dir, 'cartable.json'));
+<<<<<<< HEAD
   const modFiles = fs.existsSync(mods) ? fs.readdirSync(mods).filter((f) => /\.json$/i.test(f)) : [];
   const hasUsers = fs.existsSync(users);
   const hasCart = fs.existsSync(cartPath());
@@ -345,12 +383,19 @@ function runBackup(label) {
     cartable: hasCart,
     audit: hasAudit,
     phase: '2C'
+=======
+  saveJson(path.join(dir, '_meta.json'), {
+    at: new Date().toISOString(),
+    label: label || 'manual',
+    modules: fs.existsSync(mods) ? fs.readdirSync(mods).length : 0
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
   });
   pruneBackups();
   console.log('[backup]', dir);
   return stamp;
 }
 
+<<<<<<< HEAD
 
 /* Phase2-C backup-restore */
 function restoreBackup(stamp) {
@@ -389,6 +434,8 @@ function restoreBackup(stamp) {
   });
   return { id: safe, restored: restored, meta: loadJson(path.join(dir, '_meta.json'), null) };
 }
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
 function pruneBackups() {
   try {
     const cutoff = Date.now() - RETAIN_DAYS * 86400000;
@@ -421,8 +468,12 @@ function tickDailyBackup() {
 
 function send(res, code, obj) {
   const body = JSON.stringify(obj);
+<<<<<<< HEAD
   res.writeHead(code, Object.assign({}, securityHeaders(), {
 
+=======
+  res.writeHead(code, {
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     'Content-Type': 'application/json; charset=utf-8',
     'Content-Length': Buffer.byteLength(body),
     'Cache-Control': 'no-store',
@@ -431,8 +482,12 @@ function send(res, code, obj) {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Session-Token',
     'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS'
+<<<<<<< HEAD
     }));
 
+=======
+  });
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
   res.end(body);
 }
 
@@ -538,8 +593,13 @@ async function handleApi(req, res, url) {
     const reg = loadVersions();
     return send(res, 200, {
       ok: true,
+<<<<<<< HEAD
       version: '1.5.1',
       auth: 'scrypt+jwt',
+=======
+      version: '1.2.1',
+      auth: 'scrypt',
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
       rbac: Object.keys(ROLE_PERMS),
       components: (reg && reg.components) || {},
       moduleRegistryCount: reg && reg.modules ? Object.keys(reg.modules).length : 0,
@@ -587,19 +647,27 @@ async function handleApi(req, res, url) {
       perms: ROLE_PERMS[found.role || 'user'] || ROLE_PERMS.user
     };
     const token = tokenNew(session);
+<<<<<<< HEAD
     try { appendAudit({ action: 'login', user: session.user, role: session.role }); } catch (eA) {}
     return send(res, 200, { ok: true, token, tokenType: 'Bearer', auth: 'jwt', user: session });
+=======
+    return send(res, 200, { ok: true, token, user: session });
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
   }
 
   if (pathname === '/api/auth/logout' && method === 'POST') {
     const h = req.headers['authorization'] || '';
     const m = h.match(/^Bearer\s+(.+)$/i);
+<<<<<<< HEAD
     const t = m ? m[1].trim() : '';
     if (t) {
       if (sessions.has(t)) sessions.delete(t);
       const payload = jwtLib.verify(t, JWT_SECRET);
       if (payload && payload.jti) revokedJti.add(payload.jti);
     }
+=======
+    if (m) sessions.delete(m[1].trim());
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     return send(res, 200, { ok: true });
   }
 
@@ -612,9 +680,13 @@ async function handleApi(req, res, url) {
         user: s.user,
         name: s.name,
         role: s.role,
+<<<<<<< HEAD
         perms: ROLE_PERMS[s.role] || ROLE_PERMS.user,
         modules: s.modules || modulesForRole(s.role)
       
+=======
+        perms: ROLE_PERMS[s.role] || ROLE_PERMS.user
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
       }
     });
   }
@@ -638,11 +710,14 @@ async function handleApi(req, res, url) {
     const id = modMatch[1];
     const s = tokenGet(req);
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
+<<<<<<< HEAD
 
     if (!canAccessModule(s.role, id)) {
       return send(res, 403, { ok: false, error: 'دسترسی به این ماژول مجاز نیست', moduleId: id, role: s.role });
     }
 
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
     const fp = modPath(id);
     if (method === 'GET') {
       if (!can(s, 'read')) return send(res, 403, { ok: false, error: 'دسترسی خواندن نیست' });
@@ -660,7 +735,10 @@ async function handleApi(req, res, url) {
         payload: body.payload != null ? body.payload : body
       };
       saveJson(fp, next);
+<<<<<<< HEAD
       appendAudit({ action: 'module_save', user: s.user, role: s.role, moduleId: id, version: next.version });
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
       return send(res, 200, {
         ok: true,
         moduleId: id,
@@ -765,6 +843,7 @@ async function handleApi(req, res, url) {
         .filter((e) => e.isDirectory())
         .map((e) => {
           const meta = loadJson(path.join(BACKUP, e.name, '_meta.json'), null);
+<<<<<<< HEAD
           let bytes = 0;
           try {
             fs.readdirSync(path.join(BACKUP, e.name)).forEach((f) => {
@@ -772,6 +851,9 @@ async function handleApi(req, res, url) {
             });
           } catch (x2) {}
           return { id: e.name, meta: meta, bytes: bytes };
+=======
+          return { id: e.name, meta };
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
         })
         .sort((a, b) => (a.id < b.id ? 1 : -1))
         .slice(0, 50);
@@ -779,6 +861,7 @@ async function handleApi(req, res, url) {
     return send(res, 200, { ok: true, backups: list });
   }
 
+<<<<<<< HEAD
   
   /* ===== Phase1-B auth-admin APIs ===== */
   if (pathname === '/api/audit' && method === 'GET') {
@@ -1039,6 +1122,8 @@ async function handleApi(req, res, url) {
     return send(res, 200, { ok: true, item: found });
   }
 
+=======
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
   return send(res, 404, { ok: false, error: 'api not found' });
 }
 
@@ -1058,11 +1143,19 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(cfg.port, cfg.host, () => {
   console.log('========================================');
+<<<<<<< HEAD
   console.log(' Smart Suite Local Server v1.5.1 (headers+JWT)');
   console.log(' Auth: scrypt + RBAC | Versions API');
   console.log(' http://127.0.0.1:' + cfg.port + '/suite.html');
   console.log(' /api/health  /api/versions');
   console.log(' Login: credentials are not displayed (use secure-setup)');
+=======
+  console.log(' Smart Suite Local Server v1.2.1');
+  console.log(' Auth: scrypt + RBAC | Versions API');
+  console.log(' http://127.0.0.1:' + cfg.port + '/suite.html');
+  console.log(' /api/health  /api/versions');
+  console.log(' Login: admin / admin  pin: 1234');
+>>>>>>> 11c8bba4e78e307c57b94b3c3a16ec91fe1d3509
   console.log('========================================');
   try {
     runBackup('startup');

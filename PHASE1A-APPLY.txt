@@ -1,0 +1,13 @@
+Phase 1-A — Apply on machine WITHOUT git
+
+Open PowerShell and paste the entire block from apply-phase1a.ps1 content,
+or run the replacements listed in the chat response.
+
+After patch:
+  cd D:\smart-platform-alm\server
+  .\COPY-MODULES.bat
+  node server.js
+
+Browser:
+  sessionStorage.clear();
+  location.reload();
