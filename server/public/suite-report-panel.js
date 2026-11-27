@@ -4,7 +4,6 @@
   if (window.__SF_REPORT_PANEL__) return;
   window.__SF_REPORT_PANEL__ = true;
 
-  // Block every older report module
   window.__sfReportCard2 = true;
   window.__sfReportCardFixed = true;
   window.__sfReportCompact = true;
@@ -103,7 +102,6 @@
       box.id = "sfReportCard";
       document.body.appendChild(box);
     }
-    // layout shell
     box.style.position = "fixed";
     box.style.left = "8px";
     box.style.right = "8px";
@@ -125,29 +123,36 @@
 
     box.innerHTML = "";
     var head = document.createElement("div");
-    head.style.cssText = "display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px";
+    head.style.cssText = "display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;direction:rtl";
+
+    // Right (RTL): title + CSV beside title
+    var rightGrp = document.createElement("div");
+    rightGrp.style.cssText = "display:flex;align-items:center;gap:8px;min-width:0";
     var title = document.createElement("b");
     title.style.color = "#7dd3fc";
     title.style.fontSize = "12px";
+    title.style.whiteSpace = "nowrap";
     title.textContent = L.title;
-    var actions = document.createElement("div");
-    actions.style.cssText = "display:flex;gap:8px;align-items:center;flex-shrink:0";
     var bCsv = document.createElement("button");
     bCsv.type = "button";
     bCsv.id = "sfExcelExportBtn";
     bCsv.textContent = L.csv;
     styleBtn(bCsv, "#059669");
     bCsv.onclick = exportCsv;
+    rightGrp.appendChild(title);
+    rightGrp.appendChild(bCsv);
+
+    // Left: refresh only
     var bRef = document.createElement("button");
     bRef.type = "button";
     bRef.id = "sfRepRefresh";
     bRef.textContent = L.refresh;
     styleBtn(bRef, "#0ea5e9");
     bRef.onclick = function () { load(true); };
-    actions.appendChild(bCsv);
-    actions.appendChild(bRef);
-    head.appendChild(title);
-    head.appendChild(actions);
+
+    head.appendChild(rightGrp);
+    head.appendChild(bRef);
+
     var body = document.createElement("div");
     body.id = "sfRepBody";
     body.style.height = "50px";
@@ -156,18 +161,13 @@
     box.appendChild(body);
     locked = true;
 
-    // Protect against other scripts removing/rebuilding the card
     try {
       var obs = new MutationObserver(function (muts) {
         for (var i = 0; i < muts.length; i++) {
-          var m = muts[i];
-          if (m.type === "childList") {
-            // if our body was wiped, restore structure once
-            if (!document.getElementById("sfRepBody")) {
-              locked = false;
-              buildOnce();
-              load(true);
-            }
+          if (muts[i].type === "childList" && !document.getElementById("sfRepBody")) {
+            locked = false;
+            buildOnce();
+            load(true);
           }
         }
       });
@@ -244,13 +244,11 @@
       });
   }
 
-  // Neutralize ensureCard from old inline scripts if they still run
   Object.defineProperty(window, "__sfReportCard2", { value: true, writable: false, configurable: false });
 
   function boot() {
     buildOnce();
     load(true);
-    // data refresh only every 60s — no DOM rebuild
     setInterval(function () { load(false); }, 60000);
   }
 
