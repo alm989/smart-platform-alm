@@ -1102,5 +1102,397 @@ pre.detail{white-space:pre-wrap;word-break:break-word;background:#020617;border:
   setTimeout(boot, 800);
 })();
 </script>
+<script>
+/* __sfExcelExport â€” management report CSV/Excel download */
+(function () {
+  if (window.__sfExcelExport) return;
+  window.__sfExcelExport = true;
+
+  function tok() {
+    return sessionStorage.getItem("smart_suite_api_token") || "";
+  }
+  function csvEscape(v) {
+    var s = String(v == null ? "" : v);
+    if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+    return s;
+  }
+  function downloadCsv(filename, rows) {
+    var bom = "\uFEFF";
+    var body = rows.map(function (r) {
+      return r.map(csvEscape).join(",");
+    }).join("\r\n");
+    var blob = new Blob([bom + body], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1500);
+  }
+  function flattenSummary(j) {
+    var rows = [["key", "value"]];
+    rows.push(["at", j.at || ""]);
+    rows.push(["by", j.by || ""]);
+    rows.push(["role", j.role || ""]);
+    var t = j.totals || {};
+    Object.keys(t).forEach(function (k) {
+      rows.push(["totals." + k, t[k]]);
+    });
+    if (j.modules && typeof j.modules === "object") {
+      Object.keys(j.modules).forEach(function (k) {
+        rows.push(["module." + k, JSON.stringify(j.modules[k])]);
+      });
+    }
+    return rows;
+  }
+  async function exportReport() {
+    var t = tok();
+    if (!t) {
+      alert("\u0627\u0628\u062a\u062f\u0627 \u0648\u0627\u0631\u062f \u0634\u0648\u06cc\u062f");
+      return;
+    }
+    var H = { Authorization: "Bearer " + t };
+    var summary = null;
+    try {
+      var r = await fetch("/api/reports/summary", { headers: H });
+      summary = await r.json();
+    } catch (e) {}
+    if (!summary || !summary.ok) {
+      try {
+        var h = await fetch("/api/health").then(function (x) { return x.json(); });
+        summary = { ok: true, at: new Date().toISOString(), totals: h, by: "health-fallback" };
+      } catch (e2) {
+        alert("\u062e\u0637\u0627 \u062f\u0631 \u062f\u0631\u06cc\u0627\u0641\u062a \u06af\u0632\u0627\u0631\u0634");
+        return;
+      }
+    }
+    var rows = flattenSummary(summary);
+    // also effects snapshot
+    try {
+      var er = await fetch("/api/effects", { headers: H });
+      var ej = await er.json();
+      rows.push([]);
+      rows.push(["effects_id", "source", "amount", "side", "status", "date", "desc"]);
+      (ej.items || []).slice(0, 500).forEach(function (it) {
+        rows.push([it.id, it.source, it.amount, it.side, it.status, it.date, it.desc]);
+      });
+    } catch (e3) {}
+    var stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+    downloadCsv("smart-suite-report-" + stamp + ".csv", rows);
+    if (window.SmartCore && SmartCore.toast) SmartCore.toast("CSV \u062f\u0627\u0646\u0644\u0648\u062f \u0634\u062f");
+  }
+  window.sfExportManagementReport = exportReport;
+
+  function ensureBtn() {
+    if (document.getElementById("sfExcelExportBtn")) return;
+    var host = document.getElementById("sfReportCard") ||
+      document.getElementById("sfReportCard2") ||
+      document.querySelector(".settings-panel") ||
+      document.body;
+    if (!host) return;
+    var b = document.createElement("button");
+    b.id = "sfExcelExportBtn";
+    b.type = "button";
+    b.textContent = "\u062e\u0631\u0648\u062c\u06cc Excel/CSV \u06af\u0632\u0627\u0631\u0634";
+    b.style.cssText = "margin:8px;background:#059669;color:#fff;border:none;border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer;font-family:Tahoma,sans-serif;font-size:.75rem;display:block;width:calc(100% - 16px)";
+    b.onclick = function () { exportReport(); };
+    host.appendChild(b);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { setTimeout(ensureBtn, 600); });
+  else setTimeout(ensureBtn, 600);
+  setInterval(ensureBtn, 3000);
+})();
+</script>
+<script>
+/* __sfOfflineEffects â€” queue effects when offline / 5xx, flush later */
+(function () {
+  if (window.__sfOfflineEffects) return;
+  window.__sfOfflineEffects = true;
+
+  var KEY = "smart_effects_offline_v1";
+
+  function tok() {
+    return sessionStorage.getItem("smart_suite_api_token") || "";
+  }
+  function loadQ() {
+    try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+    catch (e) { return []; }
+  }
+  function saveQ(q) {
+    localStorage.setItem(KEY, JSON.stringify(q.slice(-200)));
+    updateBadge();
+  }
+  function updateBadge() {
+    var n = loadQ().length;
+    var el = document.getElementById("sfOfflineFxBadge");
+    if (!el) return;
+    el.textContent = n ? ("\u0635\u0641 \u0622\u0641\u0644\u0627\u06cc\u0646: " + n) : "";
+    el.style.display = n ? "inline-block" : "none";
+  }
+
+  window.sfOfflineQueueEffect = function (payload) {
+    var q = loadQ();
+    payload = payload || {};
+    payload._queuedAt = new Date().toISOString();
+    if (!payload.sourceId) payload.sourceId = (payload.source || "x") + "_" + Date.now();
+    // dedupe offline by sourceId
+    if (q.some(function (x) { return x && x.sourceId === payload.sourceId; })) {
+      return Promise.resolve({ ok: true, offline: true, deduped: true });
+    }
+    q.push(payload);
+    saveQ(q);
+    console.log("[offline-effect] queued", payload.sourceId);
+    return Promise.resolve({ ok: true, offline: true, item: payload });
+  };
+
+  window.sfFlushOfflineEffects = function () {
+    var t = tok();
+    if (!t) return Promise.resolve({ ok: false, error: "no-token" });
+    var q = loadQ();
+    if (!q.length) return Promise.resolve({ ok: true, flushed: 0 });
+    var left = [];
+    var chain = Promise.resolve();
+    var flushed = 0;
+    q.forEach(function (payload) {
+      chain = chain.then(function () {
+        return fetch("/api/effects", {
+          method: "POST",
+          headers: { Authorization: "Bearer " + t, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            source: payload.source,
+            sourceId: payload.sourceId,
+            date: payload.date,
+            amount: payload.amount,
+            side: payload.side,
+            accountHint: payload.accountHint,
+            desc: payload.desc
+          })
+        }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok && j && j.ok, j: j }; }); })
+          .then(function (res) {
+            if (res.ok) flushed++;
+            else left.push(payload);
+          })
+          .catch(function () { left.push(payload); });
+      });
+    });
+    return chain.then(function () {
+      saveQ(left);
+      console.log("[offline-effect] flushed", flushed, "left", left.length);
+      return { ok: true, flushed: flushed, left: left.length };
+    });
+  };
+
+  // Wrap sfPostEffectDeduped if present to fallback offline
+  function wrapDedupe() {
+    var prev = window.sfPostEffectDeduped;
+    if (typeof prev !== "function" || prev._offWrap) return;
+    window.sfPostEffectDeduped = function (payload) {
+      return prev(payload).then(function (j) {
+        if (j && j.ok) return j;
+        return window.sfOfflineQueueEffect(payload);
+      }).catch(function () {
+        return window.sfOfflineQueueEffect(payload);
+      });
+    };
+    window.sfPostEffectDeduped._offWrap = true;
+  }
+
+  function ensureUi() {
+    if (document.getElementById("sfOfflineFxBadge")) return;
+    var bar = document.createElement("div");
+    bar.id = "sfOfflineFxBar";
+    bar.style.cssText = "position:fixed;bottom:12px;left:12px;z-index:9999;display:flex;gap:8px;align-items:center;font-family:Tahoma,sans-serif;direction:rtl";
+    bar.innerHTML =
+      "<span id=\"sfOfflineFxBadge\" style=\"display:none;background:#b45309;color:#fff;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700\"></span>" +
+      "<button type=\"button\" id=\"sfOfflineFxFlush\" style=\"background:#0f766e;color:#fff;border:none;border-radius:8px;padding:6px 10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:12px\">\u0627\u0631\u0633\u0627\u0644 \u0635\u0641 \u0622\u0641\u0644\u0627\u06cc\u0646</button>";
+    document.body.appendChild(bar);
+    document.getElementById("sfOfflineFxFlush").onclick = function () {
+      window.sfFlushOfflineEffects().then(function (r) {
+        alert("\u0627\u0631\u0633\u0627\u0644 \u0634\u062f: " + (r && r.flushed) + " | \u0628\u0627\u0642\u06cc\u0645\u0627\u0646\u062f\u0647: " + (r && r.left));
+      });
+    };
+    updateBadge();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { ensureUi(); wrapDedupe(); });
+  else { ensureUi(); wrapDedupe(); }
+  setInterval(function () { wrapDedupe(); updateBadge(); }, 3000);
+  window.addEventListener("online", function () {
+    setTimeout(function () { window.sfFlushOfflineEffects(); }, 1000);
+  });
+})();
+</script>
+<script>
+/* __sfEffectsOnlineFirst â€” POST online first; offline only if network fails */
+(function () {
+  if (window.__sfEffectsOnlineFirst) return;
+  window.__sfEffectsOnlineFirst = true;
+
+  function tok() {
+    return sessionStorage.getItem("smart_suite_api_token") || "";
+  }
+
+  window.sfPostEffectOnline = function (payload) {
+    payload = payload || {};
+    var t = tok();
+    if (!payload.sourceId) {
+      payload.sourceId = (payload.source || "fx") + "_" + Date.now();
+    }
+    if (!payload.amount) {
+      return Promise.resolve({ ok: false, error: "no-amount" });
+    }
+    if (!t) {
+      if (typeof window.sfOfflineQueueEffect === "function") {
+        return window.sfOfflineQueueEffect(payload).then(function (j) {
+          return Object.assign({ reason: "no-token" }, j);
+        });
+      }
+      return Promise.resolve({ ok: false, error: "no-token" });
+    }
+    return fetch("/api/effects", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + t,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        source: payload.source,
+        sourceId: payload.sourceId,
+        date: payload.date || "",
+        amount: payload.amount,
+        side: payload.side || "debit",
+        accountHint: payload.accountHint || "",
+        desc: payload.desc || ""
+      })
+    }).then(function (r) {
+      return r.json().then(function (j) {
+        j = j || {};
+        j.httpStatus = r.status;
+        if (r.ok && j.ok) {
+          console.log("[effect-online] ok", j.item && j.item.id, payload.source);
+          return j;
+        }
+        // 401/403: do NOT silent-offline (permission issue)
+        if (r.status === 401 || r.status === 403) {
+          console.warn("[effect-online] forbidden", r.status, j);
+          return { ok: false, error: j.error || "forbidden", httpStatus: r.status, offlineSkipped: true };
+        }
+        // other errors -> offline queue
+        if (typeof window.sfOfflineQueueEffect === "function") {
+          return window.sfOfflineQueueEffect(payload).then(function (o) {
+            return Object.assign({ reason: "http-" + r.status }, o);
+          });
+        }
+        return j;
+      });
+    }).catch(function (e) {
+      console.warn("[effect-online] network", e);
+      if (typeof window.sfOfflineQueueEffect === "function") {
+        return window.sfOfflineQueueEffect(payload).then(function (o) {
+          return Object.assign({ reason: "network" }, o);
+        });
+      }
+      return { ok: false, error: String(e && e.message || e) };
+    });
+  };
+
+  // Override deduped helper to use online-first
+  window.sfPostEffectDeduped = function (payload) {
+    payload = payload || {};
+    var t = tok();
+    if (!t) return window.sfPostEffectOnline(payload);
+    var src = payload.source || "";
+    return fetch("/api/effects?source=" + encodeURIComponent(src) + "&limit=100",
+      { headers: { Authorization: "Bearer " + t } })
+      .then(function (r) { return r.json().then(function (j) { return { r: r, j: j }; }); })
+      .then(function (pack) {
+        if (pack.r.ok && pack.j && pack.j.items) {
+          var hit = pack.j.items.find(function (x) {
+            return x && String(x.sourceId) === String(payload.sourceId) &&
+              (x.status === "pending" || x.status === "posted");
+          });
+          if (hit) {
+            console.log("[effect-dedupe] existing", hit.id);
+            return { ok: true, deduped: true, item: hit };
+          }
+        }
+        return window.sfPostEffectOnline(payload);
+      })
+      .catch(function () {
+        return window.sfPostEffectOnline(payload);
+      });
+  };
+  window.sfPostEffectDeduped._offWrap = true;
+
+  function rewire(name, source, side, hint) {
+    window[name] = function (opts) {
+      opts = opts || {};
+      var amount = Number(opts.amount);
+      if (!amount) {
+        var FA = "\u06f0\u06f1\u06f2\u06f3\u06f4\u06f5\u06f6\u06f7\u06f8\u06f9";
+        amount = Number(String(opts.amount || "").replace(/[\u06f0-\u06f9]/g, function (d) {
+          return String(FA.indexOf(d));
+        }).replace(/[^\d.-]/g, "")) || 0;
+      }
+      if (!amount) return Promise.resolve({ ok: false, error: "no-amount" });
+      return window.sfPostEffectDeduped({
+        source: source,
+        sourceId: opts.sourceId || (source + "_" + Date.now()),
+        date: opts.date || "",
+        amount: Math.abs(amount),
+        side: opts.side || side,
+        accountHint: opts.accountHint || hint,
+        desc: opts.desc || hint
+      });
+    };
+  }
+
+  function wireAll() {
+    rewire("sfQueuePayrollEffect", "payroll", "debit", "\u062d\u0642\u0648\u0642");
+    rewire("sfQueueWarehouseEffect", "warehouse", "debit", "\u0627\u0646\u0628\u0627\u0631");
+    rewire("sfQueueCashEffect", "cashbox", "debit", "\u0635\u0646\u062f\u0648\u0642");
+    rewire("sfQueueBankEffect", "bank", "debit", "\u0628\u0627\u0646\u06a9");
+    rewire("sfQueueSalesEffect", "sales", "credit", "\u0641\u0631\u0648\u0634");
+    rewire("sfQueuePurchaseEffect", "purchase", "debit", "\u062e\u0631\u06cc\u062f");
+  }
+  wireAll();
+  setInterval(wireAll, 2500);
+})();
+</script>
+<script>
+/* __sfWireTaxBudgetOnline */
+(function () {
+  if (window.__sfWireTaxBudgetOnline) return;
+  window.__sfWireTaxBudgetOnline = true;
+  function rewire(name, source, side, hint) {
+    if (typeof window.sfPostEffectDeduped !== "function" && typeof window.sfPostEffectOnline !== "function") return;
+    window[name] = function (opts) {
+      opts = opts || {};
+      var FA = "\u06f0\u06f1\u06f2\u06f3\u06f4\u06f5\u06f6\u06f7\u06f8\u06f9";
+      var amount = Number(String(opts.amount || "").replace(/[\u06f0-\u06f9]/g, function (d) {
+        return String(FA.indexOf(d));
+      }).replace(/[^\d.-]/g, "")) || Number(opts.amount) || 0;
+      if (!amount) return Promise.resolve({ ok: false, error: "no-amount" });
+      var payload = {
+        source: source,
+        sourceId: opts.sourceId || (source + "_" + Date.now()),
+        date: opts.date || "",
+        amount: Math.abs(amount),
+        side: opts.side || side,
+        accountHint: opts.accountHint || hint,
+        desc: opts.desc || hint
+      };
+      if (typeof window.sfPostEffectDeduped === "function") return window.sfPostEffectDeduped(payload);
+      return window.sfPostEffectOnline(payload);
+    };
+  }
+  function tick() {
+    rewire("sfQueueTaxEffect", "tax", "debit", "\u0645\u0627\u0644\u06cc\u0627\u062a");
+    rewire("sfQueueBudgetEffect", "budget", "debit", "\u0628\u0648\u062f\u062c\u0647");
+    rewire("sfQueueWarehouseEffect", "warehouse", "debit", "\u0627\u0646\u0628\u0627\u0631");
+  }
+  tick();
+  setInterval(tick, 2000);
+})();
+</script>
 </body>
 </html>

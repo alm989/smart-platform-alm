@@ -2859,5 +2859,736 @@ tr.deleted{opacity:.55;text-decoration:line-through}
   setTimeout(boot, 900);
 })();
 </script>
+<script>
+/* __sfResolveTempCodes â€” map TEMP lines to chart of accounts */
+(function () {
+  if (window.__sfResolveTempCodes) return;
+  window.__sfResolveTempCodes = true;
+
+  var ACCT_KEY = "smart_mod_accounting_v2";
+  var DEFAULTS = {
+    cashbox: { code: "1101", name: "\u0635\u0646\u062f\u0648\u0642" },
+    bank: { code: "1102", name: "\u0628\u0627\u0646\u06a9" },
+    tankhah: { code: "1103", name: "\u062a\u0646\u062e\u0648\u0627\u0647" },
+    pettycash: { code: "1103", name: "\u062a\u0646\u062e\u0648\u0627\u0647" },
+    sales: { code: "4101", name: "\u062f\u0631\u0622\u0645\u062f \u0641\u0631\u0648\u0634" },
+    purchase: { code: "5101", name: "\u062e\u0631\u06cc\u062f" },
+    counter: { code: "2101", name: "\u062d\u0633\u0627\u0628 \u0645\u0642\u0627\u0628\u0644" }
+  };
+
+  function loadDb() {
+    try {
+      var db = JSON.parse(localStorage.getItem(ACCT_KEY) || "{}");
+      if (!db.stores) db.stores = {};
+      if (!Array.isArray(db.stores.code)) db.stores.code = [];
+      if (!Array.isArray(db.stores.voucher)) db.stores.voucher = [];
+      return db;
+    } catch (e) {
+      return { stores: { code: [], voucher: [] } };
+    }
+  }
+  function saveDb(db) {
+    db.updatedAt = new Date().toISOString();
+    localStorage.setItem(ACCT_KEY, JSON.stringify(db));
+    try {
+      if (window.SmartCore && SmartCore.api && SmartCore.api.syncState) SmartCore.api.syncState();
+    } catch (e) {}
+  }
+  function findCode(db, hint) {
+    var h = String(hint || "").trim();
+    if (!h) return null;
+    var list = db.stores.code || [];
+    for (var i = 0; i < list.length; i++) {
+      var c = list[i];
+      if (!c || c.deleted) continue;
+      var code = String(c["\u06a9\u062f"] || c.code || "");
+      var name = String(c["\u0646\u0627\u0645"] || c.name || "");
+      if (code === h || name === h) return { code: code, name: name };
+      if (name && h && name.indexOf(h) >= 0) return { code: code, name: name };
+      if (name && h && h.indexOf(name) >= 0) return { code: code, name: name };
+    }
+    return null;
+  }
+  function ensureDefaultCodes(db) {
+    var need = [
+      { "\u06a9\u062f": "1101", "\u0646\u0627\u0645": "\u0635\u0646\u062f\u0648\u0642", "\u0648\u0636\u0639\u06cc\u062a": "\u0641\u0639\u0627\u0644" },
+      { "\u06a9\u062f": "1102", "\u0646\u0627\u0645": "\u0628\u0627\u0646\u06a9", "\u0648\u0636\u0639\u06cc\u062a": "\u0641\u0639\u0627\u0644" },
+      { "\u06a9\u062f": "1103", "\u0646\u0627\u0645": "\u062a\u0646\u062e\u0648\u0627\u0647", "\u0648\u0636\u0639\u06cc\u062a": "\u0641\u0639\u0627\u0644" },
+      { "\u06a9\u062f": "2101", "\u0646\u0627\u0645": "\u062d\u0633\u0627\u0628 \u0645\u0642\u0627\u0628\u0644", "\u0648\u0636\u0639\u06cc\u062a": "\u0641\u0639\u0627\u0644" },
+      { "\u06a9\u062f": "4101", "\u0646\u0627\u0645": "\u062f\u0631\u0622\u0645\u062f \u0641\u0631\u0648\u0634", "\u0648\u0636\u0639\u06cc\u062a": "\u0641\u0639\u0627\u0644" },
+      { "\u06a9\u062f": "5101", "\u0646\u0627\u0645": "\u062e\u0631\u06cc\u062f", "\u0648\u0636\u0639\u06cc\u062t": "\u0641\u0639\u0627\u0644" }
+    ];
+    // fix typo in status for 5101 - use correct unicode
+    need[5]["\u0648\u0636\u0639\u06cc\u062a"] = "\u0641\u0639\u0627\u0644";
+    var changed = false;
+    need.forEach(function (row) {
+      var exists = (db.stores.code || []).some(function (c) {
+        return c && !c.deleted && String(c["\u06a9\u062f"] || "") === row["\u06a9\u062f"];
+      });
+      if (!exists) {
+        row.id = "seed_" + row["\u06a9\u062f"];
+        row.deleted = false;
+        db.stores.code.push(row);
+        changed = true;
+      }
+    });
+    return changed;
+  }
+  function resolveVoucher(v, db) {
+    if (!v || !Array.isArray(v["\u0631\u062f\u06cc\u0641\u200c\u0647\u0627"])) return false;
+    var lines = v["\u0631\u062f\u06cc\u0641\u200c\u0647\u0627"];
+    var changed = false;
+    var srcHint = "";
+    try {
+      var m = String(v["\u0634\u0631\u062d"] || "").match(/\u0645\u0646\u0628\u0639:\s*([a-zA-Z_]+)/);
+      if (m) srcHint = m[1];
+    } catch (e) {}
+    lines.forEach(function (ln, idx) {
+      if (!ln) return;
+      var code = String(ln.code || "").trim();
+      if (code && code !== "TEMP" && code !== "0") return;
+      var hint = ln.desc || "";
+      var found = findCode(db, hint);
+      if (!found && idx === 0 && srcHint && DEFAULTS[srcHint]) {
+        found = DEFAULTS[srcHint];
+      }
+      if (!found && idx > 0) found = DEFAULTS.counter;
+      if (!found && idx === 0) found = DEFAULTS.cashbox;
+      if (found) {
+        ln.code = found.code;
+        changed = true;
+      }
+    });
+    if (changed) {
+      v["\u06a9\u062f \u062d\u0633\u0627\u0628"] = lines.map(function (l) { return l.code; }).join("\u060c ");
+    }
+    return changed;
+  }
+  function resolveAll() {
+    var db = loadDb();
+    var seeded = ensureDefaultCodes(db);
+    var n = 0;
+    (db.stores.voucher || []).forEach(function (v) {
+      if (v && !v.deleted && resolveVoucher(v, db)) n++;
+    });
+    if (seeded || n) saveDb(db);
+    if (n && window.SmartCore && SmartCore.toast) {
+      SmartCore.toast("\u06a9\u062f \u062d\u0633\u0627\u0628 TEMP \u0628\u0631\u0627\u06cc " + n + " \u0633\u0646\u062f \u062d\u0644 \u0634\u062f");
+    }
+    console.log("[resolve-temp] vouchers fixed:", n, "seeded:", seeded);
+    return n;
+  }
+  function patchFormLines() {
+    var body = document.getElementById("vBody");
+    if (!body) return;
+    var db = loadDb();
+    ensureDefaultCodes(db);
+    Array.prototype.forEach.call(body.querySelectorAll("tr"), function (tr, idx) {
+      var codeInp = tr.querySelector(".vl-code");
+      if (!codeInp) return;
+      var c = (codeInp.value || "").trim();
+      if (c && c !== "TEMP" && c !== "0") return;
+      var desc = ((tr.querySelector(".vl-desc") || {}).value) || "";
+      var found = findCode(db, desc) || (idx === 0 ? DEFAULTS.cashbox : DEFAULTS.counter);
+      if (found) codeInp.value = found.code;
+    });
+  }
+  window.sfResolveTempCodes = resolveAll;
+  window.sfPatchVoucherFormCodes = patchFormLines;
+
+  // button on effects panel / voucher
+  function ensureBtn() {
+    if (document.getElementById("sfResolveTempBtn")) return;
+    var host = document.getElementById("sfFxPanel") || document.querySelector("#p-voucher .card") || document.querySelector(".main");
+    if (!host) return;
+    var b = document.createElement("button");
+    b.id = "sfResolveTempBtn";
+    b.type = "button";
+    b.textContent = "\u062d\u0644 \u06a9\u062f TEMP \u2192 \u06a9\u062f\u06cc\u0646\u06af";
+    b.style.cssText = "margin:8px;background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-weight:700;cursor:pointer;font-family:Tahoma,sans-serif;font-size:.72rem";
+    b.onclick = function () {
+      resolveAll();
+      patchFormLines();
+      try { if (typeof renderDash === "function") renderDash(); } catch (e) {}
+    };
+    host.appendChild(b);
+  }
+
+  setTimeout(function () { resolveAll(); ensureBtn(); }, 1200);
+  setInterval(ensureBtn, 3000);
+})();
+</script>
+<script>
+/* __sfFinalizeMenuVisible â€” always-visible finalize controls */
+(function () {
+  if (window.__sfFinalizeMenuVisible) return;
+  window.__sfFinalizeMenuVisible = true;
+
+  var ACCT_KEY = "smart_mod_accounting_v2";
+
+  function tok() {
+    return sessionStorage.getItem("smart_suite_api_token") || "";
+  }
+  function loadDb() {
+    try {
+      var db = JSON.parse(localStorage.getItem(ACCT_KEY) || "{}");
+      if (!db.stores) db.stores = {};
+      if (!Array.isArray(db.stores.voucher)) db.stores.voucher = [];
+      return db;
+    } catch (e) {
+      return { stores: { voucher: [] } };
+    }
+  }
+  function saveDb(db) {
+    db.updatedAt = new Date().toISOString();
+    localStorage.setItem(ACCT_KEY, JSON.stringify(db));
+    try {
+      if (window.SmartCore && SmartCore.api && SmartCore.api.syncState) SmartCore.api.syncState();
+    } catch (e) {}
+  }
+  function linesOk(lines) {
+    if (!Array.isArray(lines) || !lines.length) return false;
+    for (var i = 0; i < lines.length; i++) {
+      var c = String((lines[i] && lines[i].code) || "").trim();
+      if (!c || c === "TEMP" || c === "0") return false;
+    }
+    return true;
+  }
+  function balOk(lines) {
+    var d = 0, c = 0;
+    (lines || []).forEach(function (l) {
+      d += Number(l.debit) || 0;
+      c += Number(l.credit) || 0;
+    });
+    return Math.round((d - c) * 100) === 0 && d > 0;
+  }
+  function patchEffect(effectId, voucherId) {
+    if (!effectId || !tok()) return;
+    fetch("/api/effects/" + encodeURIComponent(effectId), {
+      method: "PATCH",
+      headers: {
+        Authorization: "Bearer " + tok(),
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ status: "posted", voucherRef: "perm:" + voucherId })
+    }).catch(function () {});
+  }
+
+  window.sfFinalizeTempVoucher = window.sfFinalizeTempVoucher || function (voucherId) {
+    var db = loadDb();
+    var v = (db.stores.voucher || []).find(function (x) {
+      return x && !x.deleted && String(x.id) === String(voucherId);
+    });
+    if (!v) {
+      alert("\u0633\u0646\u062f \u06cc\u0627\u0641\u062a \u0646\u0634\u062f");
+      return false;
+    }
+    // prefer form lines if open
+    try {
+      var body = document.getElementById("vBody");
+      if (body && body.querySelectorAll("tr").length) {
+        var lines = [];
+        Array.prototype.forEach.call(body.querySelectorAll("tr"), function (tr) {
+          var code = ((tr.querySelector(".vl-code") || {}).value || "").trim();
+          var desc = ((tr.querySelector(".vl-desc") || {}).value || "").trim();
+          var debit = Number(((tr.querySelector(".vl-debit") || {}).value || "0").toString().replace(/[^\d.-]/g, "")) || 0;
+          var credit = Number(((tr.querySelector(".vl-credit") || {}).value || "0").toString().replace(/[^\d.-]/g, "")) || 0;
+          if (code || desc || debit || credit) lines.push({ code: code, desc: desc, debit: debit, credit: credit });
+        });
+        if (lines.length) v["\u0631\u062f\u06cc\u0641\u200c\u0647\u0627"] = lines;
+      }
+    } catch (e) {}
+
+    var lines = v["\u0631\u062f\u06cc\u0641\u200c\u0647\u0627"] || [];
+    if (!linesOk(lines)) {
+      if (typeof window.sfResolveTempCodes === "function") window.sfResolveTempCodes();
+      // reload after resolve
+      db = loadDb();
+      v = (db.stores.voucher || []).find(function (x) {
+        return x && String(x.id) === String(voucherId);
+      }) || v;
+      lines = v["\u0631\u062f\u06cc\u0641\u200c\u0647\u0627"] || [];
+    }
+    if (!linesOk(lines)) {
+      alert("\u0627\u0628\u062a\u062f\u0627 \u06a9\u062f TEMP \u0631\u0627 \u0628\u0647 \u06a9\u062f \u062d\u0633\u0627\u0628 \u0648\u0627\u0642\u0639\u06cc \u062a\u063a\u06cc\u06cc\u0631 \u062f\u0647\u06cc\u062f");
+      return false;
+    }
+    if (!balOk(lines)) {
+      alert("\u0633\u0646\u062f \u0646\u0627\u062a\u0631\u0627\u0632 \u0627\u0633\u062a");
+      return false;
+    }
+    v["\u0648\u0636\u0639\u06cc\u062a"] = "\u062f\u0627\u0626\u0645";
+    v.finalizedAt = new Date().toISOString();
+    saveDb(db);
+    if (v.effectId) patchEffect(v.effectId, v.id);
+    if (window.SmartCore && SmartCore.toast) {
+      SmartCore.toast("\u0633\u0646\u062f #" + (v["\u0634\u0645\u0627\u0631\u0647"] || "") + " \u062f\u0627\u0626\u0645 \u0634\u062f");
+    }
+    try { if (typeof renderDash === "function") renderDash(); } catch (e2) {}
+    fillSelects();
+    return true;
+  };
+
+  function tempList() {
+    return (loadDb().stores.voucher || []).filter(function (v) {
+      return v && !v.deleted && (v["\u0648\u0636\u0639\u06cc\u062a"] || "\u0645\u0648\u0642\u062a") === "\u0645\u0648\u0642\u062a";
+    });
+  }
+  function fillSelects() {
+    var temps = tempList();
+    document.querySelectorAll(".sf-fin-sel").forEach(function (sel) {
+      var cur = sel.value;
+      sel.innerHTML = temps.map(function (v) {
+        return "<option value=\"" + v.id + "\">#" +
+          (v["\u0634\u0645\u0627\u0631\u0647"] || "?") + " â€” " +
+          String(v["\u0634\u0631\u062d"] || "").slice(0, 36) + "</option>";
+      }).join("") || "<option value=\"\">\u0633\u0646\u062f \u0645\u0648\u0642\u062a\u06cc \u0646\u06cc\u0633\u062a</option>";
+      if (cur) sel.value = cur;
+    });
+  }
+
+  function makeBar(id) {
+    if (document.getElementById(id)) return document.getElementById(id);
+    var bar = document.createElement("div");
+    bar.id = id;
+    bar.className = "sf-finalize-bar";
+    bar.style.cssText =
+      "margin:10px 0;padding:12px;border:1px solid #7c3aed;border-radius:12px;" +
+      "background:linear-gradient(135deg,#1e1b4b,#0f172a);color:#e2e8f0;" +
+      "font-family:Tahoma,sans-serif;direction:rtl;text-align:right";
+    bar.innerHTML =
+      "<div style=\"font-weight:800;color:#c4b5fd;margin-bottom:8px\">\u26a1 \u0642\u0637\u0639\u06cc\u200c\u0633\u0627\u0632\u06cc \u0633\u0646\u062f \u0645\u0648\u0642\u062a \u2192 \u062f\u0627\u0626\u0645</div>" +
+      "<div style=\"display:flex;gap:8px;flex-wrap:wrap;align-items:center\">" +
+      "<select class=\"sf-fin-sel\" style=\"flex:1;min-width:200px;padding:8px;border-radius:8px;border:1px solid #4c1d95;background:#020617;color:#e2e8f0;font-family:inherit\"></select>" +
+      "<button type=\"button\" class=\"sf-fin-resolve\" style=\"background:#334155;color:#fff;border:none;border-radius:8px;padding:8px 10px;font-weight:700;cursor:pointer;font-family:inherit\">\u062d\u0644 TEMP</button>" +
+      "<button type=\"button\" class=\"sf-fin-go\" style=\"background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:800;cursor:pointer;font-family:inherit\">\u062f\u0627\u0626\u0645 \u06a9\u0631\u062f\u0646</button>" +
+      "</div>" +
+      "<div style=\"margin-top:6px;font-size:11px;color:#94a3b8\">\u0627\u0628\u062a\u062f\u0627 \u06a9\u062f \u062d\u0633\u0627\u0628 \u0648\u0627\u0642\u0639\u06cc \u2014 \u0633\u067e\u0633 \u062f\u0627\u0626\u0645</div>";
+    bar.querySelector(".sf-fin-resolve").onclick = function () {
+      if (typeof window.sfResolveTempCodes === "function") window.sfResolveTempCodes();
+      if (typeof window.sfPatchVoucherFormCodes === "function") window.sfPatchVoucherFormCodes();
+      fillSelects();
+    };
+    bar.querySelector(".sf-fin-go").onclick = function () {
+      var sel = bar.querySelector(".sf-fin-sel");
+      var id = sel && sel.value;
+      if (!id) {
+        alert("\u0633\u0646\u062f \u0645\u0648\u0642\u062a\u06cc \u0627\u0646\u062a\u062e\u0627\u0628 \u0646\u0634\u062f\u0647");
+        return;
+      }
+      window.sfFinalizeTempVoucher(id);
+    };
+    return bar;
+  }
+
+  function place() {
+    // 1) sticky under header
+    if (!document.getElementById("sfFinalizeTop")) {
+      var top = makeBar("sfFinalizeTop");
+      var header = document.querySelector("header.header") || document.querySelector(".header");
+      if (header && header.parentNode) {
+        header.parentNode.insertBefore(top, header.nextSibling);
+      } else {
+        document.body.insertBefore(top, document.body.firstChild);
+      }
+    }
+    // 2) inside voucher panel card
+    var vp = document.querySelector("#p-voucher .card");
+    if (vp && !document.getElementById("sfFinalizeVoucher")) {
+      var vb = makeBar("sfFinalizeVoucher");
+      vp.insertBefore(vb, vp.firstChild.nextSibling);
+    }
+    // 3) nav item under Ø«Ø¨Øª dropdown
+    var regDd = null;
+    document.querySelectorAll(".nav-item").forEach(function (ni) {
+      var nb = ni.querySelector(".nb");
+      if (nb && /\u062b\u0628\u062a/.test(nb.textContent || "")) regDd = ni.querySelector(".dd");
+    });
+    if (regDd && !document.getElementById("sfFinNavBtn")) {
+      var btn = document.createElement("button");
+      btn.id = "sfFinNavBtn";
+      btn.type = "button";
+      btn.textContent = "\u0642\u0637\u0639\u06cc \u0633\u0646\u062f \u0645\u0648\u0642\u062a";
+      btn.onclick = function () {
+        var el = document.getElementById("sfFinalizeTop");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          el.style.outline = "2px solid #c4b5fd";
+          setTimeout(function () { el.style.outline = ""; }, 1500);
+        }
+        fillSelects();
+      };
+      regDd.appendChild(btn);
+    }
+    fillSelects();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(place, 400); });
+  } else setTimeout(place, 400);
+  setInterval(place, 3000);
+})();
+</script>
+<script>
+/* __sfOfflineEffects â€” queue effects when offline / 5xx, flush later */
+(function () {
+  if (window.__sfOfflineEffects) return;
+  window.__sfOfflineEffects = true;
+
+  var KEY = "smart_effects_offline_v1";
+
+  function tok() {
+    return sessionStorage.getItem("smart_suite_api_token") || "";
+  }
+  function loadQ() {
+    try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+    catch (e) { return []; }
+  }
+  function saveQ(q) {
+    localStorage.setItem(KEY, JSON.stringify(q.slice(-200)));
+    updateBadge();
+  }
+  function updateBadge() {
+    var n = loadQ().length;
+    var el = document.getElementById("sfOfflineFxBadge");
+    if (!el) return;
+    el.textContent = n ? ("\u0635\u0641 \u0622\u0641\u0644\u0627\u06cc\u0646: " + n) : "";
+    el.style.display = n ? "inline-block" : "none";
+  }
+
+  window.sfOfflineQueueEffect = function (payload) {
+    var q = loadQ();
+    payload = payload || {};
+    payload._queuedAt = new Date().toISOString();
+    if (!payload.sourceId) payload.sourceId = (payload.source || "x") + "_" + Date.now();
+    // dedupe offline by sourceId
+    if (q.some(function (x) { return x && x.sourceId === payload.sourceId; })) {
+      return Promise.resolve({ ok: true, offline: true, deduped: true });
+    }
+    q.push(payload);
+    saveQ(q);
+    console.log("[offline-effect] queued", payload.sourceId);
+    return Promise.resolve({ ok: true, offline: true, item: payload });
+  };
+
+  window.sfFlushOfflineEffects = function () {
+    var t = tok();
+    if (!t) return Promise.resolve({ ok: false, error: "no-token" });
+    var q = loadQ();
+    if (!q.length) return Promise.resolve({ ok: true, flushed: 0 });
+    var left = [];
+    var chain = Promise.resolve();
+    var flushed = 0;
+    q.forEach(function (payload) {
+      chain = chain.then(function () {
+        return fetch("/api/effects", {
+          method: "POST",
+          headers: { Authorization: "Bearer " + t, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            source: payload.source,
+            sourceId: payload.sourceId,
+            date: payload.date,
+            amount: payload.amount,
+            side: payload.side,
+            accountHint: payload.accountHint,
+            desc: payload.desc
+          })
+        }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok && j && j.ok, j: j }; }); })
+          .then(function (res) {
+            if (res.ok) flushed++;
+            else left.push(payload);
+          })
+          .catch(function () { left.push(payload); });
+      });
+    });
+    return chain.then(function () {
+      saveQ(left);
+      console.log("[offline-effect] flushed", flushed, "left", left.length);
+      return { ok: true, flushed: flushed, left: left.length };
+    });
+  };
+
+  // Wrap sfPostEffectDeduped if present to fallback offline
+  function wrapDedupe() {
+    var prev = window.sfPostEffectDeduped;
+    if (typeof prev !== "function" || prev._offWrap) return;
+    window.sfPostEffectDeduped = function (payload) {
+      return prev(payload).then(function (j) {
+        if (j && j.ok) return j;
+        return window.sfOfflineQueueEffect(payload);
+      }).catch(function () {
+        return window.sfOfflineQueueEffect(payload);
+      });
+    };
+    window.sfPostEffectDeduped._offWrap = true;
+  }
+
+  function ensureUi() {
+    if (document.getElementById("sfOfflineFxBadge")) return;
+    var bar = document.createElement("div");
+    bar.id = "sfOfflineFxBar";
+    bar.style.cssText = "position:fixed;bottom:12px;left:12px;z-index:9999;display:flex;gap:8px;align-items:center;font-family:Tahoma,sans-serif;direction:rtl";
+    bar.innerHTML =
+      "<span id=\"sfOfflineFxBadge\" style=\"display:none;background:#b45309;color:#fff;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700\"></span>" +
+      "<button type=\"button\" id=\"sfOfflineFxFlush\" style=\"background:#0f766e;color:#fff;border:none;border-radius:8px;padding:6px 10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:12px\">\u0627\u0631\u0633\u0627\u0644 \u0635\u0641 \u0622\u0641\u0644\u0627\u06cc\u0646</button>";
+    document.body.appendChild(bar);
+    document.getElementById("sfOfflineFxFlush").onclick = function () {
+      window.sfFlushOfflineEffects().then(function (r) {
+        alert("\u0627\u0631\u0633\u0627\u0644 \u0634\u062f: " + (r && r.flushed) + " | \u0628\u0627\u0642\u06cc\u0645\u0627\u0646\u062f\u0647: " + (r && r.left));
+      });
+    };
+    updateBadge();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { ensureUi(); wrapDedupe(); });
+  else { ensureUi(); wrapDedupe(); }
+  setInterval(function () { wrapDedupe(); updateBadge(); }, 3000);
+  window.addEventListener("online", function () {
+    setTimeout(function () { window.sfFlushOfflineEffects(); }, 1000);
+  });
+})();
+</script>
+<script>
+/* __sfEffectsOnlineFirst â€” POST online first; offline only if network fails */
+(function () {
+  if (window.__sfEffectsOnlineFirst) return;
+  window.__sfEffectsOnlineFirst = true;
+
+  function tok() {
+    return sessionStorage.getItem("smart_suite_api_token") || "";
+  }
+
+  window.sfPostEffectOnline = function (payload) {
+    payload = payload || {};
+    var t = tok();
+    if (!payload.sourceId) {
+      payload.sourceId = (payload.source || "fx") + "_" + Date.now();
+    }
+    if (!payload.amount) {
+      return Promise.resolve({ ok: false, error: "no-amount" });
+    }
+    if (!t) {
+      if (typeof window.sfOfflineQueueEffect === "function") {
+        return window.sfOfflineQueueEffect(payload).then(function (j) {
+          return Object.assign({ reason: "no-token" }, j);
+        });
+      }
+      return Promise.resolve({ ok: false, error: "no-token" });
+    }
+    return fetch("/api/effects", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + t,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        source: payload.source,
+        sourceId: payload.sourceId,
+        date: payload.date || "",
+        amount: payload.amount,
+        side: payload.side || "debit",
+        accountHint: payload.accountHint || "",
+        desc: payload.desc || ""
+      })
+    }).then(function (r) {
+      return r.json().then(function (j) {
+        j = j || {};
+        j.httpStatus = r.status;
+        if (r.ok && j.ok) {
+          console.log("[effect-online] ok", j.item && j.item.id, payload.source);
+          return j;
+        }
+        // 401/403: do NOT silent-offline (permission issue)
+        if (r.status === 401 || r.status === 403) {
+          console.warn("[effect-online] forbidden", r.status, j);
+          return { ok: false, error: j.error || "forbidden", httpStatus: r.status, offlineSkipped: true };
+        }
+        // other errors -> offline queue
+        if (typeof window.sfOfflineQueueEffect === "function") {
+          return window.sfOfflineQueueEffect(payload).then(function (o) {
+            return Object.assign({ reason: "http-" + r.status }, o);
+          });
+        }
+        return j;
+      });
+    }).catch(function (e) {
+      console.warn("[effect-online] network", e);
+      if (typeof window.sfOfflineQueueEffect === "function") {
+        return window.sfOfflineQueueEffect(payload).then(function (o) {
+          return Object.assign({ reason: "network" }, o);
+        });
+      }
+      return { ok: false, error: String(e && e.message || e) };
+    });
+  };
+
+  // Override deduped helper to use online-first
+  window.sfPostEffectDeduped = function (payload) {
+    payload = payload || {};
+    var t = tok();
+    if (!t) return window.sfPostEffectOnline(payload);
+    var src = payload.source || "";
+    return fetch("/api/effects?source=" + encodeURIComponent(src) + "&limit=100",
+      { headers: { Authorization: "Bearer " + t } })
+      .then(function (r) { return r.json().then(function (j) { return { r: r, j: j }; }); })
+      .then(function (pack) {
+        if (pack.r.ok && pack.j && pack.j.items) {
+          var hit = pack.j.items.find(function (x) {
+            return x && String(x.sourceId) === String(payload.sourceId) &&
+              (x.status === "pending" || x.status === "posted");
+          });
+          if (hit) {
+            console.log("[effect-dedupe] existing", hit.id);
+            return { ok: true, deduped: true, item: hit };
+          }
+        }
+        return window.sfPostEffectOnline(payload);
+      })
+      .catch(function () {
+        return window.sfPostEffectOnline(payload);
+      });
+  };
+  window.sfPostEffectDeduped._offWrap = true;
+
+  function rewire(name, source, side, hint) {
+    window[name] = function (opts) {
+      opts = opts || {};
+      var amount = Number(opts.amount);
+      if (!amount) {
+        var FA = "\u06f0\u06f1\u06f2\u06f3\u06f4\u06f5\u06f6\u06f7\u06f8\u06f9";
+        amount = Number(String(opts.amount || "").replace(/[\u06f0-\u06f9]/g, function (d) {
+          return String(FA.indexOf(d));
+        }).replace(/[^\d.-]/g, "")) || 0;
+      }
+      if (!amount) return Promise.resolve({ ok: false, error: "no-amount" });
+      return window.sfPostEffectDeduped({
+        source: source,
+        sourceId: opts.sourceId || (source + "_" + Date.now()),
+        date: opts.date || "",
+        amount: Math.abs(amount),
+        side: opts.side || side,
+        accountHint: opts.accountHint || hint,
+        desc: opts.desc || hint
+      });
+    };
+  }
+
+  function wireAll() {
+    rewire("sfQueuePayrollEffect", "payroll", "debit", "\u062d\u0642\u0648\u0642");
+    rewire("sfQueueWarehouseEffect", "warehouse", "debit", "\u0627\u0646\u0628\u0627\u0631");
+    rewire("sfQueueCashEffect", "cashbox", "debit", "\u0635\u0646\u062f\u0648\u0642");
+    rewire("sfQueueBankEffect", "bank", "debit", "\u0628\u0627\u0646\u06a9");
+    rewire("sfQueueSalesEffect", "sales", "credit", "\u0641\u0631\u0648\u0634");
+    rewire("sfQueuePurchaseEffect", "purchase", "debit", "\u062e\u0631\u06cc\u062f");
+  }
+  wireAll();
+  setInterval(wireAll, 2500);
+})();
+</script>
+<script>
+/* __sfChartSeed160 â€” extra COA seeds for tax/budget/warehouse/payroll */
+(function () {
+  if (window.__sfChartSeed160) return;
+  window.__sfChartSeed160 = true;
+  var ACCT_KEY = "smart_mod_accounting_v2";
+  var SEEDS = [
+    { code: "1101", name: "\u0635\u0646\u062f\u0648\u0642" },
+    { code: "1102", name: "\u0628\u0627\u0646\u06a9" },
+    { code: "1103", name: "\u062a\u0646\u062e\u0648\u0627\u0647" },
+    { code: "1301", name: "\u0627\u0646\u0628\u0627\u0631" },
+    { code: "2101", name: "\u062d\u0633\u0627\u0628 \u0645\u0642\u0627\u0628\u0644" },
+    { code: "2201", name: "\u0645\u0627\u0644\u06cc\u0627\u062a \u067e\u0631\u062f\u0627\u062e\u062a\u0646\u06cc" },
+    { code: "4101", name: "\u062f\u0631\u0622\u0645\u062f \u0641\u0631\u0648\u0634" },
+    { code: "5101", name: "\u062e\u0631\u06cc\u062f" },
+    { code: "5102", name: "\u062d\u0642\u0648\u0642 \u0648 \u062f\u0633\u062a\u0645\u0632\u062f" },
+    { code: "6101", name: "\u0628\u0648\u062f\u062c\u0647 / \u0647\u0632\u06cc\u0646\u0647" }
+  ];
+  var SOURCE_MAP = {
+    cashbox: "1101", bank: "1102", tankhah: "1103", pettycash: "1103",
+    warehouse: "1301", sales: "4101", purchase: "5101",
+    payroll: "5102", tax: "2201", budget: "6101"
+  };
+  function loadDb() {
+    try {
+      var db = JSON.parse(localStorage.getItem(ACCT_KEY) || "{}");
+      if (!db.stores) db.stores = {};
+      if (!Array.isArray(db.stores.code)) db.stores.code = [];
+      if (!Array.isArray(db.stores.voucher)) db.stores.voucher = [];
+      return db;
+    } catch (e) {
+      return { stores: { code: [], voucher: [] } };
+    }
+  }
+  function saveDb(db) {
+    db.updatedAt = new Date().toISOString();
+    localStorage.setItem(ACCT_KEY, JSON.stringify(db));
+    try {
+      if (window.SmartCore && SmartCore.api && SmartCore.api.syncState) SmartCore.api.syncState();
+    } catch (e) {}
+  }
+  function ensureSeeds() {
+    var db = loadDb();
+    var n = 0;
+    SEEDS.forEach(function (row) {
+      var exists = db.stores.code.some(function (c) {
+        return c && !c.deleted && String(c["\u06a9\u062f"] || c.code || "") === row.code;
+      });
+      if (!exists) {
+        var o = { id: "seed_" + row.code, deleted: false };
+        o["\u06a9\u062f"] = row.code;
+        o["\u0646\u0627\u0645"] = row.name;
+        o["\u0648\u0636\u0639\u06cc\u062a"] = "\u0641\u0639\u0627\u0644";
+        db.stores.code.push(o);
+        n++;
+      }
+    });
+    if (n) saveDb(db);
+    console.log("[chart-seed-1.6] added", n);
+    return n;
+  }
+  // enhance resolve map if present
+  var prev = window.sfResolveTempCodes;
+  window.sfResolveTempCodes = function () {
+    ensureSeeds();
+    var db = loadDb();
+    var fixed = 0;
+    (db.stores.voucher || []).forEach(function (v) {
+      if (!v || v.deleted || !Array.isArray(v["\u0631\u062f\u06cc\u0641\u200c\u0647\u0627"])) return;
+      var src = "";
+      try {
+        var m = String(v["\u0634\u0631\u062d"] || "").match(/\[fx_[^\]]+\]|source[:\s]+([a-z]+)/i);
+        // detect from effect sources in desc
+        var d = String(v["\u0634\u0631\u062d"] || "") + " " + String(v.effectId || "");
+        Object.keys(SOURCE_MAP).forEach(function (k) {
+          if (d.indexOf(k) >= 0) src = k;
+        });
+      } catch (e) {}
+      var lines = v["\u0631\u062f\u06cc\u0641\u200c\u0647\u0627"];
+      var ch = false;
+      lines.forEach(function (ln, idx) {
+        if (!ln) return;
+        var c = String(ln.code || "").trim();
+        if (c && c !== "TEMP" && c !== "0") return;
+        if (idx === 0 && src && SOURCE_MAP[src]) {
+          ln.code = SOURCE_MAP[src];
+          ch = true;
+        } else if (idx > 0) {
+          ln.code = "2101";
+          ch = true;
+        }
+      });
+      if (ch) {
+        v["\u06a9\u062f \u062d\u0633\u0627\u0628"] = lines.map(function (l) { return l.code; }).join("\u060c ");
+        fixed++;
+      }
+    });
+    if (fixed) saveDb(db);
+    if (typeof prev === "function") try { prev(); } catch (e2) {}
+    console.log("[chart-seed-1.6] vouchers fixed", fixed);
+    return fixed;
+  };
+  setTimeout(ensureSeeds, 800);
+})();
+</script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 /**
- * Smart Suite Local Server v1.5.1 (headers+JWT)
+ * Smart Suite Local Server v1.6.0 (headers+JWT)
  * - scrypt + RBAC
  * - VERSIONS.json registry + /api/versions
  * - Cartable + backup
@@ -236,6 +236,23 @@ function can(session, perm) {
   const list = ROLE_PERMS[role] || ROLE_PERMS.user;
   return list.indexOf('*') >= 0 || list.indexOf(perm) >= 0;
 }
+/* ===== PriorityIAM5 helpers ===== */
+function canApproveEffect(s) {
+  if (!s) return false;
+  if (s.role === 'admin' || s.role === 'ceo') return true;
+  if (s.role === 'manager') return true;
+  if (s.perms && (s.perms.indexOf('*') >= 0 || s.perms.indexOf('effects:approve') >= 0)) return true;
+  return false;
+}
+function canWriteEffect(s) {
+  if (!s) return false;
+  if (canApproveEffect(s)) return true;
+  if (s.role === 'user' || s.role === 'manager') return true;
+  if (s.perms && (s.perms.indexOf('effects:write') >= 0 || s.perms.indexOf('*') >= 0)) return true;
+  return false;
+}
+/* ===== end PriorityIAM5 helpers ===== */
+
 
 function modPath(id) {
   const safe = String(id || '').replace(/[^a-zA-Z0-9_-]/g, '');
@@ -538,7 +555,7 @@ async function handleApi(req, res, url) {
     const reg = loadVersions();
     return send(res, 200, {
       ok: true,
-      version: '1.5.1',
+      version: '1.6.0',
       auth: 'scrypt+jwt',
       rbac: Object.keys(ROLE_PERMS),
       components: (reg && reg.components) || {},
@@ -983,6 +1000,17 @@ async function handleApi(req, res, url) {
     if (!s) return send(res, 401, { ok: false, error: 'وارد نشده' });
     if (!can(s, 'write') && !can(s, '*')) return send(res, 403, { ok: false, error: 'دسترسی نوشتن نیست' });
     const body = await readBody(req);
+    // IAM160_effects_module
+    {
+      const src0 = String((body && body.source) || '').trim().toLowerCase();
+      const alias = { tankhah: 'pettycash', pettycash: 'pettycash' };
+      const modId = alias[src0] || src0;
+      const skipMod = !modId || modId === 'unknown' || modId === 'manual';
+      if (!skipMod && typeof canAccessModule === 'function' && !canAccessModule(s.role, modId)) {
+        try { appendAudit({ action: 'effect_deny', user: s.user, role: s.role, source: src0 }); } catch (eD) {}
+        return send(res, 403, { ok: false, error: 'Ø¯Ø³ØªØ±Ø³ÛŒ Ø¨Ù‡ Ù…Ù†Ø¨Ø¹ Ø§Ø«Ø± Ù…Ø¬Ø§Ø² Ù†ÛŒØ³Øª', source: src0, role: s.role });
+      }
+    }
     const amount = Number(String(body.amount == null ? '' : body.amount).replace(/[^\d.-]/g, ''));
     if (!isFinite(amount) || amount === 0) {
       return send(res, 400, { ok: false, error: 'مبلغ نامعتبر' });
@@ -1017,6 +1045,13 @@ async function handleApi(req, res, url) {
     if (!can(s, 'write') && !can(s, '*')) return send(res, 403, { ok: false, error: 'دسترسی نوشتن نیست' });
     const fid = fxMatch[1];
     const body = await readBody(req);
+    // IAM160_approve_gate
+    if (body && body.status && (body.status === 'posted' || body.status === 'rejected')) {
+      const role = String(s.role || '');
+      if (role !== 'admin' && role !== 'ceo' && role !== 'manager') {
+        return send(res, 403, { ok: false, error: 'ÙÙ‚Ø· Ù…Ø¯ÛŒØ± Ù…Ø¬Ø§Ø² Ø¨Ù‡ ØªØ§ÛŒÛŒØ¯/Ø±Ø¯ Ø§Ø«Ø± Ø§Ø³Øª' });
+      }
+    }
     const db = loadEffects();
     let found = null;
     db.items = (db.items || []).map((x) => {
@@ -1058,7 +1093,7 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(cfg.port, cfg.host, () => {
   console.log('========================================');
-  console.log(' Smart Suite Local Server v1.5.1 (headers+JWT)');
+  console.log(' Smart Suite Local Server v1.6.0 (headers+JWT)');
   console.log(' Auth: scrypt + RBAC | Versions API');
   console.log(' http://127.0.0.1:' + cfg.port + '/suite.html');
   console.log(' /api/health  /api/versions');
@@ -1071,3 +1106,5 @@ server.listen(cfg.port, cfg.host, () => {
   }
   setInterval(tickDailyBackup, 5 * 60 * 1000);
 });
+
+/* PriorityIAM5 applied marker */

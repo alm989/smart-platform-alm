@@ -4,3 +4,5 @@ server/backups/
 *.bak*
 *.bak-*
 .DS_Store
+*.zip
+smart-platform-*.zip
