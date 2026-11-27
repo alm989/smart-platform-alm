@@ -1,7 +1,8 @@
-/* suite-report-panel.js — ASCII only; Persian via fromCharCode; no flicker */
+/* suite-report-panel.js v20261127d — title + CSV on right, refresh left */
 (function () {
   "use strict";
-  if (window.__SF_REPORT_PANEL__) return;
+  if (window.__SF_REPORT_PANEL_V20261127D__) return;
+  window.__SF_REPORT_PANEL_V20261127D__ = true;
   window.__SF_REPORT_PANEL__ = true;
 
   window.__sfReportCard2 = true;
@@ -119,30 +120,36 @@
     box.style.fontFamily = "Tahoma,sans-serif";
     box.style.direction = "rtl";
 
-    if (locked && document.getElementById("sfRepBody")) return box;
+    if (locked && document.getElementById("sfRepBody") && document.getElementById("sfTitleCsvGrp")) return box;
 
     box.innerHTML = "";
     var head = document.createElement("div");
+    head.id = "sfRepHead";
     head.style.cssText = "display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;direction:rtl";
 
-    // Right (RTL): title + CSV beside title
+    // RIGHT side in RTL: title then CSV (beside each other)
     var rightGrp = document.createElement("div");
-    rightGrp.style.cssText = "display:flex;align-items:center;gap:8px;min-width:0";
+    rightGrp.id = "sfTitleCsvGrp";
+    rightGrp.style.cssText = "display:flex;align-items:center;gap:8px;direction:rtl";
+
     var title = document.createElement("b");
+    title.id = "sfRepTitle";
     title.style.color = "#7dd3fc";
     title.style.fontSize = "12px";
     title.style.whiteSpace = "nowrap";
     title.textContent = L.title;
+
     var bCsv = document.createElement("button");
     bCsv.type = "button";
     bCsv.id = "sfExcelExportBtn";
     bCsv.textContent = L.csv;
     styleBtn(bCsv, "#059669");
     bCsv.onclick = exportCsv;
+
     rightGrp.appendChild(title);
     rightGrp.appendChild(bCsv);
 
-    // Left: refresh only
+    // LEFT: refresh
     var bRef = document.createElement("button");
     bRef.type = "button";
     bRef.id = "sfRepRefresh";
@@ -157,23 +164,10 @@
     body.id = "sfRepBody";
     body.style.height = "50px";
     body.style.overflow = "hidden";
+
     box.appendChild(head);
     box.appendChild(body);
     locked = true;
-
-    try {
-      var obs = new MutationObserver(function (muts) {
-        for (var i = 0; i < muts.length; i++) {
-          if (muts[i].type === "childList" && !document.getElementById("sfRepBody")) {
-            locked = false;
-            buildOnce();
-            load(true);
-          }
-        }
-      });
-      obs.observe(box, { childList: true });
-    } catch (e) {}
-
     return box;
   }
 
@@ -244,9 +238,12 @@
       });
   }
 
-  Object.defineProperty(window, "__sfReportCard2", { value: true, writable: false, configurable: false });
+  try {
+    Object.defineProperty(window, "__sfReportCard2", { value: true, writable: false, configurable: false });
+  } catch (e) {}
 
   function boot() {
+    locked = false;
     buildOnce();
     load(true);
     setInterval(function () { load(false); }, 60000);
